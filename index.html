@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#C1D6A8"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-  <meta name="apple-mobile-web-app-title" content="Pont St-Louis"/>
+  <meta name="apple-mobile-web-app-title" content="Ponts Beauharnois"/>
   <link rel="manifest" href="manifest.json"/>
-  <title>Pont St-Louis-de-Gonzague</title>
+  <title>Ponts du canal de Beauharnois</title>
   <style>
     @font-face {
       font-family: 'Product Sans';
@@ -34,39 +34,56 @@
       padding: 24px 16px;
     }
 
-    .card {
+    .header-card {
       width: 100%;
       max-width: 420px;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 4px 24px rgba(0,0,0,0.12);
       background: white;
+      margin-bottom: 16px;
     }
 
     .logo-section {
       background: white;
-      padding: 20px;
+      padding: 16px 20px;
       text-align: center;
     }
 
     .logo-section img {
-      height: 50px;
+      height: 45px;
       object-fit: contain;
     }
 
+    .bridge-card {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      background: white;
+      margin-bottom: 12px;
+    }
+
+    .bridge-header {
+      padding: 10px 16px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
     .status-section {
-      padding: 28px 20px;
+      padding: 20px 16px;
       text-align: center;
       transition: background-color 0.5s ease;
     }
 
     .status-section.disponible { background-color: #C1D6A8; }
-    .status-section.bientot_leve { background-color: #FEEAA8; }
-    .status-section.leve {
-      background-color: #E48082;
-      animation: pulse 1.5s infinite;
-    }
-    .status-section.bientot_leve { animation: pulse 2.5s infinite; }
+    .status-section.bientot_leve { background-color: #FEEAA8; animation: pulse 2.5s infinite; }
+    .status-section.leve { background-color: #E48082; animation: pulse 1.5s infinite; }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; }
@@ -74,7 +91,7 @@
     }
 
     .status-label {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 700;
       letter-spacing: 0.5px;
     }
@@ -83,37 +100,27 @@
     .status-section.bientot_leve .status-label { color: #5a4000; }
     .status-section.leve .status-label { color: white; }
 
-    .bridge-name {
-      font-size: 13px;
-      margin-bottom: 8px;
-      opacity: 0.7;
-    }
-
-    .status-section.disponible .bridge-name { color: #2d4a1e; }
-    .status-section.bientot_leve .bridge-name { color: #5a4000; }
-    .status-section.leve .bridge-name { color: white; }
-
     .lifts-section {
-      padding: 16px 20px;
+      padding: 12px 16px;
       border-top: 1px solid #eee;
     }
 
     .lifts-title {
-      font-size: 12px;
+      font-size: 11px;
       color: #888;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .lifts-value {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: #333;
     }
 
     .refresh-section {
-      padding: 10px 20px 16px;
+      padding: 6px 16px 12px;
       font-size: 11px;
       color: #aaa;
       text-align: right;
@@ -122,7 +129,7 @@
     .install-card {
       width: 100%;
       max-width: 420px;
-      margin: 16px auto 0;
+      margin: 4px auto 0;
       padding: 16px 20px;
       background: white;
       border-radius: 20px;
@@ -180,6 +187,42 @@
       font-size: 13px;
       color: #2d4a1e;
       font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .bridge-prefs {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .bridge-prefs-title {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .pref-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+    }
+
+    .pref-item:last-child { border-bottom: none; }
+
+    .pref-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #2d4a1e;
+      cursor: pointer;
+    }
+
+    .pref-label {
+      font-size: 13px;
+      color: #333;
+      font-weight: 500;
     }
 
     .notify-btn {
@@ -266,30 +309,57 @@
 </head>
 <body>
 
-  <div class="card">
+  <!-- Header with logo -->
+  <div class="header-card">
     <div class="logo-section">
       <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Seaway"/>
     </div>
-
-    <div class="status-section disponible" id="statusSection">
-      <div class="bridge-name">Pont St-Louis-de-Gonzague</div>
-      <div class="status-label" id="statusLabel">Chargement...</div>
-    </div>
-
-    <div class="lifts-section">
-      <div class="lifts-title" id="liftsTitle">🚢 Levages dans les 60 prochaines minutes</div>
-      <div class="lifts-value" id="liftsValue">—</div>
-    </div>
-
-    <div class="refresh-section" id="refreshTime">Dernière mise à jour : —</div>
   </div>
 
+  <!-- Pont St-Louis-de-Gonzague -->
+  <div class="bridge-card">
+    <div class="bridge-header">🌉 Pont St-Louis-de-Gonzague</div>
+    <div class="status-section disponible" id="statusGonzague">
+      <div class="status-label" id="labelGonzague">Chargement...</div>
+    </div>
+    <div class="lifts-section">
+      <div class="lifts-title" id="liftsTitleGonzague">🚢 Levages dans les 60 prochaines minutes</div>
+      <div class="lifts-value" id="liftsGonzague">—</div>
+    </div>
+    <div class="refresh-section" id="refreshGonzague">—</div>
+  </div>
+
+  <!-- Pont Larocque -->
+  <div class="bridge-card">
+    <div class="bridge-header">🌉 Pont Larocque (Salaberry-de-Valleyfield)</div>
+    <div class="status-section disponible" id="statusLarocque">
+      <div class="status-label" id="labelLarocque">Chargement...</div>
+    </div>
+    <div class="lifts-section">
+      <div class="lifts-title" id="liftsTitleLarocque">🚢 Levages dans les 60 prochaines minutes</div>
+      <div class="lifts-value" id="liftsLarocque">—</div>
+    </div>
+    <div class="refresh-section" id="refreshLarocque">—</div>
+  </div>
+
+  <!-- Install card -->
   <div class="install-card" id="installCard">
     <p class="install-title" id="installTitle">📲 Installer l'app</p>
     <p class="install-subtitle" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</p>
 
     <div id="installedMsg" style="display:none;">
-      <p class="installed-msg" id="installedMsgText">✅ L'app est installée ! Activez les notifications ci-dessous.</p>
+      <p class="installed-msg" id="installedMsgText">✅ L'app est installée !</p>
+      <p class="bridge-prefs-title" id="prefTitle">Choisissez les notifications à recevoir :</p>
+      <div class="bridge-prefs" id="bridgePrefs">
+        <label class="pref-item">
+          <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"/>
+          <span class="pref-label">🌉 Pont St-Louis-de-Gonzague</span>
+        </label>
+        <label class="pref-item">
+          <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"/>
+          <span class="pref-label">🌉 Pont Larocque (Valleyfield)</span>
+        </label>
+      </div>
     </div>
 
     <div id="iosInstructions" style="display:none;">
@@ -337,10 +407,11 @@
       statusLabels: { disponible: 'DISPONIBLE', bientot_leve: 'LEVAGE IMMINENT', leve: 'LEVÉ' },
       liftsTitle: '🚢 Levages dans les 60 prochaines minutes',
       noLifts: 'Aucun levage prévu',
-      lastRefresh: 'Dernière mise à jour',
+      lastRefresh: 'Mis à jour',
       installTitle: '📲 Installer l\'app',
       installSubtitle: 'Installez l\'app pour recevoir des notifications lors des levages',
-      installedMsg: '✅ L\'app est installée ! Activez les notifications ci-dessous.',
+      installedMsg: '✅ L\'app est installée !',
+      prefTitle: 'Choisissez les notifications à recevoir :',
       notifyBtn: '🔔 Activer les notifications',
       notifyActive: '✅ Notifications activées',
       unsubBtn: '🔕 Désactiver les notifications',
@@ -364,10 +435,11 @@
       statusLabels: { disponible: 'AVAILABLE', bientot_leve: 'LIFT IMMINENT', leve: 'LIFTED' },
       liftsTitle: '🚢 Bridge lifts in the next 60 minutes',
       noLifts: 'No anticipated bridge lifts',
-      lastRefresh: 'Last updated',
+      lastRefresh: 'Updated',
       installTitle: '📲 Install the app',
       installSubtitle: 'Install the app to receive notifications for bridge lifts',
-      installedMsg: '✅ App installed! Enable notifications below.',
+      installedMsg: '✅ App installed!',
+      prefTitle: 'Choose which notifications to receive:',
       notifyBtn: '🔔 Enable notifications',
       notifyActive: '✅ Notifications enabled',
       unsubBtn: '🔕 Disable notifications',
@@ -395,45 +467,91 @@
 
   let lastData = null;
 
+  function getSelectedBridges() {
+    const bridges = [];
+    if (document.getElementById('prefGonzague').checked) bridges.push('gonzague');
+    if (document.getElementById('prefLarocque').checked) bridges.push('larocque');
+    return bridges;
+  }
+
+  async function updatePrefs() {
+    const bridges = getSelectedBridges();
+    localStorage.setItem('bridgePrefs', JSON.stringify(bridges));
+    // Update server if already subscribed
+    if (localStorage.getItem('notificationsEnabled') === 'true') {
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          const subData = JSON.parse(JSON.stringify(sub));
+          subData.bridges = bridges;
+          await fetch(`${BACKEND_URL}/subscribe`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(subData)
+          });
+        }
+      } catch(e) { console.error(e); }
+    }
+  }
+
+  function loadPrefs() {
+    const saved = localStorage.getItem('bridgePrefs');
+    if (saved) {
+      const bridges = JSON.parse(saved);
+      document.getElementById('prefGonzague').checked = bridges.includes('gonzague');
+      document.getElementById('prefLarocque').checked = bridges.includes('larocque');
+    }
+  }
+
   function updateNotifyButtons() {
     const isEnabled = localStorage.getItem('notificationsEnabled') === 'true';
     const t = translations[currentLang];
     const notifyBtn = document.getElementById('notifyBtn');
     const unsubBtn = document.getElementById('unsubBtn');
+    const bridgePrefs = document.getElementById('bridgePrefs');
 
     if (isEnabled) {
       notifyBtn.textContent = t.notifyActive;
       notifyBtn.classList.add('active');
       unsubBtn.style.display = 'block';
       unsubBtn.textContent = t.unsubBtn;
+      bridgePrefs.style.display = 'block';
     } else {
       notifyBtn.textContent = t.notifyBtn;
       notifyBtn.classList.remove('active');
       unsubBtn.style.display = 'none';
+      bridgePrefs.style.display = 'none';
     }
   }
 
   function updateDisplay() {
     if (!lastData) return;
     const t = translations[currentLang];
-    const section = document.getElementById('statusSection');
-    const label = document.getElementById('statusLabel');
-    const lifts = document.getElementById('liftsValue');
-    const refresh = document.getElementById('refreshTime');
 
-    section.className = `status-section ${lastData.status}`;
-    label.textContent = t.statusLabels[lastData.status] || lastData.status;
-    lifts.textContent = lastData.next_lifts === 'No anticipated bridge lifts'
-      ? t.noLifts : lastData.next_lifts;
-    refresh.textContent = `${t.lastRefresh} : ${lastData.last_refreshed}`;
+    // Gonzague
+    document.getElementById('statusGonzague').className = `status-section ${lastData.gonzague.status}`;
+    document.getElementById('labelGonzague').textContent = t.statusLabels[lastData.gonzague.status] || lastData.gonzague.status;
+    document.getElementById('liftsTitleGonzague').textContent = t.liftsTitle;
+    document.getElementById('liftsGonzague').textContent =
+      lastData.gonzague.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.gonzague.next_lifts;
+    document.getElementById('refreshGonzague').textContent = `${t.lastRefresh} : ${lastData.last_refreshed}`;
+
+    // Larocque
+    document.getElementById('statusLarocque').className = `status-section ${lastData.larocque.status}`;
+    document.getElementById('labelLarocque').textContent = t.statusLabels[lastData.larocque.status] || lastData.larocque.status;
+    document.getElementById('liftsTitleLarocque').textContent = t.liftsTitle;
+    document.getElementById('liftsLarocque').textContent =
+      lastData.larocque.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.larocque.next_lifts;
+    document.getElementById('refreshLarocque').textContent = `${t.lastRefresh} : ${lastData.last_refreshed}`;
   }
 
   function applyTranslations() {
     const t = translations[currentLang];
-    document.getElementById('liftsTitle').textContent = t.liftsTitle;
     document.getElementById('installTitle').textContent = t.installTitle;
     document.getElementById('installSubtitle').textContent = t.installSubtitle;
     document.getElementById('installedMsgText').textContent = t.installedMsg;
+    document.getElementById('prefTitle').textContent = t.prefTitle;
     document.getElementById('supportText').textContent = t.supportText;
     document.getElementById('langBtn').textContent = t.langBtn;
     document.getElementById('ios1').innerHTML = t.ios1;
@@ -499,10 +617,12 @@
         userVisibleOnly: true,
         applicationServerKey: 'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'
       });
+      const subData = JSON.parse(JSON.stringify(sub));
+      subData.bridges = getSelectedBridges();
       await fetch(`${BACKEND_URL}/subscribe`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(sub)
+        body: JSON.stringify(subData)
       });
       localStorage.setItem('notificationsEnabled', 'true');
       updateNotifyButtons();
@@ -524,12 +644,9 @@
         });
         await sub.unsubscribe();
       }
-      localStorage.removeItem('notificationsEnabled');
-      updateNotifyButtons();
-    } catch(e) {
-      localStorage.removeItem('notificationsEnabled');
-      updateNotifyButtons();
-    }
+    } catch(e) { console.error(e); }
+    localStorage.removeItem('notificationsEnabled');
+    updateNotifyButtons();
   }
 
   // Détecter la plateforme
@@ -546,6 +663,7 @@
     document.getElementById('androidInstructions').style.display = 'block';
   }
 
+  loadPrefs();
   applyTranslations();
 
   if ('serviceWorker' in navigator) {
