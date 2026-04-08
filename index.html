@@ -160,9 +160,7 @@
       line-height: 1.4;
     }
 
-    .install-steps li:last-child {
-      border-bottom: none;
-    }
+    .install-steps li:last-child { border-bottom: none; }
 
     .step-num {
       background: #2d4a1e;
@@ -204,6 +202,18 @@
 
     .notify-btn:hover { background: #3d6a2e; }
     .notify-btn.active { background: #888; }
+
+    .lang-btn {
+      display: block;
+      margin: 12px auto 0;
+      background: none;
+      border: none;
+      font-family: 'Product Sans', sans-serif;
+      font-size: 12px;
+      color: #aaa;
+      cursor: pointer;
+      text-decoration: underline;
+    }
 
     .paypal-btn {
       display: flex;
@@ -249,7 +259,7 @@
     </div>
 
     <div class="lifts-section">
-      <div class="lifts-title">🚢 Levages dans les 60 prochaines minutes</div>
+      <div class="lifts-title" id="liftsTitle">🚢 Levages dans les 60 prochaines minutes</div>
       <div class="lifts-value" id="liftsValue">—</div>
     </div>
 
@@ -257,27 +267,27 @@
   </div>
 
   <div class="install-card" id="installCard">
-    <p class="install-title">📲 Installer l'app</p>
-    <p class="install-subtitle">Installez l'app pour recevoir des notifications lors des levages</p>
+    <p class="install-title" id="installTitle">📲 Installer l'app</p>
+    <p class="install-subtitle" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</p>
 
     <div id="installedMsg" style="display:none;">
-      <p class="installed-msg">✅ L'app est installée ! Activez les notifications ci-dessous.</p>
+      <p class="installed-msg" id="installedMsgText">✅ L'app est installée ! Activez les notifications ci-dessous.</p>
     </div>
 
     <div id="iosInstructions" style="display:none;">
-      <ul class="install-steps">
-        <li><span class="step-num">1</span> Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari</li>
-        <li><span class="step-num">2</span> Sélectionnez <strong>Sur l'écran d'accueil</strong></li>
-        <li><span class="step-num">3</span> Appuyez sur <strong>Ajouter</strong> en haut à droite</li>
-        <li><span class="step-num">4</span> Ouvrez l'app depuis votre écran d'accueil</li>
+      <ul class="install-steps" id="iosSteps">
+        <li><span class="step-num">1</span> <span id="ios1">Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari</span></li>
+        <li><span class="step-num">2</span> <span id="ios2">Sélectionnez <strong>Sur l'écran d'accueil</strong></span></li>
+        <li><span class="step-num">3</span> <span id="ios3">Appuyez sur <strong>Ajouter</strong> en haut à droite</span></li>
+        <li><span class="step-num">4</span> <span id="ios4">Ouvrez l'app depuis votre écran d'accueil</span></li>
       </ul>
     </div>
 
     <div id="androidInstructions" style="display:none;">
       <ul class="install-steps">
-        <li><span class="step-num">1</span> Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome</li>
-        <li><span class="step-num">2</span> Sélectionnez <strong>Ajouter à l'écran d'accueil</strong></li>
-        <li><span class="step-num">3</span> Appuyez sur <strong>Ajouter</strong></li>
+        <li><span class="step-num">1</span> <span id="and1">Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome</span></li>
+        <li><span class="step-num">2</span> <span id="and2">Sélectionnez <strong>Ajouter à l'écran d'accueil</strong></span></li>
+        <li><span class="step-num">3</span> <span id="and3">Appuyez sur <strong>Ajouter</strong></span></li>
       </ul>
     </div>
   </div>
@@ -286,69 +296,167 @@
     🔔 Activer les notifications
   </button>
 
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">English</button>
+
   <a href="https://paypal.me/kvndbrl" target="_blank" class="paypal-btn">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
       <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.379 3.034.682 6.657-2.255 8.705-1.908 1.32-4.513 1.768-7.517 1.547l-.81 5.135h3.238c.524 0 .968-.382 1.05-.9l.974-6.174h2.19c4.298 0 7.664-1.748 8.647-6.797.418-2.149.086-3.77-.91-4.975z"/>
     </svg>
-    Soutenir ce projet
+    <span id="supportText">Soutenir ce projet</span>
   </a>
 
   <div class="error" id="errorMsg"></div>
 
 <script>
   const BACKEND_URL = 'https://pont-st-louis-de-gonzague.onrender.com';
-  const statusLabels = {
-    disponible: 'DISPONIBLE',
-    bientot_leve: 'LEVAGE IMMINENT',
-    leve: 'LEVÉ'
+
+  const translations = {
+    fr: {
+      statusLabels: { disponible: 'DISPONIBLE', bientot_leve: 'LEVAGE IMMINENT', leve: 'LEVÉ' },
+      liftsTitle: '🚢 Levages dans les 60 prochaines minutes',
+      noLifts: 'Aucun levage prévu',
+      lastRefresh: 'Dernière mise à jour',
+      installTitle: '📲 Installer l\'app',
+      installSubtitle: 'Installez l\'app pour recevoir des notifications lors des levages',
+      installedMsg: '✅ L\'app est installée ! Activez les notifications ci-dessous.',
+      notifyBtn: '🔔 Activer les notifications',
+      notifyActive: '✅ Notifications activées',
+      supportText: 'Soutenir ce projet',
+      langBtn: 'English',
+      retry: 'Réessayer',
+      reconnecting: 'Reconnexion en cours',
+      serverError: 'Serveur temporairement indisponible.',
+      permDenied: 'Permission refusée. Vérifiez les paramètres de notifications de votre appareil.',
+      notSupported: 'Les notifications ne sont pas supportées sur votre appareil.',
+      iosAlert: 'Pour activer les notifications sur iPhone :\n\n1. Appuyez sur le bouton Partager ⬆️\n2. Sélectionnez "Sur l\'écran d\'accueil"\n3. Ouvrez l\'app depuis l\'écran d\'accueil\n4. Appuyez à nouveau sur Activer les notifications',
+      ios1: 'Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari',
+      ios2: 'Sélectionnez <strong>Sur l\'écran d\'accueil</strong>',
+      ios3: 'Appuyez sur <strong>Ajouter</strong> en haut à droite',
+      ios4: 'Ouvrez l\'app depuis votre écran d\'accueil',
+      and1: 'Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome',
+      and2: 'Sélectionnez <strong>Ajouter à l\'écran d\'accueil</strong>',
+      and3: 'Appuyez sur <strong>Ajouter</strong>',
+    },
+    en: {
+      statusLabels: { disponible: 'AVAILABLE', bientot_leve: 'LIFT IMMINENT', leve: 'LIFTED' },
+      liftsTitle: '🚢 Bridge lifts in the next 60 minutes',
+      noLifts: 'No anticipated bridge lifts',
+      lastRefresh: 'Last updated',
+      installTitle: '📲 Install the app',
+      installSubtitle: 'Install the app to receive notifications for bridge lifts',
+      installedMsg: '✅ App installed! Enable notifications below.',
+      notifyBtn: '🔔 Enable notifications',
+      notifyActive: '✅ Notifications enabled',
+      supportText: 'Support this project',
+      langBtn: 'Français',
+      retry: 'Retry',
+      reconnecting: 'Reconnecting',
+      serverError: 'Server temporarily unavailable.',
+      permDenied: 'Permission denied. Check your device notification settings.',
+      notSupported: 'Notifications are not supported on your device.',
+      iosAlert: 'To enable notifications on iPhone:\n\n1. Tap the Share button ⬆️\n2. Select "Add to Home Screen"\n3. Open the app from your home screen\n4. Tap Enable Notifications again',
+      ios1: 'Tap <strong>Share</strong> ⬆️ at the bottom of Safari',
+      ios2: 'Select <strong>Add to Home Screen</strong>',
+      ios3: 'Tap <strong>Add</strong> in the top right',
+      ios4: 'Open the app from your home screen',
+      and1: 'Tap the <strong>3 dots</strong> ⋮ in the top right of Chrome',
+      and2: 'Select <strong>Add to Home Screen</strong>',
+      and3: 'Tap <strong>Add</strong>',
+    }
   };
 
+  // Detect language - default to French, switch to English if browser is English
+  const browserLang = navigator.language || navigator.userLanguage;
+  let currentLang = localStorage.getItem('appLang') ||
+    (browserLang.startsWith('en') ? 'en' : 'fr');
+
+  function applyTranslations() {
+    const t = translations[currentLang];
+    document.getElementById('liftsTitle').textContent = t.liftsTitle;
+    document.getElementById('installTitle').textContent = t.installTitle;
+    document.getElementById('installSubtitle').textContent = t.installSubtitle;
+    document.getElementById('installedMsgText').textContent = t.installedMsg;
+    document.getElementById('supportText').textContent = t.supportText;
+    document.getElementById('langBtn').textContent = t.langBtn;
+    document.getElementById('ios1').innerHTML = t.ios1;
+    document.getElementById('ios2').innerHTML = t.ios2;
+    document.getElementById('ios3').innerHTML = t.ios3;
+    document.getElementById('ios4').innerHTML = t.ios4;
+    document.getElementById('and1').innerHTML = t.and1;
+    document.getElementById('and2').innerHTML = t.and2;
+    document.getElementById('and3').innerHTML = t.and3;
+
+    const btn = document.getElementById('notifyBtn');
+    if (localStorage.getItem('notificationsEnabled') === 'true') {
+      btn.textContent = t.notifyActive;
+    } else {
+      btn.textContent = t.notifyBtn;
+    }
+
+    // Update status label if already loaded
+    const section = document.getElementById('statusSection');
+    const currentStatus = section.className.replace('status-section ', '').trim();
+    if (t.statusLabels[currentStatus]) {
+      document.getElementById('statusLabel').textContent = t.statusLabels[currentStatus];
+    }
+  }
+
+  function toggleLang() {
+    currentLang = currentLang === 'fr' ? 'en' : 'fr';
+    localStorage.setItem('appLang', currentLang);
+    applyTranslations();
+  }
+
   let retryCount = 0;
+  let lastData = null;
 
   async function fetchStatus() {
     try {
       const res = await fetch(`${BACKEND_URL}/status`, { signal: AbortSignal.timeout(10000) });
       const data = await res.json();
+      lastData = data;
 
       retryCount = 0;
       document.getElementById('errorMsg').textContent = '';
 
+      const t = translations[currentLang];
       const section = document.getElementById('statusSection');
       const label = document.getElementById('statusLabel');
       const lifts = document.getElementById('liftsValue');
       const refresh = document.getElementById('refreshTime');
 
       section.className = `status-section ${data.status}`;
-      label.textContent = statusLabels[data.status] || data.status;
-      lifts.textContent = data.next_lifts
-        .replace('No anticipated bridge lifts', 'Aucun levage prévu');
-      refresh.textContent = `Dernière mise à jour : ${data.last_refreshed}`;
+      label.textContent = t.statusLabels[data.status] || data.status;
+      lifts.textContent = data.next_lifts.replace('No anticipated bridge lifts', t.noLifts);
+      refresh.textContent = `${t.lastRefresh} : ${data.last_refreshed}`;
 
     } catch(e) {
+      const t = translations[currentLang];
       retryCount++;
       if (retryCount < 3) {
         setTimeout(fetchStatus, 10000);
-        document.getElementById('errorMsg').textContent = `Reconnexion en cours... (${retryCount}/3)`;
+        document.getElementById('errorMsg').textContent = `${t.reconnecting}... (${retryCount}/3)`;
       } else {
         retryCount = 0;
         document.getElementById('errorMsg').innerHTML =
-          'Serveur temporairement indisponible. <a href="#" onclick="fetchStatus();return false;" style="color:#E48082;">Réessayer</a>';
+          `${t.serverError} <a href="#" onclick="fetchStatus();return false;" style="color:#E48082;">${t.retry}</a>`;
       }
     }
   }
 
   async function toggleNotifications() {
+    const t = translations[currentLang];
     const btn = document.getElementById('notifyBtn');
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
 
     if (isIOS && !isInstalled) {
-      alert('Pour activer les notifications sur iPhone :\n\n1. Appuyez sur le bouton Partager ⬆️\n2. Sélectionnez "Sur l\'écran d\'accueil"\n3. Ouvrez l\'app depuis l\'écran d\'accueil\n4. Appuyez à nouveau sur Activer les notifications');
+      alert(t.iosAlert);
       return;
     }
 
     if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-      alert('Les notifications ne sont pas supportées sur votre appareil.');
+      alert(t.notSupported);
       return;
     }
 
@@ -365,15 +473,15 @@
         body: JSON.stringify(sub)
       });
       localStorage.setItem('notificationsEnabled', 'true');
-      btn.textContent = '✅ Notifications activées';
+      btn.textContent = t.notifyActive;
       btn.classList.add('active');
     } else {
       localStorage.removeItem('notificationsEnabled');
-      alert('Permission refusée. Vérifiez les paramètres de notifications de votre appareil.');
+      alert(t.permDenied);
     }
   }
 
-  // Détecter la plateforme et afficher les bonnes instructions
+  // Détecter la plateforme
   const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
@@ -387,12 +495,14 @@
     document.getElementById('androidInstructions').style.display = 'block';
   }
 
-  // Restaurer l'état du bouton notifications au chargement
+  // Restaurer état notifications
   if (localStorage.getItem('notificationsEnabled') === 'true') {
     const btn = document.getElementById('notifyBtn');
-    btn.textContent = '✅ Notifications activées';
     btn.classList.add('active');
   }
+
+  // Appliquer les traductions
+  applyTranslations();
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
