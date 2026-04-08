@@ -175,8 +175,7 @@
   <div class="error" id="errorMsg"></div>
 
 <script>
-  const BACKEND_URL = 'https://VOTRE-APP.onrender.com'; // À remplacer
-
+  const BACKEND_URL = 'https://pont-st-louis-de-gonzague.onrender.com';
   const statusLabels = {
     disponible: 'DISPONIBLE',
     bientot_leve: 'LEVAGE IMMINENT',
@@ -211,7 +210,7 @@
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: 'VOTRE_VAPID_PUBLIC_KEY' // À remplacer
+        applicationServerKey: 'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'
       });
       await fetch(`${BACKEND_URL}/subscribe`, {
         method: 'POST',
