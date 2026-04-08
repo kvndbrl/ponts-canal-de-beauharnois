@@ -275,7 +275,7 @@
     </div>
 
     <div id="iosInstructions" style="display:none;">
-      <ul class="install-steps" id="iosSteps">
+      <ul class="install-steps">
         <li><span class="step-num">1</span> <span id="ios1">Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari</span></li>
         <li><span class="step-num">2</span> <span id="ios2">Sélectionnez <strong>Sur l'écran d'accueil</strong></span></li>
         <li><span class="step-num">3</span> <span id="ios3">Appuyez sur <strong>Ajouter</strong> en haut à droite</span></li>
@@ -365,10 +365,27 @@
     }
   };
 
-  // Detect language - default to French, switch to English if browser is English
   const browserLang = navigator.language || navigator.userLanguage;
   let currentLang = localStorage.getItem('appLang') ||
     (browserLang.startsWith('en') ? 'en' : 'fr');
+
+  let lastData = null;
+
+  function updateDisplay() {
+    if (!lastData) return;
+    const t = translations[currentLang];
+    const section = document.getElementById('statusSection');
+    const label = document.getElementById('statusLabel');
+    const lifts = document.getElementById('liftsValue');
+    const refresh = document.getElementById('refreshTime');
+
+    section.className = `status-section ${lastData.status}`;
+    label.textContent = t.statusLabels[lastData.status] || lastData.status;
+    lifts.textContent = lastData.next_lifts === 'No anticipated bridge lifts'
+      ? t.noLifts
+      : lastData.next_lifts;
+    refresh.textContent = `${t.lastRefresh} : ${lastData.last_refreshed}`;
+  }
 
   function applyTranslations() {
     const t = translations[currentLang];
@@ -387,18 +404,11 @@
     document.getElementById('and3').innerHTML = t.and3;
 
     const btn = document.getElementById('notifyBtn');
-    if (localStorage.getItem('notificationsEnabled') === 'true') {
-      btn.textContent = t.notifyActive;
-    } else {
-      btn.textContent = t.notifyBtn;
-    }
+    btn.textContent = localStorage.getItem('notificationsEnabled') === 'true'
+      ? t.notifyActive
+      : t.notifyBtn;
 
-    // Update status label if already loaded
-    const section = document.getElementById('statusSection');
-    const currentStatus = section.className.replace('status-section ', '').trim();
-    if (t.statusLabels[currentStatus]) {
-      document.getElementById('statusLabel').textContent = t.statusLabels[currentStatus];
-    }
+    updateDisplay();
   }
 
   function toggleLang() {
@@ -408,7 +418,6 @@
   }
 
   let retryCount = 0;
-  let lastData = null;
 
   async function fetchStatus() {
     try {
@@ -418,17 +427,7 @@
 
       retryCount = 0;
       document.getElementById('errorMsg').textContent = '';
-
-      const t = translations[currentLang];
-      const section = document.getElementById('statusSection');
-      const label = document.getElementById('statusLabel');
-      const lifts = document.getElementById('liftsValue');
-      const refresh = document.getElementById('refreshTime');
-
-      section.className = `status-section ${data.status}`;
-      label.textContent = t.statusLabels[data.status] || data.status;
-      lifts.textContent = data.next_lifts.replace('No anticipated bridge lifts', t.noLifts);
-      refresh.textContent = `${t.lastRefresh} : ${data.last_refreshed}`;
+      updateDisplay();
 
     } catch(e) {
       const t = translations[currentLang];
@@ -497,11 +496,9 @@
 
   // Restaurer état notifications
   if (localStorage.getItem('notificationsEnabled') === 'true') {
-    const btn = document.getElementById('notifyBtn');
-    btn.classList.add('active');
+    document.getElementById('notifyBtn').classList.add('active');
   }
 
-  // Appliquer les traductions
   applyTranslations();
 
   if ('serviceWorker' in navigator) {
