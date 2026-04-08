@@ -111,5 +111,17 @@ app.post('/subscribe', (req, res) => {
 
 app.get('/', (req, res) => res.send('Pont St-Louis-de-Gonzague API'));
 
+// Auto-ping pour éviter la mise en veille de Render
+setInterval(async () => {
+  try {
+    await fetch('https://pont-st-louis-de-gonzague.onrender.com/ping');
+    console.log('Auto-ping OK');
+  } catch(e) {
+    console.log('Auto-ping échoué:', e.message);
+  }
+}, 600000);
+
+app.get('/ping', (req, res) => res.send('OK'));
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
