@@ -309,14 +309,12 @@
 </head>
 <body>
 
-  <!-- Header with logo -->
   <div class="header-card">
     <div class="logo-section">
       <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Seaway"/>
     </div>
   </div>
 
-  <!-- Pont St-Louis-de-Gonzague -->
   <div class="bridge-card">
     <div class="bridge-header">🌉 Pont St-Louis-de-Gonzague</div>
     <div class="status-section disponible" id="statusGonzague">
@@ -329,7 +327,6 @@
     <div class="refresh-section" id="refreshGonzague">—</div>
   </div>
 
-  <!-- Pont Larocque -->
   <div class="bridge-card">
     <div class="bridge-header">🌉 Pont Larocque (Salaberry-de-Valleyfield)</div>
     <div class="status-section disponible" id="statusLarocque">
@@ -342,7 +339,6 @@
     <div class="refresh-section" id="refreshLarocque">—</div>
   </div>
 
-  <!-- Install card -->
   <div class="install-card" id="installCard">
     <p class="install-title" id="installTitle">📲 Installer l'app</p>
     <p class="install-subtitle" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</p>
@@ -477,7 +473,6 @@
   async function updatePrefs() {
     const bridges = getSelectedBridges();
     localStorage.setItem('bridgePrefs', JSON.stringify(bridges));
-    // Update server if already subscribed
     if (localStorage.getItem('notificationsEnabled') === 'true') {
       try {
         const reg = await navigator.serviceWorker.ready;
@@ -529,7 +524,6 @@
     if (!lastData) return;
     const t = translations[currentLang];
 
-    // Gonzague
     document.getElementById('statusGonzague').className = `status-section ${lastData.gonzague.status}`;
     document.getElementById('labelGonzague').textContent = t.statusLabels[lastData.gonzague.status] || lastData.gonzague.status;
     document.getElementById('liftsTitleGonzague').textContent = t.liftsTitle;
@@ -537,7 +531,6 @@
       lastData.gonzague.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.gonzague.next_lifts;
     document.getElementById('refreshGonzague').textContent = `${t.lastRefresh} : ${lastData.last_refreshed}`;
 
-    // Larocque
     document.getElementById('statusLarocque').className = `status-section ${lastData.larocque.status}`;
     document.getElementById('labelLarocque').textContent = t.statusLabels[lastData.larocque.status] || lastData.larocque.status;
     document.getElementById('liftsTitleLarocque').textContent = t.liftsTitle;
@@ -656,7 +649,9 @@
   if (isInstalled) {
     document.getElementById('installedMsg').style.display = 'block';
     document.getElementById('notifyBtn').style.display = 'block';
-    document.getElementById('installCard').style.display = 'none';
+    document.getElementById('installCard').style.display = 'block';
+    document.getElementById('installTitle').style.display = 'none';
+    document.getElementById('installSubtitle').style.display = 'none';
   } else if (isIOS) {
     document.getElementById('iosInstructions').style.display = 'block';
   } else {
