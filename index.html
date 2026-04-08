@@ -211,26 +211,40 @@
     leve: 'LEVÉ'
   };
 
-  async function fetchStatus() {
-    try {
-      const res = await fetch(`${BACKEND_URL}/status`);
-      const data = await res.json();
+  let retryCount = 0;
 
-      const section = document.getElementById('statusSection');
-      const label = document.getElementById('statusLabel');
-      const lifts = document.getElementById('liftsValue');
-      const refresh = document.getElementById('refreshTime');
+async function fetchStatus() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/status`, { signal: AbortSignal.timeout(10000) });
+    const data = await res.json();
 
-      section.className = `status-section ${data.status}`;
-      label.textContent = statusLabels[data.status] || data.status;
-      lifts.textContent = data.next_lifts
-        .replace('No anticipated bridge lifts', 'Aucun levage prévu');
-      refresh.textContent = `Dernière mise à jour : ${data.last_refreshed}`;
+    retryCount = 0;
+    document.getElementById('errorMsg').textContent = '';
 
-    } catch(e) {
-      document.getElementById('errorMsg').textContent = 'Impossible de contacter le serveur.';
+    const section = document.getElementById('statusSection');
+    const label = document.getElementById('statusLabel');
+    const lifts = document.getElementById('liftsValue');
+    const refresh = document.getElementById('refreshTime');
+
+    section.className = `status-section ${data.status}`;
+    label.textContent = statusLabels[data.status] || data.status;
+    lifts.textContent = data.next_lifts
+      .replace('No anticipated bridge lifts', 'Aucun levage prévu');
+    refresh.textContent = `Dernière mise à jour : ${data.last_refreshed}`;
+
+  } catch(e) {
+    retryCount++;
+    if (retryCount < 3) {
+      // Réessayer dans 10 secondes
+      setTimeout(fetchStatus, 10000);
+      document.getElementById('errorMsg').textContent = `Reconnexion en cours... (${retryCount}/3)`;
+    } else {
+      retryCount = 0;
+      document.getElementById('errorMsg').innerHTML =
+        'Serveur temporairement indisponible. <a href="#" onclick="fetchStatus();return false;" style="color:#E48082;">Réessayer</a>';
     }
   }
+}
 
   async function toggleNotifications() {
   const btn = document.getElementById('notifyBtn');
