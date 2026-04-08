@@ -63,9 +63,6 @@ async function removeSubscription(sub) {
 let subscriptions = [];
 let lastStatus = null;
 
-// Load subscriptions on startup
-loadSubscriptions().then(subs => { subscriptions = subs; });
-
 // ── Bridge status fetch ───────────────────────────────────────────────
 async function fetchBridgeStatus() {
   const res = await fetch(
@@ -119,6 +116,7 @@ async function sendNotifications(status) {
   for (const sub of [...subscriptions]) {
     try {
       await webpush.sendNotification(sub, payload);
+      console.log('Notification sent successfully');
     } catch(e) {
       console.error('Failed notification, removing sub:', e.message);
       subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
@@ -142,9 +140,6 @@ async function monitor() {
     console.error('Monitor error:', e.message);
   }
 }
-
-setInterval(monitor, 60000);
-monitor();
 
 // ── Auto-ping ─────────────────────────────────────────────────────────
 setInterval(async () => {
@@ -186,3 +181,13 @@ app.get('/subscribers', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+// ── Start: load subscriptions BEFORE monitoring ───────────────────────
+async function start() {
+  subscriptions = await loadSubscriptions();
+  console.log(`Ready with ${subscriptions.length} subscriptions — starting monitor`);
+  await monitor();
+  setInterval(monitor, 60000);
+}
+
+start();
