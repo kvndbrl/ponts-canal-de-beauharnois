@@ -233,23 +233,38 @@
   }
 
   async function toggleNotifications() {
-    const btn = document.getElementById('notifyBtn');
-    const perm = await Notification.requestPermission();
-    if (perm === 'granted') {
-      const reg = await navigator.serviceWorker.ready;
-      const sub = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: 'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'
-      });
-      await fetch(`${BACKEND_URL}/subscribe`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(sub)
-      });
-      btn.textContent = '✅ Notifications activées';
-      btn.classList.add('active');
-    }
+  const btn = document.getElementById('notifyBtn');
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
+
+  if (isIOS && !isInstalled) {
+    alert('Pour activer les notifications sur iPhone :\n\n1. Appuyez sur le bouton Partager ⬆️\n2. Sélectionnez "Sur l\'écran d\'accueil"\n3. Ouvrez l\'app depuis l\'écran d\'accueil\n4. Appuyez à nouveau sur Activer les notifications');
+    return;
   }
+
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+    alert('Les notifications ne sont pas supportées sur votre appareil.');
+    return;
+  }
+
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: 'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'
+    });
+    await fetch(`${BACKEND_URL}/subscribe`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(sub)
+    });
+    btn.textContent = '✅ Notifications activées';
+    btn.classList.add('active');
+  } else {
+    alert('Permission refusée. Vérifiez les paramètres de notifications de votre appareil.');
+  }
+}
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
