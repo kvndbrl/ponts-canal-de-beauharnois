@@ -364,9 +364,11 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(sub)
       });
+      localStorage.setItem('notificationsEnabled', 'true');
       btn.textContent = '✅ Notifications activées';
       btn.classList.add('active');
     } else {
+      localStorage.removeItem('notificationsEnabled');
       alert('Permission refusée. Vérifiez les paramètres de notifications de votre appareil.');
     }
   }
@@ -383,6 +385,13 @@
     document.getElementById('iosInstructions').style.display = 'block';
   } else {
     document.getElementById('androidInstructions').style.display = 'block';
+  }
+
+  // Restaurer l'état du bouton notifications au chargement
+  if (localStorage.getItem('notificationsEnabled') === 'true') {
+    const btn = document.getElementById('notifyBtn');
+    btn.textContent = '✅ Notifications activées';
+    btn.classList.add('active');
   }
 
   if ('serviceWorker' in navigator) {
