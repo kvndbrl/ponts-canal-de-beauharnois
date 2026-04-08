@@ -2,48 +2,69 @@ const express = require('express');
 const webpush = require('web-push');
 const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
 const cors = require('cors');
-const fs = require('fs');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
-const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
-
 webpush.setVapidDetails(
   process.env.VAPID_EMAIL,
-  VAPID_PUBLIC_KEY,
-  VAPID_PRIVATE_KEY
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
 );
 
-// ── Persistent subscriptions ──────────────────────────────────────────
-const SUBS_FILE = '/tmp/subscriptions.json';
+// ── Upstash Redis helpers ─────────────────────────────────────────────
+const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-function loadSubscriptions() {
+async function redisCommand(...args) {
+  const res = await fetch(`${REDIS_URL}/${args.map(encodeURIComponent).join('/')}`, {
+    headers: { Authorization: `Bearer ${REDIS_TOKEN}` }
+  });
+  const data = await res.json();
+  return data.result;
+}
+
+async function loadSubscriptions() {
   try {
-    if (fs.existsSync(SUBS_FILE)) {
-      const data = fs.readFileSync(SUBS_FILE, 'utf8');
-      return JSON.parse(data);
+    const keys = await redisCommand('keys', 'sub:*');
+    if (!keys || keys.length === 0) return [];
+    const subs = [];
+    for (const key of keys) {
+      const val = await redisCommand('get', key);
+      if (val) subs.push(JSON.parse(val));
     }
+    console.log(`Loaded ${subs.length} subscriptions from Redis`);
+    return subs;
   } catch(e) {
     console.error('Error loading subscriptions:', e.message);
+    return [];
   }
-  return [];
 }
 
-function saveSubscriptions() {
+async function saveSubscription(sub) {
   try {
-    fs.writeFileSync(SUBS_FILE, JSON.stringify(subscriptions));
+    const key = `sub:${Buffer.from(sub.endpoint).toString('base64').slice(0, 50)}`;
+    await redisCommand('set', key, JSON.stringify(sub));
   } catch(e) {
-    console.error('Error saving subscriptions:', e.message);
+    console.error('Error saving subscription:', e.message);
   }
 }
 
-let subscriptions = loadSubscriptions();
+async function removeSubscription(sub) {
+  try {
+    const key = `sub:${Buffer.from(sub.endpoint).toString('base64').slice(0, 50)}`;
+    await redisCommand('del', key);
+  } catch(e) {
+    console.error('Error removing subscription:', e.message);
+  }
+}
+
+let subscriptions = [];
 let lastStatus = null;
 
-console.log(`Loaded ${subscriptions.length} subscriptions from disk`);
+// Load subscriptions on startup
+loadSubscriptions().then(subs => { subscriptions = subs; });
 
 // ── Bridge status fetch ───────────────────────────────────────────────
 async function fetchBridgeStatus() {
@@ -93,33 +114,27 @@ async function sendNotifications(status) {
   if (!msg) return;
 
   const payload = JSON.stringify({ ...msg, persistent: status !== 'disponible' });
-  console.log(`Sending notifications to ${subscriptions.length} subscribers for status: ${status}`);
+  console.log(`Sending to ${subscriptions.length} subscribers — status: ${status}`);
 
-  const failed = [];
-  for (const sub of subscriptions) {
+  for (const sub of [...subscriptions]) {
     try {
       await webpush.sendNotification(sub, payload);
     } catch(e) {
-      console.error('Failed to send notification:', e.message);
-      failed.push(sub);
+      console.error('Failed notification, removing sub:', e.message);
+      subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
+      await removeSubscription(sub);
     }
-  }
-
-  if (failed.length > 0) {
-    subscriptions = subscriptions.filter(s => !failed.includes(s));
-    saveSubscriptions();
-    console.log(`Removed ${failed.length} invalid subscriptions`);
   }
 }
 
-// ── Monitor bridge every 60 seconds ──────────────────────────────────
+// ── Monitor ───────────────────────────────────────────────────────────
 async function monitor() {
   try {
     const data = await fetchBridgeStatus();
     console.log(`[${new Date().toISOString()}] Status: ${data.status} (was: ${lastStatus})`);
 
     if (lastStatus !== null && lastStatus !== data.status) {
-      console.log(`Status changed from ${lastStatus} to ${data.status} — sending notifications`);
+      console.log(`Changed: ${lastStatus} → ${data.status}`);
       await sendNotifications(data.status);
     }
     lastStatus = data.status;
@@ -131,7 +146,7 @@ async function monitor() {
 setInterval(monitor, 60000);
 monitor();
 
-// ── Auto-ping to prevent sleep ────────────────────────────────────────
+// ── Auto-ping ─────────────────────────────────────────────────────────
 setInterval(async () => {
   try {
     await fetch('https://pont-st-louis-de-gonzague.onrender.com/ping');
@@ -155,11 +170,11 @@ app.get('/status', async (req, res) => {
   }
 });
 
-app.post('/subscribe', (req, res) => {
+app.post('/subscribe', async (req, res) => {
   const sub = req.body;
   if (!subscriptions.find(s => s.endpoint === sub.endpoint)) {
     subscriptions.push(sub);
-    saveSubscriptions();
+    await saveSubscription(sub);
     console.log(`New subscriber! Total: ${subscriptions.length}`);
   }
   res.json({ ok: true });
