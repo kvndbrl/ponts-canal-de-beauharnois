@@ -7,12 +7,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Génère tes clés VAPID avec: npx web-push generate-vapid-keys
-const VAPID_PUBLIC_KEY = 'VOTRE_VAPID_PUBLIC_KEY';
-const VAPID_PRIVATE_KEY = 'VOTRE_VAPID_PRIVATE_KEY';
+const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
+const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 
-webpush.setVapidDetails('mailto:ton@email.com', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
-
+webpush.setVapidDetails(
+  process.env.VAPID_EMAIL,
+  VAPID_PUBLIC_KEY,
+  VAPID_PRIVATE_KEY
+);
 let subscriptions = [];
 let lastStatus = null;
 
