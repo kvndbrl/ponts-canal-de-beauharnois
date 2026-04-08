@@ -133,9 +133,15 @@
       font-size: 12px;
       font-weight: 700;
       color: #333;
-      margin-bottom: 12px;
+      margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+    }
+
+    .install-subtitle {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 12px;
     }
 
     .install-steps {
@@ -179,7 +185,7 @@
     }
 
     .notify-btn {
-      display: block;
+      display: none;
       width: calc(100% - 32px);
       max-width: 420px;
       margin: 16px auto 0;
@@ -250,11 +256,12 @@
     <div class="refresh-section" id="refreshTime">Dernière mise à jour : —</div>
   </div>
 
-  <div class="install-card">
+  <div class="install-card" id="installCard">
     <p class="install-title">📲 Installer l'app</p>
+    <p class="install-subtitle">Installez l'app pour recevoir des notifications lors des levages</p>
 
     <div id="installedMsg" style="display:none;">
-      <p class="installed-msg">✅ L'app est déjà installée sur votre appareil !</p>
+      <p class="installed-msg">✅ L'app est installée ! Activez les notifications ci-dessous.</p>
     </div>
 
     <div id="iosInstructions" style="display:none;">
@@ -367,10 +374,11 @@
   // Détecter la plateforme et afficher les bonnes instructions
   const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const isAndroid = /Android/.test(navigator.userAgent);
 
   if (isInstalled) {
     document.getElementById('installedMsg').style.display = 'block';
+    document.getElementById('notifyBtn').style.display = 'block';
+    document.getElementById('installCard').style.display = 'none';
   } else if (isIOS) {
     document.getElementById('iosInstructions').style.display = 'block';
   } else {
