@@ -183,22 +183,45 @@
       font-weight: 700;
     }
 
-    .installed-msg {
-      font-size: 13px;
-      color: #2d4a1e;
+    .notify-btn {
+      display: none;
+      width: calc(100% - 32px);
+      max-width: 420px;
+      margin: 16px auto 0;
+      padding: 14px;
+      border-radius: 50px;
+      border: none;
+      background: #2d4a1e;
+      color: white;
+      font-family: 'Product Sans', sans-serif;
+      font-size: 15px;
       font-weight: 700;
-      margin-bottom: 12px;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      transition: background 0.2s;
     }
 
-    .bridge-prefs {
+    .notify-btn:hover { background: #3d6a2e; }
+    .notify-btn.active { background: #888; }
+
+    .prefs-card {
       display: none;
-      margin-top: 8px;
+      width: calc(100% - 32px);
+      max-width: 420px;
+      margin: 12px auto 0;
+      padding: 16px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
     }
 
     .bridge-prefs-title {
       font-size: 12px;
       color: #555;
       margin-bottom: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .pref-item {
@@ -224,27 +247,6 @@
       color: #333;
       font-weight: 500;
     }
-
-    .notify-btn {
-      display: none;
-      width: calc(100% - 32px);
-      max-width: 420px;
-      margin: 16px auto 0;
-      padding: 14px;
-      border-radius: 50px;
-      border: none;
-      background: #2d4a1e;
-      color: white;
-      font-family: 'Product Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-      transition: background 0.2s;
-    }
-
-    .notify-btn:hover { background: #3d6a2e; }
-    .notify-btn.active { background: #888; }
 
     .unsub-btn {
       display: none;
@@ -339,24 +341,10 @@
     <div class="refresh-section" id="refreshLarocque">—</div>
   </div>
 
-  <div class="install-card" id="installCard">
+  <!-- Instructions d'installation (seulement si pas installé) -->
+  <div class="install-card" id="installCard" style="display:none;">
     <p class="install-title" id="installTitle">📲 Installer l'app</p>
     <p class="install-subtitle" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</p>
-
-    <div id="installedMsg" style="display:none;">
-      <p class="installed-msg" id="installedMsgText">✅ L'app est installée !</p>
-      <p class="bridge-prefs-title" id="prefTitle">Choisissez les notifications à recevoir :</p>
-      <div class="bridge-prefs" id="bridgePrefs">
-        <label class="pref-item">
-          <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"/>
-          <span class="pref-label">🌉 Pont St-Louis-de-Gonzague</span>
-        </label>
-        <label class="pref-item">
-          <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"/>
-          <span class="pref-label">🌉 Pont Larocque (Valleyfield)</span>
-        </label>
-      </div>
-    </div>
 
     <div id="iosInstructions" style="display:none;">
       <ul class="install-steps">
@@ -376,9 +364,23 @@
     </div>
   </div>
 
+  <!-- Bouton notifications (seulement si installé) -->
   <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()">
     🔔 Activer les notifications
   </button>
+
+  <!-- Cases à cocher (seulement après activation) -->
+  <div class="prefs-card" id="prefsCard">
+    <p class="bridge-prefs-title" id="prefTitle">Notifications</p>
+    <label class="pref-item">
+      <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"/>
+      <span class="pref-label">🌉 Pont St-Louis-de-Gonzague</span>
+    </label>
+    <label class="pref-item">
+      <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"/>
+      <span class="pref-label">🌉 Pont Larocque (Valleyfield)</span>
+    </label>
+  </div>
 
   <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">
     Désactiver les notifications
@@ -404,11 +406,10 @@
       liftsTitle: '🚢 Levages dans les 60 prochaines minutes',
       noLifts: 'Aucun levage prévu',
       lastRefresh: 'Mis à jour',
-      installTitle: '📱 Installer l\'app',
+      installTitle: '📲 Installer l\'app',
       installSubtitle: 'Installez l\'app pour recevoir des notifications lors des levages',
-      installedMsg: '✅ L\'app est installée !',
-      prefTitle: 'Choisissez les notifications à recevoir :',
-      notifyBtn: '📲 Activer les notifications',
+      prefTitle: 'Notifications',
+      notifyBtn: '🔔 Activer les notifications',
       notifyActive: '✅ Notifications activées',
       unsubBtn: 'Désactiver les notifications',
       supportText: 'Soutenir ce projet',
@@ -432,11 +433,10 @@
       liftsTitle: '🚢 Bridge lifts in the next 60 minutes',
       noLifts: 'No anticipated bridge lifts',
       lastRefresh: 'Updated',
-      installTitle: '📱 Install the app',
+      installTitle: '📲 Install the app',
       installSubtitle: 'Install the app to receive notifications for bridge lifts',
-      installedMsg: '✅ App installed!',
-      prefTitle: 'Choose which notifications to receive:',
-      notifyBtn: '📲 Enable notifications',
+      prefTitle: 'Notifications',
+      notifyBtn: '🔔 Enable notifications',
       notifyActive: '✅ Notifications enabled',
       unsubBtn: 'Disable notifications',
       supportText: 'Support this project',
@@ -504,19 +504,19 @@
     const t = translations[currentLang];
     const notifyBtn = document.getElementById('notifyBtn');
     const unsubBtn = document.getElementById('unsubBtn');
-    const bridgePrefs = document.getElementById('bridgePrefs');
+    const prefsCard = document.getElementById('prefsCard');
 
     if (isEnabled) {
       notifyBtn.textContent = t.notifyActive;
       notifyBtn.classList.add('active');
       unsubBtn.style.display = 'block';
       unsubBtn.textContent = t.unsubBtn;
-      bridgePrefs.style.display = 'block';
+      prefsCard.style.display = 'block';
     } else {
       notifyBtn.textContent = t.notifyBtn;
       notifyBtn.classList.remove('active');
       unsubBtn.style.display = 'none';
-      bridgePrefs.style.display = 'none';
+      prefsCard.style.display = 'none';
     }
   }
 
@@ -543,7 +543,6 @@
     const t = translations[currentLang];
     document.getElementById('installTitle').textContent = t.installTitle;
     document.getElementById('installSubtitle').textContent = t.installSubtitle;
-    document.getElementById('installedMsgText').textContent = t.installedMsg;
     document.getElementById('prefTitle').textContent = t.prefTitle;
     document.getElementById('supportText').textContent = t.supportText;
     document.getElementById('langBtn').textContent = t.langBtn;
@@ -647,14 +646,12 @@
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   if (isInstalled) {
-    document.getElementById('installedMsg').style.display = 'block';
     document.getElementById('notifyBtn').style.display = 'block';
-    document.getElementById('installCard').style.display = 'block';
-    document.getElementById('installTitle').style.display = 'none';
-    document.getElementById('installSubtitle').style.display = 'none';
   } else if (isIOS) {
+    document.getElementById('installCard').style.display = 'block';
     document.getElementById('iosInstructions').style.display = 'block';
   } else {
+    document.getElementById('installCard').style.display = 'block';
     document.getElementById('androidInstructions').style.display = 'block';
   }
 
