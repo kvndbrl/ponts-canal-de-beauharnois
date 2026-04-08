@@ -204,6 +204,13 @@
   <div class="error" id="errorMsg"></div>
 
 <script>
+  window.va = window.va || function () { 
+    (window.vaq = window.vaq || []).push(arguments); 
+  };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+
+<script>
   const BACKEND_URL = 'https://pont-st-louis-de-gonzague.onrender.com';
   const statusLabels = {
     disponible: 'DISPONIBLE',
