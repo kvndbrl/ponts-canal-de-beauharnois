@@ -31,23 +31,21 @@ async function fetchBridgeStatus() {
   );
   const html = await res.text();
 
-  // Extraire le bloc spécifique au pont Gonzague
-  const gonzagueMatch = html.match(/St[\-\s]Louis[\-\s]de[\-\s]Gonzague[\s\S]{0,2000}?(?=Larocque|Valleyfield|<\/body>)/i);
-  const section = gonzagueMatch ? gonzagueMatch[0] : html;
-
-  // Extraire la couleur dans ce bloc
-  const colorMatch = section.match(/background-color:\s*(#[A-Fa-f0-9]{6})/i);
+  // La couleur est AVANT le nom du pont dans le HTML
+  const colorMatch = html.match(/background-color:\s*(#[A-Fa-f0-9]{6})[^<]*<[^<]*St[\-\s]Louis[\-\s]de[\-\s]Gonzague/i);
   const color = colorMatch ? colorMatch[1].toUpperCase() : '#C1D6A8';
 
   let status = 'disponible';
   if (color === '#E48082') status = 'leve';
   else if (color === '#FEEAA8') status = 'bientot_leve';
 
-  // Extraire les levages
+  // Extraire le bloc Gonzague pour les levages
+  const gonzagueMatch = html.match(/St[\-\s]Louis[\-\s]de[\-\s]Gonzague[\s\S]{0,2000}?(?=Larocque|Valleyfield|<\/body>)/i);
+  const section = gonzagueMatch ? gonzagueMatch[0] : html;
+
   const liftsMatch = section.match(/item-data[^>]*>([^<]+)/);
   const next_lifts = liftsMatch ? liftsMatch[1].trim() : 'No anticipated bridge lifts';
 
-  // Extraire la dernière mise à jour
   const refreshMatch = html.match(/Last Refreshed at[:\s]*([\d\-: ]+)/i);
   const last_refreshed = refreshMatch ? refreshMatch[1].trim() : '';
 
