@@ -1,0 +1,21 @@
+{
+  "name": "Pont St-Louis-de-Gonzague",
+  "short_name": "Pont Gonzague",
+  "description": "Statut en temps réel du pont St-Louis-de-Gonzague",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#C1D6A8",
+  "theme_color": "#2d4a1e",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#C1D6A8"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Pont Gonzague"/>
+  <link rel="manifest" href="manifest.json"/>
+  <title>Pont St-Louis-de-Gonzague</title>
+  <style>
+    @font-face {
+      font-family: 'Product Sans';
+      src: url('fonts/ProductSans-Regular.ttf');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Product Sans';
+      src: url('fonts/ProductSans-Bold.ttf');
+      font-weight: 700;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Product Sans', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 24px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      background: white;
+    }
+
+    .logo-section {
+      background: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .logo-section img {
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .status-section {
+      padding: 28px 20px;
+      text-align: center;
+      transition: background-color 0.5s ease;
+    }
+
+    .status-section.disponible { background-color: #C1D6A8; }
+    .status-section.bientot_leve { background-color: #FEEAA8; }
+    .status-section.leve {
+      background-color: #E48082;
+      animation: pulse 1.5s infinite;
+    }
+    .status-section.bientot_leve { animation: pulse 2.5s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .status-label {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .status-section.disponible .status-label { color: #2d4a1e; }
+    .status-section.bientot_leve .status-label { color: #5a4000; }
+    .status-section.leve .status-label { color: white; }
+
+    .bridge-name {
+      font-size: 13px;
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+
+    .status-section.disponible .bridge-name { color: #2d4a1e; }
+    .status-section.bientot_leve .bridge-name { color: #5a4000; }
+    .status-section.leve .bridge-name { color: white; }
+
+    .lifts-section {
+      padding: 16px 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .lifts-title {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .lifts-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .refresh-section {
+      padding: 10px 20px 16px;
+      font-size: 11px;
+      color: #aaa;
+      text-align: right;
+    }
+
+    .notify-btn {
+      display: block;
+      width: calc(100% - 32px);
+      max-width: 420px;
+      margin: 16px auto 0;
+      padding: 14px;
+      border-radius: 50px;
+      border: none;
+      background: #2d4a1e;
+      color: white;
+      font-family: 'Product Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      transition: background 0.2s;
+    }
+
+    .notify-btn:hover { background: #3d6a2e; }
+    .notify-btn.active { background: #888; }
+
+    .error {
+      color: #E48082;
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo-section">
+      <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Seaway"/>
+    </div>
+
+    <div class="status-section disponible" id="statusSection">
+      <div class="bridge-name">Pont St-Louis-de-Gonzague</div>
+      <div class="status-label" id="statusLabel">Chargement...</div>
+    </div>
+
+    <div class="lifts-section">
+      <div class="lifts-title">🚢 Levages dans les 60 prochaines minutes</div>
+      <div class="lifts-value" id="liftsValue">—</div>
+    </div>
+
+    <div class="refresh-section" id="refreshTime">Dernière mise à jour : —</div>
+  </div>
+
+  <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()">
+    🔔 Activer les notifications
+  </button>
+
+  <div class="error" id="errorMsg"></div>
+
+<script>
+  const BACKEND_URL = 'https://VOTRE-APP.onrender.com'; // À remplacer
+
+  const statusLabels = {
+    disponible: 'DISPONIBLE',
+    bientot_leve: 'LEVAGE IMMINENT',
+    leve: 'LEVÉ'
+  };
+
+  async function fetchStatus() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/status`);
+      const data = await res.json();
+
+      const section = document.getElementById('statusSection');
+      const label = document.getElementById('statusLabel');
+      const lifts = document.getElementById('liftsValue');
+      const refresh = document.getElementById('refreshTime');
+
+      section.className = `status-section ${data.status}`;
+      label.textContent = statusLabels[data.status] || data.status;
+      lifts.textContent = data.next_lifts
+        .replace('No anticipated bridge lifts', 'Aucun levage prévu');
+      refresh.textContent = `Dernière mise à jour : ${data.last_refreshed}`;
+
+    } catch(e) {
+      document.getElementById('errorMsg').textContent = 'Impossible de contacter le serveur.';
+    }
+  }
+
+  async function toggleNotifications() {
+    const btn = document.getElementById('notifyBtn');
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: 'VOTRE_VAPID_PUBLIC_KEY' // À remplacer
+      });
+      await fetch(`${BACKEND_URL}/subscribe`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(sub)
+      });
+      btn.textContent = '✅ Notifications activées';
+      btn.classList.add('active');
+    }
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+
+  fetchStatus();
+  setInterval(fetchStatus, 60000);
+</script>
+</body>
+</html>

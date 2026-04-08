@@ -1,0 +1,111 @@
+const express = require('express');
+const webpush = require('web-push');
+const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Génère tes clés VAPID avec: npx web-push generate-vapid-keys
+const VAPID_PUBLIC_KEY = 'VOTRE_VAPID_PUBLIC_KEY';
+const VAPID_PRIVATE_KEY = 'VOTRE_VAPID_PRIVATE_KEY';
+
+webpush.setVapidDetails('mailto:ton@email.com', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+
+let subscriptions = [];
+let lastStatus = null;
+
+const COLORS = {
+  disponible: '#C1D6A8',
+  bientot_leve: '#FEEAA8',
+  leve: '#E48082'
+};
+
+async function fetchBridgeStatus() {
+  const res = await fetch(
+    'https://www.seaway-greatlakes.com/bridgestatus/detailsmai2?key=BridgeSBS',
+    { headers: { 'User-Agent': 'Mozilla/5.0' } }
+  );
+  const html = await res.text();
+
+  // Extraire la couleur du pont Gonzague
+  const sectionMatch = html.match(/St[\-\s]Louis[\-\s]de[\-\s]Gonzague[\s\S]{0,500}?background-color:\s*(#[A-Fa-f0-9]{6})/i);
+  const color = sectionMatch ? sectionMatch[1].toUpperCase() : '#C1D6A8';
+
+  let status = 'disponible';
+  if (color === '#E48082') status = 'leve';
+  else if (color === '#FEEAA8') status = 'bientot_leve';
+
+  // Extraire les levages
+  const liftsMatch = html.match(/item-data[^>]*>([^<]+)</);
+  const next_lifts = liftsMatch ? liftsMatch[1].trim() : 'No anticipated bridge lifts';
+
+  // Extraire la dernière mise à jour
+  const refreshMatch = html.match(/Last Refreshed at[:\s]*([\d\-: ]+)/i);
+  const last_refreshed = refreshMatch ? refreshMatch[1].trim() : '';
+
+  return { status, next_lifts, last_refreshed };
+}
+
+async function sendNotifications(status) {
+  const messages = {
+    bientot_leve: { title: '⚠️ Pont levé dans moins de 15 min', body: 'Le pont St-Louis-de-Gonzague sera levé sous peu.' },
+    leve: { title: '🚢 Pont levé', body: 'Le pont St-Louis-de-Gonzague est levé pour laisser passer un navire.' },
+    disponible: { title: '✅ Pont disponible', body: 'Le pont St-Louis-de-Gonzague est de nouveau ouvert à la circulation.' }
+  };
+
+  const msg = messages[status];
+  if (!msg) return;
+
+  const payload = JSON.stringify({ ...msg, persistent: status !== 'disponible' });
+
+  for (const sub of subscriptions) {
+    try {
+      await webpush.sendNotification(sub, payload);
+    } catch (e) {
+      subscriptions = subscriptions.filter(s => s !== sub);
+    }
+  }
+}
+
+// Surveille le pont toutes les 60 secondes
+async function monitor() {
+  try {
+    const data = await fetchBridgeStatus();
+    if (lastStatus && lastStatus !== data.status) {
+      await sendNotifications(data.status);
+    }
+    lastStatus = data.status;
+    console.log(`[${new Date().toISOString()}] Status: ${data.status}`);
+  } catch (e) {
+    console.error('Erreur:', e.message);
+  }
+}
+
+setInterval(monitor, 60000);
+monitor();
+
+// Routes
+app.get('/status', async (req, res) => {
+  try {
+    const data = await fetchBridgeStatus();
+    res.json(data);
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/subscribe', (req, res) => {
+  const sub = req.body;
+  if (!subscriptions.find(s => s.endpoint === sub.endpoint)) {
+    subscriptions.push(sub);
+    console.log('Nouvel abonné, total:', subscriptions.length);
+  }
+  res.json({ ok: true });
+});
+
+app.get('/', (req, res) => res.send('Pont St-Louis-de-Gonzague API'));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
