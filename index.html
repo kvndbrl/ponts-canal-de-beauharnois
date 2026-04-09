@@ -21,11 +21,33 @@
       font-weight: 700;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
+
+    :root {
+      --bg: #f5f5f5;
+      --card-bg: white;
+      --text: #333;
+      --text-secondary: #888;
+      --text-light: #aaa;
+      --divider: #eee;
+      --divider-dark: #f0f0f0;
+      --shadow: rgba(0,0,0,0.12);
+    }
+
+    body.dark {
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --text: #f0f0f0;
+      --text-secondary: #aaa;
+      --text-light: #666;
+      --divider: #333;
+      --divider-dark: #2a2a2a;
+      --shadow: rgba(0,0,0,0.4);
+    }
 
     body {
       font-family: 'Product Sans', sans-serif;
-      background: #f5f5f5;
+      background: var(--bg);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -39,29 +61,43 @@
       max-width: 420px;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-      background: white;
+      box-shadow: 0 4px 24px var(--shadow);
+      background: var(--card-bg);
       margin-bottom: 16px;
     }
 
-    .logo-section {
-      background: white;
+    .logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 16px 20px;
-      text-align: center;
+      background: var(--card-bg);
     }
 
-    .logo-section img {
+    .logo-row img {
       height: 45px;
       object-fit: contain;
     }
+
+    .dark-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 22px;
+      padding: 4px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .dark-toggle:hover { background: var(--divider); }
 
     .bridge-card {
       width: 100%;
       max-width: 420px;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-      background: white;
+      box-shadow: 0 4px 24px var(--shadow);
+      background: var(--card-bg);
       margin-bottom: 12px;
     }
 
@@ -69,10 +105,10 @@
       padding: 10px 16px 6px;
       font-size: 11px;
       font-weight: 700;
-      color: #888;
+      color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--divider);
     }
 
     .status-section {
@@ -102,12 +138,12 @@
 
     .lifts-section {
       padding: 12px 16px;
-      border-top: 1px solid #eee;
+      border-top: 1px solid var(--divider);
     }
 
     .lifts-title {
       font-size: 11px;
-      color: #888;
+      color: var(--text-secondary);
       margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -116,13 +152,13 @@
     .lifts-value {
       font-size: 14px;
       font-weight: 700;
-      color: #333;
+      color: var(--text);
     }
 
     .refresh-section {
       padding: 6px 16px 12px;
       font-size: 11px;
-      color: #aaa;
+      color: var(--text-light);
       text-align: right;
     }
 
@@ -131,15 +167,15 @@
       max-width: 420px;
       margin: 4px auto 0;
       padding: 16px 20px;
-      background: white;
+      background: var(--card-bg);
       border-radius: 20px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 24px var(--shadow);
     }
 
     .install-title {
       font-size: 12px;
       font-weight: 700;
-      color: #333;
+      color: var(--text);
       margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -147,7 +183,7 @@
 
     .install-subtitle {
       font-size: 12px;
-      color: #888;
+      color: var(--text-secondary);
       margin-bottom: 12px;
     }
 
@@ -158,9 +194,9 @@
 
     .install-steps li {
       font-size: 13px;
-      color: #555;
+      color: var(--text-secondary);
       padding: 8px 0;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--divider-dark);
       display: flex;
       align-items: center;
       gap: 10px;
@@ -202,7 +238,7 @@
     }
 
     .notify-btn:hover { background: #3d6a2e; }
-    .notify-btn.active { background: #888; }
+    .notify-btn.active { background: #555; }
 
     .prefs-card {
       display: none;
@@ -210,14 +246,14 @@
       max-width: 420px;
       margin: 12px auto 0;
       padding: 16px;
-      background: white;
+      background: var(--card-bg);
       border-radius: 20px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 24px var(--shadow);
     }
 
     .bridge-prefs-title {
       font-size: 12px;
-      color: #555;
+      color: var(--text-secondary);
       margin-bottom: 8px;
       font-weight: 700;
       text-transform: uppercase;
@@ -229,7 +265,7 @@
       align-items: center;
       gap: 10px;
       padding: 8px 0;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--divider-dark);
       cursor: pointer;
     }
 
@@ -244,7 +280,7 @@
 
     .pref-label {
       font-size: 13px;
-      color: #333;
+      color: var(--text);
       font-weight: 500;
     }
 
@@ -255,25 +291,33 @@
       margin: 8px auto 0;
       padding: 10px;
       border-radius: 50px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--divider);
       background: transparent;
-      color: #aaa;
+      color: var(--text-light);
       font-family: 'Product Sans', sans-serif;
       font-size: 13px;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .unsub-btn:hover { background: #f5f5f5; color: #888; }
+    .unsub-btn:hover { background: var(--divider-dark); }
+
+    .bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 12px auto 0;
+      width: calc(100% - 32px);
+      max-width: 420px;
+    }
 
     .lang-btn {
-      display: block;
-      margin: 12px auto 0;
       background: none;
       border: none;
       font-family: 'Product Sans', sans-serif;
       font-size: 12px;
-      color: #aaa;
+      color: var(--text-light);
       cursor: pointer;
       text-decoration: underline;
     }
@@ -283,7 +327,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin: 12px auto 24px;
+      margin: 12px auto 8px;
       padding: 12px 24px;
       background: #003087;
       color: white;
@@ -300,6 +344,20 @@
 
     .paypal-btn:hover { background: #002060; }
 
+    .disclaimer {
+      width: calc(100% - 32px);
+      max-width: 420px;
+      margin: 8px auto 24px;
+      font-size: 10px;
+      color: var(--text-light);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .disclaimer a {
+      color: var(--text-light);
+    }
+
     .error {
       color: #E48082;
       text-align: center;
@@ -312,8 +370,9 @@
 <body>
 
   <div class="header-card">
-    <div class="logo-section">
+    <div class="logo-row">
       <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Seaway"/>
+      <button class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</button>
     </div>
   </div>
 
@@ -341,7 +400,6 @@
     <div class="refresh-section" id="refreshLarocque">—</div>
   </div>
 
-  <!-- Instructions d'installation (seulement si pas installé) -->
   <div class="install-card" id="installCard" style="display:none;">
     <p class="install-title" id="installTitle">📲 Installer l'app</p>
     <p class="install-subtitle" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</p>
@@ -364,12 +422,10 @@
     </div>
   </div>
 
-  <!-- Bouton notifications (seulement si installé) -->
   <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()">
     🔔 Activer les notifications
   </button>
 
-  <!-- Cases à cocher (seulement après activation) -->
   <div class="prefs-card" id="prefsCard">
     <p class="bridge-prefs-title" id="prefTitle">Notifications</p>
     <label class="pref-item">
@@ -386,7 +442,9 @@
     Désactiver les notifications
   </button>
 
-  <button class="lang-btn" id="langBtn" onclick="toggleLang()">English</button>
+  <div class="bottom-row">
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">English</button>
+  </div>
 
   <a href="https://paypal.me/kvndbrl" target="_blank" class="paypal-btn">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
@@ -394,6 +452,10 @@
     </svg>
     <span id="supportText">Soutenir ce projet</span>
   </a>
+
+  <p class="disclaimer" id="disclaimer">
+    Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.
+  </p>
 
   <div class="error" id="errorMsg"></div>
 
@@ -427,6 +489,7 @@
       and1: 'Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome',
       and2: 'Sélectionnez <strong>Ajouter à l\'écran d\'accueil</strong>',
       and3: 'Appuyez sur <strong>Ajouter</strong>',
+      disclaimer: 'Cette application est indépendante et n\'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.',
     },
     en: {
       statusLabels: { disponible: 'AVAILABLE', bientot_leve: 'LIFT IMMINENT', leve: 'LIFTED' },
@@ -454,6 +517,7 @@
       and1: 'Tap the <strong>3 dots</strong> ⋮ in the top right of Chrome',
       and2: 'Select <strong>Add to Home Screen</strong>',
       and3: 'Tap <strong>Add</strong>',
+      disclaimer: 'This app is independent and is not affiliated with the St. Lawrence Seaway Management Corporation or the Great Lakes St. Lawrence Seaway System. Data is sourced from the official website <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.',
     }
   };
 
@@ -462,6 +526,24 @@
     (browserLang.startsWith('en') ? 'en' : 'fr');
 
   let lastData = null;
+
+  function applyDark(dark) {
+    document.body.classList.toggle('dark', dark);
+    document.getElementById('darkToggle').textContent = dark ? '☀️' : '🌙';
+  }
+
+  function toggleDark() {
+    const isDark = !document.body.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark ? '1' : '0');
+    applyDark(isDark);
+  }
+
+  const savedDark = localStorage.getItem('darkMode');
+  if (savedDark !== null) {
+    applyDark(savedDark === '1');
+  } else {
+    applyDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
 
   function getSelectedBridges() {
     const bridges = [];
@@ -546,6 +628,7 @@
     document.getElementById('prefTitle').textContent = t.prefTitle;
     document.getElementById('supportText').textContent = t.supportText;
     document.getElementById('langBtn').textContent = t.langBtn;
+    document.getElementById('disclaimer').innerHTML = t.disclaimer;
     document.getElementById('ios1').innerHTML = t.ios1;
     document.getElementById('ios2').innerHTML = t.ios2;
     document.getElementById('ios3').innerHTML = t.ios3;
@@ -641,7 +724,6 @@
     updateNotifyButtons();
   }
 
-  // Détecter la plateforme
   const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
