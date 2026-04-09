@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#0a0e1a"/>
+  <meta name="theme-color" content="#080b14"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Ponts Beauharnois"/>
@@ -28,15 +28,15 @@
       --surface2: #f7f8fa;
       --border: rgba(0,0,0,0.06);
       --text: #0a0e1a;
-      --text2: #5a6478;
-      --text3: #9ba3b8;
-      --green: #2a7a3b;
+      --text2: #3d4a60;
+      --text3: #5a6680;
+      --green: #1a5c2a;
       --green-bg: #e8f5eb;
-      --yellow: #7a6200;
+      --yellow: #5a4800;
       --yellow-bg: #fef9e6;
-      --red: #c0392b;
+      --red: #9b2318;
       --red-bg: #fdecea;
-      --accent: #0066ff;
+      --accent: #0055dd;
       --wave-color: #0066ff;
       --wave-opacity: 0.07;
       --shadow: 0 2px 16px rgba(0,0,0,0.08);
@@ -49,16 +49,16 @@
       --bg: #080b14;
       --surface: #111827;
       --surface2: #161d2e;
-      --border: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
       --text: #f0f4ff;
-      --text2: #8899bb;
-      --text3: #4a5570;
-      --green: #4ade80;
-      --green-bg: rgba(74,222,128,0.1);
-      --yellow: #fbbf24;
-      --yellow-bg: rgba(251,191,36,0.1);
-      --red: #f87171;
-      --red-bg: rgba(248,113,113,0.1);
+      --text2: #a8b8d8;
+      --text3: #7a8aaa;
+      --green: #3ddd6a;
+      --green-bg: rgba(61,221,106,0.12);
+      --yellow: #f0b020;
+      --yellow-bg: rgba(240,176,32,0.12);
+      --red: #f06060;
+      --red-bg: rgba(240,96,96,0.12);
       --accent: #4d9fff;
       --wave-color: #4d9fff;
       --wave-opacity: 0.18;
@@ -98,12 +98,7 @@
       animation: waveScroll 18s linear infinite;
     }
 
-    .waves-track svg {
-      width: 50%;
-      height: 100%;
-      flex-shrink: 0;
-    }
-
+    .waves-track svg { width: 50%; height: 100%; flex-shrink: 0; }
     .wave1 { fill: var(--wave-color); opacity: var(--wave-opacity); }
     .wave2 { fill: var(--wave-color); opacity: calc(var(--wave-opacity) * 0.6); }
 
@@ -112,8 +107,8 @@
       to { transform: translateX(-50%); }
     }
 
-    /* z-index for content above waves */
-    .header, .bridge-card, .install-card, .notify-btn,
+    /* z-index */
+    .header, main, .bridge-card, .install-card, .notify-btn,
     .prefs-card, .unsub-btn, .bottom-bar, .disclaimer,
     .error, .spacer { position: relative; z-index: 1; }
 
@@ -161,7 +156,7 @@
     .toggle-slider {
       position: absolute;
       inset: 0;
-      background: #dde2ec;
+      background: #b0b8cc;
       border-radius: 20px;
       transition: background 0.3s;
     }
@@ -176,16 +171,23 @@
       background: white;
       border-radius: 50%;
       transition: transform 0.3s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
 
     .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
     .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
 
-    /* ── BRIDGE CARDS ── */
-    .bridge-card {
+    /* ── MAIN ── */
+    main {
       width: 100%;
       max-width: 430px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    /* ── BRIDGE CARDS ── */
+    .bridge-card {
       background: var(--surface);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -195,8 +197,8 @@
       animation: fadeUp 0.4s ease both;
     }
 
-    .bridge-card:nth-child(3) { animation-delay: 0.05s; }
-    .bridge-card:nth-child(4) { animation-delay: 0.1s; }
+    .bridge-card:nth-child(1) { animation-delay: 0s; }
+    .bridge-card:nth-child(2) { animation-delay: 0.05s; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(12px); }
@@ -256,9 +258,9 @@
     .lifts-icon { font-size: 15px; margin-top: 2px; flex-shrink: 0; }
 
     .lifts-label {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 600;
-      letter-spacing: 1.2px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--text3);
       font-family: var(--mono);
@@ -269,7 +271,7 @@
 
     .refresh-time {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       color: var(--text3);
       margin-left: auto;
       align-self: flex-end;
@@ -278,15 +280,13 @@
 
     /* ── INSTALL CARD ── */
     .install-card {
-      width: 100%;
-      max-width: 430px;
       background: var(--surface);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
       padding: 20px;
       margin-bottom: 12px;
-      animation: fadeUp 0.4s 0.15s ease both;
+      animation: fadeUp 0.4s 0.1s ease both;
     }
 
     .install-card-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
@@ -321,7 +321,6 @@
     .notify-btn {
       display: none;
       width: 100%;
-      max-width: 430px;
       padding: 15px;
       border-radius: 50px;
       border: none;
@@ -331,9 +330,9 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0,102,255,0.3);
+      box-shadow: 0 4px 20px rgba(0,85,221,0.35);
       transition: all 0.2s;
-      animation: fadeUp 0.4s 0.2s ease both;
+      animation: fadeUp 0.4s 0.15s ease both;
       letter-spacing: 0.2px;
     }
 
@@ -349,8 +348,6 @@
     /* ── PREFS CARD ── */
     .prefs-card {
       display: none;
-      width: 100%;
-      max-width: 430px;
       background: var(--surface);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -360,9 +357,9 @@
     }
 
     .prefs-title {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       color: var(--text3);
       font-family: var(--mono);
@@ -388,7 +385,7 @@
     .pref-slider {
       position: absolute;
       inset: 0;
-      background: #dde2ec;
+      background: #b0b8cc;
       border-radius: 26px;
       transition: background 0.3s;
     }
@@ -403,7 +400,7 @@
       background: white;
       border-radius: 50%;
       transition: transform 0.3s;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
     }
 
     .pref-toggle input:checked + .pref-slider { background: var(--accent); }
@@ -415,7 +412,7 @@
       background: none;
       border: none;
       font-family: var(--sans);
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text3);
       cursor: pointer;
       padding: 10px;
@@ -426,7 +423,6 @@
 
     .bottom-bar {
       width: 100%;
-      max-width: 430px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -438,11 +434,14 @@
       background: none;
       border: none;
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text3);
       cursor: pointer;
       letter-spacing: 0.5px;
+      padding: 4px 8px;
     }
+
+    .lang-btn:hover { color: var(--text2); }
 
     .paypal-btn {
       display: flex;
@@ -464,16 +463,15 @@
 
     .disclaimer {
       width: 100%;
-      max-width: 430px;
       margin-top: 20px;
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text3);
       text-align: center;
       line-height: 1.7;
       padding: 0 8px;
     }
 
-    .disclaimer a { color: var(--text3); text-decoration: underline; text-underline-offset: 2px; }
+    .disclaimer a { color: var(--text2); text-decoration: underline; text-underline-offset: 2px; }
 
     .error {
       color: var(--red);
@@ -489,14 +487,14 @@
 </head>
 <body>
 
-  <!-- WAVES — horizontal scroll only -->
-  <div class="waves-bg" aria-hidden="true">
+  <!-- WAVES -->
+  <div class="waves-bg" aria-hidden="true" role="presentation">
     <div class="waves-track">
-      <svg viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path class="wave1" d="M0,70 C120,50 240,90 360,70 C480,50 600,90 720,70 C840,50 960,90 1080,70 C1200,50 1320,90 1440,70 L1440,140 L0,140 Z"/>
         <path class="wave2" d="M0,90 C100,70 200,105 300,90 C400,75 500,105 600,90 C700,75 800,105 900,90 C1000,75 1100,105 1200,90 C1300,75 1370,95 1440,90 L1440,140 L0,140 Z"/>
       </svg>
-      <svg viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path class="wave1" d="M0,70 C120,50 240,90 360,70 C480,50 600,90 720,70 C840,50 960,90 1080,70 C1200,50 1320,90 1440,70 L1440,140 L0,140 Z"/>
         <path class="wave2" d="M0,90 C100,70 200,105 300,90 C400,75 500,105 600,90 C700,75 800,105 900,90 C1000,75 1100,105 1200,90 C1300,75 1370,95 1440,90 L1440,140 L0,140 Z"/>
       </svg>
@@ -504,118 +502,127 @@
   </div>
 
   <!-- HEADER -->
-  <div class="header">
+  <header class="header">
     <div class="logo-pill">
-      <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Seaway"/>
+      <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Great Lakes St. Lawrence Seaway System"/>
     </div>
     <div class="toggle-wrap">
-      <span class="toggle-icon">☀️</span>
-      <label class="toggle-switch">
-        <input type="checkbox" id="darkToggleInput" onchange="toggleDark()"/>
+      <span class="toggle-icon" aria-hidden="true">☀️</span>
+      <label class="toggle-switch" aria-label="Mode sombre">
+        <input type="checkbox" id="darkToggleInput" onchange="toggleDark()" role="switch" aria-checked="false"/>
         <span class="toggle-slider"></span>
       </label>
-      <span class="toggle-icon">🌙</span>
+      <span class="toggle-icon" aria-hidden="true">🌙</span>
     </div>
-  </div>
+  </header>
 
-  <!-- PONT GONZAGUE -->
-  <div class="bridge-card">
-    <div class="bridge-name">Pont St-Louis-de-Gonzague</div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillGonzague">
-        <span class="status-dot"></span>
-        <span id="labelGonzague">Chargement...</span>
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- PONT GONZAGUE -->
+    <section class="bridge-card" aria-label="Pont St-Louis-de-Gonzague">
+      <div class="bridge-name" aria-hidden="true">Pont St-Louis-de-Gonzague</div>
+      <div class="status-block">
+        <div class="status-pill disponible" id="pillGonzague" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="labelGonzague">Chargement...</span>
+        </div>
       </div>
+      <div class="lifts-block">
+        <span class="lifts-icon" aria-hidden="true">🚢</span>
+        <div>
+          <div class="lifts-label" id="liftsTitleGonzague">Levages — 60 min</div>
+          <div class="lifts-value" id="liftsGonzague" aria-live="polite">—</div>
+        </div>
+        <div class="refresh-time" id="refreshGonzague" aria-label="Dernière mise à jour">—</div>
+      </div>
+    </section>
+
+    <!-- PONT LAROCQUE -->
+    <section class="bridge-card" aria-label="Pont Larocque">
+      <div class="bridge-name" aria-hidden="true">Pont Larocque — Valleyfield</div>
+      <div class="status-block">
+        <div class="status-pill disponible" id="pillLarocque" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="labelLarocque">Chargement...</span>
+        </div>
+      </div>
+      <div class="lifts-block">
+        <span class="lifts-icon" aria-hidden="true">🚢</span>
+        <div>
+          <div class="lifts-label" id="liftsTitleLarocque">Levages — 60 min</div>
+          <div class="lifts-value" id="liftsLarocque" aria-live="polite">—</div>
+        </div>
+        <div class="refresh-time" id="refreshLarocque" aria-label="Dernière mise à jour">—</div>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <!-- INSTALL CARD -->
+    <div class="install-card" id="installCard" style="display:none;">
+      <div class="install-card-title" id="installTitle">📲 Installer l'app</div>
+      <div class="install-card-sub" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</div>
+      <ul class="steps-list" id="iosInstructions" style="display:none;">
+        <li><span class="step-num" aria-hidden="true">1</span><span id="ios1">Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari</span></li>
+        <li><span class="step-num" aria-hidden="true">2</span><span id="ios2">Sélectionnez <strong>Sur l'écran d'accueil</strong></span></li>
+        <li><span class="step-num" aria-hidden="true">3</span><span id="ios3">Appuyez sur <strong>Ajouter</strong> en haut à droite</span></li>
+        <li><span class="step-num" aria-hidden="true">4</span><span id="ios4">Ouvrez l'app depuis votre écran d'accueil</span></li>
+      </ul>
+      <ul class="steps-list" id="androidInstructions" style="display:none;">
+        <li><span class="step-num" aria-hidden="true">1</span><span id="and1">Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome</span></li>
+        <li><span class="step-num" aria-hidden="true">2</span><span id="and2">Sélectionnez <strong>Ajouter à l'écran d'accueil</strong></span></li>
+        <li><span class="step-num" aria-hidden="true">3</span><span id="and3">Appuyez sur <strong>Ajouter</strong></span></li>
+      </ul>
     </div>
-    <div class="lifts-block">
-      <span class="lifts-icon">🚢</span>
-      <div>
-        <div class="lifts-label" id="liftsTitleGonzague">Levages — 60 min</div>
-        <div class="lifts-value" id="liftsGonzague">—</div>
-      </div>
-      <div class="refresh-time" id="refreshGonzague">—</div>
+
+    <!-- NOTIFY BUTTON -->
+    <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()" aria-label="Activer les notifications de levage de pont">
+      🔔 Activer les notifications
+    </button>
+
+    <!-- PREFS CARD -->
+    <div class="prefs-card" id="prefsCard" role="group" aria-label="Préférences de notifications">
+      <div class="prefs-title" id="prefTitle">Notifications</div>
+      <label class="pref-row">
+        <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
+        <div class="pref-toggle">
+          <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()" aria-label="Notifications pour le pont St-Louis-de-Gonzague"/>
+          <span class="pref-slider"></span>
+        </div>
+      </label>
+      <label class="pref-row">
+        <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
+        <div class="pref-toggle">
+          <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()" aria-label="Notifications pour le pont Larocque"/>
+          <span class="pref-slider"></span>
+        </div>
+      </label>
     </div>
-  </div>
 
-  <!-- PONT LAROCQUE -->
-  <div class="bridge-card">
-    <div class="bridge-name">Pont Larocque — Valleyfield</div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillLarocque">
-        <span class="status-dot"></span>
-        <span id="labelLarocque">Chargement...</span>
-      </div>
+    <!-- UNSUB -->
+    <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">
+      Désactiver les notifications
+    </button>
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-label="Changer la langue">EN</button>
+      <a href="https://paypal.me/kvndbrl" target="_blank" rel="noopener noreferrer" class="paypal-btn" aria-label="Soutenir ce projet via PayPal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+          <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.379 3.034.682 6.657-2.255 8.705-1.908 1.32-4.513 1.768-7.517 1.547l-.81 5.135h3.238c.524 0 .968-.382 1.05-.9l.974-6.174h2.19c4.298 0 7.664-1.748 8.647-6.797.418-2.149.086-3.77-.91-4.975z"/>
+        </svg>
+        <span id="supportText">Soutenir</span>
+      </a>
     </div>
-    <div class="lifts-block">
-      <span class="lifts-icon">🚢</span>
-      <div>
-        <div class="lifts-label" id="liftsTitleLarocque">Levages — 60 min</div>
-        <div class="lifts-value" id="liftsLarocque">—</div>
-      </div>
-      <div class="refresh-time" id="refreshLarocque">—</div>
-    </div>
-  </div>
 
-  <div class="spacer"></div>
+    <p class="disclaimer" id="disclaimer">
+      Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.
+    </p>
 
-  <!-- INSTALL CARD -->
-  <div class="install-card" id="installCard" style="display:none;">
-    <div class="install-card-title" id="installTitle">📲 Installer l'app</div>
-    <div class="install-card-sub" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</div>
-    <ul class="steps-list" id="iosInstructions" style="display:none;">
-      <li><span class="step-num">1</span><span id="ios1">Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari</span></li>
-      <li><span class="step-num">2</span><span id="ios2">Sélectionnez <strong>Sur l'écran d'accueil</strong></span></li>
-      <li><span class="step-num">3</span><span id="ios3">Appuyez sur <strong>Ajouter</strong> en haut à droite</span></li>
-      <li><span class="step-num">4</span><span id="ios4">Ouvrez l'app depuis votre écran d'accueil</span></li>
-    </ul>
-    <ul class="steps-list" id="androidInstructions" style="display:none;">
-      <li><span class="step-num">1</span><span id="and1">Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome</span></li>
-      <li><span class="step-num">2</span><span id="and2">Sélectionnez <strong>Ajouter à l'écran d'accueil</strong></span></li>
-      <li><span class="step-num">3</span><span id="and3">Appuyez sur <strong>Ajouter</strong></span></li>
-    </ul>
-  </div>
+    <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
 
-  <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()">
-    🔔 Activer les notifications
-  </button>
-
-  <div class="prefs-card" id="prefsCard">
-    <div class="prefs-title" id="prefTitle">Notifications</div>
-    <label class="pref-row" onclick="document.getElementById('prefGonzague').click()">
-      <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
-      <div class="pref-toggle">
-        <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"/>
-        <span class="pref-slider"></span>
-      </div>
-    </label>
-    <label class="pref-row" onclick="document.getElementById('prefLarocque').click()">
-      <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
-      <div class="pref-toggle">
-        <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"/>
-        <span class="pref-slider"></span>
-      </div>
-    </label>
-  </div>
-
-  <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">
-    Désactiver les notifications
-  </button>
-
-  <div class="bottom-bar">
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
-    <a href="https://paypal.me/kvndbrl" target="_blank" class="paypal-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-        <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.379 3.034.682 6.657-2.255 8.705-1.908 1.32-4.513 1.768-7.517 1.547l-.81 5.135h3.238c.524 0 .968-.382 1.05-.9l.974-6.174h2.19c4.298 0 7.664-1.748 8.647-6.797.418-2.149.086-3.77-.91-4.975z"/>
-      </svg>
-      <span id="supportText">Soutenir</span>
-    </a>
-  </div>
-
-  <p class="disclaimer" id="disclaimer">
-    Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.
-  </p>
-
-  <div class="error" id="errorMsg"></div>
+  </main>
 
 <script>
   const BACKEND_URL = 'https://pont-st-louis-de-gonzague.onrender.com';
@@ -633,6 +640,7 @@
       unsubBtn: 'Désactiver les notifications',
       supportText: 'Soutenir',
       langBtn: 'EN',
+      langLabel: 'Switch to English',
       retry: 'Réessayer',
       reconnecting: 'Reconnexion',
       serverError: 'Serveur indisponible.',
@@ -646,7 +654,7 @@
       and1: 'Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome',
       and2: 'Sélectionnez <strong>Ajouter à l\'écran d\'accueil</strong>',
       and3: 'Appuyez sur <strong>Ajouter</strong>',
-      disclaimer: 'Cette application est indépendante et n\'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.',
+      disclaimer: 'Cette application est indépendante et n\'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.',
     },
     en: {
       statusLabels: { disponible: 'Available', bientot_leve: 'Lift imminent', leve: 'Lifted' },
@@ -660,6 +668,7 @@
       unsubBtn: 'Disable notifications',
       supportText: 'Support',
       langBtn: 'FR',
+      langLabel: 'Passer en français',
       retry: 'Retry',
       reconnecting: 'Reconnecting',
       serverError: 'Server unavailable.',
@@ -673,7 +682,7 @@
       and1: 'Tap the <strong>3 dots</strong> ⋮ in the top right of Chrome',
       and2: 'Select <strong>Add to Home Screen</strong>',
       and3: 'Tap <strong>Add</strong>',
-      disclaimer: 'This app is independent and is not affiliated with the St. Lawrence Seaway Management Corporation or the Great Lakes St. Lawrence Seaway System. Data is sourced from <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.',
+      disclaimer: 'This app is independent and is not affiliated with the St. Lawrence Seaway Management Corporation or the Great Lakes St. Lawrence Seaway System. Data is sourced from <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.',
     }
   };
 
@@ -684,7 +693,9 @@
 
   function applyDark(dark) {
     document.body.classList.toggle('dark', dark);
-    document.getElementById('darkToggleInput').checked = dark;
+    const input = document.getElementById('darkToggleInput');
+    input.checked = dark;
+    input.setAttribute('aria-checked', dark ? 'true' : 'false');
   }
 
   function toggleDark() {
@@ -777,11 +788,14 @@
 
   function applyTranslations() {
     const t = translations[currentLang];
+    document.documentElement.lang = currentLang;
     document.getElementById('installTitle').textContent = t.installTitle;
     document.getElementById('installSubtitle').textContent = t.installSubtitle;
     document.getElementById('prefTitle').textContent = t.prefTitle;
     document.getElementById('supportText').textContent = t.supportText;
-    document.getElementById('langBtn').textContent = t.langBtn;
+    const langBtn = document.getElementById('langBtn');
+    langBtn.textContent = t.langBtn;
+    langBtn.setAttribute('aria-label', t.langLabel);
     document.getElementById('disclaimer').innerHTML = t.disclaimer;
     document.getElementById('ios1').innerHTML = t.ios1;
     document.getElementById('ios2').innerHTML = t.ios2;
