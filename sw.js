@@ -1,11 +1,11 @@
 self.addEventListener('push', function(event) {
   const data = event.data ? event.data.json() : {};
-  const title = data.title || 'Pont St-Louis-de-Gonzague';
+  const title = data.title || 'Ponts Beauharnois';
   const options = {
     body: data.body || '',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    tag: 'pont-gonzague',
+    icon: '/notification-icon.png',
+    badge: '/notification-icon.png',
+    tag: 'pont-beauharnois',
     renotify: true,
     requireInteraction: data.persistent || false
   };
