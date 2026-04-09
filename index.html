@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#C1D6A8"/>
+  <meta name="theme-color" content="#0a0e1a"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Ponts Beauharnois"/>
   <link rel="manifest" href="manifest.json"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <title>Ponts du canal de Beauharnois</title>
   <style>
     @font-face {
@@ -21,461 +22,557 @@
       font-weight: 700;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
-
     :root {
-      --bg: #f5f5f5;
-      --card-bg: white;
-      --text: #333;
-      --text-secondary: #888;
-      --text-light: #aaa;
-      --divider: #eee;
-      --divider-dark: #f0f0f0;
-      --shadow: rgba(0,0,0,0.12);
-      --logo-bg: white;
+      --bg: #f0f2f5;
+      --surface: #ffffff;
+      --surface2: #f7f8fa;
+      --border: rgba(0,0,0,0.06);
+      --text: #0a0e1a;
+      --text2: #5a6478;
+      --text3: #9ba3b8;
+      --green: #2a7a3b;
+      --green-bg: #e8f5eb;
+      --yellow: #7a6200;
+      --yellow-bg: #fef9e6;
+      --red: #c0392b;
+      --red-bg: #fdecea;
+      --accent: #0066ff;
+      --wave-color: #0066ff;
+      --wave-opacity: 0.07;
+      --shadow: 0 2px 16px rgba(0,0,0,0.08);
+      --radius: 18px;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', 'Product Sans', sans-serif;
     }
 
     body.dark {
-      --bg: #121212;
-      --card-bg: #1e1e1e;
-      --text: #f0f0f0;
-      --text-secondary: #aaa;
-      --text-light: #666;
-      --divider: #333;
-      --divider-dark: #2a2a2a;
-      --shadow: rgba(0,0,0,0.4);
-      --logo-bg: #ffffff;
+      --bg: #080b14;
+      --surface: #111827;
+      --surface2: #161d2e;
+      --border: rgba(255,255,255,0.06);
+      --text: #f0f4ff;
+      --text2: #8899bb;
+      --text3: #4a5570;
+      --green: #4ade80;
+      --green-bg: rgba(74,222,128,0.1);
+      --yellow: #fbbf24;
+      --yellow-bg: rgba(251,191,36,0.1);
+      --red: #f87171;
+      --red-bg: rgba(248,113,113,0.1);
+      --accent: #4d9fff;
+      --wave-color: #4d9fff;
+      --wave-opacity: 0.18;
+      --shadow: 0 2px 16px rgba(0,0,0,0.4);
     }
 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: 'Product Sans', sans-serif;
+      font-family: var(--sans);
       background: var(--bg);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 24px 16px;
+      padding: 20px 16px 40px;
+      transition: background 0.3s;
+      overflow-x: hidden;
     }
 
-    .header-card {
+    /* ── WAVES ── */
+    .waves-bg {
+      position: fixed;
+      bottom: 0;
+      left: 0;
       width: 100%;
-      max-width: 420px;
-      border-radius: 20px;
+      height: 140px;
+      z-index: 0;
+      pointer-events: none;
       overflow: hidden;
-      box-shadow: 0 4px 24px var(--shadow);
-      background: var(--card-bg);
-      margin-bottom: 16px;
     }
 
-    .logo-row {
+    .waves-track {
+      display: flex;
+      width: 200%;
+      height: 100%;
+      animation: waveScroll 18s linear infinite;
+    }
+
+    .waves-track svg {
+      width: 50%;
+      height: 100%;
+      flex-shrink: 0;
+    }
+
+    .wave1 { fill: var(--wave-color); opacity: var(--wave-opacity); }
+    .wave2 { fill: var(--wave-color); opacity: calc(var(--wave-opacity) * 0.6); }
+
+    @keyframes waveScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* z-index for content above waves */
+    .header, .bridge-card, .install-card, .notify-btn,
+    .prefs-card, .unsub-btn, .bottom-bar, .disclaimer,
+    .error, .spacer { position: relative; z-index: 1; }
+
+    /* ── HEADER ── */
+    .header {
+      width: 100%;
+      max-width: 430px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
-      background: var(--card-bg);
+      margin-bottom: 20px;
+      padding: 0 4px;
     }
 
-    /* Logo wrapper with white bg in dark mode */
-    .logo-wrapper {
-      background: var(--logo-bg);
-      border-radius: 10px;
+    .logo-pill {
+      background: white;
+      border-radius: 50px;
       padding: 8px 14px;
-      transition: background 0.3s;
+      box-shadow: var(--shadow);
     }
 
-    .logo-wrapper img {
-      height: 38px;
-      object-fit: contain;
-      display: block;
-    }
+    .logo-pill img { height: 32px; display: block; }
 
-    /* Traditional toggle switch */
-    .toggle-wrapper {
+    .toggle-wrap {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      background: var(--surface);
+      border-radius: 50px;
+      padding: 6px 10px;
+      box-shadow: var(--shadow);
     }
 
-    .toggle-icon {
-      font-size: 14px;
-    }
+    .toggle-icon { font-size: 13px; }
 
     .toggle-switch {
       position: relative;
-      width: 44px;
-      height: 24px;
+      width: 38px;
+      height: 20px;
       cursor: pointer;
     }
 
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
 
     .toggle-slider {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: #ccc;
-      border-radius: 24px;
+      inset: 0;
+      background: #dde2ec;
+      border-radius: 20px;
       transition: background 0.3s;
     }
 
     .toggle-slider:before {
       content: '';
       position: absolute;
-      width: 18px;
-      height: 18px;
+      width: 14px;
+      height: 14px;
       left: 3px;
-      bottom: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
+    .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
+
+    /* ── BRIDGE CARDS ── */
+    .bridge-card {
+      width: 100%;
+      max-width: 430px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .bridge-card:nth-child(3) { animation-delay: 0.05s; }
+    .bridge-card:nth-child(4) { animation-delay: 0.1s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bridge-name {
+      padding: 14px 16px 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-family: var(--mono);
+    }
+
+    .status-block { padding: 12px 16px 16px; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      transition: all 0.4s ease;
+    }
+
+    .status-pill.disponible { background: var(--green-bg); color: var(--green); }
+    .status-pill.bientot_leve { background: var(--yellow-bg); color: var(--yellow); animation: blink 2s infinite; }
+    .status-pill.leve { background: var(--red-bg); color: var(--red); animation: blink 1.2s infinite; }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .lifts-block {
+      padding: 12px 16px 14px;
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .lifts-icon { font-size: 15px; margin-top: 2px; flex-shrink: 0; }
+
+    .lifts-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-family: var(--mono);
+      margin-bottom: 3px;
+    }
+
+    .lifts-value { font-size: 13px; font-weight: 500; color: var(--text); }
+
+    .refresh-time {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text3);
+      margin-left: auto;
+      align-self: flex-end;
+      flex-shrink: 0;
+    }
+
+    /* ── INSTALL CARD ── */
+    .install-card {
+      width: 100%;
+      max-width: 430px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 12px;
+      animation: fadeUp 0.4s 0.15s ease both;
+    }
+
+    .install-card-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .install-card-sub { font-size: 12px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
+
+    .steps-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .steps-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.4;
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ── NOTIFY BUTTON ── */
+    .notify-btn {
+      display: none;
+      width: 100%;
+      max-width: 430px;
+      padding: 15px;
+      border-radius: 50px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,102,255,0.3);
+      transition: all 0.2s;
+      animation: fadeUp 0.4s 0.2s ease both;
+      letter-spacing: 0.2px;
+    }
+
+    .notify-btn:hover { transform: translateY(-1px); }
+    .notify-btn:active { transform: translateY(0); }
+    .notify-btn.active {
+      background: var(--surface);
+      color: var(--text2);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    /* ── PREFS CARD ── */
+    .prefs-card {
+      display: none;
+      width: 100%;
+      max-width: 430px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .prefs-title {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text3);
+      font-family: var(--mono);
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pref-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .pref-row:last-child { border-bottom: none; }
+    .pref-row-label { font-size: 14px; font-weight: 500; color: var(--text); }
+
+    .pref-toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+    .pref-toggle input { opacity: 0; width: 0; height: 0; }
+
+    .pref-slider {
+      position: absolute;
+      inset: 0;
+      background: #dde2ec;
+      border-radius: 26px;
+      transition: background 0.3s;
+    }
+
+    .pref-slider:before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      top: 3px;
       background: white;
       border-radius: 50%;
       transition: transform 0.3s;
       box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
 
-    .toggle-switch input:checked + .toggle-slider {
-      background: #2d4a1e;
-    }
+    .pref-toggle input:checked + .pref-slider { background: var(--accent); }
+    .pref-toggle input:checked + .pref-slider:before { transform: translateX(18px); }
 
-    .toggle-switch input:checked + .toggle-slider:before {
-      transform: translateX(20px);
-    }
-
-    .bridge-card {
-      width: 100%;
-      max-width: 420px;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 4px 24px var(--shadow);
-      background: var(--card-bg);
-      margin-bottom: 12px;
-    }
-
-    .bridge-header {
-      padding: 10px 16px 6px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 1px solid var(--divider);
-    }
-
-    .status-section {
-      padding: 20px 16px;
-      text-align: center;
-      transition: background-color 0.5s ease;
-    }
-
-    .status-section.disponible { background-color: #C1D6A8; }
-    .status-section.bientot_leve { background-color: #FEEAA8; animation: pulse 2.5s infinite; }
-    .status-section.leve { background-color: #E48082; animation: pulse 1.5s infinite; }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
-    }
-
-    .status-label {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .status-section.disponible .status-label { color: #2d4a1e; }
-    .status-section.bientot_leve .status-label { color: #5a4000; }
-    .status-section.leve .status-label { color: white; }
-
-    .lifts-section {
-      padding: 12px 16px;
-      border-top: 1px solid var(--divider);
-    }
-
-    .lifts-title {
-      font-size: 11px;
-      color: var(--text-secondary);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .lifts-value {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .refresh-section {
-      padding: 6px 16px 12px;
-      font-size: 11px;
-      color: var(--text-light);
-      text-align: right;
-    }
-
-    .install-card {
-      width: 100%;
-      max-width: 420px;
-      margin: 4px auto 0;
-      padding: 16px 20px;
-      background: var(--card-bg);
-      border-radius: 20px;
-      box-shadow: 0 4px 24px var(--shadow);
-    }
-
-    .install-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .install-subtitle {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 12px;
-    }
-
-    .install-steps {
-      list-style: none;
-      padding: 0;
-    }
-
-    .install-steps li {
-      font-size: 13px;
-      color: var(--text-secondary);
-      padding: 8px 0;
-      border-bottom: 1px solid var(--divider-dark);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      line-height: 1.4;
-    }
-
-    .install-steps li:last-child { border-bottom: none; }
-
-    .step-num {
-      background: #2d4a1e;
-      color: white;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      min-width: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .notify-btn {
-      display: none;
-      width: calc(100% - 32px);
-      max-width: 420px;
-      margin: 16px auto 0;
-      padding: 14px;
-      border-radius: 50px;
-      border: none;
-      background: #2d4a1e;
-      color: white;
-      font-family: 'Product Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-      transition: background 0.2s;
-    }
-
-    .notify-btn:hover { background: #3d6a2e; }
-    .notify-btn.active { background: #555; }
-
-    .prefs-card {
-      display: none;
-      width: calc(100% - 32px);
-      max-width: 420px;
-      margin: 12px auto 0;
-      padding: 16px;
-      background: var(--card-bg);
-      border-radius: 20px;
-      box-shadow: 0 4px 24px var(--shadow);
-    }
-
-    .bridge-prefs-title {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .pref-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--divider-dark);
-      cursor: pointer;
-    }
-
-    .pref-item:last-child { border-bottom: none; }
-
-    .pref-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: #2d4a1e;
-      cursor: pointer;
-    }
-
-    .pref-label {
-      font-size: 13px;
-      color: var(--text);
-      font-weight: 500;
-    }
-
+    /* ── BOTTOM ── */
     .unsub-btn {
       display: none;
-      width: calc(100% - 32px);
-      max-width: 420px;
-      margin: 8px auto 0;
-      padding: 10px;
-      border-radius: 50px;
-      border: 1px solid var(--divider);
-      background: transparent;
-      color: var(--text-light);
-      font-family: 'Product Sans', sans-serif;
-      font-size: 13px;
+      background: none;
+      border: none;
+      font-family: var(--sans);
+      font-size: 12px;
+      color: var(--text3);
       cursor: pointer;
-      transition: all 0.2s;
+      padding: 10px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin-top: 4px;
     }
 
-    .unsub-btn:hover { background: var(--divider-dark); }
-
-    .bottom-row {
+    .bottom-bar {
+      width: 100%;
+      max-width: 430px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin: 12px auto 0;
-      width: calc(100% - 32px);
-      max-width: 420px;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding: 0 4px;
     }
 
     .lang-btn {
       background: none;
       border: none;
-      font-family: 'Product Sans', sans-serif;
-      font-size: 12px;
-      color: var(--text-light);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text3);
       cursor: pointer;
-      text-decoration: underline;
+      letter-spacing: 0.5px;
     }
 
     .paypal-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin: 12px auto 8px;
-      padding: 12px 24px;
+      gap: 7px;
+      padding: 9px 18px;
       background: #003087;
       color: white;
       border-radius: 50px;
       text-decoration: none;
-      font-family: 'Product Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      width: calc(100% - 32px);
-      max-width: 420px;
-      box-shadow: 0 2px 12px rgba(0,48,135,0.3);
-      transition: background 0.2s;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 2px 12px rgba(0,48,135,0.25);
+      transition: all 0.2s;
     }
 
-    .paypal-btn:hover { background: #002060; }
+    .paypal-btn:hover { transform: translateY(-1px); }
 
     .disclaimer {
-      width: calc(100% - 32px);
-      max-width: 420px;
-      margin: 8px auto 24px;
+      width: 100%;
+      max-width: 430px;
+      margin-top: 20px;
       font-size: 10px;
-      color: var(--text-light);
+      color: var(--text3);
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.7;
+      padding: 0 8px;
     }
 
-    .disclaimer a { color: var(--text-light); }
+    .disclaimer a { color: var(--text3); text-decoration: underline; text-underline-offset: 2px; }
 
     .error {
-      color: #E48082;
+      color: var(--red);
       text-align: center;
-      margin-top: 16px;
-      font-size: 13px;
+      margin-top: 12px;
+      font-size: 12px;
+      font-family: var(--mono);
     }
+
+    .spacer { height: 8px; }
   </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
-  <div class="header-card">
-    <div class="logo-row">
-      <div class="logo-wrapper">
-        <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Seaway"/>
-      </div>
-      <div class="toggle-wrapper">
-        <span class="toggle-icon">☀️</span>
-        <label class="toggle-switch">
-          <input type="checkbox" id="darkToggleInput" onchange="toggleDark()"/>
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="toggle-icon">🌙</span>
-      </div>
+  <!-- WAVES — horizontal scroll only -->
+  <div class="waves-bg" aria-hidden="true">
+    <div class="waves-track">
+      <svg viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="wave1" d="M0,70 C120,50 240,90 360,70 C480,50 600,90 720,70 C840,50 960,90 1080,70 C1200,50 1320,90 1440,70 L1440,140 L0,140 Z"/>
+        <path class="wave2" d="M0,90 C100,70 200,105 300,90 C400,75 500,105 600,90 C700,75 800,105 900,90 C1000,75 1100,105 1200,90 C1300,75 1370,95 1440,90 L1440,140 L0,140 Z"/>
+      </svg>
+      <svg viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="wave1" d="M0,70 C120,50 240,90 360,70 C480,50 600,90 720,70 C840,50 960,90 1080,70 C1200,50 1320,90 1440,70 L1440,140 L0,140 Z"/>
+        <path class="wave2" d="M0,90 C100,70 200,105 300,90 C400,75 500,105 600,90 C700,75 800,105 900,90 C1000,75 1100,105 1200,90 C1300,75 1370,95 1440,90 L1440,140 L0,140 Z"/>
+      </svg>
     </div>
   </div>
 
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-pill">
+      <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Seaway"/>
+    </div>
+    <div class="toggle-wrap">
+      <span class="toggle-icon">☀️</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="darkToggleInput" onchange="toggleDark()"/>
+        <span class="toggle-slider"></span>
+      </label>
+      <span class="toggle-icon">🌙</span>
+    </div>
+  </div>
+
+  <!-- PONT GONZAGUE -->
   <div class="bridge-card">
-    <div class="bridge-header">🌉 Pont St-Louis-de-Gonzague</div>
-    <div class="status-section disponible" id="statusGonzague">
-      <div class="status-label" id="labelGonzague">Chargement...</div>
+    <div class="bridge-name">Pont St-Louis-de-Gonzague</div>
+    <div class="status-block">
+      <div class="status-pill disponible" id="pillGonzague">
+        <span class="status-dot"></span>
+        <span id="labelGonzague">Chargement...</span>
+      </div>
     </div>
-    <div class="lifts-section">
-      <div class="lifts-title" id="liftsTitleGonzague">🚢 Levages dans les 60 prochaines minutes</div>
-      <div class="lifts-value" id="liftsGonzague">—</div>
+    <div class="lifts-block">
+      <span class="lifts-icon">🚢</span>
+      <div>
+        <div class="lifts-label" id="liftsTitleGonzague">Levages — 60 min</div>
+        <div class="lifts-value" id="liftsGonzague">—</div>
+      </div>
+      <div class="refresh-time" id="refreshGonzague">—</div>
     </div>
-    <div class="refresh-section" id="refreshGonzague">—</div>
   </div>
 
+  <!-- PONT LAROCQUE -->
   <div class="bridge-card">
-    <div class="bridge-header">🌉 Pont Larocque (Salaberry-de-Valleyfield)</div>
-    <div class="status-section disponible" id="statusLarocque">
-      <div class="status-label" id="labelLarocque">Chargement...</div>
+    <div class="bridge-name">Pont Larocque — Valleyfield</div>
+    <div class="status-block">
+      <div class="status-pill disponible" id="pillLarocque">
+        <span class="status-dot"></span>
+        <span id="labelLarocque">Chargement...</span>
+      </div>
     </div>
-    <div class="lifts-section">
-      <div class="lifts-title" id="liftsTitleLarocque">🚢 Levages dans les 60 prochaines minutes</div>
-      <div class="lifts-value" id="liftsLarocque">—</div>
+    <div class="lifts-block">
+      <span class="lifts-icon">🚢</span>
+      <div>
+        <div class="lifts-label" id="liftsTitleLarocque">Levages — 60 min</div>
+        <div class="lifts-value" id="liftsLarocque">—</div>
+      </div>
+      <div class="refresh-time" id="refreshLarocque">—</div>
     </div>
-    <div class="refresh-section" id="refreshLarocque">—</div>
   </div>
 
+  <div class="spacer"></div>
+
+  <!-- INSTALL CARD -->
   <div class="install-card" id="installCard" style="display:none;">
-    <p class="install-title" id="installTitle">📲 Installer l'app</p>
-    <p class="install-subtitle" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</p>
-    <div id="iosInstructions" style="display:none;">
-      <ul class="install-steps">
-        <li><span class="step-num">1</span> <span id="ios1">Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari</span></li>
-        <li><span class="step-num">2</span> <span id="ios2">Sélectionnez <strong>Sur l'écran d'accueil</strong></span></li>
-        <li><span class="step-num">3</span> <span id="ios3">Appuyez sur <strong>Ajouter</strong> en haut à droite</span></li>
-        <li><span class="step-num">4</span> <span id="ios4">Ouvrez l'app depuis votre écran d'accueil</span></li>
-      </ul>
-    </div>
-    <div id="androidInstructions" style="display:none;">
-      <ul class="install-steps">
-        <li><span class="step-num">1</span> <span id="and1">Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome</span></li>
-        <li><span class="step-num">2</span> <span id="and2">Sélectionnez <strong>Ajouter à l'écran d'accueil</strong></span></li>
-        <li><span class="step-num">3</span> <span id="and3">Appuyez sur <strong>Ajouter</strong></span></li>
-      </ul>
-    </div>
+    <div class="install-card-title" id="installTitle">📲 Installer l'app</div>
+    <div class="install-card-sub" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</div>
+    <ul class="steps-list" id="iosInstructions" style="display:none;">
+      <li><span class="step-num">1</span><span id="ios1">Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari</span></li>
+      <li><span class="step-num">2</span><span id="ios2">Sélectionnez <strong>Sur l'écran d'accueil</strong></span></li>
+      <li><span class="step-num">3</span><span id="ios3">Appuyez sur <strong>Ajouter</strong> en haut à droite</span></li>
+      <li><span class="step-num">4</span><span id="ios4">Ouvrez l'app depuis votre écran d'accueil</span></li>
+    </ul>
+    <ul class="steps-list" id="androidInstructions" style="display:none;">
+      <li><span class="step-num">1</span><span id="and1">Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome</span></li>
+      <li><span class="step-num">2</span><span id="and2">Sélectionnez <strong>Ajouter à l'écran d'accueil</strong></span></li>
+      <li><span class="step-num">3</span><span id="and3">Appuyez sur <strong>Ajouter</strong></span></li>
+    </ul>
   </div>
 
   <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()">
@@ -483,14 +580,20 @@
   </button>
 
   <div class="prefs-card" id="prefsCard">
-    <p class="bridge-prefs-title" id="prefTitle">Notifications</p>
-    <label class="pref-item">
-      <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"/>
-      <span class="pref-label">🌉 Pont St-Louis-de-Gonzague</span>
+    <div class="prefs-title" id="prefTitle">Notifications</div>
+    <label class="pref-row" onclick="document.getElementById('prefGonzague').click()">
+      <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
+      <div class="pref-toggle">
+        <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"/>
+        <span class="pref-slider"></span>
+      </div>
     </label>
-    <label class="pref-item">
-      <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"/>
-      <span class="pref-label">🌉 Pont Larocque (Valleyfield)</span>
+    <label class="pref-row" onclick="document.getElementById('prefLarocque').click()">
+      <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
+      <div class="pref-toggle">
+        <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"/>
+        <span class="pref-slider"></span>
+      </div>
     </label>
   </div>
 
@@ -498,16 +601,15 @@
     Désactiver les notifications
   </button>
 
-  <div class="bottom-row">
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()">English</button>
+  <div class="bottom-bar">
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+    <a href="https://paypal.me/kvndbrl" target="_blank" class="paypal-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+        <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.379 3.034.682 6.657-2.255 8.705-1.908 1.32-4.513 1.768-7.517 1.547l-.81 5.135h3.238c.524 0 .968-.382 1.05-.9l.974-6.174h2.19c4.298 0 7.664-1.748 8.647-6.797.418-2.149.086-3.77-.91-4.975z"/>
+      </svg>
+      <span id="supportText">Soutenir</span>
+    </a>
   </div>
-
-  <a href="https://paypal.me/kvndbrl" target="_blank" class="paypal-btn">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-      <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.379 3.034.682 6.657-2.255 8.705-1.908 1.32-4.513 1.768-7.517 1.547l-.81 5.135h3.238c.524 0 .968-.382 1.05-.9l.974-6.174h2.19c4.298 0 7.664-1.748 8.647-6.797.418-2.149.086-3.77-.91-4.975z"/>
-    </svg>
-    <span id="supportText">Soutenir ce projet</span>
-  </a>
 
   <p class="disclaimer" id="disclaimer">
     Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.
@@ -520,24 +622,23 @@
 
   const translations = {
     fr: {
-      statusLabels: { disponible: 'DISPONIBLE', bientot_leve: 'LEVAGE IMMINENT', leve: 'LEVÉ' },
-      liftsTitle: '🚢 Levages dans les 60 prochaines minutes',
+      statusLabels: { disponible: 'Disponible', bientot_leve: 'Levage imminent', leve: 'Levé' },
+      liftsLabel: 'Levages — 60 min',
       noLifts: 'Aucun levage prévu',
-      lastRefresh: 'Mis à jour',
       installTitle: '📲 Installer l\'app',
       installSubtitle: 'Installez l\'app pour recevoir des notifications lors des levages',
       prefTitle: 'Notifications',
       notifyBtn: '🔔 Activer les notifications',
       notifyActive: '✅ Notifications activées',
       unsubBtn: 'Désactiver les notifications',
-      supportText: 'Soutenir ce projet',
-      langBtn: 'English',
+      supportText: 'Soutenir',
+      langBtn: 'EN',
       retry: 'Réessayer',
-      reconnecting: 'Reconnexion en cours',
-      serverError: 'Serveur temporairement indisponible.',
+      reconnecting: 'Reconnexion',
+      serverError: 'Serveur indisponible.',
       permDenied: 'Permission refusée. Vérifiez les paramètres de notifications de votre appareil.',
       notSupported: 'Les notifications ne sont pas supportées sur votre appareil.',
-      iosAlert: 'Pour activer les notifications sur iPhone :\n\n1. Appuyez sur le bouton Partager ⬆️\n2. Sélectionnez "Sur l\'écran d\'accueil"\n3. Ouvrez l\'app depuis l\'écran d\'accueil\n4. Appuyez à nouveau sur Activer les notifications',
+      iosAlert: 'Pour activer les notifications sur iPhone :\n\n1. Appuyez sur Partager ⬆️\n2. Sélectionnez "Sur l\'écran d\'accueil"\n3. Ouvrez l\'app depuis l\'écran d\'accueil\n4. Appuyez à nouveau sur Activer les notifications',
       ios1: 'Appuyez sur <strong>Partager</strong> ⬆️ en bas de Safari',
       ios2: 'Sélectionnez <strong>Sur l\'écran d\'accueil</strong>',
       ios3: 'Appuyez sur <strong>Ajouter</strong> en haut à droite',
@@ -548,24 +649,23 @@
       disclaimer: 'Cette application est indépendante et n\'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.',
     },
     en: {
-      statusLabels: { disponible: 'AVAILABLE', bientot_leve: 'LIFT IMMINENT', leve: 'LIFTED' },
-      liftsTitle: '🚢 Bridge lifts in the next 60 minutes',
+      statusLabels: { disponible: 'Available', bientot_leve: 'Lift imminent', leve: 'Lifted' },
+      liftsLabel: 'Lifts — 60 min',
       noLifts: 'No anticipated bridge lifts',
-      lastRefresh: 'Updated',
       installTitle: '📲 Install the app',
-      installSubtitle: 'Install the app to receive notifications for bridge lifts',
+      installSubtitle: 'Install the app to receive bridge lift notifications',
       prefTitle: 'Notifications',
       notifyBtn: '🔔 Enable notifications',
       notifyActive: '✅ Notifications enabled',
       unsubBtn: 'Disable notifications',
-      supportText: 'Support this project',
-      langBtn: 'Français',
+      supportText: 'Support',
+      langBtn: 'FR',
       retry: 'Retry',
       reconnecting: 'Reconnecting',
-      serverError: 'Server temporarily unavailable.',
+      serverError: 'Server unavailable.',
       permDenied: 'Permission denied. Check your device notification settings.',
       notSupported: 'Notifications are not supported on your device.',
-      iosAlert: 'To enable notifications on iPhone:\n\n1. Tap the Share button ⬆️\n2. Select "Add to Home Screen"\n3. Open the app from your home screen\n4. Tap Enable Notifications again',
+      iosAlert: 'To enable notifications on iPhone:\n\n1. Tap Share ⬆️\n2. Select "Add to Home Screen"\n3. Open the app from your home screen\n4. Tap Enable Notifications again',
       ios1: 'Tap <strong>Share</strong> ⬆️ at the bottom of Safari',
       ios2: 'Select <strong>Add to Home Screen</strong>',
       ios3: 'Tap <strong>Add</strong> in the top right',
@@ -573,17 +673,15 @@
       and1: 'Tap the <strong>3 dots</strong> ⋮ in the top right of Chrome',
       and2: 'Select <strong>Add to Home Screen</strong>',
       and3: 'Tap <strong>Add</strong>',
-      disclaimer: 'This app is independent and is not affiliated with the St. Lawrence Seaway Management Corporation or the Great Lakes St. Lawrence Seaway System. Data is sourced from the official website <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.',
+      disclaimer: 'This app is independent and is not affiliated with the St. Lawrence Seaway Management Corporation or the Great Lakes St. Lawrence Seaway System. Data is sourced from <a href="https://www.seaway-greatlakes.com" target="_blank">seaway-greatlakes.com</a>.',
     }
   };
 
   const browserLang = navigator.language || navigator.userLanguage;
   let currentLang = localStorage.getItem('appLang') ||
     (browserLang.startsWith('en') ? 'en' : 'fr');
-
   let lastData = null;
 
-  // ── Dark mode ─────────────────────────────────────────────────────
   function applyDark(dark) {
     document.body.classList.toggle('dark', dark);
     document.getElementById('darkToggleInput').checked = dark;
@@ -602,12 +700,11 @@
     applyDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
   }
 
-  // ── Bridge preferences ────────────────────────────────────────────
   function getSelectedBridges() {
-    const bridges = [];
-    if (document.getElementById('prefGonzague').checked) bridges.push('gonzague');
-    if (document.getElementById('prefLarocque').checked) bridges.push('larocque');
-    return bridges;
+    const b = [];
+    if (document.getElementById('prefGonzague').checked) b.push('gonzague');
+    if (document.getElementById('prefLarocque').checked) b.push('larocque');
+    return b;
   }
 
   async function updatePrefs() {
@@ -650,7 +747,6 @@
       notifyBtn.textContent = t.notifyActive;
       notifyBtn.classList.add('active');
       unsubBtn.style.display = 'block';
-      unsubBtn.textContent = t.unsubBtn;
       prefsCard.style.display = 'block';
     } else {
       notifyBtn.textContent = t.notifyBtn;
@@ -664,19 +760,19 @@
     if (!lastData) return;
     const t = translations[currentLang];
 
-    document.getElementById('statusGonzague').className = `status-section ${lastData.gonzague.status}`;
+    document.getElementById('pillGonzague').className = `status-pill ${lastData.gonzague.status}`;
     document.getElementById('labelGonzague').textContent = t.statusLabels[lastData.gonzague.status] || lastData.gonzague.status;
-    document.getElementById('liftsTitleGonzague').textContent = t.liftsTitle;
+    document.getElementById('liftsTitleGonzague').textContent = t.liftsLabel;
     document.getElementById('liftsGonzague').textContent =
       lastData.gonzague.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.gonzague.next_lifts;
-    document.getElementById('refreshGonzague').textContent = `${t.lastRefresh} : ${lastData.last_refreshed}`;
+    document.getElementById('refreshGonzague').textContent = lastData.last_refreshed.slice(11, 16);
 
-    document.getElementById('statusLarocque').className = `status-section ${lastData.larocque.status}`;
+    document.getElementById('pillLarocque').className = `status-pill ${lastData.larocque.status}`;
     document.getElementById('labelLarocque').textContent = t.statusLabels[lastData.larocque.status] || lastData.larocque.status;
-    document.getElementById('liftsTitleLarocque').textContent = t.liftsTitle;
+    document.getElementById('liftsTitleLarocque').textContent = t.liftsLabel;
     document.getElementById('liftsLarocque').textContent =
       lastData.larocque.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.larocque.next_lifts;
-    document.getElementById('refreshLarocque').textContent = `${t.lastRefresh} : ${lastData.last_refreshed}`;
+    document.getElementById('refreshLarocque').textContent = lastData.last_refreshed.slice(11, 16);
   }
 
   function applyTranslations() {
@@ -723,7 +819,7 @@
       } else {
         retryCount = 0;
         document.getElementById('errorMsg').innerHTML =
-          `${t.serverError} <a href="#" onclick="fetchStatus();return false;" style="color:#E48082;">${t.retry}</a>`;
+          `${t.serverError} <a href="#" onclick="fetchStatus();return false;">${t.retry}</a>`;
       }
     }
   }
@@ -733,15 +829,8 @@
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
 
-    if (isIOS && !isInstalled) {
-      alert(t.iosAlert);
-      return;
-    }
-
-    if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-      alert(t.notSupported);
-      return;
-    }
+    if (isIOS && !isInstalled) { alert(t.iosAlert); return; }
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) { alert(t.notSupported); return; }
 
     const perm = await Notification.requestPermission();
     if (perm === 'granted') {
@@ -789,18 +878,18 @@
     document.getElementById('notifyBtn').style.display = 'block';
   } else if (isIOS) {
     document.getElementById('installCard').style.display = 'block';
-    document.getElementById('iosInstructions').style.display = 'block';
+    document.getElementById('iosInstructions').style.display = 'flex';
+    document.getElementById('iosInstructions').style.flexDirection = 'column';
   } else {
     document.getElementById('installCard').style.display = 'block';
-    document.getElementById('androidInstructions').style.display = 'block';
+    document.getElementById('androidInstructions').style.display = 'flex';
+    document.getElementById('androidInstructions').style.flexDirection = 'column';
   }
 
   loadPrefs();
   applyTranslations();
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
   fetchStatus();
   setInterval(fetchStatus, 60000);
