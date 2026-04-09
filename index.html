@@ -11,16 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <title>Ponts du canal de Beauharnois</title>
   <style>
-    @font-face {
-      font-family: 'Product Sans';
-      src: url('fonts/ProductSans-Regular.ttf');
-      font-weight: 400;
-    }
-    @font-face {
-      font-family: 'Product Sans';
-      src: url('fonts/ProductSans-Bold.ttf');
-      font-weight: 700;
-    }
+    @font-face { font-family: 'Product Sans'; src: url('fonts/ProductSans-Regular.ttf'); font-weight: 400; }
+    @font-face { font-family: 'Product Sans'; src: url('fonts/ProductSans-Bold.ttf'); font-weight: 700; }
 
     :root {
       --bg: #f0f2f5;
@@ -79,124 +71,57 @@
       overflow-x: hidden;
     }
 
-    /* ── WAVES ── */
     .waves-bg {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 140px;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
+      position: fixed; bottom: 0; left: 0;
+      width: 100%; height: 140px;
+      z-index: 0; pointer-events: none; overflow: hidden;
     }
-
     .waves-track {
-      display: flex;
-      width: 200%;
-      height: 100%;
+      display: flex; width: 200%; height: 100%;
       animation: waveScroll 18s linear infinite;
     }
-
     .waves-track svg { width: 50%; height: 100%; flex-shrink: 0; }
     .wave1 { fill: var(--wave-color); opacity: var(--wave-opacity); }
     .wave2 { fill: var(--wave-color); opacity: calc(var(--wave-opacity) * 0.6); }
+    @keyframes waveScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-    @keyframes waveScroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
-
-    /* z-index */
     .header, main, .bridge-card, .install-card, .notify-btn,
-    .prefs-card, .unsub-btn, .bottom-bar, .disclaimer,
-    .error, .spacer { position: relative; z-index: 1; }
+    .prefs-card, .unsub-btn, .bottom-bar, .disclaimer, .error, .spacer {
+      position: relative; z-index: 1;
+    }
 
-    /* ── HEADER ── */
     .header {
-      width: 100%;
-      max-width: 430px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      padding: 0 4px;
+      width: 100%; max-width: 430px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; padding: 0 4px;
     }
-
-    .logo-pill {
-      background: white;
-      border-radius: 50px;
-      padding: 8px 14px;
-      box-shadow: var(--shadow);
-    }
-
+    .logo-pill { background: white; border-radius: 50px; padding: 8px 14px; box-shadow: var(--shadow); }
     .logo-pill img { height: 32px; display: block; }
 
     .toggle-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface);
-      border-radius: 50px;
-      padding: 6px 10px;
-      box-shadow: var(--shadow);
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border-radius: 50px; padding: 6px 10px; box-shadow: var(--shadow);
     }
-
     .toggle-icon { font-size: 13px; }
-
-    .toggle-switch {
-      position: relative;
-      width: 38px;
-      height: 20px;
-      cursor: pointer;
-    }
-
+    .toggle-switch { position: relative; width: 38px; height: 20px; cursor: pointer; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
-
-    .toggle-slider {
-      position: absolute;
-      inset: 0;
-      background: #b0b8cc;
-      border-radius: 20px;
-      transition: background 0.3s;
-    }
-
+    .toggle-slider { position: absolute; inset: 0; background: #b0b8cc; border-radius: 20px; transition: background 0.3s; }
     .toggle-slider:before {
-      content: '';
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      left: 3px;
-      top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: transform 0.3s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      content: ''; position: absolute; width: 14px; height: 14px;
+      left: 3px; top: 3px; background: white; border-radius: 50%;
+      transition: transform 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
-
     .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
     .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
 
-    /* ── MAIN ── */
-    main {
-      width: 100%;
-      max-width: 430px;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
+    main { width: 100%; max-width: 430px; display: flex; flex-direction: column; align-items: stretch; }
 
-    /* ── BRIDGE CARDS ── */
     .bridge-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: 12px;
+      overflow: hidden; border: 1px solid var(--border);
       animation: fadeUp 0.4s ease both;
     }
-
     .bridge-card:nth-child(1) { animation-delay: 0s; }
     .bridge-card:nth-child(2) { animation-delay: 0.05s; }
 
@@ -206,288 +131,179 @@
     }
 
     .bridge-name {
-      padding: 14px 16px 0;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--text3);
-      font-family: var(--mono);
+      padding: 14px 16px 0; font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text3); font-family: var(--mono);
     }
 
     .status-block { padding: 12px 16px 16px; }
 
     .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 50px;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
       transition: all 0.4s ease;
     }
-
     .status-pill.disponible { background: var(--green-bg); color: var(--green); }
     .status-pill.bientot_leve { background: var(--yellow-bg); color: var(--yellow); animation: blink 2s infinite; }
     .status-pill.leve { background: var(--red-bg); color: var(--red); animation: blink 1.2s infinite; }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.65; }
-    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
 
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
-    .lifts-block {
-      padding: 12px 16px 14px;
-      border-top: 1px solid var(--border);
-      background: var(--surface2);
+    /* Alternate route button inside bridge card */
+    .alt-route-block {
+      padding: 0 12px 12px;
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .lifts-icon { font-size: 15px; margin-top: 2px; flex-shrink: 0; }
-
-    .lifts-label {
-      font-size: 10px;
+    .alt-route-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 50px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-family: var(--sans);
+      font-size: 13px;
       font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 2px 10px rgba(0,85,221,0.25);
+    }
+
+    .alt-route-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,85,221,0.35); }
+    .alt-route-btn:active { transform: translateY(0); }
+
+    .alt-route-btn.both {
+      background: var(--surface2);
+      color: var(--text2);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .alt-route-btn.both:hover { background: var(--border); }
+
+    .alt-route-label {
+      font-size: 10px;
+      font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
       color: var(--text3);
       font-family: var(--mono);
-      margin-bottom: 3px;
-    }
-
-    .lifts-value { font-size: 13px; font-weight: 500; color: var(--text); }
-
-    .refresh-time {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text3);
-      margin-left: auto;
-      align-self: flex-end;
-      flex-shrink: 0;
-    }
-
-    /* ── INSTALL CARD ── */
-    .install-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 20px;
-      margin-bottom: 12px;
-      animation: fadeUp 0.4s 0.1s ease both;
-    }
-
-    .install-card-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-    .install-card-sub { font-size: 12px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
-
-    .steps-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-
-    .steps-list li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 13px;
-      color: var(--text2);
-      line-height: 1.4;
-    }
-
-    .step-num {
-      width: 24px;
-      height: 24px;
-      min-width: 24px;
-      background: var(--accent);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    /* ── NOTIFY BUTTON ── */
-    .notify-btn {
-      display: none;
-      width: 100%;
-      padding: 15px;
-      border-radius: 50px;
-      border: none;
-      background: var(--accent);
-      color: white;
-      font-family: var(--sans);
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0,85,221,0.35);
-      transition: all 0.2s;
-      animation: fadeUp 0.4s 0.15s ease both;
-      letter-spacing: 0.2px;
-    }
-
-    .notify-btn:hover { transform: translateY(-1px); }
-    .notify-btn:active { transform: translateY(0); }
-    .notify-btn.active {
-      background: var(--surface);
-      color: var(--text2);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-
-    /* ── PREFS CARD ── */
-    .prefs-card {
-      display: none;
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .prefs-title {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--text3);
-      font-family: var(--mono);
-      padding: 14px 16px 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .pref-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-    }
-
-    .pref-row:last-child { border-bottom: none; }
-    .pref-row-label { font-size: 14px; font-weight: 500; color: var(--text); }
-
-    .pref-toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
-    .pref-toggle input { opacity: 0; width: 0; height: 0; }
-
-    .pref-slider {
-      position: absolute;
-      inset: 0;
-      background: #b0b8cc;
-      border-radius: 26px;
-      transition: background 0.3s;
-    }
-
-    .pref-slider:before {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      left: 3px;
-      top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: transform 0.3s;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-    }
-
-    .pref-toggle input:checked + .pref-slider { background: var(--accent); }
-    .pref-toggle input:checked + .pref-slider:before { transform: translateX(18px); }
-
-    /* ── BOTTOM ── */
-    .unsub-btn {
-      display: none;
-      background: none;
-      border: none;
-      font-family: var(--sans);
-      font-size: 13px;
-      color: var(--text3);
-      cursor: pointer;
-      padding: 10px;
-      text-decoration: underline;
-      text-underline-offset: 3px;
+      padding: 0 4px;
       margin-top: 4px;
     }
 
+    .lifts-block {
+      padding: 12px 16px 14px; border-top: 1px solid var(--border);
+      background: var(--surface2); display: flex; align-items: flex-start; gap: 10px;
+    }
+    .lifts-icon { font-size: 15px; margin-top: 2px; flex-shrink: 0; }
+    .lifts-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text3); font-family: var(--mono); margin-bottom: 3px;
+    }
+    .lifts-value { font-size: 13px; font-weight: 500; color: var(--text); }
+    .refresh-time {
+      font-family: var(--mono); font-size: 10px; color: var(--text3);
+      margin-left: auto; align-self: flex-end; flex-shrink: 0;
+    }
+
+    .install-card {
+      background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
+      border: 1px solid var(--border); padding: 20px; margin-bottom: 12px;
+      animation: fadeUp 0.4s 0.1s ease both;
+    }
+    .install-card-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .install-card-sub { font-size: 12px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
+    .steps-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .steps-list li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text2); line-height: 1.4; }
+    .step-num {
+      width: 24px; height: 24px; min-width: 24px; background: var(--accent);
+      color: white; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 11px; font-weight: 700;
+    }
+
+    .notify-btn {
+      display: none; width: 100%; padding: 15px; border-radius: 50px; border: none;
+      background: var(--accent); color: white; font-family: var(--sans);
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,85,221,0.35);
+      transition: all 0.2s; animation: fadeUp 0.4s 0.15s ease both; letter-spacing: 0.2px;
+    }
+    .notify-btn:hover { transform: translateY(-1px); }
+    .notify-btn:active { transform: translateY(0); }
+    .notify-btn.active { background: var(--surface); color: var(--text2); box-shadow: var(--shadow); border: 1px solid var(--border); }
+
+    .prefs-card {
+      display: none; background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; margin-top: 10px;
+    }
+    .prefs-title {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+      color: var(--text3); font-family: var(--mono); padding: 14px 16px 10px; border-bottom: 1px solid var(--border);
+    }
+    .pref-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-bottom: 1px solid var(--border); cursor: pointer;
+    }
+    .pref-row:last-child { border-bottom: none; }
+    .pref-row-label { font-size: 14px; font-weight: 500; color: var(--text); }
+    .pref-toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+    .pref-toggle input { opacity: 0; width: 0; height: 0; }
+    .pref-slider { position: absolute; inset: 0; background: #b0b8cc; border-radius: 26px; transition: background 0.3s; }
+    .pref-slider:before {
+      content: ''; position: absolute; width: 20px; height: 20px;
+      left: 3px; top: 3px; background: white; border-radius: 50%;
+      transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+    .pref-toggle input:checked + .pref-slider { background: var(--accent); }
+    .pref-toggle input:checked + .pref-slider:before { transform: translateX(18px); }
+
+    .unsub-btn {
+      display: none; background: none; border: none; font-family: var(--sans);
+      font-size: 13px; color: var(--text3); cursor: pointer; padding: 10px;
+      text-decoration: underline; text-underline-offset: 3px; margin-top: 4px;
+    }
+
     .bottom-bar {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 16px;
-      padding: 0 4px;
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      margin-top: 16px; padding: 0 4px;
     }
-
     .lang-btn {
-      background: none;
-      border: none;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text3);
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      padding: 4px 8px;
+      background: none; border: none; font-family: var(--mono); font-size: 12px;
+      color: var(--text3); cursor: pointer; letter-spacing: 0.5px; padding: 4px 8px;
     }
-
     .lang-btn:hover { color: var(--text2); }
-
     .paypal-btn {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 9px 18px;
-      background: #003087;
-      color: white;
-      border-radius: 50px;
-      text-decoration: none;
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 600;
-      box-shadow: 0 2px 12px rgba(0,48,135,0.25);
-      transition: all 0.2s;
+      display: flex; align-items: center; gap: 7px; padding: 9px 18px;
+      background: #003087; color: white; border-radius: 50px; text-decoration: none;
+      font-family: var(--sans); font-size: 13px; font-weight: 600;
+      box-shadow: 0 2px 12px rgba(0,48,135,0.25); transition: all 0.2s;
     }
-
     .paypal-btn:hover { transform: translateY(-1px); }
 
     .disclaimer {
-      width: 100%;
-      margin-top: 20px;
-      font-size: 11px;
-      color: var(--text3);
-      text-align: center;
-      line-height: 1.7;
-      padding: 0 8px;
+      width: 100%; margin-top: 20px; font-size: 11px; color: var(--text3);
+      text-align: center; line-height: 1.7; padding: 0 8px;
     }
-
     .disclaimer a { color: var(--text2); text-decoration: underline; text-underline-offset: 2px; }
 
-    .error {
-      color: var(--red);
-      text-align: center;
-      margin-top: 12px;
-      font-size: 12px;
-      font-family: var(--mono);
-    }
-
+    .error { color: var(--red); text-align: center; margin-top: 12px; font-size: 12px; font-family: var(--mono); }
     .spacer { height: 8px; }
   </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
-  <!-- WAVES -->
   <div class="waves-bg" aria-hidden="true" role="presentation">
     <div class="waves-track">
       <svg viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -501,7 +317,6 @@
     </div>
   </div>
 
-  <!-- HEADER -->
   <header class="header">
     <div class="logo-pill">
       <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Great Lakes St. Lawrence Seaway System"/>
@@ -516,7 +331,6 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
   <main>
 
     <!-- PONT GONZAGUE -->
@@ -527,6 +341,15 @@
           <span class="status-dot" aria-hidden="true"></span>
           <span id="labelGonzague">Chargement...</span>
         </div>
+      </div>
+      <div class="alt-route-block" id="altGonzague" aria-hidden="true" style="display:none;">
+        <div class="alt-route-label" id="altLabelGonzague">Itinéraire alternatif</div>
+        <a class="alt-route-btn" id="altBtnGonzague1" href="#" target="_blank" rel="noopener noreferrer">
+          🗺️ <span id="altTextGonzague1">Pont Larocque →</span>
+        </a>
+        <a class="alt-route-btn" id="altBtnGonzague2" href="#" target="_blank" rel="noopener noreferrer">
+          🗺️ <span id="altTextGonzague2">← Pont Larocque</span>
+        </a>
       </div>
       <div class="lifts-block">
         <span class="lifts-icon" aria-hidden="true">🚢</span>
@@ -547,6 +370,15 @@
           <span id="labelLarocque">Chargement...</span>
         </div>
       </div>
+      <div class="alt-route-block" id="altLarocque" aria-hidden="true" style="display:none;">
+        <div class="alt-route-label" id="altLabelLarocque">Itinéraire alternatif</div>
+        <a class="alt-route-btn" id="altBtnLarocque1" href="#" target="_blank" rel="noopener noreferrer">
+          🗺️ <span id="altTextLarocque1">Pont Gonzague →</span>
+        </a>
+        <a class="alt-route-btn" id="altBtnLarocque2" href="#" target="_blank" rel="noopener noreferrer">
+          🗺️ <span id="altTextLarocque2">← Pont Gonzague</span>
+        </a>
+      </div>
       <div class="lifts-block">
         <span class="lifts-icon" aria-hidden="true">🚢</span>
         <div>
@@ -559,8 +391,7 @@
 
     <div class="spacer"></div>
 
-    <!-- INSTALL CARD -->
-    <div class="install-card" id="installCard" style="display:none;">
+    <div class="install-card" id="installCard" aria-hidden="true">
       <div class="install-card-title" id="installTitle">📲 Installer l'app</div>
       <div class="install-card-sub" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</div>
       <ul class="steps-list" id="iosInstructions" style="display:none;">
@@ -576,39 +407,42 @@
       </ul>
     </div>
 
-    <!-- NOTIFY BUTTON -->
-    <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()" aria-label="Activer les notifications de levage de pont">
+    <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()"
+            aria-label="Activer les notifications de levage de pont"
+            aria-hidden="true" style="display:none;">
       🔔 Activer les notifications
     </button>
 
-    <!-- PREFS CARD -->
-    <div class="prefs-card" id="prefsCard" role="group" aria-label="Préférences de notifications">
+    <div class="prefs-card" id="prefsCard" role="group"
+         aria-label="Préférences de notifications" aria-hidden="true">
       <div class="prefs-title" id="prefTitle">Notifications</div>
       <label class="pref-row">
         <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
         <div class="pref-toggle">
-          <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()" aria-label="Notifications pour le pont St-Louis-de-Gonzague"/>
+          <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"
+                 aria-label="Notifications pour le pont St-Louis-de-Gonzague"/>
           <span class="pref-slider"></span>
         </div>
       </label>
       <label class="pref-row">
         <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
         <div class="pref-toggle">
-          <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()" aria-label="Notifications pour le pont Larocque"/>
+          <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"
+                 aria-label="Notifications pour le pont Larocque"/>
           <span class="pref-slider"></span>
         </div>
       </label>
     </div>
 
-    <!-- UNSUB -->
-    <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">
+    <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()"
+            aria-hidden="true" style="display:none;">
       Désactiver les notifications
     </button>
 
-    <!-- BOTTOM BAR -->
     <div class="bottom-bar">
       <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-label="Changer la langue">EN</button>
-      <a href="https://paypal.me/kvndbrl" target="_blank" rel="noopener noreferrer" class="paypal-btn" aria-label="Soutenir ce projet via PayPal">
+      <a href="https://paypal.me/kvndbrl" target="_blank" rel="noopener noreferrer"
+         class="paypal-btn" aria-label="Soutenir ce projet via PayPal">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="white" aria-hidden="true">
           <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.379 3.034.682 6.657-2.255 8.705-1.908 1.32-4.513 1.768-7.517 1.547l-.81 5.135h3.238c.524 0 .968-.382 1.05-.9l.974-6.174h2.19c4.298 0 7.664-1.748 8.647-6.797.418-2.149.086-3.77-.91-4.975z"/>
         </svg>
@@ -627,11 +461,46 @@
 <script>
   const BACKEND_URL = 'https://pont-st-louis-de-gonzague.onrender.com';
 
+  // ── Bridge GPS coordinates ──
+  const BRIDGES = {
+    gonzague: { lat: 45.2312, lng: -74.0019 },
+    larocque: { lat: 45.2259, lng: -74.1147 }
+  };
+
+  // Canal latitude dividing line (north = Valleyfield side, south = St-Louis/St-Stanislas side)
+  const CANAL_LAT = 45.228;
+
+  // Route 236 + A-30 waypoint (for both-bridges-lifted scenario)
+  const ROUTE_236_A30 = '45.3200,-74.1500';
+
+  // Destinations on each side of the canal
+  const DEST = {
+    gonzague: {
+      north: '45.2312,-74.0019', // pont Gonzague côté nord
+      south: '45.2290,-74.0025'  // pont Gonzague côté sud
+    },
+    larocque: {
+      north: '45.2259,-74.1147', // pont Larocque côté nord
+      south: '45.2240,-74.1155'  // pont Larocque côté sud
+    }
+  };
+
+  let userLat = null;
+  let lastData = null;
+
+  // ── Translations ──
   const translations = {
     fr: {
       statusLabels: { disponible: 'Disponible', bientot_leve: 'Levage imminent', leve: 'Levé' },
       liftsLabel: 'Levages — 60 min',
       noLifts: 'Aucun levage prévu',
+      altLabel: 'Itinéraire alternatif',
+      altViaLarocque_to:   'Vers l\'autre rive via Pont Larocque',
+      altViaLarocque_from: 'Vers Valleyfield via Pont Larocque',
+      altViaGonzague_to:   'Vers l\'autre rive via Pont Gonzague',
+      altViaGonzague_from: 'Vers Valleyfield via Pont Gonzague',
+      altVia236_to:        'Vers l\'autre rive via Route 236 + A-30',
+      altVia236_from:      'Vers Valleyfield via Route 236 + A-30',
       installTitle: '📲 Installer l\'app',
       installSubtitle: 'Installez l\'app pour recevoir des notifications lors des levages',
       prefTitle: 'Notifications',
@@ -639,11 +508,8 @@
       notifyActive: '✅ Notifications activées',
       unsubBtn: 'Désactiver les notifications',
       supportText: 'Soutenir',
-      langBtn: 'EN',
-      langLabel: 'Switch to English',
-      retry: 'Réessayer',
-      reconnecting: 'Reconnexion',
-      serverError: 'Serveur indisponible.',
+      langBtn: 'EN', langLabel: 'Switch to English',
+      retry: 'Réessayer', reconnecting: 'Reconnexion', serverError: 'Serveur indisponible.',
       permDenied: 'Permission refusée. Vérifiez les paramètres de notifications de votre appareil.',
       notSupported: 'Les notifications ne sont pas supportées sur votre appareil.',
       iosAlert: 'Pour activer les notifications sur iPhone :\n\n1. Appuyez sur Partager ⬆️\n2. Sélectionnez "Sur l\'écran d\'accueil"\n3. Ouvrez l\'app depuis l\'écran d\'accueil\n4. Appuyez à nouveau sur Activer les notifications',
@@ -660,6 +526,13 @@
       statusLabels: { disponible: 'Available', bientot_leve: 'Lift imminent', leve: 'Lifted' },
       liftsLabel: 'Lifts — 60 min',
       noLifts: 'No anticipated bridge lifts',
+      altLabel: 'Alternate route',
+      altViaLarocque_to:   'To the other side via Larocque Bridge',
+      altViaLarocque_from: 'To Valleyfield via Larocque Bridge',
+      altViaGonzague_to:   'To the other side via Gonzague Bridge',
+      altViaGonzague_from: 'To Valleyfield via Gonzague Bridge',
+      altVia236_to:        'To the other side via Route 236 + Hwy 30',
+      altVia236_from:      'To Valleyfield via Route 236 + Hwy 30',
       installTitle: '📲 Install the app',
       installSubtitle: 'Install the app to receive bridge lift notifications',
       prefTitle: 'Notifications',
@@ -667,11 +540,8 @@
       notifyActive: '✅ Notifications enabled',
       unsubBtn: 'Disable notifications',
       supportText: 'Support',
-      langBtn: 'FR',
-      langLabel: 'Passer en français',
-      retry: 'Retry',
-      reconnecting: 'Reconnecting',
-      serverError: 'Server unavailable.',
+      langBtn: 'FR', langLabel: 'Passer en français',
+      retry: 'Retry', reconnecting: 'Reconnecting', serverError: 'Server unavailable.',
       permDenied: 'Permission denied. Check your device notification settings.',
       notSupported: 'Notifications are not supported on your device.',
       iosAlert: 'To enable notifications on iPhone:\n\n1. Tap Share ⬆️\n2. Select "Add to Home Screen"\n3. Open the app from your home screen\n4. Tap Enable Notifications again',
@@ -687,29 +557,152 @@
   };
 
   const browserLang = navigator.language || navigator.userLanguage;
-  let currentLang = localStorage.getItem('appLang') ||
-    (browserLang.startsWith('en') ? 'en' : 'fr');
-  let lastData = null;
+  let currentLang = localStorage.getItem('appLang') || (browserLang.startsWith('en') ? 'en' : 'fr');
 
+  // ── Dark mode ──
   function applyDark(dark) {
     document.body.classList.toggle('dark', dark);
     const input = document.getElementById('darkToggleInput');
     input.checked = dark;
     input.setAttribute('aria-checked', dark ? 'true' : 'false');
   }
-
   function toggleDark() {
     const isDark = document.getElementById('darkToggleInput').checked;
     localStorage.setItem('darkMode', isDark ? '1' : '0');
     applyDark(isDark);
   }
-
   const savedDark = localStorage.getItem('darkMode');
-  if (savedDark !== null) {
-    applyDark(savedDark === '1');
-  } else {
-    applyDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+  if (savedDark !== null) applyDark(savedDark === '1');
+  else applyDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+  // ── GPS ──
+  function getUserLocation() {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      pos => { userLat = pos.coords.latitude; updateAltRoutes(); },
+      () => { userLat = null; updateAltRoutes(); },
+      { timeout: 8000, maximumAge: 60000 }
+    );
   }
+
+  function mapsUrl(dest, waypoint = null) {
+    let url = `https://www.google.com/maps/dir/?api=1&destination=${dest}`;
+    if (waypoint) url += `&waypoints=${waypoint}`;
+    return url;
+  }
+
+  // ── Alternate route logic ──
+  function updateAltRoutes() {
+    if (!lastData) return;
+    const t = translations[currentLang];
+
+    const gonzagueLifted = lastData.gonzague.status === 'leve' || lastData.gonzague.status === 'bientot_leve';
+    const larocqueLifted = lastData.larocque.status === 'leve' || lastData.larocque.status === 'bientot_leve';
+    const bothLifted = gonzagueLifted && larocqueLifted;
+
+    // Determine user side: null = unknown, true = north (Valleyfield), false = south
+    const userNorth = userLat !== null ? userLat >= CANAL_LAT : null;
+
+    // ── Gonzague card ──
+    const altG = document.getElementById('altGonzague');
+    if (gonzagueLifted) {
+      const btn1 = document.getElementById('altBtnGonzague1');
+      const btn2 = document.getElementById('altBtnGonzague2');
+      const lbl1 = document.getElementById('altTextGonzague1');
+      const lbl2 = document.getElementById('altTextGonzague2');
+      document.getElementById('altLabelGonzague').textContent = t.altLabel;
+
+      if (bothLifted) {
+        // Both lifted — show Route 236 + A-30 for both directions
+        lbl1.textContent = t.altVia236_to;
+        btn1.href = mapsUrl(ROUTE_236_A30);
+        lbl2.textContent = t.altVia236_from;
+        btn2.href = mapsUrl(ROUTE_236_A30);
+        btn1.className = 'alt-route-btn both';
+        btn2.className = 'alt-route-btn both';
+      } else {
+        // Only Gonzague lifted — suggest Larocque
+        lbl1.textContent = t.altViaLarocque_to;
+        btn1.href = mapsUrl(DEST.larocque.south);
+        lbl2.textContent = t.altViaLarocque_from;
+        btn2.href = mapsUrl(DEST.larocque.north);
+        btn1.className = 'alt-route-btn';
+        btn2.className = 'alt-route-btn';
+
+        // If we know the user's side, show only the relevant button
+        if (userNorth !== null) {
+          if (userNorth) {
+            // User is north (Valleyfield side) — wants to go south
+            btn1.style.display = 'none';
+            btn2.style.display = 'flex';
+          } else {
+            // User is south — wants to go north
+            btn1.style.display = 'flex';
+            btn2.style.display = 'none';
+          }
+        } else {
+          btn1.style.display = 'flex';
+          btn2.style.display = 'flex';
+        }
+      }
+
+      altG.style.display = 'flex';
+      altG.removeAttribute('aria-hidden');
+    } else {
+      altG.style.display = 'none';
+      altG.setAttribute('aria-hidden', 'true');
+    }
+
+    // ── Larocque card ──
+    const altL = document.getElementById('altLarocque');
+    if (larocqueLifted) {
+      const btn1 = document.getElementById('altBtnLarocque1');
+      const btn2 = document.getElementById('altBtnLarocque2');
+      const lbl1 = document.getElementById('altTextLarocque1');
+      const lbl2 = document.getElementById('altTextLarocque2');
+      document.getElementById('altLabelLarocque').textContent = t.altLabel;
+
+      if (bothLifted) {
+        lbl1.textContent = t.altVia236_to;
+        btn1.href = mapsUrl(ROUTE_236_A30);
+        lbl2.textContent = t.altVia236_from;
+        btn2.href = mapsUrl(ROUTE_236_A30);
+        btn1.className = 'alt-route-btn both';
+        btn2.className = 'alt-route-btn both';
+      } else {
+        // Only Larocque lifted — suggest Gonzague
+        lbl1.textContent = t.altViaGonzague_to;
+        btn1.href = mapsUrl(DEST.gonzague.south);
+        lbl2.textContent = t.altViaGonzague_from;
+        btn2.href = mapsUrl(DEST.gonzague.north);
+        btn1.className = 'alt-route-btn';
+        btn2.className = 'alt-route-btn';
+
+        if (userNorth !== null) {
+          if (userNorth) {
+            btn1.style.display = 'none';
+            btn2.style.display = 'flex';
+          } else {
+            btn1.style.display = 'flex';
+            btn2.style.display = 'none';
+          }
+        } else {
+          btn1.style.display = 'flex';
+          btn2.style.display = 'flex';
+        }
+      }
+
+      altL.style.display = 'flex';
+      altL.removeAttribute('aria-hidden');
+    } else {
+      altL.style.display = 'none';
+      altL.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  // ── Prefs & notifications ──
+  function show(el) { el.style.display = 'block'; el.removeAttribute('aria-hidden'); }
+  function hide(el) { el.style.display = 'none'; el.setAttribute('aria-hidden', 'true'); }
 
   function getSelectedBridges() {
     const b = [];
@@ -729,8 +722,7 @@
           const subData = JSON.parse(JSON.stringify(sub));
           subData.bridges = bridges;
           await fetch(`${BACKEND_URL}/subscribe`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(subData)
           });
         }
@@ -753,20 +745,19 @@
     const notifyBtn = document.getElementById('notifyBtn');
     const unsubBtn = document.getElementById('unsubBtn');
     const prefsCard = document.getElementById('prefsCard');
-
     if (isEnabled) {
       notifyBtn.textContent = t.notifyActive;
       notifyBtn.classList.add('active');
-      unsubBtn.style.display = 'block';
-      prefsCard.style.display = 'block';
+      show(unsubBtn); unsubBtn.textContent = t.unsubBtn;
+      show(prefsCard);
     } else {
       notifyBtn.textContent = t.notifyBtn;
       notifyBtn.classList.remove('active');
-      unsubBtn.style.display = 'none';
-      prefsCard.style.display = 'none';
+      hide(unsubBtn); hide(prefsCard);
     }
   }
 
+  // ── Display ──
   function updateDisplay() {
     if (!lastData) return;
     const t = translations[currentLang];
@@ -784,6 +775,8 @@
     document.getElementById('liftsLarocque').textContent =
       lastData.larocque.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.larocque.next_lifts;
     document.getElementById('refreshLarocque').textContent = lastData.last_refreshed.slice(11, 16);
+
+    updateAltRoutes();
   }
 
   function applyTranslations() {
@@ -814,8 +807,8 @@
     applyTranslations();
   }
 
+  // ── Fetch ──
   let retryCount = 0;
-
   async function fetchStatus() {
     try {
       const res = await fetch(`${BACKEND_URL}/status`, { signal: AbortSignal.timeout(10000) });
@@ -838,14 +831,13 @@
     }
   }
 
+  // ── Notifications ──
   async function toggleNotifications() {
     const t = translations[currentLang];
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
-
     if (isIOS && !isInstalled) { alert(t.iosAlert); return; }
     if (!('Notification' in window) || !('serviceWorker' in navigator)) { alert(t.notSupported); return; }
-
     const perm = await Notification.requestPermission();
     if (perm === 'granted') {
       const reg = await navigator.serviceWorker.ready;
@@ -856,8 +848,7 @@
       const subData = JSON.parse(JSON.stringify(sub));
       subData.bridges = getSelectedBridges();
       await fetch(`${BACKEND_URL}/subscribe`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        method: 'POST', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(subData)
       });
       localStorage.setItem('notificationsEnabled', 'true');
@@ -874,8 +865,7 @@
       const sub = await reg.pushManager.getSubscription();
       if (sub) {
         await fetch(`${BACKEND_URL}/unsubscribe`, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          method: 'POST', headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ endpoint: sub.endpoint })
         });
         await sub.unsubscribe();
@@ -885,28 +875,41 @@
     updateNotifyButtons();
   }
 
+  // ── Platform detection ──
   const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const notifyBtn = document.getElementById('notifyBtn');
+  const installCard = document.getElementById('installCard');
 
   if (isInstalled) {
-    document.getElementById('notifyBtn').style.display = 'block';
+    show(notifyBtn);
+    hide(installCard);
   } else if (isIOS) {
-    document.getElementById('installCard').style.display = 'block';
-    document.getElementById('iosInstructions').style.display = 'flex';
-    document.getElementById('iosInstructions').style.flexDirection = 'column';
+    hide(notifyBtn);
+    show(installCard);
+    const iosEl = document.getElementById('iosInstructions');
+    iosEl.style.display = 'flex';
+    iosEl.style.flexDirection = 'column';
+    iosEl.removeAttribute('aria-hidden');
   } else {
-    document.getElementById('installCard').style.display = 'block';
-    document.getElementById('androidInstructions').style.display = 'flex';
-    document.getElementById('androidInstructions').style.flexDirection = 'column';
+    hide(notifyBtn);
+    show(installCard);
+    const andEl = document.getElementById('androidInstructions');
+    andEl.style.display = 'flex';
+    andEl.style.flexDirection = 'column';
+    andEl.removeAttribute('aria-hidden');
   }
 
   loadPrefs();
   applyTranslations();
+  getUserLocation();
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
   fetchStatus();
   setInterval(fetchStatus, 60000);
+  // Refresh GPS every 5 minutes
+  setInterval(getUserLocation, 300000);
 </script>
 </body>
 </html>
