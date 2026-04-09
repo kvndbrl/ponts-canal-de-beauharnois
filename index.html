@@ -128,18 +128,9 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .bridge-name {
-      padding: 14px 16px 0; font-size: 10px; font-weight: 700;
-      letter-spacing: 1.5px; text-transform: uppercase;
-      color: var(--text3); font-family: var(--mono);
-    }
+    .bridge-name { padding: 14px 16px 0; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); font-family: var(--mono); }
     .status-block { padding: 12px 16px 16px; }
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 16px; border-radius: 50px;
-      font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
-      transition: all 0.4s ease;
-    }
+    .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 700; letter-spacing: 0.3px; transition: all 0.4s ease; }
     .status-pill.disponible { background: var(--green-bg); color: var(--green); }
     .status-pill.bientot_leve { background: var(--yellow-bg); color: var(--yellow); animation: blink 2s infinite; }
     .status-pill.leve { background: var(--red-bg); color: var(--red); animation: blink 1.2s infinite; }
@@ -147,98 +138,55 @@
     .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
     .duration-block { display: none; padding: 0 16px 14px; gap: 8px; }
-    .duration-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: 600;
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text2); font-family: var(--mono);
-    }
+    .duration-pill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: 600; background: var(--surface2); border: 1px solid var(--border); color: var(--text2); font-family: var(--mono); }
 
-    .closure-block {
-      display: none; margin: 0 12px 12px;
-      padding: 10px 14px; border-radius: 12px;
-      background: var(--orange-bg); border: 1px solid rgba(122,56,0,0.15);
-      gap: 8px; align-items: flex-start;
-    }
+    .closure-block { display: none; margin: 0 12px 12px; padding: 10px 14px; border-radius: 12px; background: var(--orange-bg); border: 1px solid rgba(122,56,0,0.15); gap: 8px; align-items: flex-start; }
     body.dark .closure-block { border-color: rgba(255,150,50,0.2); }
     .closure-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
     .closure-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--orange); font-family: var(--mono); margin-bottom: 3px; }
     .closure-value { font-size: 12px; font-weight: 600; color: var(--orange); font-family: var(--mono); line-height: 1.5; }
 
     .alt-route-block { padding: 0 12px 14px; }
-    .alt-route-btn {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; padding: 11px 16px; border-radius: 50px;
-      border: 1.5px solid var(--border); background: var(--surface2);
-      color: var(--text2); font-family: var(--sans); font-size: 13px; font-weight: 600;
-      cursor: pointer; text-decoration: none; transition: all 0.2s;
-    }
+    .alt-route-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px 16px; border-radius: 50px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text2); font-family: var(--sans); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; }
     .alt-route-btn:hover { background: var(--border); }
     .alt-route-btn .map-icon { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .alt-route-btn .map-icon.google { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
     .alt-route-btn .map-icon.apple { background: linear-gradient(135deg, #2b9af3 0%, #0d6ef5 50%, #1a4fd6 100%); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
 
-    .lifts-block {
-      padding: 12px 16px 14px; border-top: 1px solid var(--border);
-      background: var(--surface2); display: flex; align-items: flex-start; gap: 10px;
-    }
+    .lifts-block { padding: 12px 16px 14px; border-top: 1px solid var(--border); background: var(--surface2); display: flex; align-items: flex-start; gap: 10px; }
     .lifts-icon { font-size: 15px; margin-top: 2px; flex-shrink: 0; }
     .lifts-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); font-family: var(--mono); margin-bottom: 3px; }
     .lifts-value { font-size: 13px; font-weight: 500; color: var(--text); }
     .refresh-time { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-left: auto; align-self: flex-end; flex-shrink: 0; }
 
-    .install-card {
-      background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
-      border: 1px solid var(--border); padding: 20px; margin-bottom: 12px;
-      animation: fadeUp 0.4s 0.1s ease both;
-    }
+    .install-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); padding: 20px; margin-bottom: 12px; animation: fadeUp 0.4s 0.1s ease both; }
     .install-card-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
     .install-card-sub { font-size: 12px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
     .steps-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .steps-list li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text2); line-height: 1.4; }
     .step-num { width: 24px; height: 24px; min-width: 24px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
 
-    .notify-btn {
-      display: none; width: 100%; padding: 15px; border-radius: 50px; border: none;
-      background: var(--accent); color: white; font-family: var(--sans);
-      font-size: 15px; font-weight: 700; cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0,85,221,0.35);
-      transition: all 0.2s; animation: fadeUp 0.4s 0.15s ease both; letter-spacing: 0.2px;
-    }
+    .notify-btn { display: none; width: 100%; padding: 15px; border-radius: 50px; border: none; background: var(--accent); color: white; font-family: var(--sans); font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(0,85,221,0.35); transition: all 0.2s; animation: fadeUp 0.4s 0.15s ease both; letter-spacing: 0.2px; }
     .notify-btn:hover { transform: translateY(-1px); }
     .notify-btn:active { transform: translateY(0); }
 
-    /* ── Notif summary / settings card ── */
-    .notif-summary {
-      display: none; background: var(--surface); border-radius: var(--radius);
-      box-shadow: var(--shadow); border: 1px solid var(--border);
-      overflow: hidden; margin-top: 10px; animation: fadeUp 0.3s ease both;
-    }
-    .notif-summary-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px; cursor: pointer; user-select: none;
-    }
+    /* Notif summary */
+    .notif-summary { display: none; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; margin-top: 10px; animation: fadeUp 0.3s ease both; }
+    .notif-summary-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; cursor: pointer; user-select: none; }
     .notif-summary-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .notif-status-dot {
-      width: 8px; height: 8px; min-width: 8px; border-radius: 50%;
-      background: var(--accent); box-shadow: 0 0 0 3px rgba(0,85,221,0.15);
-    }
+    .notif-status-dot { width: 8px; height: 8px; min-width: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px rgba(0,85,221,0.15); }
     body.dark .notif-status-dot { box-shadow: 0 0 0 3px rgba(77,159,255,0.2); }
     .notif-summary-text { display: flex; flex-direction: column; min-width: 0; }
     .notif-summary-title { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; }
     .notif-summary-bridges { font-size: 11px; color: var(--text3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .notif-chevron { color: var(--text3); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
     .notif-summary.expanded .notif-chevron { transform: rotate(180deg); }
-
     .notif-details { display: none; border-top: 1px solid var(--border); }
     .notif-summary.expanded .notif-details { display: block; }
 
-    /* Settings sections */
-    .settings-section-title {
-      padding: 12px 16px 6px;
-      font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
-      text-transform: uppercase; color: var(--text3); font-family: var(--mono);
-    }
+    /* Settings */
+    .settings-section-title { padding: 14px 16px 4px; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); font-family: var(--mono); }
+    .settings-section-desc { padding: 0 16px 10px; font-size: 11px; color: var(--text3); line-height: 1.55; }
 
     .pref-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
     .pref-row:last-child { border-bottom: none; }
@@ -250,86 +198,39 @@
     .pref-toggle input:checked + .pref-slider { background: var(--accent); }
     .pref-toggle input:checked + .pref-slider:before { transform: translateX(18px); }
 
-    /* Time range rows */
-    .time-range-row {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 16px; border-bottom: 1px solid var(--border);
-    }
-    .time-range-row:last-of-type { border-bottom: none; }
+    /* Time ranges */
+    .time-range-row { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+    .time-range-label { font-size: 12px; font-weight: 600; color: var(--text2); min-width: 48px; }
+    .time-range-label.optional { color: var(--text3); }
+    .time-sep { font-size: 12px; color: var(--text3); font-family: var(--mono); flex-shrink: 0; }
 
-    .time-range-label {
-      font-size: 12px; font-weight: 600; color: var(--text2);
-      min-width: 48px;
-    }
-
-    .time-range-label.optional {
-      color: var(--text3);
-    }
-
-    .time-sep {
-      font-size: 12px; color: var(--text3); font-family: var(--mono);
-      flex-shrink: 0;
-    }
-
-    /* Native time input (Android) */
     input[type="time"].time-input {
-      flex: 1;
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 13px;
-      outline: none;
-      -webkit-appearance: none;
+      flex: 1; padding: 6px 10px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--surface2);
+      color: var(--text); font-family: var(--mono); font-size: 13px;
+      outline: none; -webkit-appearance: none;
     }
+    input[type="time"].time-input:focus { border-color: var(--accent); }
 
-    input[type="time"].time-input:focus {
-      border-color: var(--accent);
-    }
-
-    /* iOS select dropdown */
     select.time-select {
-      flex: 1;
-      padding: 6px 8px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 12px;
-      outline: none;
-      -webkit-appearance: none;
-      appearance: none;
-      text-align: center;
-      cursor: pointer;
+      flex: 1; padding: 6px 8px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--surface2);
+      color: var(--text); font-family: var(--mono); font-size: 12px;
+      outline: none; -webkit-appearance: none; appearance: none;
+      text-align: center; cursor: pointer;
     }
-
     select.time-select:focus { border-color: var(--accent); }
 
-    .time-clear {
-      background: none; border: none; color: var(--text3);
-      font-size: 16px; cursor: pointer; padding: 0 2px;
-      flex-shrink: 0; line-height: 1;
-    }
+    .time-clear { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 0 2px; flex-shrink: 0; line-height: 1; }
     .time-clear:hover { color: var(--red); }
 
     .unsub-row { padding: 12px 16px; border-top: 1px solid var(--border); }
     .unsub-btn { display: block; background: none; border: none; font-family: var(--sans); font-size: 12px; color: var(--text3); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
 
-    .bottom-bar {
-      width: 100%; display: flex; align-items: center; justify-content: space-between;
-      margin-top: 16px; padding: 0 4px; position: relative; z-index: 1;
-    }
+    .bottom-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 0 4px; position: relative; z-index: 1; }
     .lang-btn { background: none; border: none; font-family: var(--mono); font-size: 12px; color: var(--text3); cursor: pointer; letter-spacing: 0.5px; padding: 4px 8px; }
     .lang-btn:hover { color: var(--text2); }
-    .paypal-btn {
-      display: flex; align-items: center; gap: 7px; padding: 9px 18px;
-      background: #003087; color: white; border-radius: 50px; text-decoration: none;
-      font-family: var(--sans); font-size: 13px; font-weight: 600;
-      box-shadow: 0 2px 12px rgba(0,48,135,0.25); transition: all 0.2s;
-    }
+    .paypal-btn { display: flex; align-items: center; gap: 7px; padding: 9px 18px; background: #003087; color: white; border-radius: 50px; text-decoration: none; font-family: var(--sans); font-size: 13px; font-weight: 600; box-shadow: 0 2px 12px rgba(0,48,135,0.25); transition: all 0.2s; }
     .paypal-btn:hover { transform: translateY(-1px); }
 
     .disclaimer { width: 100%; margin-top: 20px; font-size: 11px; color: var(--text3); text-align: center; line-height: 1.7; padding: 0 8px; position: relative; z-index: 1; }
@@ -483,7 +384,7 @@
 
       <div class="notif-details" id="notifDetails">
 
-        <!-- Bridges section -->
+        <!-- Bridges -->
         <div class="settings-section-title" id="settingsBridgesTitle">Ponts</div>
         <label class="pref-row">
           <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
@@ -502,25 +403,26 @@
           </div>
         </label>
 
-        <!-- Time ranges section -->
-        <div class="settings-section-title" id="settingsTimeTitle">Plages horaires</div>
+        <!-- Time ranges -->
+        <div class="settings-section-title" id="settingsTimeTitle">Plages horaires (optionnel)</div>
+        <div class="settings-section-desc" id="settingsTimeDesc">
+          Recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.
+        </div>
 
-        <!-- Range 1 -->
-        <div class="time-range-row" id="range1Row">
+        <div class="time-range-row">
           <span class="time-range-label" id="range1Label">Plage 1</span>
           <div id="range1Start"></div>
           <span class="time-sep">→</span>
           <div id="range1End"></div>
-          <button class="time-clear" id="range1Clear" onclick="clearRange(1)" title="Effacer">×</button>
+          <button class="time-clear" onclick="clearRange(1)" aria-label="Effacer plage 1">×</button>
         </div>
 
-        <!-- Range 2 -->
-        <div class="time-range-row" id="range2Row">
+        <div class="time-range-row" style="border-bottom: none;">
           <span class="time-range-label optional" id="range2Label">Plage 2</span>
           <div id="range2Start"></div>
           <span class="time-sep">→</span>
           <div id="range2End"></div>
-          <button class="time-clear" id="range2Clear" onclick="clearRange(2)" title="Effacer">×</button>
+          <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">×</button>
         </div>
 
         <!-- Unsub -->
@@ -579,7 +481,7 @@
   setupMapIcon(document.getElementById('mapIconGonzague'));
   setupMapIcon(document.getElementById('mapIconLarocque'));
 
-  // ── Time range inputs ─────────────────────────────────────────────
+  // ── Time range inputs ──────────────────────────────────────────────
   const TIME_STEPS = [];
   for (let h = 0; h < 24; h++) {
     for (let m of [0, 30]) {
@@ -587,12 +489,12 @@
     }
   }
 
-  function makeTimeInput(id, placeholder, onchange) {
+  function makeTimeInput(id, ariaLabel) {
     if (isIOS) {
       const sel = document.createElement('select');
       sel.className = 'time-select';
       sel.id = id;
-      sel.setAttribute('aria-label', placeholder);
+      sel.setAttribute('aria-label', ariaLabel);
       const empty = document.createElement('option');
       empty.value = ''; empty.textContent = '--:--';
       sel.appendChild(empty);
@@ -601,15 +503,15 @@
         opt.value = t; opt.textContent = t;
         sel.appendChild(opt);
       });
-      sel.addEventListener('change', onchange);
+      sel.addEventListener('change', saveTimeRanges);
       return sel;
     } else {
       const inp = document.createElement('input');
       inp.type = 'time';
       inp.className = 'time-input';
       inp.id = id;
-      inp.setAttribute('aria-label', placeholder);
-      inp.addEventListener('change', onchange);
+      inp.setAttribute('aria-label', ariaLabel);
+      inp.addEventListener('change', saveTimeRanges);
       return inp;
     }
   }
@@ -624,12 +526,9 @@
     if (el) el.value = val || '';
   }
 
-  // Build time inputs
   ['1','2'].forEach(n => {
-    const startEl = makeTimeInput(`range${n}StartInput`, `Début plage ${n}`, saveTimeRanges);
-    const endEl = makeTimeInput(`range${n}EndInput`, `Fin plage ${n}`, saveTimeRanges);
-    document.getElementById(`range${n}Start`).appendChild(startEl);
-    document.getElementById(`range${n}End`).appendChild(endEl);
+    document.getElementById(`range${n}Start`).appendChild(makeTimeInput(`range${n}StartInput`, `Début plage ${n}`));
+    document.getElementById(`range${n}End`).appendChild(makeTimeInput(`range${n}EndInput`, `Fin plage ${n}`));
   });
 
   function clearRange(n) {
@@ -665,7 +564,6 @@
     });
   }
 
-  // ── Sync prefs to server ──────────────────────────────────────────
   async function syncPrefs() {
     if (localStorage.getItem('notificationsEnabled') !== 'true') return;
     try {
@@ -687,10 +585,8 @@
 
   function toggleNotifExpand() {
     notifExpanded = !notifExpanded;
-    const summary = document.getElementById('notifSummary');
-    const header = document.getElementById('notifSummaryHeader');
-    summary.classList.toggle('expanded', notifExpanded);
-    header.setAttribute('aria-expanded', notifExpanded ? 'true' : 'false');
+    document.getElementById('notifSummary').classList.toggle('expanded', notifExpanded);
+    document.getElementById('notifSummaryHeader').setAttribute('aria-expanded', notifExpanded ? 'true' : 'false');
   }
 
   function formatClosure(raw, lang) {
@@ -710,7 +606,8 @@
       notifTitle: '✅ Notifications activées',
       notifBridges: (g, l) => [g && 'Pont St-Louis', l && 'Pont Larocque'].filter(Boolean).join(' · ') || '—',
       settingsBridgesTitle: 'Ponts',
-      settingsTimeTitle: 'Plages horaires',
+      settingsTimeTitle: 'Plages horaires (optionnel)',
+      settingsTimeDesc: 'Recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.',
       range1Label: 'Plage 1',
       range2Label: 'Plage 2',
       installTitle: '📲 Installer l\'app',
@@ -743,7 +640,8 @@
       notifTitle: '✅ Notifications enabled',
       notifBridges: (g, l) => [g && 'St-Louis Bridge', l && 'Larocque Bridge'].filter(Boolean).join(' · ') || '—',
       settingsBridgesTitle: 'Bridges',
-      settingsTimeTitle: 'Time ranges',
+      settingsTimeTitle: 'Time ranges (optional)',
+      settingsTimeDesc: 'Receive notifications only during certain hours. Leave empty to be notified at any time.',
       range1Label: 'Range 1',
       range2Label: 'Range 2',
       installTitle: '📲 Install the app',
@@ -790,42 +688,33 @@
     const t = translations[currentLang];
     ['gonzague', 'larocque'].forEach(bridge => {
       const cap = bridge.charAt(0).toUpperCase() + bridge.slice(1);
-      const altBlock = document.getElementById(`alt${cap}`);
-      const altBtn = document.getElementById(`altBtn${cap}`);
-      const altText = document.getElementById(`altText${cap}`);
-      const durationBlock = document.getElementById(`duration${cap}`);
-      const closureBlock = document.getElementById(`closure${cap}`);
-      const closureLabel = document.getElementById(`closureLabel${cap}`);
-      const closureValue = document.getElementById(`closureValue${cap}`);
       const status = lastData[bridge].status;
       const lifted = status === 'leve' || status === 'bientot_leve';
       const closure = lastData[bridge].closure;
 
+      const altBlock = document.getElementById(`alt${cap}`);
+      const durationBlock = document.getElementById(`duration${cap}`);
+      const closureBlock = document.getElementById(`closure${cap}`);
+
       if (lifted) {
         const altBridge = bridge === 'gonzague' ? 'larocque' : 'gonzague';
-        altBtn.href = getMapsUrl(altBridge);
-        altText.textContent = t.altText;
-        altBlock.style.display = 'block';
-        altBlock.removeAttribute('aria-hidden');
+        document.getElementById(`altBtn${cap}`).href = getMapsUrl(altBridge);
+        document.getElementById(`altText${cap}`).textContent = t.altText;
+        altBlock.style.display = 'block'; altBlock.removeAttribute('aria-hidden');
         document.getElementById(`durPlaisance${cap}`).textContent = t.durPlaisance;
         document.getElementById(`durCommercial${cap}`).textContent = t.durCommercial;
-        durationBlock.style.display = 'flex';
-        durationBlock.removeAttribute('aria-hidden');
+        durationBlock.style.display = 'flex'; durationBlock.removeAttribute('aria-hidden');
       } else {
-        altBlock.style.display = 'none';
-        altBlock.setAttribute('aria-hidden', 'true');
-        durationBlock.style.display = 'none';
-        durationBlock.setAttribute('aria-hidden', 'true');
+        altBlock.style.display = 'none'; altBlock.setAttribute('aria-hidden', 'true');
+        durationBlock.style.display = 'none'; durationBlock.setAttribute('aria-hidden', 'true');
       }
 
       if (closure) {
-        closureLabel.textContent = t.closureLabel;
-        closureValue.textContent = formatClosure(closure, currentLang);
-        closureBlock.style.display = 'flex';
-        closureBlock.removeAttribute('aria-hidden');
+        document.getElementById(`closureLabel${cap}`).textContent = t.closureLabel;
+        document.getElementById(`closureValue${cap}`).textContent = formatClosure(closure, currentLang);
+        closureBlock.style.display = 'flex'; closureBlock.removeAttribute('aria-hidden');
       } else {
-        closureBlock.style.display = 'none';
-        closureBlock.setAttribute('aria-hidden', 'true');
+        closureBlock.style.display = 'none'; closureBlock.setAttribute('aria-hidden', 'true');
       }
     });
   }
@@ -890,14 +779,12 @@
     document.getElementById('liftsGonzague').textContent =
       lastData.gonzague.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.gonzague.next_lifts;
     document.getElementById('refreshGonzague').textContent = lastData.last_refreshed.slice(11, 16);
-
     document.getElementById('pillLarocque').className = `status-pill ${lastData.larocque.status}`;
     document.getElementById('labelLarocque').textContent = t.statusLabels[lastData.larocque.status] || lastData.larocque.status;
     document.getElementById('liftsTitleLarocque').textContent = t.liftsLabel;
     document.getElementById('liftsLarocque').textContent =
       lastData.larocque.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.larocque.next_lifts;
     document.getElementById('refreshLarocque').textContent = lastData.last_refreshed.slice(11, 16);
-
     updateAltRoutes();
   }
 
@@ -909,6 +796,7 @@
     document.getElementById('supportText').textContent = t.supportText;
     document.getElementById('settingsBridgesTitle').textContent = t.settingsBridgesTitle;
     document.getElementById('settingsTimeTitle').textContent = t.settingsTimeTitle;
+    document.getElementById('settingsTimeDesc').textContent = t.settingsTimeDesc;
     document.getElementById('range1Label').textContent = t.range1Label;
     document.getElementById('range2Label').textContent = t.range2Label;
     const langBtn = document.getElementById('langBtn');
@@ -922,10 +810,6 @@
     document.getElementById('and1').innerHTML = t.and1;
     document.getElementById('and2').innerHTML = t.and2;
     document.getElementById('and3').innerHTML = t.and3;
-    ['Gonzague', 'Larocque'].forEach(b => {
-      const el = document.getElementById(`altText${b}`);
-      if (el) el.textContent = t.altText;
-    });
     updateNotifyButtons();
     updateDisplay();
   }
