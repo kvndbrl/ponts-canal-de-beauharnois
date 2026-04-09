@@ -1,11 +1,11 @@
 {
-  "name": "Pont St-Louis-de-Gonzague",
-  "short_name": "Pont St-Louis",
-  "description": "Statut en temps réel du pont St-Louis-de-Gonzague",
+  "name": "Ponts Canal de Beauharnois",
+  "short_name": "Ponts Canal",
+  "description": "Statut en temps réel du pont St-Louis-de-Gonzague et du pont Larocque",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#C1D6A8",
-  "theme_color": "#2d4a1e",
+  "background_color": "#080b14",
+  "theme_color": "#080b14",
   "icons": [
     {
       "src": "icon-192.png",
