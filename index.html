@@ -133,9 +133,7 @@
       letter-spacing: 1.5px; text-transform: uppercase;
       color: var(--text3); font-family: var(--mono);
     }
-
     .status-block { padding: 12px 16px 16px; }
-
     .status-pill {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 8px 16px; border-radius: 50px;
@@ -148,12 +146,7 @@
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
-    /* Duration estimate */
-    .duration-block {
-      display: none;
-      padding: 0 16px 14px;
-      gap: 8px;
-    }
+    .duration-block { display: none; padding: 0 16px 14px; gap: 8px; }
     .duration-pill {
       display: inline-flex; align-items: center; gap: 5px;
       padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: 600;
@@ -161,49 +154,17 @@
       color: var(--text2); font-family: var(--mono);
     }
 
-    /* Closure block */
     .closure-block {
-      display: none;
-      margin: 0 12px 12px;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: var(--orange-bg);
-      border: 1px solid rgba(122,56,0,0.15);
-      gap: 8px;
-      align-items: flex-start;
+      display: none; margin: 0 12px 12px;
+      padding: 10px 14px; border-radius: 12px;
+      background: var(--orange-bg); border: 1px solid rgba(122,56,0,0.15);
+      gap: 8px; align-items: flex-start;
     }
+    body.dark .closure-block { border-color: rgba(255,150,50,0.2); }
+    .closure-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .closure-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--orange); font-family: var(--mono); margin-bottom: 3px; }
+    .closure-value { font-size: 12px; font-weight: 600; color: var(--orange); font-family: var(--mono); line-height: 1.5; }
 
-    body.dark .closure-block {
-      border-color: rgba(255,150,50,0.2);
-    }
-
-    .closure-icon {
-      font-size: 16px;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .closure-content {}
-
-    .closure-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--orange);
-      font-family: var(--mono);
-      margin-bottom: 3px;
-    }
-
-    .closure-value {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--orange);
-      font-family: var(--mono);
-      line-height: 1.5;
-    }
-
-    /* Alt route */
     .alt-route-block { padding: 0 12px 14px; }
     .alt-route-btn {
       display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -213,10 +174,7 @@
       cursor: pointer; text-decoration: none; transition: all 0.2s;
     }
     .alt-route-btn:hover { background: var(--border); }
-    .alt-route-btn .map-icon {
-      width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .alt-route-btn .map-icon { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .alt-route-btn .map-icon.google { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
     .alt-route-btn .map-icon.apple { background: linear-gradient(135deg, #2b9af3 0%, #0d6ef5 50%, #1a4fd6 100%); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
 
@@ -250,6 +208,7 @@
     .notify-btn:hover { transform: translateY(-1px); }
     .notify-btn:active { transform: translateY(0); }
 
+    /* ── Notif summary / settings card ── */
     .notif-summary {
       display: none; background: var(--surface); border-radius: var(--radius);
       box-shadow: var(--shadow); border: 1px solid var(--border);
@@ -270,8 +229,17 @@
     .notif-summary-bridges { font-size: 11px; color: var(--text3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .notif-chevron { color: var(--text3); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
     .notif-summary.expanded .notif-chevron { transform: rotate(180deg); }
+
     .notif-details { display: none; border-top: 1px solid var(--border); }
     .notif-summary.expanded .notif-details { display: block; }
+
+    /* Settings sections */
+    .settings-section-title {
+      padding: 12px 16px 6px;
+      font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--text3); font-family: var(--mono);
+    }
+
     .pref-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
     .pref-row:last-child { border-bottom: none; }
     .pref-row-label { font-size: 13px; font-weight: 500; color: var(--text); }
@@ -281,6 +249,72 @@
     .pref-slider:before { content: ''; position: absolute; width: 20px; height: 20px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.25); }
     .pref-toggle input:checked + .pref-slider { background: var(--accent); }
     .pref-toggle input:checked + .pref-slider:before { transform: translateX(18px); }
+
+    /* Time range rows */
+    .time-range-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border-bottom: 1px solid var(--border);
+    }
+    .time-range-row:last-of-type { border-bottom: none; }
+
+    .time-range-label {
+      font-size: 12px; font-weight: 600; color: var(--text2);
+      min-width: 48px;
+    }
+
+    .time-range-label.optional {
+      color: var(--text3);
+    }
+
+    .time-sep {
+      font-size: 12px; color: var(--text3); font-family: var(--mono);
+      flex-shrink: 0;
+    }
+
+    /* Native time input (Android) */
+    input[type="time"].time-input {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="time"].time-input:focus {
+      border-color: var(--accent);
+    }
+
+    /* iOS select dropdown */
+    select.time-select {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    select.time-select:focus { border-color: var(--accent); }
+
+    .time-clear {
+      background: none; border: none; color: var(--text3);
+      font-size: 16px; cursor: pointer; padding: 0 2px;
+      flex-shrink: 0; line-height: 1;
+    }
+    .time-clear:hover { color: var(--red); }
+
     .unsub-row { padding: 12px 16px; border-top: 1px solid var(--border); }
     .unsub-btn { display: block; background: none; border: none; font-family: var(--sans); font-size: 12px; color: var(--text3); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
 
@@ -351,7 +385,7 @@
       </div>
       <div class="closure-block" id="closureGonzague" aria-hidden="true">
         <span class="closure-icon" aria-hidden="true">🚧</span>
-        <div class="closure-content">
+        <div>
           <div class="closure-label" id="closureLabelGonzague">Fermeture planifiée</div>
           <div class="closure-value" id="closureValueGonzague">—</div>
         </div>
@@ -387,7 +421,7 @@
       </div>
       <div class="closure-block" id="closureLarocque" aria-hidden="true">
         <span class="closure-icon" aria-hidden="true">🚧</span>
-        <div class="closure-content">
+        <div>
           <div class="closure-label" id="closureLabelLarocque">Fermeture planifiée</div>
           <div class="closure-value" id="closureValueLarocque">—</div>
         </div>
@@ -410,6 +444,7 @@
 
     <div class="spacer"></div>
 
+    <!-- INSTALL CARD -->
     <div class="install-card" id="installCard" aria-hidden="true">
       <div class="install-card-title" id="installTitle">📲 Installer l'app</div>
       <div class="install-card-sub" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</div>
@@ -426,12 +461,14 @@
       </ul>
     </div>
 
+    <!-- NOTIFY BUTTON -->
     <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()"
             aria-label="Activer les notifications de levage de pont"
             aria-hidden="true" style="display:none;">
       🔔 Activer les notifications
     </button>
 
+    <!-- NOTIF SUMMARY + SETTINGS -->
     <div class="notif-summary" id="notifSummary" aria-hidden="true">
       <div class="notif-summary-header" onclick="toggleNotifExpand()" role="button" aria-expanded="false" id="notifSummaryHeader">
         <div class="notif-summary-left">
@@ -443,7 +480,11 @@
         </div>
         <span class="notif-chevron" aria-hidden="true">▾</span>
       </div>
+
       <div class="notif-details" id="notifDetails">
+
+        <!-- Bridges section -->
+        <div class="settings-section-title" id="settingsBridgesTitle">Ponts</div>
         <label class="pref-row">
           <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
           <div class="pref-toggle">
@@ -452,7 +493,7 @@
             <span class="pref-slider"></span>
           </div>
         </label>
-        <label class="pref-row">
+        <label class="pref-row" style="border-bottom: 1px solid var(--border);">
           <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
           <div class="pref-toggle">
             <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"
@@ -460,11 +501,35 @@
             <span class="pref-slider"></span>
           </div>
         </label>
+
+        <!-- Time ranges section -->
+        <div class="settings-section-title" id="settingsTimeTitle">Plages horaires</div>
+
+        <!-- Range 1 -->
+        <div class="time-range-row" id="range1Row">
+          <span class="time-range-label" id="range1Label">Plage 1</span>
+          <div id="range1Start"></div>
+          <span class="time-sep">→</span>
+          <div id="range1End"></div>
+          <button class="time-clear" id="range1Clear" onclick="clearRange(1)" title="Effacer">×</button>
+        </div>
+
+        <!-- Range 2 -->
+        <div class="time-range-row" id="range2Row">
+          <span class="time-range-label optional" id="range2Label">Plage 2</span>
+          <div id="range2Start"></div>
+          <span class="time-sep">→</span>
+          <div id="range2End"></div>
+          <button class="time-clear" id="range2Clear" onclick="clearRange(2)" title="Effacer">×</button>
+        </div>
+
+        <!-- Unsub -->
         <div class="unsub-row">
           <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">
             Désactiver les notifications
           </button>
         </div>
+
       </div>
     </div>
 
@@ -498,18 +563,8 @@
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-  const GOOGLE_MAPS_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
-    <path d="M12 2C8.13 2 5 5.13 5 9c0 1.93.62 3.71 1.67 5.16L12 2z" fill="#C5221F"/>
-    <circle cx="12" cy="9" r="2.5" fill="white"/>
-  </svg>`;
-
-  const APPLE_MAPS_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="10" fill="white" opacity="0.9"/>
-    <polygon points="12,4 14,12 12,10 10,12" fill="#FF3B30"/>
-    <polygon points="12,20 10,12 12,14 14,12" fill="#8E8E93"/>
-    <circle cx="12" cy="12" r="1.5" fill="#1C1C1E"/>
-  </svg>`;
+  const GOOGLE_MAPS_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/><path d="M12 2C8.13 2 5 5.13 5 9c0 1.93.62 3.71 1.67 5.16L12 2z" fill="#C5221F"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg>`;
+  const APPLE_MAPS_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white" opacity="0.9"/><polygon points="12,4 14,12 12,10 10,12" fill="#FF3B30"/><polygon points="12,20 10,12 12,14 14,12" fill="#8E8E93"/><circle cx="12" cy="12" r="1.5" fill="#1C1C1E"/></svg>`;
 
   function getMapsUrl(bridgeKey) {
     const b = BRIDGES[bridgeKey];
@@ -517,13 +572,115 @@
     return `https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}&travelmode=driving`;
   }
 
-  function setupMapIcon(iconEl) {
-    iconEl.innerHTML = isIOS ? APPLE_MAPS_ICON : GOOGLE_MAPS_ICON;
-    iconEl.className = `map-icon ${isIOS ? 'apple' : 'google'}`;
+  function setupMapIcon(el) {
+    el.innerHTML = isIOS ? APPLE_MAPS_ICON : GOOGLE_MAPS_ICON;
+    el.className = `map-icon ${isIOS ? 'apple' : 'google'}`;
   }
-
   setupMapIcon(document.getElementById('mapIconGonzague'));
   setupMapIcon(document.getElementById('mapIconLarocque'));
+
+  // ── Time range inputs ─────────────────────────────────────────────
+  const TIME_STEPS = [];
+  for (let h = 0; h < 24; h++) {
+    for (let m of [0, 30]) {
+      TIME_STEPS.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+    }
+  }
+
+  function makeTimeInput(id, placeholder, onchange) {
+    if (isIOS) {
+      const sel = document.createElement('select');
+      sel.className = 'time-select';
+      sel.id = id;
+      sel.setAttribute('aria-label', placeholder);
+      const empty = document.createElement('option');
+      empty.value = ''; empty.textContent = '--:--';
+      sel.appendChild(empty);
+      TIME_STEPS.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t; opt.textContent = t;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', onchange);
+      return sel;
+    } else {
+      const inp = document.createElement('input');
+      inp.type = 'time';
+      inp.className = 'time-input';
+      inp.id = id;
+      inp.setAttribute('aria-label', placeholder);
+      inp.addEventListener('change', onchange);
+      return inp;
+    }
+  }
+
+  function getTimeValue(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : '';
+  }
+
+  function setTimeValue(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
+  }
+
+  // Build time inputs
+  ['1','2'].forEach(n => {
+    const startEl = makeTimeInput(`range${n}StartInput`, `Début plage ${n}`, saveTimeRanges);
+    const endEl = makeTimeInput(`range${n}EndInput`, `Fin plage ${n}`, saveTimeRanges);
+    document.getElementById(`range${n}Start`).appendChild(startEl);
+    document.getElementById(`range${n}End`).appendChild(endEl);
+  });
+
+  function clearRange(n) {
+    setTimeValue(`range${n}StartInput`, '');
+    setTimeValue(`range${n}EndInput`, '');
+    saveTimeRanges();
+  }
+
+  function getTimeRanges() {
+    const ranges = [];
+    ['1','2'].forEach(n => {
+      const start = getTimeValue(`range${n}StartInput`);
+      const end = getTimeValue(`range${n}EndInput`);
+      if (start && end) ranges.push({ start, end });
+    });
+    return ranges;
+  }
+
+  async function saveTimeRanges() {
+    localStorage.setItem('timeRanges', JSON.stringify(getTimeRanges()));
+    await syncPrefs();
+  }
+
+  function loadTimeRanges() {
+    const saved = localStorage.getItem('timeRanges');
+    if (!saved) return;
+    const ranges = JSON.parse(saved);
+    ranges.forEach((r, i) => {
+      if (i < 2) {
+        setTimeValue(`range${i+1}StartInput`, r.start);
+        setTimeValue(`range${i+1}EndInput`, r.end);
+      }
+    });
+  }
+
+  // ── Sync prefs to server ──────────────────────────────────────────
+  async function syncPrefs() {
+    if (localStorage.getItem('notificationsEnabled') !== 'true') return;
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      if (!sub) return;
+      const subData = JSON.parse(JSON.stringify(sub));
+      subData.bridges = getSelectedBridges();
+      subData.timeRanges = getTimeRanges();
+      await fetch(`${BACKEND_URL}/subscribe`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(subData)
+      });
+    } catch(e) { console.error(e); }
+  }
 
   let lastData = null;
   let notifExpanded = false;
@@ -536,14 +693,9 @@
     header.setAttribute('aria-expanded', notifExpanded ? 'true' : 'false');
   }
 
-  // Format closure date from English to local format
   function formatClosure(raw, lang) {
     if (!raw) return null;
-    // Input: "2026-04-11 03:00 until 2026-04-11 15:00"
-    if (lang === 'fr') {
-      return raw.replace(' until ', ' au ');
-    }
-    return raw;
+    return lang === 'fr' ? raw.replace(' until ', ' au ') : raw;
   }
 
   const translations = {
@@ -557,6 +709,10 @@
       closureLabel: 'Fermeture planifiée',
       notifTitle: '✅ Notifications activées',
       notifBridges: (g, l) => [g && 'Pont St-Louis', l && 'Pont Larocque'].filter(Boolean).join(' · ') || '—',
+      settingsBridgesTitle: 'Ponts',
+      settingsTimeTitle: 'Plages horaires',
+      range1Label: 'Plage 1',
+      range2Label: 'Plage 2',
       installTitle: '📲 Installer l\'app',
       installSubtitle: 'Installez l\'app pour recevoir des notifications lors des levages',
       notifyBtn: '🔔 Activer les notifications',
@@ -586,6 +742,10 @@
       closureLabel: 'Planned closure',
       notifTitle: '✅ Notifications enabled',
       notifBridges: (g, l) => [g && 'St-Louis Bridge', l && 'Larocque Bridge'].filter(Boolean).join(' · ') || '—',
+      settingsBridgesTitle: 'Bridges',
+      settingsTimeTitle: 'Time ranges',
+      range1Label: 'Range 1',
+      range2Label: 'Range 2',
       installTitle: '📲 Install the app',
       installSubtitle: 'Install the app to receive bridge lift notifications',
       notifyBtn: '🔔 Enable notifications',
@@ -641,7 +801,6 @@
       const lifted = status === 'leve' || status === 'bientot_leve';
       const closure = lastData[bridge].closure;
 
-      // Duration + alt route
       if (lifted) {
         const altBridge = bridge === 'gonzague' ? 'larocque' : 'gonzague';
         altBtn.href = getMapsUrl(altBridge);
@@ -659,7 +818,6 @@
         durationBlock.setAttribute('aria-hidden', 'true');
       }
 
-      // Closure
       if (closure) {
         closureLabel.textContent = t.closureLabel;
         closureValue.textContent = formatClosure(closure, currentLang);
@@ -683,23 +841,9 @@
   }
 
   async function updatePrefs() {
-    const bridges = getSelectedBridges();
-    localStorage.setItem('bridgePrefs', JSON.stringify(bridges));
+    localStorage.setItem('bridgePrefs', JSON.stringify(getSelectedBridges()));
     updateBridgeSummary();
-    if (localStorage.getItem('notificationsEnabled') === 'true') {
-      try {
-        const reg = await navigator.serviceWorker.ready;
-        const sub = await reg.pushManager.getSubscription();
-        if (sub) {
-          const subData = JSON.parse(JSON.stringify(sub));
-          subData.bridges = bridges;
-          await fetch(`${BACKEND_URL}/subscribe`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(subData)
-          });
-        }
-      } catch(e) { console.error(e); }
-    }
+    await syncPrefs();
   }
 
   function loadPrefs() {
@@ -740,7 +884,6 @@
   function updateDisplay() {
     if (!lastData) return;
     const t = translations[currentLang];
-
     document.getElementById('pillGonzague').className = `status-pill ${lastData.gonzague.status}`;
     document.getElementById('labelGonzague').textContent = t.statusLabels[lastData.gonzague.status] || lastData.gonzague.status;
     document.getElementById('liftsTitleGonzague').textContent = t.liftsLabel;
@@ -764,6 +907,10 @@
     document.getElementById('installTitle').textContent = t.installTitle;
     document.getElementById('installSubtitle').textContent = t.installSubtitle;
     document.getElementById('supportText').textContent = t.supportText;
+    document.getElementById('settingsBridgesTitle').textContent = t.settingsBridgesTitle;
+    document.getElementById('settingsTimeTitle').textContent = t.settingsTimeTitle;
+    document.getElementById('range1Label').textContent = t.range1Label;
+    document.getElementById('range2Label').textContent = t.range2Label;
     const langBtn = document.getElementById('langBtn');
     langBtn.textContent = t.langBtn;
     langBtn.setAttribute('aria-label', t.langLabel);
@@ -775,6 +922,10 @@
     document.getElementById('and1').innerHTML = t.and1;
     document.getElementById('and2').innerHTML = t.and2;
     document.getElementById('and3').innerHTML = t.and3;
+    ['Gonzague', 'Larocque'].forEach(b => {
+      const el = document.getElementById(`altText${b}`);
+      if (el) el.textContent = t.altText;
+    });
     updateNotifyButtons();
     updateDisplay();
   }
@@ -822,6 +973,7 @@
       });
       const subData = JSON.parse(JSON.stringify(sub));
       subData.bridges = getSelectedBridges();
+      subData.timeRanges = getTimeRanges();
       await fetch(`${BACKEND_URL}/subscribe`, {
         method: 'POST', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(subData)
@@ -850,6 +1002,7 @@
     updateNotifyButtons();
   }
 
+  // Platform detection
   const isInstalledPWA = window.matchMedia('(display-mode: standalone)').matches;
   const notifyBtn = document.getElementById('notifyBtn');
   const installCard = document.getElementById('installCard');
@@ -871,6 +1024,7 @@
   }
 
   loadPrefs();
+  loadTimeRanges();
   applyTranslations();
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');

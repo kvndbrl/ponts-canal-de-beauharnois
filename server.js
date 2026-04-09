@@ -62,6 +62,35 @@ async function removeSubscription(sub) {
 let subscriptions = [];
 let lastStatus = { gonzague: null, larocque: null };
 
+// ── Time range check (Montreal time) ─────────────────────────────────
+function isInTimeRange(sub) {
+  const ranges = sub.timeRanges;
+  // No ranges configured → always notify
+  if (!ranges || ranges.length === 0) return true;
+
+  // Get current Montreal time
+  const now = new Date();
+  const montreal = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+  const currentMinutes = montreal.getHours() * 60 + montreal.getMinutes();
+
+  for (const range of ranges) {
+    if (!range.start || !range.end) continue;
+    const [startH, startM] = range.start.split(':').map(Number);
+    const [endH, endM] = range.end.split(':').map(Number);
+    const startMinutes = startH * 60 + startM;
+    const endMinutes = endH * 60 + endM;
+
+    if (startMinutes <= endMinutes) {
+      // Normal range e.g. 09:00 → 17:00
+      if (currentMinutes >= startMinutes && currentMinutes <= endMinutes) return true;
+    } else {
+      // Overnight range e.g. 22:00 → 06:00
+      if (currentMinutes >= startMinutes || currentMinutes <= endMinutes) return true;
+    }
+  }
+  return false;
+}
+
 // ── Bridge status fetch ───────────────────────────────────────────────
 async function fetchBridgeStatus() {
   const res = await fetch(
@@ -78,7 +107,6 @@ async function fetchBridgeStatus() {
     return 'disponible';
   }
 
-  // Extract color for each bridge
   function extractColor(html, bridgePattern) {
     const regex = new RegExp(
       `background-color:\\s*(#[A-Fa-f0-9]{6})[^<]*<[^<]*${bridgePattern}`, 'i'
@@ -87,28 +115,19 @@ async function fetchBridgeStatus() {
     return match ? match[1].toUpperCase() : '#C1D6A8';
   }
 
-  // Extract lifts text (first item-data after bridge name)
   function extractLifts(section) {
     const match = section.match(/class="item-data[^"]*"[^>]*>([^<]+)/);
     return match ? match[1].trim() : 'No anticipated bridge lifts';
   }
 
-  // Extract closure info — look for item-data with white-space:pre after the lifts block
   function extractClosure(section) {
-    // Find all item-data blocks in the section
     const matches = [...section.matchAll(/class="item-data[^"]*"[^>]*style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*>([^<]+)/gi)];
-    if (matches.length > 0) {
-      return matches[0][1].trim();
-    }
-    // Also try the reverse attribute order
+    if (matches.length > 0) return matches[0][1].trim();
     const matches2 = [...section.matchAll(/style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*class="item-data[^"]*"[^>]*>([^<]+)/gi)];
-    if (matches2.length > 0) {
-      return matches2[0][1].trim();
-    }
+    if (matches2.length > 0) return matches2[0][1].trim();
     return null;
   }
 
-  // Split HTML into sections per bridge
   const gonzagueSection = html.match(/Gonzague[\s\S]{0,3000}?(?=Larocque|<\/body>)/i)?.[0] || '';
   const larocqueSection = html.match(/Larocque[\s\S]{0,3000}?(?=Gonzague|<\/body>)/i)?.[0] || '';
 
@@ -118,19 +137,16 @@ async function fetchBridgeStatus() {
   const refreshMatch = html.match(/Last Refreshed at[:\s]*([\d\-: ]+)/i);
   const last_refreshed = refreshMatch ? refreshMatch[1].trim() : '';
 
-  const gonzagueClosure = extractClosure(gonzagueSection);
-  const larocqueClosure = extractClosure(larocqueSection);
-
   return {
     gonzague: {
       status: colorToStatus(colorGonzague),
       next_lifts: extractLifts(gonzagueSection),
-      closure: gonzagueClosure
+      closure: extractClosure(gonzagueSection)
     },
     larocque: {
       status: colorToStatus(colorLarocque),
       next_lifts: extractLifts(larocqueSection),
-      closure: larocqueClosure
+      closure: extractClosure(larocqueSection)
     },
     last_refreshed
   };
@@ -166,6 +182,13 @@ async function sendNotifications(bridge, status) {
   for (const sub of [...subscriptions]) {
     const bridges = sub.bridges || ['gonzague', 'larocque'];
     if (!bridges.includes(bridge)) continue;
+
+    // Check time range
+    if (!isInTimeRange(sub)) {
+      console.log(`Skipping notification for subscriber (outside time range)`);
+      continue;
+    }
+
     try {
       await webpush.sendNotification(sub, payload);
     } catch(e) {
@@ -225,11 +248,13 @@ app.post('/subscribe', async (req, res) => {
   const existing = subscriptions.find(s => s.endpoint === sub.endpoint);
   if (existing) {
     existing.bridges = sub.bridges || ['gonzague', 'larocque'];
+    existing.timeRanges = sub.timeRanges || [];
     await saveSubscription(existing);
+    console.log(`Updated subscriber. Bridges: ${existing.bridges}, Ranges: ${JSON.stringify(existing.timeRanges)}`);
   } else {
     subscriptions.push(sub);
     await saveSubscription(sub);
-    console.log(`New subscriber! Bridges: ${sub.bridges}. Total: ${subscriptions.length}`);
+    console.log(`New subscriber! Bridges: ${sub.bridges}, Ranges: ${JSON.stringify(sub.timeRanges)}. Total: ${subscriptions.length}`);
   }
   res.json({ ok: true });
 });
