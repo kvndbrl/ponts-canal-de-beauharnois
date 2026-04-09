@@ -13,7 +13,6 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-// ── Upstash Redis helpers ─────────────────────────────────────────────
 const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
@@ -71,43 +70,67 @@ async function fetchBridgeStatus() {
   );
   const html = await res.text();
 
-  // St-Louis-de-Gonzague
-  const gonzagueColor = html.match(/background-color:\s*(#[A-Fa-f0-9]{6})[^<]*<[^<]*St[\-\s]Louis[\-\s]de[\-\s]Gonzague/i);
-  const colorGonzague = gonzagueColor ? gonzagueColor[1].toUpperCase() : '#C1D6A8';
-
-  // Larocque
-  const larocqueColor = html.match(/background-color:\s*(#[A-Fa-f0-9]{6})[^<]*<[^<]*Larocque/i);
-  const colorLarocque = larocqueColor ? larocqueColor[1].toUpperCase() : '#C1D6A8';
-
   function colorToStatus(color) {
-    if (color === '#E48082') return 'leve';
-    if (color === '#FEEAA8') return 'bientot_leve';
+    if (!color) return 'disponible';
+    const c = color.toUpperCase();
+    if (c === '#E48082') return 'leve';
+    if (c === '#FEEAA8') return 'bientot_leve';
     return 'disponible';
   }
 
-  // Lifts for Gonzague
-  const gonzagueSection = html.match(/St[\-\s]Louis[\-\s]de[\-\s]Gonzague[\s\S]{0,2000}?(?=Larocque|Valleyfield|<\/body>)/i);
-  const gonzagueSec = gonzagueSection ? gonzagueSection[0] : '';
-  const gonzagueLifts = gonzagueSec.match(/item-data[^>]*>([^<]+)/);
+  // Extract color for each bridge
+  function extractColor(html, bridgePattern) {
+    const regex = new RegExp(
+      `background-color:\\s*(#[A-Fa-f0-9]{6})[^<]*<[^<]*${bridgePattern}`, 'i'
+    );
+    const match = html.match(regex);
+    return match ? match[1].toUpperCase() : '#C1D6A8';
+  }
 
-  // Lifts for Larocque
-  const larocqueSection = html.match(/Larocque[\s\S]{0,2000}?(?=St[\-\s]Louis|<\/body>)/i);
-  const larocqueSec = larocqueSection ? larocqueSection[0] : '';
-  const larocqueLifts = larocqueSec.match(/item-data[^>]*>([^<]+)/);
+  // Extract lifts text (first item-data after bridge name)
+  function extractLifts(section) {
+    const match = section.match(/class="item-data[^"]*"[^>]*>([^<]+)/);
+    return match ? match[1].trim() : 'No anticipated bridge lifts';
+  }
+
+  // Extract closure info — look for item-data with white-space:pre after the lifts block
+  function extractClosure(section) {
+    // Find all item-data blocks in the section
+    const matches = [...section.matchAll(/class="item-data[^"]*"[^>]*style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*>([^<]+)/gi)];
+    if (matches.length > 0) {
+      return matches[0][1].trim();
+    }
+    // Also try the reverse attribute order
+    const matches2 = [...section.matchAll(/style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*class="item-data[^"]*"[^>]*>([^<]+)/gi)];
+    if (matches2.length > 0) {
+      return matches2[0][1].trim();
+    }
+    return null;
+  }
+
+  // Split HTML into sections per bridge
+  const gonzagueSection = html.match(/Gonzague[\s\S]{0,3000}?(?=Larocque|<\/body>)/i)?.[0] || '';
+  const larocqueSection = html.match(/Larocque[\s\S]{0,3000}?(?=Gonzague|<\/body>)/i)?.[0] || '';
+
+  const colorGonzague = extractColor(html, 'St[\\-\\s]Louis[\\-\\s]de[\\-\\s]Gonzague');
+  const colorLarocque = extractColor(html, 'Larocque');
 
   const refreshMatch = html.match(/Last Refreshed at[:\s]*([\d\-: ]+)/i);
   const last_refreshed = refreshMatch ? refreshMatch[1].trim() : '';
 
+  const gonzagueClosure = extractClosure(gonzagueSection);
+  const larocqueClosure = extractClosure(larocqueSection);
+
   return {
     gonzague: {
       status: colorToStatus(colorGonzague),
-      next_lifts: gonzagueLifts ? gonzagueLifts[1].trim() : 'No anticipated bridge lifts',
-      color: colorGonzague
+      next_lifts: extractLifts(gonzagueSection),
+      closure: gonzagueClosure
     },
     larocque: {
       status: colorToStatus(colorLarocque),
-      next_lifts: larocqueLifts ? larocqueLifts[1].trim() : 'No anticipated bridge lifts',
-      color: colorLarocque
+      next_lifts: extractLifts(larocqueSection),
+      closure: larocqueClosure
     },
     last_refreshed
   };
@@ -141,13 +164,10 @@ async function sendNotifications(bridge, status) {
   console.log(`Sending [${bridge}] ${status} to ${subscriptions.length} subscribers`);
 
   for (const sub of [...subscriptions]) {
-    // Check if subscriber wants notifications for this bridge
     const bridges = sub.bridges || ['gonzague', 'larocque'];
     if (!bridges.includes(bridge)) continue;
-
     try {
       await webpush.sendNotification(sub, payload);
-      console.log(`Notification sent to subscriber for ${bridge}`);
     } catch(e) {
       console.error('Failed notification, removing sub:', e.statusCode, e.message);
       subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
@@ -162,16 +182,12 @@ async function monitor() {
     const data = await fetchBridgeStatus();
     console.log(`[${new Date().toISOString()}] Gonzague: ${data.gonzague.status} | Larocque: ${data.larocque.status}`);
 
-    // Check Gonzague
     if (lastStatus.gonzague !== null && lastStatus.gonzague !== data.gonzague.status) {
-      console.log(`Gonzague changed: ${lastStatus.gonzague} → ${data.gonzague.status}`);
       await sendNotifications('gonzague', data.gonzague.status);
     }
     lastStatus.gonzague = data.gonzague.status;
 
-    // Check Larocque
     if (lastStatus.larocque !== null && lastStatus.larocque !== data.larocque.status) {
-      console.log(`Larocque changed: ${lastStatus.larocque} → ${data.larocque.status}`);
       await sendNotifications('larocque', data.larocque.status);
     }
     lastStatus.larocque = data.larocque.status;
@@ -192,8 +208,7 @@ setInterval(async () => {
 }, 600000);
 
 // ── Routes ────────────────────────────────────────────────────────────
-app.get('/', (req, res) => res.send('Pont St-Louis-de-Gonzague API'));
-
+app.get('/', (req, res) => res.send('Ponts Beauharnois API'));
 app.get('/ping', (req, res) => res.send('OK'));
 
 app.get('/status', async (req, res) => {
@@ -209,10 +224,8 @@ app.post('/subscribe', async (req, res) => {
   const sub = req.body;
   const existing = subscriptions.find(s => s.endpoint === sub.endpoint);
   if (existing) {
-    // Update bridge preferences
     existing.bridges = sub.bridges || ['gonzague', 'larocque'];
     await saveSubscription(existing);
-    console.log(`Updated subscriber bridges: ${existing.bridges}`);
   } else {
     subscriptions.push(sub);
     await saveSubscription(sub);
@@ -237,7 +250,6 @@ app.get('/subscribers', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
-// ── Start ─────────────────────────────────────────────────────────────
 async function start() {
   subscriptions = await loadSubscriptions();
   console.log(`Ready with ${subscriptions.length} subscriptions — starting monitor`);
