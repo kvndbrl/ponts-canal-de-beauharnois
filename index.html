@@ -144,6 +144,32 @@
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
+    /* Duration estimate */
+    .duration-block {
+      display: none;
+      padding: 0 16px 14px;
+      gap: 8px;
+    }
+
+    .duration-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: var(--mono);
+    }
+
+    .duration-pill .duration-dot {
+      font-size: 10px;
+    }
+
+    /* Alt route button */
     .alt-route-block { padding: 0 12px 14px; }
     .alt-route-btn {
       display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -190,52 +216,37 @@
     .notify-btn:hover { transform: translateY(-1px); }
     .notify-btn:active { transform: translateY(0); }
 
-    /* Compact notif summary */
     .notif-summary {
-      display: none;
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      margin-top: 10px;
-      animation: fadeUp 0.3s ease both;
+      display: none; background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); border: 1px solid var(--border);
+      overflow: hidden; margin-top: 10px; animation: fadeUp 0.3s ease both;
     }
-
     .notif-summary-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 12px 16px; cursor: pointer; user-select: none;
     }
-
     .notif-summary-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-
     .notif-status-dot {
       width: 8px; height: 8px; min-width: 8px; border-radius: 50%;
       background: var(--accent); box-shadow: 0 0 0 3px rgba(0,85,221,0.15);
     }
     body.dark .notif-status-dot { box-shadow: 0 0 0 3px rgba(77,159,255,0.2); }
-
     .notif-summary-text { display: flex; flex-direction: column; min-width: 0; }
     .notif-summary-title { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; }
     .notif-summary-bridges { font-size: 11px; color: var(--text3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
     .notif-chevron { color: var(--text3); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
     .notif-summary.expanded .notif-chevron { transform: rotate(180deg); }
-
     .notif-details { display: none; border-top: 1px solid var(--border); }
     .notif-summary.expanded .notif-details { display: block; }
-
     .pref-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
     .pref-row:last-child { border-bottom: none; }
     .pref-row-label { font-size: 13px; font-weight: 500; color: var(--text); }
-
     .pref-toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
     .pref-toggle input { opacity: 0; width: 0; height: 0; }
     .pref-slider { position: absolute; inset: 0; background: #b0b8cc; border-radius: 26px; transition: background 0.3s; }
     .pref-slider:before { content: ''; position: absolute; width: 20px; height: 20px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.25); }
     .pref-toggle input:checked + .pref-slider { background: var(--accent); }
     .pref-toggle input:checked + .pref-slider:before { transform: translateX(18px); }
-
     .unsub-row { padding: 12px 16px; border-top: 1px solid var(--border); }
     .unsub-btn { display: block; background: none; border: none; font-family: var(--sans); font-size: 12px; color: var(--text3); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
 
@@ -291,6 +302,7 @@
 
   <main>
 
+    <!-- PONT GONZAGUE -->
     <section class="bridge-card" aria-label="Pont St-Louis-de-Gonzague">
       <div class="bridge-name" aria-hidden="true">Pont St-Louis-de-Gonzague</div>
       <div class="status-block">
@@ -298,6 +310,10 @@
           <span class="status-dot" aria-hidden="true"></span>
           <span id="labelGonzague">Chargement...</span>
         </div>
+      </div>
+      <div class="duration-block" id="durationGonzague" aria-hidden="true">
+        <span class="duration-pill">⛵ <span id="durPlaisanceGonzague">~10 min</span></span>
+        <span class="duration-pill">🚢 <span id="durCommercialGonzague">~15 min</span></span>
       </div>
       <div class="alt-route-block" id="altGonzague" style="display:none;" aria-hidden="true">
         <a class="alt-route-btn" id="altBtnGonzague" href="#" target="_blank" rel="noopener noreferrer">
@@ -315,6 +331,7 @@
       </div>
     </section>
 
+    <!-- PONT LAROCQUE -->
     <section class="bridge-card" aria-label="Pont Larocque">
       <div class="bridge-name" aria-hidden="true">Pont Larocque — Valleyfield</div>
       <div class="status-block">
@@ -322,6 +339,10 @@
           <span class="status-dot" aria-hidden="true"></span>
           <span id="labelLarocque">Chargement...</span>
         </div>
+      </div>
+      <div class="duration-block" id="durationLarocque" aria-hidden="true">
+        <span class="duration-pill">⛵ <span id="durPlaisanceLarocque">~10 min</span></span>
+        <span class="duration-pill">🚢 <span id="durCommercialLarocque">~15 min</span></span>
       </div>
       <div class="alt-route-block" id="altLarocque" style="display:none;" aria-hidden="true">
         <a class="alt-route-btn" id="altBtnLarocque" href="#" target="_blank" rel="noopener noreferrer">
@@ -473,6 +494,8 @@
       liftsLabel: 'Levages — 60 min',
       noLifts: 'Aucun levage prévu',
       altText: 'Trouver un itinéraire alternatif',
+      durPlaisance: '~10 min · Plaisance',
+      durCommercial: '~15 min · Commercial',
       notifTitle: '✅ Notifications activées',
       notifBridges: (g, l) => [g && 'Pont St-Louis', l && 'Pont Larocque'].filter(Boolean).join(' · ') || '—',
       installTitle: '📲 Installer l\'app',
@@ -499,6 +522,8 @@
       liftsLabel: 'Lifts — 60 min',
       noLifts: 'No anticipated bridge lifts',
       altText: 'Find an alternate route',
+      durPlaisance: '~10 min · Pleasure craft',
+      durCommercial: '~15 min · Commercial',
       notifTitle: '✅ Notifications enabled',
       notifBridges: (g, l) => [g && 'St-Louis Bridge', l && 'Larocque Bridge'].filter(Boolean).join(' · ') || '—',
       installTitle: '📲 Install the app',
@@ -548,17 +573,27 @@
       const altBlock = document.getElementById(`alt${cap}`);
       const altBtn = document.getElementById(`altBtn${cap}`);
       const altText = document.getElementById(`altText${cap}`);
+      const durationBlock = document.getElementById(`duration${cap}`);
       const status = lastData[bridge].status;
       const lifted = status === 'leve' || status === 'bientot_leve';
+
       if (lifted) {
+        // Alt route
         const altBridge = bridge === 'gonzague' ? 'larocque' : 'gonzague';
         altBtn.href = getMapsUrl(altBridge);
         altText.textContent = t.altText;
         altBlock.style.display = 'block';
         altBlock.removeAttribute('aria-hidden');
+        // Duration
+        document.getElementById(`durPlaisance${cap}`).textContent = t.durPlaisance;
+        document.getElementById(`durCommercial${cap}`).textContent = t.durCommercial;
+        durationBlock.style.display = 'flex';
+        durationBlock.removeAttribute('aria-hidden');
       } else {
         altBlock.style.display = 'none';
         altBlock.setAttribute('aria-hidden', 'true');
+        durationBlock.style.display = 'none';
+        durationBlock.setAttribute('aria-hidden', 'true');
       }
     });
   }
@@ -623,7 +658,6 @@
       notifSummary.removeAttribute('aria-hidden');
       updateBridgeSummary();
     } else {
-      // Only show notify button on mobile
       if (isMobile) {
         notifyBtn.textContent = t.notifyBtn;
         show(notifyBtn);
@@ -671,10 +705,6 @@
     document.getElementById('and1').innerHTML = t.and1;
     document.getElementById('and2').innerHTML = t.and2;
     document.getElementById('and3').innerHTML = t.and3;
-    ['Gonzague', 'Larocque'].forEach(b => {
-      const el = document.getElementById(`altText${b}`);
-      if (el) el.textContent = t.altText;
-    });
     updateNotifyButtons();
     updateDisplay();
   }
@@ -756,15 +786,12 @@
   const installCard = document.getElementById('installCard');
 
   if (isInstalledPWA) {
-    // PWA installée → bouton notifications, pas de carte install
     show(notifyBtn);
     hide(installCard);
   } else if (!isMobile) {
-    // Desktop → rien du tout
     hide(notifyBtn);
     hide(installCard);
   } else if (isIOS) {
-    // iOS mobile → instructions iOS
     hide(notifyBtn);
     show(installCard);
     const iosEl = document.getElementById('iosInstructions');
@@ -772,7 +799,6 @@
     iosEl.style.flexDirection = 'column';
     iosEl.removeAttribute('aria-hidden');
   } else {
-    // Android → instructions Android
     hide(notifyBtn);
     show(installCard);
     const andEl = document.getElementById('androidInstructions');
