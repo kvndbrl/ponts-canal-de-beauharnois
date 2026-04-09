@@ -144,68 +144,30 @@
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
-    /* Alt route button */
-    .alt-route-block {
-      padding: 0 12px 14px;
-    }
-
+    .alt-route-block { padding: 0 12px 14px; }
     .alt-route-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 11px 16px;
-      border-radius: 50px;
-      border: 1.5px solid var(--border);
-      background: var(--surface2);
-      color: var(--text2);
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 11px 16px; border-radius: 50px;
+      border: 1.5px solid var(--border); background: var(--surface2);
+      color: var(--text2); font-family: var(--sans); font-size: 13px; font-weight: 600;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
     }
-
     .alt-route-btn:hover { background: var(--border); }
-
     .alt-route-btn .map-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
     }
-
-    /* Google Maps icon colors */
-    .alt-route-btn .map-icon.google {
-      background: white;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-    }
-
-    /* Apple Maps icon */
-    .alt-route-btn .map-icon.apple {
-      background: linear-gradient(135deg, #2b9af3 0%, #0d6ef5 50%, #1a4fd6 100%);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
+    .alt-route-btn .map-icon.google { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+    .alt-route-btn .map-icon.apple { background: linear-gradient(135deg, #2b9af3 0%, #0d6ef5 50%, #1a4fd6 100%); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
 
     .lifts-block {
       padding: 12px 16px 14px; border-top: 1px solid var(--border);
       background: var(--surface2); display: flex; align-items: flex-start; gap: 10px;
     }
     .lifts-icon { font-size: 15px; margin-top: 2px; flex-shrink: 0; }
-    .lifts-label {
-      font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-      color: var(--text3); font-family: var(--mono); margin-bottom: 3px;
-    }
+    .lifts-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); font-family: var(--mono); margin-bottom: 3px; }
     .lifts-value { font-size: 13px; font-weight: 500; color: var(--text); }
-    .refresh-time {
-      font-family: var(--mono); font-size: 10px; color: var(--text3);
-      margin-left: auto; align-self: flex-end; flex-shrink: 0;
-    }
+    .refresh-time { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-left: auto; align-self: flex-end; flex-shrink: 0; }
 
     .install-card {
       background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
@@ -216,12 +178,9 @@
     .install-card-sub { font-size: 12px; color: var(--text2); margin-bottom: 16px; line-height: 1.5; }
     .steps-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .steps-list li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text2); line-height: 1.4; }
-    .step-num {
-      width: 24px; height: 24px; min-width: 24px; background: var(--accent);
-      color: white; border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-size: 11px; font-weight: 700;
-    }
+    .step-num { width: 24px; height: 24px; min-width: 24px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
 
+    /* ── NOTIFY BUTTON ── */
     .notify-btn {
       display: none; width: 100%; padding: 15px; border-radius: 50px; border: none;
       background: var(--accent); color: white; font-family: var(--sans);
@@ -231,44 +190,122 @@
     }
     .notify-btn:hover { transform: translateY(-1px); }
     .notify-btn:active { transform: translateY(0); }
-    .notify-btn.active { background: var(--surface); color: var(--text2); box-shadow: var(--shadow); border: 1px solid var(--border); }
 
-    .prefs-card {
-      display: none; background: var(--surface); border-radius: var(--radius);
-      box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; margin-top: 10px;
+    /* ── COMPACT NOTIF SUMMARY (when enabled) ── */
+    .notif-summary {
+      display: none;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-top: 10px;
+      animation: fadeUp 0.3s ease both;
     }
-    .prefs-title {
-      font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
-      color: var(--text3); font-family: var(--mono); padding: 14px 16px 10px; border-bottom: 1px solid var(--border);
+
+    .notif-summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
     }
-    .pref-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+
+    .notif-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .notif-status-dot {
+      width: 8px;
+      height: 8px;
+      min-width: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,85,221,0.15);
+    }
+
+    body.dark .notif-status-dot {
+      box-shadow: 0 0 0 3px rgba(77,159,255,0.2);
+    }
+
+    .notif-summary-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .notif-summary-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .notif-summary-bridges {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .notif-chevron {
+      color: var(--text3);
+      font-size: 12px;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .notif-summary.expanded .notif-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Expanded details */
+    .notif-details {
+      display: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .notif-summary.expanded .notif-details {
+      display: block;
+    }
+
+    .pref-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer;
+    }
     .pref-row:last-child { border-bottom: none; }
-    .pref-row-label { font-size: 14px; font-weight: 500; color: var(--text); }
+    .pref-row-label { font-size: 13px; font-weight: 500; color: var(--text); }
+
     .pref-toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
     .pref-toggle input { opacity: 0; width: 0; height: 0; }
     .pref-slider { position: absolute; inset: 0; background: #b0b8cc; border-radius: 26px; transition: background 0.3s; }
-    .pref-slider:before {
-      content: ''; position: absolute; width: 20px; height: 20px;
-      left: 3px; top: 3px; background: white; border-radius: 50%;
-      transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-    }
+    .pref-slider:before { content: ''; position: absolute; width: 20px; height: 20px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.25); }
     .pref-toggle input:checked + .pref-slider { background: var(--accent); }
     .pref-toggle input:checked + .pref-slider:before { transform: translateX(18px); }
 
+    .unsub-row {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+    }
+
     .unsub-btn {
-      display: none; background: none; border: none; font-family: var(--sans);
-      font-size: 13px; color: var(--text3); cursor: pointer; padding: 10px;
-      text-decoration: underline; text-underline-offset: 3px; margin-top: 4px;
+      display: block;
+      background: none; border: none; font-family: var(--sans);
+      font-size: 12px; color: var(--text3); cursor: pointer; padding: 0;
+      text-decoration: underline; text-underline-offset: 3px;
     }
 
     .bottom-bar {
       width: 100%; display: flex; align-items: center; justify-content: space-between;
       margin-top: 16px; padding: 0 4px; position: relative; z-index: 1;
     }
-    .lang-btn {
-      background: none; border: none; font-family: var(--mono); font-size: 12px;
-      color: var(--text3); cursor: pointer; letter-spacing: 0.5px; padding: 4px 8px;
-    }
+    .lang-btn { background: none; border: none; font-family: var(--mono); font-size: 12px; color: var(--text3); cursor: pointer; letter-spacing: 0.5px; padding: 4px 8px; }
     .lang-btn:hover { color: var(--text2); }
     .paypal-btn {
       display: flex; align-items: center; gap: 7px; padding: 9px 18px;
@@ -278,13 +315,8 @@
     }
     .paypal-btn:hover { transform: translateY(-1px); }
 
-    .disclaimer {
-      width: 100%; margin-top: 20px; font-size: 11px; color: var(--text3);
-      text-align: center; line-height: 1.7; padding: 0 8px;
-      position: relative; z-index: 1;
-    }
+    .disclaimer { width: 100%; margin-top: 20px; font-size: 11px; color: var(--text3); text-align: center; line-height: 1.7; padding: 0 8px; position: relative; z-index: 1; }
     .disclaimer a { color: var(--text2); text-decoration: underline; text-underline-offset: 2px; }
-
     .error { color: var(--red); text-align: center; margin-top: 12px; font-size: 12px; font-family: var(--mono); position: relative; z-index: 1; }
     .spacer { height: 8px; position: relative; z-index: 1; }
   </style>
@@ -373,6 +405,7 @@
 
     <div class="spacer"></div>
 
+    <!-- INSTALL CARD -->
     <div class="install-card" id="installCard" aria-hidden="true">
       <div class="install-card-title" id="installTitle">📲 Installer l'app</div>
       <div class="install-card-sub" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</div>
@@ -389,37 +422,49 @@
       </ul>
     </div>
 
+    <!-- NOTIFY BUTTON (not yet enabled) -->
     <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()"
             aria-label="Activer les notifications de levage de pont"
             aria-hidden="true" style="display:none;">
       🔔 Activer les notifications
     </button>
 
-    <div class="prefs-card" id="prefsCard" role="group"
-         aria-label="Préférences de notifications" aria-hidden="true">
-      <div class="prefs-title" id="prefTitle">Notifications</div>
-      <label class="pref-row">
-        <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
-        <div class="pref-toggle">
-          <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"
-                 aria-label="Notifications pour le pont St-Louis-de-Gonzague"/>
-          <span class="pref-slider"></span>
+    <!-- COMPACT NOTIF SUMMARY (when enabled) -->
+    <div class="notif-summary" id="notifSummary" aria-hidden="true">
+      <div class="notif-summary-header" onclick="toggleNotifExpand()" role="button" aria-expanded="false" id="notifSummaryHeader">
+        <div class="notif-summary-left">
+          <span class="notif-status-dot" aria-hidden="true"></span>
+          <div class="notif-summary-text">
+            <span class="notif-summary-title" id="notifSummaryTitle">✅ Notifications activées</span>
+            <span class="notif-summary-bridges" id="notifSummaryBridges">Pont St-Louis · Pont Larocque</span>
+          </div>
         </div>
-      </label>
-      <label class="pref-row">
-        <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
-        <div class="pref-toggle">
-          <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"
-                 aria-label="Notifications pour le pont Larocque"/>
-          <span class="pref-slider"></span>
+        <span class="notif-chevron" aria-hidden="true">▾</span>
+      </div>
+      <div class="notif-details" id="notifDetails">
+        <label class="pref-row">
+          <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
+          <div class="pref-toggle">
+            <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"
+                   aria-label="Notifications pour le pont St-Louis-de-Gonzague"/>
+            <span class="pref-slider"></span>
+          </div>
+        </label>
+        <label class="pref-row">
+          <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
+          <div class="pref-toggle">
+            <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"
+                   aria-label="Notifications pour le pont Larocque"/>
+            <span class="pref-slider"></span>
+          </div>
+        </label>
+        <div class="unsub-row">
+          <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">
+            Désactiver les notifications
+          </button>
         </div>
-      </label>
+      </div>
     </div>
-
-    <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()"
-            aria-hidden="true" style="display:none;">
-      Désactiver les notifications
-    </button>
 
     <div class="bottom-bar">
       <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-label="Changer la langue">EN</button>
@@ -443,22 +488,19 @@
 <script>
   const BACKEND_URL = 'https://pont-st-louis-de-gonzague.onrender.com';
 
-  // Bridge coordinates
   const BRIDGES = {
-    gonzague: { lat: 45.2312, lng: -74.0019, name: 'Pont St-Louis-de-Gonzague' },
-    larocque: { lat: 45.2259, lng: -74.1147, name: 'Pont Larocque' }
+    gonzague: { lat: 45.2312, lng: -74.0019 },
+    larocque: { lat: 45.2259, lng: -74.1147 }
   };
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  // Google Maps SVG icon
   const GOOGLE_MAPS_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
     <path d="M12 2C8.13 2 5 5.13 5 9c0 1.93.62 3.71 1.67 5.16L12 2z" fill="#C5221F"/>
     <circle cx="12" cy="9" r="2.5" fill="white"/>
   </svg>`;
 
-  // Apple Maps icon (compass rose style)
   const APPLE_MAPS_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="10" fill="white" opacity="0.9"/>
     <polygon points="12,4 14,12 12,10 10,12" fill="#FF3B30"/>
@@ -468,13 +510,8 @@
 
   function getMapsUrl(bridgeKey) {
     const b = BRIDGES[bridgeKey];
-    if (isIOS) {
-      // Apple Maps — directions to bridge, from current location
-      return `maps://?daddr=${b.lat},${b.lng}&dirflg=d`;
-    } else {
-      // Google Maps — directions to bridge, from current location
-      return `https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}&travelmode=driving`;
-    }
+    if (isIOS) return `maps://?daddr=${b.lat},${b.lng}&dirflg=d`;
+    return `https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}&travelmode=driving`;
   }
 
   function setupMapIcon(iconEl) {
@@ -482,11 +519,19 @@
     iconEl.className = `map-icon ${isIOS ? 'apple' : 'google'}`;
   }
 
-  // Initialize map icons
   setupMapIcon(document.getElementById('mapIconGonzague'));
   setupMapIcon(document.getElementById('mapIconLarocque'));
 
   let lastData = null;
+  let notifExpanded = false;
+
+  function toggleNotifExpand() {
+    notifExpanded = !notifExpanded;
+    const summary = document.getElementById('notifSummary');
+    const header = document.getElementById('notifSummaryHeader');
+    summary.classList.toggle('expanded', notifExpanded);
+    header.setAttribute('aria-expanded', notifExpanded ? 'true' : 'false');
+  }
 
   // ── Translations ──
   const translations = {
@@ -495,11 +540,11 @@
       liftsLabel: 'Levages — 60 min',
       noLifts: 'Aucun levage prévu',
       altText: 'Trouver un itinéraire alternatif',
+      notifTitle: '✅ Notifications activées',
+      notifBridges: (g, l) => [g && 'Pont St-Louis', l && 'Pont Larocque'].filter(Boolean).join(' · ') || '—',
       installTitle: '📲 Installer l\'app',
       installSubtitle: 'Installez l\'app pour recevoir des notifications lors des levages',
-      prefTitle: 'Notifications',
       notifyBtn: '🔔 Activer les notifications',
-      notifyActive: '✅ Notifications activées',
       unsubBtn: 'Désactiver les notifications',
       supportText: 'Soutenir',
       langBtn: 'EN', langLabel: 'Switch to English',
@@ -521,11 +566,11 @@
       liftsLabel: 'Lifts — 60 min',
       noLifts: 'No anticipated bridge lifts',
       altText: 'Find an alternate route',
+      notifTitle: '✅ Notifications enabled',
+      notifBridges: (g, l) => [g && 'St-Louis Bridge', l && 'Larocque Bridge'].filter(Boolean).join(' · ') || '—',
       installTitle: '📲 Install the app',
       installSubtitle: 'Install the app to receive bridge lift notifications',
-      prefTitle: 'Notifications',
       notifyBtn: '🔔 Enable notifications',
-      notifyActive: '✅ Notifications enabled',
       unsubBtn: 'Disable notifications',
       supportText: 'Support',
       langBtn: 'FR', langLabel: 'Passer en français',
@@ -567,16 +612,14 @@
   function updateAltRoutes() {
     if (!lastData) return;
     const t = translations[currentLang];
-
     ['gonzague', 'larocque'].forEach(bridge => {
-      const altBlock = document.getElementById(`alt${bridge.charAt(0).toUpperCase() + bridge.slice(1)}`);
-      const altBtn = document.getElementById(`altBtn${bridge.charAt(0).toUpperCase() + bridge.slice(1)}`);
-      const altText = document.getElementById(`altText${bridge.charAt(0).toUpperCase() + bridge.slice(1)}`);
+      const cap = bridge.charAt(0).toUpperCase() + bridge.slice(1);
+      const altBlock = document.getElementById(`alt${cap}`);
+      const altBtn = document.getElementById(`altBtn${cap}`);
+      const altText = document.getElementById(`altText${cap}`);
       const status = lastData[bridge].status;
       const lifted = status === 'leve' || status === 'bientot_leve';
-
       if (lifted) {
-        // Point to the OTHER bridge as alternate
         const altBridge = bridge === 'gonzague' ? 'larocque' : 'gonzague';
         altBtn.href = getMapsUrl(altBridge);
         altText.textContent = t.altText;
@@ -604,6 +647,7 @@
   async function updatePrefs() {
     const bridges = getSelectedBridges();
     localStorage.setItem('bridgePrefs', JSON.stringify(bridges));
+    updateBridgeSummary();
     if (localStorage.getItem('notificationsEnabled') === 'true') {
       try {
         const reg = await navigator.serviceWorker.ready;
@@ -629,21 +673,31 @@
     }
   }
 
+  function updateBridgeSummary() {
+    const t = translations[currentLang];
+    const g = document.getElementById('prefGonzague').checked;
+    const l = document.getElementById('prefLarocque').checked;
+    document.getElementById('notifSummaryTitle').textContent = t.notifTitle;
+    document.getElementById('notifSummaryBridges').textContent = t.notifBridges(g, l);
+    document.getElementById('unsubBtn').textContent = t.unsubBtn;
+  }
+
   function updateNotifyButtons() {
     const isEnabled = localStorage.getItem('notificationsEnabled') === 'true';
     const t = translations[currentLang];
     const notifyBtn = document.getElementById('notifyBtn');
-    const unsubBtn = document.getElementById('unsubBtn');
-    const prefsCard = document.getElementById('prefsCard');
+    const notifSummary = document.getElementById('notifSummary');
+
     if (isEnabled) {
-      notifyBtn.textContent = t.notifyActive;
-      notifyBtn.classList.add('active');
-      show(unsubBtn); unsubBtn.textContent = t.unsubBtn;
-      show(prefsCard);
+      hide(notifyBtn);
+      notifSummary.style.display = 'block';
+      notifSummary.removeAttribute('aria-hidden');
+      updateBridgeSummary();
     } else {
       notifyBtn.textContent = t.notifyBtn;
-      notifyBtn.classList.remove('active');
-      hide(unsubBtn); hide(prefsCard);
+      show(notifyBtn);
+      notifSummary.style.display = 'none';
+      notifSummary.setAttribute('aria-hidden', 'true');
     }
   }
 
@@ -674,7 +728,6 @@
     document.documentElement.lang = currentLang;
     document.getElementById('installTitle').textContent = t.installTitle;
     document.getElementById('installSubtitle').textContent = t.installSubtitle;
-    document.getElementById('prefTitle').textContent = t.prefTitle;
     document.getElementById('supportText').textContent = t.supportText;
     const langBtn = document.getElementById('langBtn');
     langBtn.textContent = t.langBtn;
@@ -687,7 +740,6 @@
     document.getElementById('and1').innerHTML = t.and1;
     document.getElementById('and2').innerHTML = t.and2;
     document.getElementById('and3').innerHTML = t.and3;
-    // Update alt route text if visible
     ['Gonzague', 'Larocque'].forEach(b => {
       const el = document.getElementById(`altText${b}`);
       if (el) el.textContent = t.altText;
