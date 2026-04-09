@@ -9,7 +9,23 @@ self.addEventListener('push', function(event) {
     renotify: true,
     requireInteraction: data.persistent || false
   };
-  event.waitUntil(self.registration.showNotification(title, options));
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then(function(clientList) {
+        // Si l'app est ouverte ET visible (premier plan), ne pas notifier
+        const appVisible = clientList.some(client =>
+          client.visibilityState === 'visible'
+        );
+
+        if (appVisible) {
+          console.log('App is in foreground, skipping notification');
+          return;
+        }
+
+        return self.registration.showNotification(title, options);
+      })
+  );
 });
 
 self.addEventListener('notificationclick', function(event) {
