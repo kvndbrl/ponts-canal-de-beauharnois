@@ -43,27 +43,24 @@
     .header{width:100%;max-width:430px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:0 4px;gap:12px;}
     .greeting-block{display:flex;flex-direction:column;min-width:0;flex:1;}
     .greeting-text{font-size:20px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
-    .weather-text{font-size:12px;color:var(--text3);font-family:var(--mono);margin-top:2px;white-space:nowrap;}
+    .weather-text{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-    /* Weather card */
-    .weather-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:14px 16px;margin-bottom:12px;animation:fadeUp .4s ease both;position:relative;z-index:1;}
-    .weather-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-    .weather-city{font-size:11px;font-weight:600;color:var(--text3);font-family:var(--mono);letter-spacing:.5px;}
-    .weather-current{display:flex;align-items:center;gap:10px;}
-    .weather-emoji{font-size:28px;line-height:1;}
-    .weather-temps{display:flex;flex-direction:column;}
-    .weather-temp-main{font-size:22px;font-weight:700;color:var(--text);line-height:1.1;}
-    .weather-temp-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:1px;}
-    .weather-minmax{font-size:11px;color:var(--text3);font-family:var(--mono);text-align:right;}
-    .weather-hourly{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
-    .weather-hourly::-webkit-scrollbar{display:none;}
-    .weather-hour{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:40px;padding:6px 4px;border-radius:10px;flex-shrink:0;}
-    .weather-hour.now{background:var(--accent);color:white;}
-    .weather-hour-time{font-size:9px;font-family:var(--mono);font-weight:600;color:var(--text3);}
-    .weather-hour.now .weather-hour-time{color:rgba(255,255,255,.8);}
-    .weather-hour-icon{font-size:14px;}
-    .weather-hour-temp{font-size:11px;font-weight:700;color:var(--text);font-family:var(--mono);}
-    .weather-hour.now .weather-hour-temp{color:white;}
+    /* Name modal */
+    .name-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);}
+    .name-modal{background:var(--surface);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:340px;box-shadow:0 8px 40px rgba(0,0,0,.3);animation:fadeUp .3s ease both;}
+    .name-modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;}
+    .name-modal-sub{font-size:13px;color:var(--text3);margin-bottom:20px;line-height:1.5;}
+    .name-modal-input{width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--sans);font-size:16px;outline:none;transition:border-color .2s;}
+    .name-modal-input:focus{border-color:var(--accent);}
+    .name-modal-btn{width:100%;margin-top:14px;padding:14px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;}
+    .name-modal-btn:hover{opacity:.9;}
+    .name-modal-skip{display:block;text-align:center;margin-top:10px;font-size:12px;color:var(--text3);cursor:pointer;background:none;border:none;font-family:var(--sans);text-decoration:underline;text-underline-offset:3px;width:100%;}
+
+    /* Prénom row in settings */
+    .prenom-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);}
+    .prenom-label{font-size:13px;font-weight:500;color:var(--text);flex-shrink:0;}
+    .prenom-input{flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--sans);font-size:13px;outline:none;}
+    .prenom-input:focus{border-color:var(--accent);}
     .toggle-wrap{display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:50px;padding:6px 10px;box-shadow:var(--shadow);flex-shrink:0;}
     .toggle-icon{font-size:13px;}
     .toggle-switch{position:relative;width:38px;height:20px;cursor:pointer;}
@@ -191,6 +188,16 @@
   </div>
 </div>
 
+<div id="nameModalOverlay" class="name-modal-overlay" style="display:none;" aria-modal="true" role="dialog">
+  <div class="name-modal">
+    <div class="name-modal-title" id="modalTitle">Comment vous appelez-vous ?</div>
+    <div class="name-modal-sub" id="modalSub">Votre prénom sera affiché dans la salutation. Vous pourrez le modifier dans les réglages.</div>
+    <input class="name-modal-input" id="nameModalInput" type="text" maxlength="30" autocomplete="given-name" placeholder="Prénom"/>
+    <button class="name-modal-btn" id="modalBtn" onclick="saveName()">Continuer</button>
+    <button class="name-modal-skip" id="modalSkip" onclick="skipName()">Passer</button>
+  </div>
+</div>
+
 <header class="header">
   <div class="greeting-block" aria-live="polite">
     <span class="greeting-text" id="greetingText">Bonjour !</span>
@@ -207,24 +214,6 @@
 </header>
 
 <main>
-
-  <!-- WEATHER CARD -->
-  <div class="weather-card" id="weatherCard" style="display:none;" aria-hidden="true">
-    <div class="weather-card-top">
-      <div>
-        <div class="weather-city" id="weatherCity">—</div>
-        <div class="weather-current">
-          <span class="weather-emoji" id="weatherCardEmoji">—</span>
-          <div class="weather-temps">
-            <span class="weather-temp-main" id="weatherTempMain">—</span>
-            <span class="weather-temp-sub" id="weatherTempSub">—</span>
-          </div>
-        </div>
-      </div>
-      <div class="weather-minmax" id="weatherMinMax">—</div>
-    </div>
-    <div class="weather-hourly" id="weatherHourly"></div>
-  </div>
 
   <section class="bridge-card" aria-label="Pont St-Louis-de-Gonzague">
     <div class="bridge-name" aria-hidden="true">
@@ -323,6 +312,12 @@
       <span class="settings-chevron" aria-hidden="true">&#x25BE;</span>
     </div>
     <div class="settings-body" id="settingsBody">
+      <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
+      <div class="prenom-row">
+        <label class="prenom-label" for="prenomInput" id="prenomLabel">Prénom</label>
+        <input class="prenom-input" id="prenomInput" type="text" maxlength="30" autocomplete="given-name" placeholder="—" oninput="updatePrenom()"/>
+      </div>
+
       <div class="settings-section-label" id="notifSectionLabel">Notifications</div>
       <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez etre notifie.</div>
       <label class="pref-row">
@@ -410,82 +405,105 @@ async function fetchWeather(){
     try{
       const {latitude:lat,longitude:lon}=pos.coords;
 
-      // Fetch current + hourly + daily forecast
-      const wUrl='https://api.open-meteo.com/v1/forecast'
-        +'?latitude='+lat+'&longitude='+lon
-        +'&current=temperature_2m,weather_code'
-        +'&hourly=temperature_2m,weather_code'
-        +'&daily=temperature_2m_max,temperature_2m_min'
-        +'&timezone=auto&forecast_days=1';
-      const wRes=await fetch(wUrl);
+      // Weather + reverse geocode in parallel
+      const [wRes,gRes]=await Promise.all([
+        fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon
+          +'&current=temperature_2m,weather_code'
+          +'&daily=temperature_2m_max,temperature_2m_min'
+          +'&timezone=auto&forecast_days=1'),
+        fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json',
+          {headers:{'Accept-Language':currentLang==='en'?'en':'fr'}})
+      ]);
       const w=await wRes.json();
-
-      // Reverse geocode city name
-      let city='';
-      try{
-        const gRes=await fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json',
-          {headers:{'Accept-Language':currentLang==='en'?'en':'fr'}});
-        const g=await gRes.json();
-        city=g.address?.city||g.address?.town||g.address?.village||g.address?.municipality||'';
-      }catch(e){}
+      const g=await gRes.json();
 
       const c=Math.round(w.current.temperature_2m);
       const code=w.current.weather_code;
       const maxC=Math.round(w.daily.temperature_2m_max[0]);
       const minC=Math.round(w.daily.temperature_2m_min[0]);
+      const city=g.address?.city||g.address?.town||g.address?.village||g.address?.municipality||'';
 
-      // Update header weather text
-      document.getElementById('weatherText').textContent=wEmoji(c)+' '+c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F';
+      // Compact single line: 🌤️ Salaberry · 7°C · ↑12° ↓2°
+      const parts=[];
+      parts.push(wmoEmoji(code));
+      if(city) parts.push(city);
+      parts.push(c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F');
+      parts.push('\u2191'+maxC+'\u00B0 \u2193'+minC+'\u00B0');
+      document.getElementById('weatherText').textContent=parts.join(' \u00B7 ').replace(' \u00B7 '+wmoEmoji(code)+' \u00B7 ',wmoEmoji(code)+' ');
+      // Fix: build properly
+      let line=wmoEmoji(code)+' ';
+      if(city) line+=city+' \u00B7 ';
+      line+=c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F \u00B7 \u2191'+maxC+'\u00B0 \u2193'+minC+'\u00B0';
+      document.getElementById('weatherText').textContent=line;
 
-      // Update weather card
-      document.getElementById('weatherCity').textContent=city;
-      document.getElementById('weatherCardEmoji').textContent=wmoEmoji(code);
-      document.getElementById('weatherTempMain').textContent=c+'\u00B0C';
-      document.getElementById('weatherTempSub').textContent=toF(c)+'\u00B0F';
-      const sep=currentLang==='fr'?' min · max ':' min · max ';
-      document.getElementById('weatherMinMax').innerHTML=
-        minC+'\u00B0 \u2193<br>'+maxC+'\u00B0 \u2191';
-
-      // Hourly forecast — next 12 hours from now
-      const nowHour=new Date().getHours();
-      const hours=w.hourly.time;
-      const temps=w.hourly.temperature_2m;
-      const codes=w.hourly.weather_code;
-      const hourlyEl=document.getElementById('weatherHourly');
-      hourlyEl.innerHTML='';
-
-      // Find index matching current hour
-      let startIdx=hours.findIndex(t=>new Date(t).getHours()===nowHour&&new Date(t).toDateString()===new Date().toDateString());
-      if(startIdx<0)startIdx=nowHour;
-
-      for(let i=startIdx;i<Math.min(startIdx+12,hours.length);i++){
-        const h=new Date(hours[i]).getHours();
-        const isNow=(i===startIdx);
-        const div=document.createElement('div');
-        div.className='weather-hour'+(isNow?' now':'');
-        const timeStr=h===0?'00h':(h<10?'0'+h+'h':h+'h');
-        div.innerHTML=
-          '<span class="weather-hour-time">'+(isNow?(currentLang==='fr'?'Main':'Now'):(timeStr))+'</span>'
-          +'<span class="weather-hour-icon">'+wmoEmoji(codes[i])+'</span>'
-          +'<span class="weather-hour-temp">'+Math.round(temps[i])+'\u00B0</span>';
-        hourlyEl.appendChild(div);
-      }
-
-      // Show card
-      const card=document.getElementById('weatherCard');
-      card.style.display='block';
-      card.removeAttribute('aria-hidden');
-
-    }catch(e){console.log('Weather error:',e);}
+    }catch(e){console.log('Weather:',e);}
   },()=>{},{timeout:8000,maximumAge:300000});
 }
 
-function getGreeting(lang){
+// ── Name / prénom ──────────────────────────────────────────────────────
+function getUserName(){ return localStorage.getItem('userName')||''; }
+
+function updateGreeting(){
+  const name=getUserName();
   const h=new Date().getHours();
-  if(lang==='fr'){if(h>=5&&h<12)return'Bonjour !';if(h>=12&&h<18)return'Bon apr\u00E8s-midi !';return'Bonsoir !';}
-  else{if(h>=5&&h<12)return'Good morning!';if(h>=12&&h<18)return'Good afternoon!';return'Good evening!';}
+  const t=TR[currentLang];
+  let greeting;
+  if(currentLang==='fr'){
+    if(h>=5&&h<12) greeting='Bonjour';
+    else if(h>=12&&h<18) greeting='Bon après-midi';
+    else greeting='Bonsoir';
+    document.getElementById('greetingText').textContent=greeting+(name?' '+name:'')+'\u00A0!';
+  } else {
+    if(h>=5&&h<12) greeting='Good morning';
+    else if(h>=12&&h<18) greeting='Good afternoon';
+    else greeting='Good evening';
+    document.getElementById('greetingText').textContent=greeting+(name?', '+name:'')+'!';
+  }
 }
-function updateGreeting(){document.getElementById('greetingText').textContent=getGreeting(currentLang);}
+
+function saveName(){
+  const val=document.getElementById('nameModalInput').value.trim();
+  localStorage.setItem('userName', val);
+  localStorage.setItem('nameAsked', '1');
+  document.getElementById('nameModalOverlay').style.display='none';
+  // Sync input in settings
+  const si=document.getElementById('prenomInput');
+  if(si) si.value=val;
+  updateGreeting();
+}
+
+function skipName(){
+  localStorage.setItem('nameAsked','1');
+  document.getElementById('nameModalOverlay').style.display='none';
+}
+
+function updatePrenom(){
+  const val=document.getElementById('prenomInput').value.trim();
+  localStorage.setItem('userName',val);
+  updateGreeting();
+}
+
+function showNameModalIfNeeded(){
+  if(localStorage.getItem('nameAsked')) return;
+  const t=TR[currentLang];
+  document.getElementById('modalTitle').textContent=t.modalTitle||'Comment vous appelez-vous\u00A0?';
+  document.getElementById('modalSub').textContent=t.modalSub||'Votre prénom sera affiché dans la salutation. Vous pourrez le modifier dans les réglages.';
+  document.getElementById('modalBtn').textContent=t.modalBtn||'Continuer';
+  document.getElementById('modalSkip').textContent=t.modalSkip||'Passer';
+  document.getElementById('nameModalInput').placeholder=t.modalPlaceholder||'Prénom';
+  // Small delay so app loads first
+  setTimeout(()=>{
+    document.getElementById('nameModalOverlay').style.display='flex';
+    document.getElementById('nameModalInput').focus();
+  }, 800);
+}
+
+// Allow Enter key in modal
+document.getElementById('nameModalInput').addEventListener('keydown', e=>{
+  if(e.key==='Enter') saveName();
+});
+
+
 
 function translateLifts(t,lang){
   if(!t||lang==='en')return t;
@@ -540,7 +558,10 @@ const TR={
     cp:'Fermeture\u00A0: ',
     ab:n=>'Le '+n+' est disponible',
     st:'R\u00E9glages',nsl:'\u{1F514} Notifications',
-    bd:'Choisissez les ponts pour lesquels vous souhaitez \u00EAtre notifi\u00E9.',
+    prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
+    modalTitle:'Comment vous appelez-vous\u00A0?',
+    modalSub:'Votre pr\u00E9nom sera affich\u00E9 dans la salutation. Vous pourrez le modifier dans les r\u00E9glages.',
+    modalBtn:'Continuer',modalSkip:'Passer',modalPlaceholder:'Pr\u00E9nom',
     tsl:'\u23F0 Plages horaires',
     td:'Optionnel \u2014 recevez des notifications seulement pendant certaines heures. Laissez vide pour \u00EAtre notifi\u00E9 en tout temps.',
     r1:'Plage 1',r2:'Plage 2',
@@ -569,7 +590,10 @@ const TR={
     cp:'Closure: ',
     ab:n=>n+' is available',
     st:'Settings',nsl:'\u{1F514} Notifications',
-    bd:'Choose the bridges for which you want to receive notifications.',
+    prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
+    modalTitle:'What\u2019s your name?',
+    modalSub:'Your first name will be shown in the greeting. You can change it in Settings.',
+    modalBtn:'Continue',modalSkip:'Skip',modalPlaceholder:'First name',
     tsl:'\u23F0 Time ranges',
     td:'Optional \u2014 receive notifications only during certain hours. Leave empty to be notified at any time.',
     r1:'Range 1',r2:'Range 2',
@@ -740,6 +764,9 @@ function applyTrans(){
   const t=TR[currentLang];
   document.documentElement.lang=currentLang;
   updateGreeting();
+  document.getElementById('prenomSectionLabel').textContent=t.prenomSectionLabel;
+  document.getElementById('prenomLabel').textContent=t.prenomLabel;
+  document.getElementById('prenomInput').placeholder=t.prenomPlaceholder;
   document.getElementById('settingsTitle').textContent=t.st;
   document.getElementById('notifSectionLabel').textContent=t.nsl;
   document.getElementById('settingsBridgesDesc').textContent=t.bd;
@@ -885,6 +912,10 @@ document.addEventListener('touchend', async ()=>{
 });
 
 loadPrefs();loadTR();applyTrans();fetchWeather();
+// Load saved prénom into settings field
+const savedName=getUserName();
+if(savedName) document.getElementById('prenomInput').value=savedName;
+showNameModalIfNeeded();
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 fetchStatus();
 setInterval(fetchStatus,60000);
