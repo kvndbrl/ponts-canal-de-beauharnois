@@ -32,24 +32,60 @@
       --shadow:0 2px 16px rgba(0,0,0,.4);
     }
 
-    /* ── Thème Staniçois — vert/bleu/jaune SSK ── */
-    body.theme-stanicois{--accent:#2d7a3a;--wave-color:#2d7a3a;--wave-opacity:.08;}
-    body.theme-stanicois.dark{--accent:#4dbb5a;--wave-color:#4dbb5a;--wave-opacity:.16;}
+    /* ══ THÈME GONZAGUOIS — vert forêt / crème ══ */
+    body.theme-gonzaguois{
+      --bg:#f2f5ef;--surface:#fafcf8;--surface2:#eef3ea;
+      --border:rgba(40,80,20,.08);
+      --text:#0d1a09;--text2:#2d4a20;--text3:#5a7248;
+      --accent:#3a6b2a;--wave-color:#3a6b2a;--wave-opacity:.09;
+      --shadow:0 2px 16px rgba(40,80,20,.1);
+    }
+    body.theme-gonzaguois.dark{
+      --bg:#080f06;--surface:#0f1c0c;--surface2:#142410;
+      --border:rgba(100,200,60,.08);
+      --text:#e8f5e0;--text2:#a0c880;--text3:#6a9450;
+      --accent:#6ab84a;--wave-color:#4a9030;--wave-opacity:.18;
+      --shadow:0 2px 16px rgba(0,0,0,.5);
+    }
 
-    /* ── Thème Campivallensien — bleu/or Valleyfield ── */
-    body.theme-campivallensien{--accent:#1a4a8c;--wave-color:#1a4a8c;--wave-opacity:.07;}
-    body.theme-campivallensien.dark{--accent:#4a7fd4;--wave-color:#4a7fd4;--wave-opacity:.18;}
+    /* ══ THÈME CAMPIVALLENSIEN — bleu royal / or ══ */
+    body.theme-campivallensien{
+      --bg:#eef2f8;--surface:#f8fafd;--surface2:#e8eef8;
+      --border:rgba(20,50,120,.08);
+      --text:#080e1f;--text2:#1a3060;--text3:#4a6090;
+      --accent:#1a4a8c;--wave-color:#1a4a8c;--wave-opacity:.09;
+      --shadow:0 2px 16px rgba(20,50,120,.1);
+    }
+    body.theme-campivallensien.dark{
+      --bg:#06090f;--surface:#0c1220;--surface2:#101828;
+      --border:rgba(60,120,220,.08);
+      --text:#e0eaff;--text2:#90aae0;--text3:#5878b0;
+      --accent:#4a7fd4;--wave-color:#2a5ab0;--wave-opacity:.2;
+      --shadow:0 2px 16px rgba(0,0,0,.5);
+    }
 
-    /* ── Thème Gonzaguois — vert SLG ── */
-    body.theme-gonzaguois{--accent:#3a6b2a;--wave-color:#3a6b2a;--wave-opacity:.08;}
-    body.theme-gonzaguois.dark{--accent:#6ab84a;--wave-color:#6ab84a;--wave-opacity:.16;}
+    /* ══ THÈME STANIÇOIS — vert émeraude / bleu lac / jaune soleil ══ */
+    body.theme-stanicois{
+      --bg:#eef8f4;--surface:#f6fcf9;--surface2:#e4f4ee;
+      --border:rgba(20,100,70,.08);
+      --text:#071410;--text2:#1a4a36;--text3:#3a7060;
+      --accent:#1a7a5a;--wave-color:#1a7a5a;--wave-opacity:.09;
+      --shadow:0 2px 16px rgba(20,100,70,.1);
+    }
+    body.theme-stanicois.dark{
+      --bg:#050e0a;--surface:#0a1c14;--surface2:#0e241a;
+      --border:rgba(40,180,120,.08);
+      --text:#d8f5ea;--text2:#70c8a0;--text3:#409870;
+      --accent:#3dbb8a;--wave-color:#20906a;--wave-opacity:.2;
+      --shadow:0 2px 16px rgba(0,0,0,.5);
+    }
 
     /* Theme swatches */
     .theme-section{padding:10px 16px 14px;}
     .theme-swatches{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
     .theme-swatch{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1;min-width:60px;}
-    .theme-swatch-dot{width:32px;height:32px;border-radius:50%;border:3px solid transparent;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.15);}
-    .theme-swatch.active .theme-swatch-dot{border-color:var(--text);transform:scale(1.15);}
+    .theme-swatch-dot{width:36px;height:36px;border-radius:50%;border:3px solid transparent;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+    .theme-swatch.active .theme-swatch-dot{border-color:var(--text);transform:scale(1.15);box-shadow:0 3px 12px rgba(0,0,0,.3);}
     .theme-swatch-name{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);text-align:center;line-height:1.3;}
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:var(--sans);background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px;transition:background .3s;overflow-x:hidden;}
@@ -335,20 +371,16 @@
       <div class="settings-section-label" id="themeSectionLabel">Thème</div>
       <div class="theme-section">
         <div class="theme-swatches" id="themeSwatches">
-          <div class="theme-swatch active" id="swatch-marin" onclick="setTheme('marin')">
-            <div class="theme-swatch-dot" style="background:#0055dd;"></div>
-            <span class="theme-swatch-name" id="swatchNameMarin">Marin</span>
-          </div>
-          <div class="theme-swatch" id="swatch-gonzaguois" onclick="setTheme('gonzaguois')">
-            <div class="theme-swatch-dot" style="background:#3a6b2a;"></div>
+          <div class="theme-swatch active" id="swatch-gonzaguois" onclick="setTheme('gonzaguois')">
+            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#3a6b2a,#6ab84a);"></div>
             <span class="theme-swatch-name">Gonzaguois</span>
           </div>
           <div class="theme-swatch" id="swatch-campivallensien" onclick="setTheme('campivallensien')">
-            <div class="theme-swatch-dot" style="background:#1a4a8c;"></div>
+            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#1a4a8c,#d4a017);"></div>
             <span class="theme-swatch-name">Campival&shy;lensien</span>
           </div>
           <div class="theme-swatch" id="swatch-stanicois" onclick="setTheme('stanicois')">
-            <div class="theme-swatch-dot" style="background:#2d7a3a;"></div>
+            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#1a7a5a,#3dbb8a);"></div>
             <span class="theme-swatch-name">Staniçois</span>
           </div>
         </div>
@@ -594,7 +626,7 @@ const TR={
     ab:n=>'Le '+n+' est disponible',
     st:'R\u00E9glages',nsl:'\u{1F514} Notifications',
     prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
-    themeSectionLabel:'Th\u00E8me',swatchNameMarin:'Marin',
+    themeSectionLabel:'Th\u00E8me',
     modalTitle:'Comment vous appelez-vous\u00A0?',
     modalSub:'Votre pr\u00E9nom sera affich\u00E9 dans la salutation. Vous pourrez le modifier dans les r\u00E9glages.',
     modalBtn:'Continuer',modalSkip:'Passer',modalPlaceholder:'Pr\u00E9nom',
@@ -627,7 +659,7 @@ const TR={
     ab:n=>n+' is available',
     st:'Settings',nsl:'\u{1F514} Notifications',
     prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
-    themeSectionLabel:'Theme',swatchNameMarin:'Marine',
+    themeSectionLabel:'Theme',
     modalTitle:'What\u2019s your name?',
     modalSub:'Your first name will be shown in the greeting. You can change it in Settings.',
     modalBtn:'Continue',modalSkip:'Skip',modalPlaceholder:'First name',
@@ -663,14 +695,12 @@ const sd=localStorage.getItem('darkMode');
 if(sd!==null)applyDark(sd==='1');else applyDark(window.matchMedia('(prefers-color-scheme:dark)').matches);
 
 // ── Themes ──────────────────────────────────────────────────────────
-const THEMES=['marin','gonzaguois','campivallensien','stanicois'];
+const THEMES=['gonzaguois','campivallensien','stanicois'];
 
 function setTheme(theme){
-  // Remove all theme classes
   THEMES.forEach(t=>document.body.classList.remove('theme-'+t));
-  if(theme!=='marin') document.body.classList.add('theme-'+theme);
+  document.body.classList.add('theme-'+theme);
   localStorage.setItem('appTheme',theme);
-  // Update active swatch
   THEMES.forEach(t=>{
     const el=document.getElementById('swatch-'+t);
     if(el) el.classList.toggle('active',t===theme);
@@ -678,7 +708,7 @@ function setTheme(theme){
 }
 
 function loadTheme(){
-  const saved=localStorage.getItem('appTheme')||'marin';
+  const saved=localStorage.getItem('appTheme')||'gonzaguois';
   setTheme(saved);
 }
 
@@ -822,7 +852,6 @@ function applyTrans(){
   document.documentElement.lang=currentLang;
   updateGreeting();
   document.getElementById('themeSectionLabel').textContent=t.themeSectionLabel;
-  document.getElementById('swatchNameMarin').textContent=t.swatchNameMarin;
   document.getElementById('prenomSectionLabel').textContent=t.prenomSectionLabel;
   document.getElementById('prenomLabel').textContent=t.prenomLabel;
   document.getElementById('prenomInput').placeholder=t.prenomPlaceholder;
