@@ -208,7 +208,7 @@
     /* Settings drawer */
     .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);}
     .drawer-overlay.open{opacity:1;pointer-events:all;}
-    .settings-drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,92vw);background:var(--surface);z-index:301;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.18);}
+    .settings-drawer{position:fixed;top:0;right:0;bottom:0;width:100%;background:var(--surface);z-index:301;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.18);}
     .settings-drawer *{max-width:100%;box-sizing:border-box;}
     .settings-drawer.open{transform:translateX(0);}
     .drawer-header{display:flex;align-items:center;justify-content:space-between;padding:22px 16px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;}
