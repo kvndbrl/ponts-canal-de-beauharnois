@@ -1008,7 +1008,10 @@ if(isPWA){
   show(notifyBtn); hide(installCard); hide(webviewBanner);
 } else if(isFBWebView){
   // In Facebook/Instagram WebView — show how to open in real browser
-  hide(notifyBtn); hide(installCard);
+  // No notifications possible in WebView
+  hide(notifyBtn); hide(installCard); hide(webviewBanner);
+  const sc=document.getElementById('settingsCard');
+  if(sc){ sc.style.display='none'; sc.setAttribute('aria-hidden','true'); }
   webviewBanner.style.display='block'; webviewBanner.removeAttribute('aria-hidden');
   if(isIOS){
     document.getElementById('webviewStepsIOS').style.display='block';
