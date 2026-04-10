@@ -75,7 +75,9 @@
     .status-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:50px;font-size:13px;font-weight:700;transition:all .4s ease;}
     .status-pill.disponible{background:var(--green-bg);color:var(--green);}
     .status-pill.bientot_leve{background:var(--yellow-bg);color:var(--yellow);animation:blink 2s infinite;}
+    .status-pill.raising{background:var(--orange-bg);color:var(--orange);animation:blink 1.5s infinite;}
     .status-pill.leve{background:var(--red-bg);color:var(--red);animation:blink 1.2s infinite;}
+    .status-pill.lowering{background:var(--yellow-bg);color:var(--yellow);animation:blink 2s infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.65}}
     .status-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;}
     .duration-block{display:none;padding:0 16px 14px;align-items:center;gap:8px;}
@@ -413,7 +415,7 @@ function fmtClosure(raw,lang){if(!raw)return null;return lang==='fr'?raw.replace
 
 const TR={
   fr:{
-    sl:{disponible:'Disponible',bientot_leve:'Levage imminent',leve:'Lev\u00E9'},
+    sl:{disponible:'Disponible',bientot_leve:'Levage imminent',raising:'En cours de levage',leve:'Lev\u00E9',lowering:'Bient\u00F4t disponible'},
     ll:'Lev\u00E9e pr\u00E9vue au cours des 60 prochaines minutes',nl:'Aucune lev\u00E9e pr\u00E9vue',
     dp:'~10 min \u00B7 Plaisance',dc:'~15 min \u00B7 Commercial',
     cp:'Fermeture\u00A0: ',
@@ -442,7 +444,7 @@ const TR={
     bn:{gonzague:'Pont St-Louis-de-Gonzague',larocque:'Pont Larocque'}
   },
   en:{
-    sl:{disponible:'Available',bientot_leve:'Lift imminent',leve:'Lifted'},
+    sl:{disponible:'Available',bientot_leve:'Lift imminent',raising:'Raising',leve:'Lifted',lowering:'Lowering'},
     ll:'Bridge lifts in the next 60 minutes',nl:'No anticipated bridge lifts',
     dp:'~10 min \u00B7 Pleasure craft',dc:'~15 min \u00B7 Commercial',
     cp:'Closure: ',
@@ -493,10 +495,21 @@ const liftAvgMin=12;
   if(saved) liftStartTimes[b]=parseInt(saved,10);
 });
 
-function trackLiftStatus(bridge,status){
+function trackLiftStatus(bridge, status, raisedSince){
   if(status==='leve'){
     if(!liftStartTimes[bridge]){
-      liftStartTimes[bridge]=Date.now();
+      // Use raisedSince time from API if available
+      if(raisedSince){
+        // Parse "HH:MM" into today's timestamp
+        const now=new Date();
+        const [h,m]=raisedSince.split(':').map(Number);
+        const t=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0,0);
+        // If the time is in the future (past midnight edge case), subtract a day
+        if(t>now) t.setDate(t.getDate()-1);
+        liftStartTimes[bridge]=t.getTime();
+      } else {
+        liftStartTimes[bridge]=Date.now();
+      }
       localStorage.setItem('liftStart_'+bridge, String(liftStartTimes[bridge]));
     }
   } else {
@@ -544,14 +557,14 @@ setInterval(refreshTimers, 10000);
 function updateCards(){
   if(!lastData)return;
   const t=TR[currentLang];
-  const gL=lastData.gonzague.status==='leve'||lastData.gonzague.status==='bientot_leve';
-  const lL=lastData.larocque.status==='leve'||lastData.larocque.status==='bientot_leve';
+  const gL=['leve','bientot_leve','raising','lowering'].includes(lastData.gonzague.status);
+  const lL=['leve','bientot_leve','raising','lowering'].includes(lastData.larocque.status);
   ['gonzague','larocque'].forEach(b=>{
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     const alt=b==='gonzague'?'larocque':'gonzague';
     const tL=b==='gonzague'?gL:lL,oL=b==='gonzague'?lL:gL;
     const isLifted=lastData[b].status==='leve';
-    const isImminent=lastData[b].status==='bientot_leve';
+    const isLowering=lastData[b].status==='lowering';
     const cl=lastData[b].closures;
     const db=document.getElementById('duration'+C),ab=document.getElementById('altInfo'+C);
     const badge=document.getElementById('closureBadge'+C);
@@ -561,6 +574,9 @@ function updateCards(){
     if(isLifted){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=getLiftTimerText(b,lastData[b].status,currentLang);
+    } else if(isLowering){
+      db.style.display='flex'; db.removeAttribute('aria-hidden');
+      timerEl.textContent=currentLang==='fr'?'Le pont redescend \u2014 Bient\u00F4t disponible':'Bridge is lowering \u2014 Opening soon';
     } else { db.style.display='none'; db.setAttribute('aria-hidden','true'); }
     // Closures → badge + tooltip
     if(cl&&cl.length>0){
@@ -630,8 +646,8 @@ async function fetchStatus(){
   try{
     const r=await fetch(BACKEND+'/status',{signal:AbortSignal.timeout(10000)});
     const d=await r.json();lastData=d;retries=0;document.getElementById('errorMsg').textContent='';
-    trackLiftStatus('gonzague',d.gonzague.status);
-    trackLiftStatus('larocque',d.larocque.status);
+    trackLiftStatus('gonzague',d.gonzague.status,d.gonzague.raisedSince);
+    trackLiftStatus('larocque',d.larocque.status,d.larocque.raisedSince);
     updateDisplay();
     refreshTimers();
   }catch(e){

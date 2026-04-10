@@ -99,6 +99,24 @@ async function fetchBridgeStatus() {
   );
   const html = await res.text();
 
+  function extractStatus(section) {
+    // Extract all status-title h1 text in this section
+    const titles = [...section.matchAll(/<h1[^>]*class="status-title"[^>]*>\s*<b>([^<]+)<\/b>/gi)]
+      .map(m => m[1].trim().toLowerCase());
+
+    // Combine into one string for pattern matching
+    const combined = titles.join(' ');
+
+    if (combined.includes('lowering')) return { status: 'lowering', raisedSince: null };
+    if (combined.includes('raising')) return { status: 'raising', raisedSince: null };
+
+    // "raised since HH:MM"
+    const raisedMatch = combined.match(/raised since\s+(\d{1,2}:\d{2})/i);
+    if (raisedMatch) return { status: 'leve', raisedSince: raisedMatch[1] };
+
+    return { status: null, raisedSince: null };
+  }
+
   function colorToStatus(color) {
     if (!color) return 'disponible';
     const c = color.toUpperCase();
@@ -113,6 +131,14 @@ async function fetchBridgeStatus() {
     );
     const match = html.match(regex);
     return match ? match[1].toUpperCase() : '#C1D6A8';
+  }
+
+  function getBridgeStatus(section, color) {
+    const { status: subtitleStatus, raisedSince } = extractStatus(section);
+    // Subtitle takes priority for raising/lowering/raised since
+    if (subtitleStatus) return { status: subtitleStatus, raisedSince };
+    // Fall back to color
+    return { status: colorToStatus(color), raisedSince: null };
   }
 
   function extractLifts(section) {
@@ -137,17 +163,22 @@ async function fetchBridgeStatus() {
   const colorGonzague = extractColor(html, 'St[\\-\\s]Louis[\\-\\s]de[\\-\\s]Gonzague');
   const colorLarocque = extractColor(html, 'Larocque');
 
+  const gonzague = getBridgeStatus(gonzagueSection, colorGonzague);
+  const larocque = getBridgeStatus(larocqueSection, colorLarocque);
+
   const refreshMatch = html.match(/Last Refreshed at[:\s]*([\d\-: ]+)/i);
   const last_refreshed = refreshMatch ? refreshMatch[1].trim() : '';
 
   return {
     gonzague: {
-      status: colorToStatus(colorGonzague),
+      status: gonzague.status,
+      raisedSince: gonzague.raisedSince,
       next_lifts: extractLifts(gonzagueSection),
       closures: extractClosures(gonzagueSection)
     },
     larocque: {
-      status: colorToStatus(colorLarocque),
+      status: larocque.status,
+      raisedSince: larocque.raisedSince,
       next_lifts: extractLifts(larocqueSection),
       closures: extractClosures(larocqueSection)
     },
@@ -163,12 +194,20 @@ async function sendNotifications(bridge, status) {
 
   const messages = {
     bientot_leve: {
-      title: `⚠️ Pont levé dans moins de 15 min`,
+      title: `⚠️ Levage imminent`,
       body: `Le pont ${bridgeName} sera levé sous peu.`
+    },
+    raising: {
+      title: `🔼 Pont en cours de levage`,
+      body: `Le pont ${bridgeName} est en train de se lever.`
     },
     leve: {
       title: `🚢 Pont levé`,
       body: `Le pont ${bridgeName} est levé pour laisser passer un navire.`
+    },
+    lowering: {
+      title: `🔽 Pont en cours de descente`,
+      body: `Le pont ${bridgeName} sera bientôt disponible.`
     },
     disponible: {
       title: `✅ Pont disponible`,
@@ -179,7 +218,7 @@ async function sendNotifications(bridge, status) {
   const msg = messages[status];
   if (!msg) return;
 
-  const payload = JSON.stringify({ ...msg, bridge, persistent: status !== 'disponible' });
+  const payload = JSON.stringify({ ...msg, bridge, persistent: status !== 'disponible' && status !== 'lowering' });
   console.log(`Sending [${bridge}] ${status} to ${subscriptions.length} subscribers`);
 
   for (const sub of [...subscriptions]) {
