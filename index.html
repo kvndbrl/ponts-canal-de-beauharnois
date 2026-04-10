@@ -84,11 +84,43 @@
 
     .header, main { position: relative; z-index: 1; }
 
-    .header { width: 100%; max-width: 430px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 4px; }
-    .logo-pill { background: white; border-radius: 50px; padding: 8px 14px; box-shadow: var(--shadow); }
-    .logo-pill img { height: 32px; display: block; }
+    .header {
+      width: 100%; max-width: 430px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; padding: 0 4px;
+      gap: 12px;
+    }
 
-    .toggle-wrap { display: flex; align-items: center; gap: 6px; background: var(--surface); border-radius: 50px; padding: 6px 10px; box-shadow: var(--shadow); }
+    /* Greeting + weather pill */
+    .greeting-pill {
+      background: var(--surface);
+      border-radius: 50px;
+      padding: 8px 14px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .greeting-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .weather-text {
+      font-size: 11px;
+      color: var(--text3);
+      font-family: var(--mono);
+      margin-top: 1px;
+      white-space: nowrap;
+    }
+
+    .toggle-wrap { display: flex; align-items: center; gap: 6px; background: var(--surface); border-radius: 50px; padding: 6px 10px; box-shadow: var(--shadow); flex-shrink: 0; }
     .toggle-icon { font-size: 13px; }
     .toggle-switch { position: relative; width: 38px; height: 20px; cursor: pointer; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
@@ -102,7 +134,6 @@
     .bridge-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); animation: fadeUp 0.4s ease both; }
     .bridge-card:nth-child(1) { animation-delay: 0s; }
     .bridge-card:nth-child(2) { animation-delay: 0.05s; }
-
     @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
     .bridge-name { padding: 14px 16px 0; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); font-family: var(--mono); }
@@ -117,18 +148,16 @@
     .duration-block { display: none; padding: 0 16px 14px; gap: 8px; }
     .duration-pill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: 600; background: var(--surface2); border: 1px solid var(--border); color: var(--text2); font-family: var(--mono); }
 
+    .alt-info-block { display: none; align-items: center; gap: 8px; margin: 0 16px 14px; padding: 8px 12px; border-radius: 10px; background: var(--green-bg); border: 1px solid rgba(26,92,42,0.12); }
+    body.dark .alt-info-block { border-color: rgba(61,221,106,0.15); }
+    .alt-info-icon { font-size: 14px; flex-shrink: 0; }
+    .alt-info-text { font-size: 12px; font-weight: 600; color: var(--green); line-height: 1.4; }
+
     .closure-block { display: none; margin: 0 12px 12px; padding: 10px 14px; border-radius: 12px; background: var(--orange-bg); border: 1px solid rgba(122,56,0,0.15); gap: 8px; align-items: flex-start; }
     body.dark .closure-block { border-color: rgba(255,150,50,0.2); }
     .closure-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
     .closure-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--orange); font-family: var(--mono); margin-bottom: 3px; }
     .closure-value { font-size: 12px; font-weight: 600; color: var(--orange); font-family: var(--mono); line-height: 1.5; }
-
-    .alt-route-block { padding: 0 12px 14px; }
-    .alt-route-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px 16px; border-radius: 50px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text2); font-family: var(--sans); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; }
-    .alt-route-btn:hover { background: var(--border); }
-    .alt-route-btn .map-icon { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .alt-route-btn .map-icon.google { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
-    .alt-route-btn .map-icon.apple { background: linear-gradient(135deg, #2b9af3 0%, #0d6ef5 50%, #1a4fd6 100%); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
 
     .lifts-block { padding: 12px 16px 14px; border-top: 1px solid var(--border); background: var(--surface2); display: flex; align-items: flex-start; gap: 10px; }
     .lifts-icon { font-size: 15px; margin-top: 2px; flex-shrink: 0; }
@@ -186,75 +215,14 @@
     .unsub-row { padding: 12px 16px; border-top: 1px solid var(--border); }
     .unsub-btn { display: block; background: none; border: none; font-family: var(--sans); font-size: 12px; color: var(--text3); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
 
-    /* ── Donation card ── */
-    .donation-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 16px 16px 14px;
-      margin-top: 16px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .donation-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .donation-desc {
-      font-size: 11px;
-      color: var(--text3);
-      margin-bottom: 12px;
-      line-height: 1.5;
-    }
-
-    .donation-amounts {
-      display: flex;
-      gap: 8px;
-    }
-
-    .donation-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 8px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
-      background: var(--surface2);
-      color: var(--text);
-      text-decoration: none;
-      font-family: var(--sans);
-      font-weight: 700;
-      font-size: 16px;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    .donation-btn:hover {
-      background: #003087;
-      color: white;
-      border-color: #003087;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,48,135,0.25);
-    }
-
-    .donation-btn .donation-label {
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--text3);
-      margin-top: 2px;
-      font-family: var(--mono);
-    }
-
-    .donation-btn:hover .donation-label {
-      color: rgba(255,255,255,0.7);
-    }
+    .donation-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); padding: 16px 16px 14px; margin-top: 16px; position: relative; z-index: 1; }
+    .donation-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .donation-desc { font-size: 11px; color: var(--text3); margin-bottom: 12px; line-height: 1.5; }
+    .donation-amounts { display: flex; gap: 8px; }
+    .donation-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 8px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text); text-decoration: none; font-family: var(--sans); font-weight: 700; font-size: 16px; transition: all 0.2s; cursor: pointer; }
+    .donation-btn:hover { background: #003087; color: white; border-color: #003087; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,48,135,0.25); }
+    .donation-btn .donation-label { font-size: 10px; font-weight: 500; color: var(--text3); margin-top: 2px; font-family: var(--mono); }
+    .donation-btn:hover .donation-label { color: rgba(255,255,255,0.7); }
 
     .bottom-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 0 4px; position: relative; z-index: 1; }
     .lang-btn { background: none; border: none; font-family: var(--mono); font-size: 12px; color: var(--text3); cursor: pointer; letter-spacing: 0.5px; padding: 4px 8px; }
@@ -283,8 +251,9 @@
   </div>
 
   <header class="header">
-    <div class="logo-pill">
-      <img src="https://www.seaway-greatlakes.com/assets/images/navbar/seaway-logo.png" alt="Great Lakes St. Lawrence Seaway System"/>
+    <div class="greeting-pill" aria-live="polite">
+      <span class="greeting-text" id="greetingText">Bonjour !</span>
+      <span class="weather-text" id="weatherText">—</span>
     </div>
     <div class="toggle-wrap">
       <span class="toggle-icon" aria-hidden="true">☀️</span>
@@ -311,18 +280,16 @@
         <span class="duration-pill">⛵ <span id="durPlaisanceGonzague">~10 min</span></span>
         <span class="duration-pill">🚢 <span id="durCommercialGonzague">~15 min</span></span>
       </div>
+      <div class="alt-info-block" id="altInfoGonzague" aria-hidden="true">
+        <span class="alt-info-icon" aria-hidden="true">ℹ️</span>
+        <span class="alt-info-text" id="altInfoTextGonzague"></span>
+      </div>
       <div class="closure-block" id="closureGonzague" aria-hidden="true">
         <span class="closure-icon" aria-hidden="true">🚧</span>
         <div>
           <div class="closure-label" id="closureLabelGonzague">Fermeture planifiée</div>
           <div class="closure-value" id="closureValueGonzague">—</div>
         </div>
-      </div>
-      <div class="alt-route-block" id="altGonzague" style="display:none;" aria-hidden="true">
-        <a class="alt-route-btn" id="altBtnGonzague" href="#" target="_blank" rel="noopener noreferrer">
-          <span class="map-icon" id="mapIconGonzague" aria-hidden="true"></span>
-          <span id="altTextGonzague">Trouver un itinéraire alternatif</span>
-        </a>
       </div>
       <div class="lifts-block">
         <span class="lifts-icon" aria-hidden="true">🚢</span>
@@ -347,18 +314,16 @@
         <span class="duration-pill">⛵ <span id="durPlaisanceLarocque">~10 min</span></span>
         <span class="duration-pill">🚢 <span id="durCommercialLarocque">~15 min</span></span>
       </div>
+      <div class="alt-info-block" id="altInfoLarocque" aria-hidden="true">
+        <span class="alt-info-icon" aria-hidden="true">ℹ️</span>
+        <span class="alt-info-text" id="altInfoTextLarocque"></span>
+      </div>
       <div class="closure-block" id="closureLarocque" aria-hidden="true">
         <span class="closure-icon" aria-hidden="true">🚧</span>
         <div>
           <div class="closure-label" id="closureLabelLarocque">Fermeture planifiée</div>
           <div class="closure-value" id="closureValueLarocque">—</div>
         </div>
-      </div>
-      <div class="alt-route-block" id="altLarocque" style="display:none;" aria-hidden="true">
-        <a class="alt-route-btn" id="altBtnLarocque" href="#" target="_blank" rel="noopener noreferrer">
-          <span class="map-icon" id="mapIconLarocque" aria-hidden="true"></span>
-          <span id="altTextLarocque">Trouver un itinéraire alternatif</span>
-        </a>
       </div>
       <div class="lifts-block">
         <span class="lifts-icon" aria-hidden="true">🚢</span>
@@ -389,14 +354,12 @@
       </ul>
     </div>
 
-    <!-- NOTIFY BUTTON -->
     <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()"
             aria-label="Activer les notifications de levage de pont"
             aria-hidden="true" style="display:none;">
       🔔 Activer les notifications
     </button>
 
-    <!-- NOTIF SUMMARY + SETTINGS -->
     <div class="notif-summary" id="notifSummary" aria-hidden="true">
       <div class="notif-summary-header" onclick="toggleNotifExpand()" role="button" aria-expanded="false" id="notifSummaryHeader">
         <div class="notif-summary-left">
@@ -446,23 +409,13 @@
       </div>
     </div>
 
-    <!-- DONATION CARD -->
     <div class="donation-card">
       <div class="donation-title" id="donationTitle">💙 Soutenir ce projet</div>
       <div class="donation-desc" id="donationDesc">Ce projet est gratuit et maintenu bénévolement. Un don est toujours apprécié !</div>
       <div class="donation-amounts">
-        <a href="https://paypal.me/kvndbrl/2" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 2 dollars">
-          2 $
-          <span class="donation-label">CAD</span>
-        </a>
-        <a href="https://paypal.me/kvndbrl/5" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 5 dollars">
-          5 $
-          <span class="donation-label">CAD</span>
-        </a>
-        <a href="https://paypal.me/kvndbrl/10" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 10 dollars">
-          10 $
-          <span class="donation-label">CAD</span>
-        </a>
+        <a href="https://paypal.me/kvndbrl/2" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 2 dollars">2 $<span class="donation-label">CAD</span></a>
+        <a href="https://paypal.me/kvndbrl/5" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 5 dollars">5 $<span class="donation-label">CAD</span></a>
+        <a href="https://paypal.me/kvndbrl/10" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 10 dollars">10 $<span class="donation-label">CAD</span></a>
       </div>
     </div>
 
@@ -481,31 +434,62 @@
 <script>
   const BACKEND_URL = 'https://pont-st-louis-de-gonzague.onrender.com';
 
-  const BRIDGES = {
-    gonzague: { lat: 45.2312, lng: -74.0019 },
-    larocque: { lat: 45.2259, lng: -74.1147 }
-  };
-
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-  const GOOGLE_MAPS_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/><path d="M12 2C8.13 2 5 5.13 5 9c0 1.93.62 3.71 1.67 5.16L12 2z" fill="#C5221F"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg>`;
-  const APPLE_MAPS_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white" opacity="0.9"/><polygon points="12,4 14,12 12,10 10,12" fill="#FF3B30"/><polygon points="12,20 10,12 12,14 14,12" fill="#8E8E93"/><circle cx="12" cy="12" r="1.5" fill="#1C1C1E"/></svg>`;
-
-  function getMapsUrl(bridgeKey) {
-    const b = BRIDGES[bridgeKey];
-    if (isIOS) return `maps://?daddr=${b.lat},${b.lng}&dirflg=d`;
-    return `https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}&travelmode=driving`;
+  // ── Weather emoji by temperature (°C) ──
+  function weatherEmoji(temp) {
+    if (temp <= -15) return '🥶';
+    if (temp <= -5)  return '❄️';
+    if (temp <= 5)   return '🧊';
+    if (temp <= 12)  return '🌬️';
+    if (temp <= 18)  return '🌤️';
+    if (temp <= 24)  return '☀️';
+    if (temp <= 30)  return '🌡️';
+    return '🔥';
   }
 
-  function setupMapIcon(el) {
-    el.innerHTML = isIOS ? APPLE_MAPS_ICON : GOOGLE_MAPS_ICON;
-    el.className = `map-icon ${isIOS ? 'apple' : 'google'}`;
-  }
-  setupMapIcon(document.getElementById('mapIconGonzague'));
-  setupMapIcon(document.getElementById('mapIconLarocque'));
+  function toF(c) { return Math.round(c * 9/5 + 32); }
 
-  // ── Lifts translation ──────────────────────────────────────────────
+  // ── Greeting by hour ──
+  function getGreeting(lang) {
+    const h = new Date().getHours();
+    if (lang === 'fr') {
+      if (h >= 5 && h < 12) return 'Bonjour !';
+      if (h >= 12 && h < 18) return 'Bon après-midi !';
+      return 'Bonsoir !';
+    } else {
+      if (h >= 5 && h < 12) return 'Good morning!';
+      if (h >= 12 && h < 18) return 'Good afternoon!';
+      return 'Good evening!';
+    }
+  }
+
+  function updateGreeting() {
+    document.getElementById('greetingText').textContent = getGreeting(currentLang);
+  }
+
+  async function fetchWeather() {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(async pos => {
+      try {
+        const { latitude: lat, longitude: lon } = pos.coords;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&timezone=auto`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const c = Math.round(data.current.temperature_2m);
+        const f = toF(c);
+        const emoji = weatherEmoji(c);
+        document.getElementById('weatherText').textContent = `${emoji} ${c}°C · ${f}°F`;
+      } catch(e) {
+        console.log('Weather unavailable');
+      }
+    }, () => {
+      // geolocation denied — no weather shown
+    }, { timeout: 8000, maximumAge: 300000 });
+  }
+
+  // ── Lifts translation ──
   function translateLifts(text, lang) {
     if (!text || lang === 'en') return text;
     return text
@@ -515,12 +499,10 @@
       .replace(/\buntil\b/gi, 'jusqu\'à');
   }
 
-  // ── Time range inputs ──────────────────────────────────────────────
+  // ── Time range inputs ──
   const TIME_STEPS = [];
   for (let h = 0; h < 24; h++) {
-    for (let m of [0, 30]) {
-      TIME_STEPS.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
-    }
+    for (let m of [0, 30]) TIME_STEPS.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
   }
 
   function makeTimeInput(id, ariaLabel) {
@@ -528,14 +510,9 @@
       const sel = document.createElement('select');
       sel.className = 'time-select'; sel.id = id;
       sel.setAttribute('aria-label', ariaLabel);
-      const empty = document.createElement('option');
-      empty.value = ''; empty.textContent = '--:--';
+      const empty = document.createElement('option'); empty.value = ''; empty.textContent = '--:--';
       sel.appendChild(empty);
-      TIME_STEPS.forEach(t => {
-        const opt = document.createElement('option');
-        opt.value = t; opt.textContent = t;
-        sel.appendChild(opt);
-      });
+      TIME_STEPS.forEach(t => { const opt = document.createElement('option'); opt.value = t; opt.textContent = t; sel.appendChild(opt); });
       sel.addEventListener('change', saveTimeRanges);
       return sel;
     } else {
@@ -555,11 +532,7 @@
     document.getElementById(`range${n}End`).appendChild(makeTimeInput(`range${n}EndInput`, `Fin plage ${n}`));
   });
 
-  function clearRange(n) {
-    setTimeValue(`range${n}StartInput`, '');
-    setTimeValue(`range${n}EndInput`, '');
-    saveTimeRanges();
-  }
+  function clearRange(n) { setTimeValue(`range${n}StartInput`, ''); setTimeValue(`range${n}EndInput`, ''); saveTimeRanges(); }
 
   function getTimeRanges() {
     const ranges = [];
@@ -571,10 +544,7 @@
     return ranges;
   }
 
-  async function saveTimeRanges() {
-    localStorage.setItem('timeRanges', JSON.stringify(getTimeRanges()));
-    await syncPrefs();
-  }
+  async function saveTimeRanges() { localStorage.setItem('timeRanges', JSON.stringify(getTimeRanges())); await syncPrefs(); }
 
   function loadTimeRanges() {
     const saved = localStorage.getItem('timeRanges');
@@ -593,10 +563,7 @@
       const subData = JSON.parse(JSON.stringify(sub));
       subData.bridges = getSelectedBridges();
       subData.timeRanges = getTimeRanges();
-      await fetch(`${BACKEND_URL}/subscribe`, {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(subData)
-      });
+      await fetch(`${BACKEND_URL}/subscribe`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(subData) });
     } catch(e) { console.error(e); }
   }
 
@@ -619,10 +586,10 @@
       statusLabels: { disponible: 'Disponible', bientot_leve: 'Levage imminent', leve: 'Levé' },
       liftsLabel: 'Levages — 60 min',
       noLifts: 'Aucun levage prévu',
-      altText: 'Trouver un itinéraire alternatif',
       durPlaisance: '~10 min · Plaisance',
       durCommercial: '~15 min · Commercial',
       closureLabel: 'Fermeture planifiée',
+      altBridgeAvailable: (name) => `Le ${name} est disponible`,
       notifTitle: '✅ Notifications activées',
       notifBridges: (g, l) => [g && 'Pont St-Louis', l && 'Pont Larocque'].filter(Boolean).join(' · ') || '—',
       settingsBridgesTitle: 'Ponts',
@@ -649,15 +616,16 @@
       and2: 'Sélectionnez <strong>Ajouter à l\'écran d\'accueil</strong>',
       and3: 'Appuyez sur <strong>Ajouter</strong>',
       disclaimer: 'Cette application est indépendante et n\'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.',
+      bridgeNames: { gonzague: 'Pont St-Louis-de-Gonzague', larocque: 'Pont Larocque' }
     },
     en: {
       statusLabels: { disponible: 'Available', bientot_leve: 'Lift imminent', leve: 'Lifted' },
       liftsLabel: 'Lifts — 60 min',
       noLifts: 'No anticipated bridge lifts',
-      altText: 'Find an alternate route',
       durPlaisance: '~10 min · Pleasure craft',
       durCommercial: '~15 min · Commercial',
       closureLabel: 'Planned closure',
+      altBridgeAvailable: (name) => `${name} is available`,
       notifTitle: '✅ Notifications enabled',
       notifBridges: (g, l) => [g && 'St-Louis Bridge', l && 'Larocque Bridge'].filter(Boolean).join(' · ') || '—',
       settingsBridgesTitle: 'Bridges',
@@ -684,6 +652,7 @@
       and2: 'Select <strong>Add to Home Screen</strong>',
       and3: 'Tap <strong>Add</strong>',
       disclaimer: 'This app is independent and is not affiliated with the St. Lawrence Seaway Management Corporation or the Great Lakes St. Lawrence Seaway System. Data is sourced from <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.',
+      bridgeNames: { gonzague: 'St-Louis-de-Gonzague Bridge', larocque: 'Larocque Bridge' }
     }
   };
 
@@ -705,30 +674,37 @@
   if (savedDark !== null) applyDark(savedDark === '1');
   else applyDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-  function updateAltRoutes() {
+  function updateBridgeCards() {
     if (!lastData) return;
     const t = translations[currentLang];
+    const gonzagueLifted = lastData.gonzague.status === 'leve' || lastData.gonzague.status === 'bientot_leve';
+    const larocqueLifted = lastData.larocque.status === 'leve' || lastData.larocque.status === 'bientot_leve';
+
     ['gonzague', 'larocque'].forEach(bridge => {
       const cap = bridge.charAt(0).toUpperCase() + bridge.slice(1);
-      const status = lastData[bridge].status;
-      const lifted = status === 'leve' || status === 'bientot_leve';
+      const altBridge = bridge === 'gonzague' ? 'larocque' : 'gonzague';
+      const thisLifted = bridge === 'gonzague' ? gonzagueLifted : larocqueLifted;
+      const otherLifted = bridge === 'gonzague' ? larocqueLifted : gonzagueLifted;
       const closure = lastData[bridge].closure;
 
-      const altBlock = document.getElementById(`alt${cap}`);
       const durationBlock = document.getElementById(`duration${cap}`);
+      const altInfoBlock = document.getElementById(`altInfo${cap}`);
+      const altInfoText = document.getElementById(`altInfoText${cap}`);
       const closureBlock = document.getElementById(`closure${cap}`);
 
-      if (lifted) {
-        const altBridge = bridge === 'gonzague' ? 'larocque' : 'gonzague';
-        document.getElementById(`altBtn${cap}`).href = getMapsUrl(altBridge);
-        document.getElementById(`altText${cap}`).textContent = t.altText;
-        altBlock.style.display = 'block'; altBlock.removeAttribute('aria-hidden');
+      if (thisLifted) {
         document.getElementById(`durPlaisance${cap}`).textContent = t.durPlaisance;
         document.getElementById(`durCommercial${cap}`).textContent = t.durCommercial;
         durationBlock.style.display = 'flex'; durationBlock.removeAttribute('aria-hidden');
       } else {
-        altBlock.style.display = 'none'; altBlock.setAttribute('aria-hidden', 'true');
         durationBlock.style.display = 'none'; durationBlock.setAttribute('aria-hidden', 'true');
+      }
+
+      if (thisLifted && !otherLifted) {
+        altInfoText.textContent = t.altBridgeAvailable(t.bridgeNames[altBridge]);
+        altInfoBlock.style.display = 'flex'; altInfoBlock.removeAttribute('aria-hidden');
+      } else {
+        altInfoBlock.style.display = 'none'; altInfoBlock.setAttribute('aria-hidden', 'true');
       }
 
       if (closure) {
@@ -782,13 +758,11 @@
     const notifSummary = document.getElementById('notifSummary');
     if (isEnabled) {
       hide(notifyBtn);
-      notifSummary.style.display = 'block';
-      notifSummary.removeAttribute('aria-hidden');
+      notifSummary.style.display = 'block'; notifSummary.removeAttribute('aria-hidden');
       updateBridgeSummary();
     } else {
       if (isMobile) { notifyBtn.textContent = t.notifyBtn; show(notifyBtn); }
-      notifSummary.style.display = 'none';
-      notifSummary.setAttribute('aria-hidden', 'true');
+      notifSummary.style.display = 'none'; notifSummary.setAttribute('aria-hidden', 'true');
     }
   }
 
@@ -800,26 +774,23 @@
     document.getElementById('labelGonzague').textContent = t.statusLabels[lastData.gonzague.status] || lastData.gonzague.status;
     document.getElementById('liftsTitleGonzague').textContent = t.liftsLabel;
     document.getElementById('liftsGonzague').textContent = translateLifts(
-      lastData.gonzague.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.gonzague.next_lifts,
-      currentLang
-    );
+      lastData.gonzague.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.gonzague.next_lifts, currentLang);
     document.getElementById('refreshGonzague').textContent = lastData.last_refreshed.slice(11, 16);
 
     document.getElementById('pillLarocque').className = `status-pill ${lastData.larocque.status}`;
     document.getElementById('labelLarocque').textContent = t.statusLabels[lastData.larocque.status] || lastData.larocque.status;
     document.getElementById('liftsTitleLarocque').textContent = t.liftsLabel;
     document.getElementById('liftsLarocque').textContent = translateLifts(
-      lastData.larocque.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.larocque.next_lifts,
-      currentLang
-    );
+      lastData.larocque.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.larocque.next_lifts, currentLang);
     document.getElementById('refreshLarocque').textContent = lastData.last_refreshed.slice(11, 16);
 
-    updateAltRoutes();
+    updateBridgeCards();
   }
 
   function applyTranslations() {
     const t = translations[currentLang];
     document.documentElement.lang = currentLang;
+    updateGreeting();
     document.getElementById('installTitle').textContent = t.installTitle;
     document.getElementById('installSubtitle').textContent = t.installSubtitle;
     document.getElementById('settingsBridgesTitle').textContent = t.settingsBridgesTitle;
@@ -888,10 +859,7 @@
       const subData = JSON.parse(JSON.stringify(sub));
       subData.bridges = getSelectedBridges();
       subData.timeRanges = getTimeRanges();
-      await fetch(`${BACKEND_URL}/subscribe`, {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(subData)
-      });
+      await fetch(`${BACKEND_URL}/subscribe`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(subData) });
       localStorage.setItem('notificationsEnabled', 'true');
       updateNotifyButtons();
     } else {
@@ -905,10 +873,7 @@
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.getSubscription();
       if (sub) {
-        await fetch(`${BACKEND_URL}/unsubscribe`, {
-          method: 'POST', headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ endpoint: sub.endpoint })
-        });
+        await fetch(`${BACKEND_URL}/unsubscribe`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ endpoint: sub.endpoint }) });
         await sub.unsubscribe();
       }
     } catch(e) { console.error(e); }
@@ -928,23 +893,24 @@
   } else if (isIOS) {
     hide(notifyBtn); show(installCard);
     const iosEl = document.getElementById('iosInstructions');
-    iosEl.style.display = 'flex'; iosEl.style.flexDirection = 'column';
-    iosEl.removeAttribute('aria-hidden');
+    iosEl.style.display = 'flex'; iosEl.style.flexDirection = 'column'; iosEl.removeAttribute('aria-hidden');
   } else {
     hide(notifyBtn); show(installCard);
     const andEl = document.getElementById('androidInstructions');
-    andEl.style.display = 'flex'; andEl.style.flexDirection = 'column';
-    andEl.removeAttribute('aria-hidden');
+    andEl.style.display = 'flex'; andEl.style.flexDirection = 'column'; andEl.removeAttribute('aria-hidden');
   }
 
   loadPrefs();
   loadTimeRanges();
   applyTranslations();
+  fetchWeather();
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
   fetchStatus();
   setInterval(fetchStatus, 60000);
+  // Refresh greeting every minute (in case hour changes)
+  setInterval(updateGreeting, 60000);
 </script>
 </body>
 </html>
