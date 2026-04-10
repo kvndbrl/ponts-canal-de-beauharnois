@@ -75,11 +75,7 @@
       overflow-x: hidden;
     }
 
-    .waves-bg {
-      position: fixed; bottom: 0; left: 0;
-      width: 100%; height: 140px;
-      z-index: 0; pointer-events: none; overflow: hidden;
-    }
+    .waves-bg { position: fixed; bottom: 0; left: 0; width: 100%; height: 140px; z-index: 0; pointer-events: none; overflow: hidden; }
     .waves-track { display: flex; width: 200%; height: 100%; animation: waveScroll 18s linear infinite; }
     .waves-track svg { width: 50%; height: 100%; flex-shrink: 0; }
     .wave1 { fill: var(--wave-color); opacity: var(--wave-opacity); }
@@ -88,45 +84,26 @@
 
     .header, main { position: relative; z-index: 1; }
 
-    .header {
-      width: 100%; max-width: 430px;
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 20px; padding: 0 4px;
-    }
+    .header { width: 100%; max-width: 430px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 4px; }
     .logo-pill { background: white; border-radius: 50px; padding: 8px 14px; box-shadow: var(--shadow); }
     .logo-pill img { height: 32px; display: block; }
 
-    .toggle-wrap {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--surface); border-radius: 50px; padding: 6px 10px; box-shadow: var(--shadow);
-    }
+    .toggle-wrap { display: flex; align-items: center; gap: 6px; background: var(--surface); border-radius: 50px; padding: 6px 10px; box-shadow: var(--shadow); }
     .toggle-icon { font-size: 13px; }
     .toggle-switch { position: relative; width: 38px; height: 20px; cursor: pointer; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
     .toggle-slider { position: absolute; inset: 0; background: #b0b8cc; border-radius: 20px; transition: background 0.3s; }
-    .toggle-slider:before {
-      content: ''; position: absolute; width: 14px; height: 14px;
-      left: 3px; top: 3px; background: white; border-radius: 50%;
-      transition: transform 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    }
+    .toggle-slider:before { content: ''; position: absolute; width: 14px; height: 14px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
     .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
     .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
 
     main { width: 100%; max-width: 430px; display: flex; flex-direction: column; align-items: stretch; }
 
-    .bridge-card {
-      background: var(--surface); border-radius: var(--radius);
-      box-shadow: var(--shadow); margin-bottom: 12px;
-      overflow: hidden; border: 1px solid var(--border);
-      animation: fadeUp 0.4s ease both;
-    }
+    .bridge-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); animation: fadeUp 0.4s ease both; }
     .bridge-card:nth-child(1) { animation-delay: 0s; }
     .bridge-card:nth-child(2) { animation-delay: 0.05s; }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
     .bridge-name { padding: 14px 16px 0; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); font-family: var(--mono); }
     .status-block { padding: 12px 16px 16px; }
@@ -170,7 +147,6 @@
     .notify-btn:hover { transform: translateY(-1px); }
     .notify-btn:active { transform: translateY(0); }
 
-    /* Notif summary */
     .notif-summary { display: none; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; margin-top: 10px; animation: fadeUp 0.3s ease both; }
     .notif-summary-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; cursor: pointer; user-select: none; }
     .notif-summary-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
@@ -184,12 +160,10 @@
     .notif-details { display: none; border-top: 1px solid var(--border); }
     .notif-summary.expanded .notif-details { display: block; }
 
-    /* Settings */
     .settings-section-title { padding: 14px 16px 4px; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); font-family: var(--mono); }
     .settings-section-desc { padding: 0 16px 10px; font-size: 11px; color: var(--text3); line-height: 1.55; }
 
     .pref-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
-    .pref-row:last-child { border-bottom: none; }
     .pref-row-label { font-size: 13px; font-weight: 500; color: var(--text); }
     .pref-toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
     .pref-toggle input { opacity: 0; width: 0; height: 0; }
@@ -198,40 +172,93 @@
     .pref-toggle input:checked + .pref-slider { background: var(--accent); }
     .pref-toggle input:checked + .pref-slider:before { transform: translateX(18px); }
 
-    /* Time ranges */
     .time-range-row { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
     .time-range-label { font-size: 12px; font-weight: 600; color: var(--text2); min-width: 48px; }
     .time-range-label.optional { color: var(--text3); }
     .time-sep { font-size: 12px; color: var(--text3); font-family: var(--mono); flex-shrink: 0; }
-
-    input[type="time"].time-input {
-      flex: 1; padding: 6px 10px; border-radius: 8px;
-      border: 1px solid var(--border); background: var(--surface2);
-      color: var(--text); font-family: var(--mono); font-size: 13px;
-      outline: none; -webkit-appearance: none;
-    }
+    input[type="time"].time-input { flex: 1; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-family: var(--mono); font-size: 13px; outline: none; -webkit-appearance: none; }
     input[type="time"].time-input:focus { border-color: var(--accent); }
-
-    select.time-select {
-      flex: 1; padding: 6px 8px; border-radius: 8px;
-      border: 1px solid var(--border); background: var(--surface2);
-      color: var(--text); font-family: var(--mono); font-size: 12px;
-      outline: none; -webkit-appearance: none; appearance: none;
-      text-align: center; cursor: pointer;
-    }
+    select.time-select { flex: 1; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-family: var(--mono); font-size: 12px; outline: none; -webkit-appearance: none; appearance: none; text-align: center; cursor: pointer; }
     select.time-select:focus { border-color: var(--accent); }
-
     .time-clear { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 0 2px; flex-shrink: 0; line-height: 1; }
     .time-clear:hover { color: var(--red); }
 
     .unsub-row { padding: 12px 16px; border-top: 1px solid var(--border); }
     .unsub-btn { display: block; background: none; border: none; font-family: var(--sans); font-size: 12px; color: var(--text3); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
 
+    /* ── Donation card ── */
+    .donation-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 16px 16px 14px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .donation-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .donation-desc {
+      font-size: 11px;
+      color: var(--text3);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .donation-amounts {
+      display: flex;
+      gap: 8px;
+    }
+
+    .donation-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      text-decoration: none;
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 16px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .donation-btn:hover {
+      background: #003087;
+      color: white;
+      border-color: #003087;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,48,135,0.25);
+    }
+
+    .donation-btn .donation-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text3);
+      margin-top: 2px;
+      font-family: var(--mono);
+    }
+
+    .donation-btn:hover .donation-label {
+      color: rgba(255,255,255,0.7);
+    }
+
     .bottom-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 0 4px; position: relative; z-index: 1; }
     .lang-btn { background: none; border: none; font-family: var(--mono); font-size: 12px; color: var(--text3); cursor: pointer; letter-spacing: 0.5px; padding: 4px 8px; }
     .lang-btn:hover { color: var(--text2); }
-    .paypal-btn { display: flex; align-items: center; gap: 7px; padding: 9px 18px; background: #003087; color: white; border-radius: 50px; text-decoration: none; font-family: var(--sans); font-size: 13px; font-weight: 600; box-shadow: 0 2px 12px rgba(0,48,135,0.25); transition: all 0.2s; }
-    .paypal-btn:hover { transform: translateY(-1px); }
 
     .disclaimer { width: 100%; margin-top: 20px; font-size: 11px; color: var(--text3); text-align: center; line-height: 1.7; padding: 0 8px; position: relative; z-index: 1; }
     .disclaimer a { color: var(--text2); text-decoration: underline; text-underline-offset: 2px; }
@@ -381,34 +408,24 @@
         </div>
         <span class="notif-chevron" aria-hidden="true">▾</span>
       </div>
-
       <div class="notif-details" id="notifDetails">
-
-        <!-- Bridges -->
         <div class="settings-section-title" id="settingsBridgesTitle">Ponts</div>
         <label class="pref-row">
           <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
           <div class="pref-toggle">
-            <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"
-                   aria-label="Notifications pour le pont St-Louis-de-Gonzague"/>
+            <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()" aria-label="Notifications pour le pont St-Louis-de-Gonzague"/>
             <span class="pref-slider"></span>
           </div>
         </label>
         <label class="pref-row" style="border-bottom: 1px solid var(--border);">
           <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
           <div class="pref-toggle">
-            <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"
-                   aria-label="Notifications pour le pont Larocque"/>
+            <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()" aria-label="Notifications pour le pont Larocque"/>
             <span class="pref-slider"></span>
           </div>
         </label>
-
-        <!-- Time ranges -->
         <div class="settings-section-title" id="settingsTimeTitle">Plages horaires (optionnel)</div>
-        <div class="settings-section-desc" id="settingsTimeDesc">
-          Recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.
-        </div>
-
+        <div class="settings-section-desc" id="settingsTimeDesc">Recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.</div>
         <div class="time-range-row">
           <span class="time-range-label" id="range1Label">Plage 1</span>
           <div id="range1Start"></div>
@@ -416,7 +433,6 @@
           <div id="range1End"></div>
           <button class="time-clear" onclick="clearRange(1)" aria-label="Effacer plage 1">×</button>
         </div>
-
         <div class="time-range-row" style="border-bottom: none;">
           <span class="time-range-label optional" id="range2Label">Plage 2</span>
           <div id="range2Start"></div>
@@ -424,26 +440,34 @@
           <div id="range2End"></div>
           <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">×</button>
         </div>
-
-        <!-- Unsub -->
         <div class="unsub-row">
-          <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">
-            Désactiver les notifications
-          </button>
+          <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">Désactiver les notifications</button>
         </div>
+      </div>
+    </div>
 
+    <!-- DONATION CARD -->
+    <div class="donation-card">
+      <div class="donation-title" id="donationTitle">💙 Soutenir ce projet</div>
+      <div class="donation-desc" id="donationDesc">Ce projet est gratuit et maintenu bénévolement. Un don est toujours apprécié !</div>
+      <div class="donation-amounts">
+        <a href="https://paypal.me/kvndbrl/2" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 2 dollars">
+          2 $
+          <span class="donation-label">CAD</span>
+        </a>
+        <a href="https://paypal.me/kvndbrl/5" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 5 dollars">
+          5 $
+          <span class="donation-label">CAD</span>
+        </a>
+        <a href="https://paypal.me/kvndbrl/10" target="_blank" rel="noopener noreferrer" class="donation-btn" aria-label="Donner 10 dollars">
+          10 $
+          <span class="donation-label">CAD</span>
+        </a>
       </div>
     </div>
 
     <div class="bottom-bar">
       <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-label="Changer la langue">EN</button>
-      <a href="https://paypal.me/kvndbrl" target="_blank" rel="noopener noreferrer"
-         class="paypal-btn" aria-label="Soutenir ce projet via PayPal">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white" aria-hidden="true">
-          <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.379 3.034.682 6.657-2.255 8.705-1.908 1.32-4.513 1.768-7.517 1.547l-.81 5.135h3.238c.524 0 .968-.382 1.05-.9l.974-6.174h2.19c4.298 0 7.664-1.748 8.647-6.797.418-2.149.086-3.77-.91-4.975z"/>
-        </svg>
-        <span id="supportText">Soutenir</span>
-      </a>
     </div>
 
     <p class="disclaimer" id="disclaimer">
@@ -481,6 +505,16 @@
   setupMapIcon(document.getElementById('mapIconGonzague'));
   setupMapIcon(document.getElementById('mapIconLarocque'));
 
+  // ── Lifts translation ──────────────────────────────────────────────
+  function translateLifts(text, lang) {
+    if (!text || lang === 'en') return text;
+    return text
+      .replace(/No anticipated bridge lifts/gi, 'Aucun levage prévu')
+      .replace(/Commercial Vessel/gi, 'Navire commercial')
+      .replace(/Pleasure Craft/gi, 'Embarcation de plaisance')
+      .replace(/\buntil\b/gi, 'jusqu\'à');
+  }
+
   // ── Time range inputs ──────────────────────────────────────────────
   const TIME_STEPS = [];
   for (let h = 0; h < 24; h++) {
@@ -492,8 +526,7 @@
   function makeTimeInput(id, ariaLabel) {
     if (isIOS) {
       const sel = document.createElement('select');
-      sel.className = 'time-select';
-      sel.id = id;
+      sel.className = 'time-select'; sel.id = id;
       sel.setAttribute('aria-label', ariaLabel);
       const empty = document.createElement('option');
       empty.value = ''; empty.textContent = '--:--';
@@ -507,24 +540,15 @@
       return sel;
     } else {
       const inp = document.createElement('input');
-      inp.type = 'time';
-      inp.className = 'time-input';
-      inp.id = id;
+      inp.type = 'time'; inp.className = 'time-input'; inp.id = id;
       inp.setAttribute('aria-label', ariaLabel);
       inp.addEventListener('change', saveTimeRanges);
       return inp;
     }
   }
 
-  function getTimeValue(id) {
-    const el = document.getElementById(id);
-    return el ? el.value : '';
-  }
-
-  function setTimeValue(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.value = val || '';
-  }
+  function getTimeValue(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+  function setTimeValue(id, val) { const el = document.getElementById(id); if (el) el.value = val || ''; }
 
   ['1','2'].forEach(n => {
     document.getElementById(`range${n}Start`).appendChild(makeTimeInput(`range${n}StartInput`, `Début plage ${n}`));
@@ -555,12 +579,8 @@
   function loadTimeRanges() {
     const saved = localStorage.getItem('timeRanges');
     if (!saved) return;
-    const ranges = JSON.parse(saved);
-    ranges.forEach((r, i) => {
-      if (i < 2) {
-        setTimeValue(`range${i+1}StartInput`, r.start);
-        setTimeValue(`range${i+1}EndInput`, r.end);
-      }
+    JSON.parse(saved).forEach((r, i) => {
+      if (i < 2) { setTimeValue(`range${i+1}StartInput`, r.start); setTimeValue(`range${i+1}EndInput`, r.end); }
     });
   }
 
@@ -610,11 +630,12 @@
       settingsTimeDesc: 'Recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.',
       range1Label: 'Plage 1',
       range2Label: 'Plage 2',
+      donationTitle: '💙 Soutenir ce projet',
+      donationDesc: 'Ce projet est gratuit et maintenu bénévolement. Un don est toujours apprécié !',
       installTitle: '📲 Installer l\'app',
       installSubtitle: 'Installez l\'app pour recevoir des notifications lors des levages',
       notifyBtn: '🔔 Activer les notifications',
       unsubBtn: 'Désactiver les notifications',
-      supportText: 'Soutenir',
       langBtn: 'EN', langLabel: 'Switch to English',
       retry: 'Réessayer', reconnecting: 'Reconnexion', serverError: 'Serveur indisponible.',
       permDenied: 'Permission refusée. Vérifiez les paramètres de notifications de votre appareil.',
@@ -644,11 +665,12 @@
       settingsTimeDesc: 'Receive notifications only during certain hours. Leave empty to be notified at any time.',
       range1Label: 'Range 1',
       range2Label: 'Range 2',
+      donationTitle: '💙 Support this project',
+      donationDesc: 'This project is free and maintained voluntarily. A donation is always appreciated!',
       installTitle: '📲 Install the app',
       installSubtitle: 'Install the app to receive bridge lift notifications',
       notifyBtn: '🔔 Enable notifications',
       unsubBtn: 'Disable notifications',
-      supportText: 'Support',
       langBtn: 'FR', langLabel: 'Passer en français',
       retry: 'Retry', reconnecting: 'Reconnecting', serverError: 'Server unavailable.',
       permDenied: 'Permission denied. Check your device notification settings.',
@@ -773,18 +795,25 @@
   function updateDisplay() {
     if (!lastData) return;
     const t = translations[currentLang];
+
     document.getElementById('pillGonzague').className = `status-pill ${lastData.gonzague.status}`;
     document.getElementById('labelGonzague').textContent = t.statusLabels[lastData.gonzague.status] || lastData.gonzague.status;
     document.getElementById('liftsTitleGonzague').textContent = t.liftsLabel;
-    document.getElementById('liftsGonzague').textContent =
-      lastData.gonzague.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.gonzague.next_lifts;
+    document.getElementById('liftsGonzague').textContent = translateLifts(
+      lastData.gonzague.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.gonzague.next_lifts,
+      currentLang
+    );
     document.getElementById('refreshGonzague').textContent = lastData.last_refreshed.slice(11, 16);
+
     document.getElementById('pillLarocque').className = `status-pill ${lastData.larocque.status}`;
     document.getElementById('labelLarocque').textContent = t.statusLabels[lastData.larocque.status] || lastData.larocque.status;
     document.getElementById('liftsTitleLarocque').textContent = t.liftsLabel;
-    document.getElementById('liftsLarocque').textContent =
-      lastData.larocque.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.larocque.next_lifts;
+    document.getElementById('liftsLarocque').textContent = translateLifts(
+      lastData.larocque.next_lifts === 'No anticipated bridge lifts' ? t.noLifts : lastData.larocque.next_lifts,
+      currentLang
+    );
     document.getElementById('refreshLarocque').textContent = lastData.last_refreshed.slice(11, 16);
+
     updateAltRoutes();
   }
 
@@ -793,12 +822,13 @@
     document.documentElement.lang = currentLang;
     document.getElementById('installTitle').textContent = t.installTitle;
     document.getElementById('installSubtitle').textContent = t.installSubtitle;
-    document.getElementById('supportText').textContent = t.supportText;
     document.getElementById('settingsBridgesTitle').textContent = t.settingsBridgesTitle;
     document.getElementById('settingsTimeTitle').textContent = t.settingsTimeTitle;
     document.getElementById('settingsTimeDesc').textContent = t.settingsTimeDesc;
     document.getElementById('range1Label').textContent = t.range1Label;
     document.getElementById('range2Label').textContent = t.range2Label;
+    document.getElementById('donationTitle').textContent = t.donationTitle;
+    document.getElementById('donationDesc').textContent = t.donationDesc;
     const langBtn = document.getElementById('langBtn');
     langBtn.textContent = t.langBtn;
     langBtn.setAttribute('aria-label', t.langLabel);
