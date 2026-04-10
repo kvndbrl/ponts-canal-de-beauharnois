@@ -185,17 +185,22 @@
     .step-num{width:24px;height:24px;min-width:24px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
     .notify-btn{display:none;width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,85,221,.35);transition:all .2s;letter-spacing:.2px;}
     .notify-btn:hover{transform:translateY(-1px);}
-    .settings-card{display:none;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden;margin-top:10px;}
-    .settings-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;user-select:none;}
-    .settings-header-left{display:flex;align-items:center;gap:10px;}
-    .settings-icon{font-size:16px;}
-    .settings-title{font-size:14px;font-weight:700;color:var(--text);}
-    .settings-chevron{color:var(--text3);font-size:12px;transition:transform .2s;}
-    .settings-card.expanded .settings-chevron{transform:rotate(180deg);}
-    .settings-body{display:none;border-top:1px solid var(--border);}
-    .settings-card.expanded .settings-body{display:block;}
     .settings-section-label{padding:12px 16px 4px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-family:var(--mono);}
     .settings-section-desc{padding:0 16px 10px;font-size:11px;color:var(--text3);line-height:1.55;}
+
+    /* Gear button in header */
+    .gear-btn{background:none;border:none;font-size:22px;cursor:pointer;padding:4px;line-height:1;flex-shrink:0;opacity:.75;transition:opacity .2s;}
+    .gear-btn:hover{opacity:1;}
+
+    /* Settings drawer */
+    .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);}
+    .drawer-overlay.open{opacity:1;pointer-events:all;}
+    .settings-drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,92vw);background:var(--surface);z-index:301;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.18);}
+    .settings-drawer.open{transform:translateX(0);}
+    .drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;}
+    .drawer-title{font-size:16px;font-weight:700;color:var(--text);}
+    .drawer-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);padding:4px;line-height:1;}
+    .drawer-close:hover{color:var(--text);}
     .pref-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
     .pref-row-label{font-size:13px;font-weight:500;color:var(--text);}
     .pref-toggle{position:relative;width:44px;height:26px;flex-shrink:0;}
@@ -269,6 +274,7 @@
     <span class="greeting-text" id="greetingText">Bonjour !</span>
     <span class="weather-text" id="weatherText">—</span>
   </div>
+  <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">⚙️</button>
 </header>
 
 <main>
@@ -381,86 +387,6 @@
     Activer les notifications
   </button>
 
-  <div class="settings-card" id="settingsCard" aria-hidden="true">
-    <div class="settings-header" onclick="toggleSettings()" role="button" aria-expanded="false" id="settingsHeader">
-      <div class="settings-header-left">
-        <span class="settings-icon" aria-hidden="true">&#x2699;&#xFE0F;</span>
-        <span class="settings-title" id="settingsTitle">Reglages</span>
-      </div>
-      <span class="settings-chevron" aria-hidden="true">&#x25BE;</span>
-    </div>
-    <div class="settings-body" id="settingsBody">
-      <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
-      <div class="prenom-row" style="border-bottom:1px solid var(--border);">
-        <label class="prenom-label" for="prenomInput" id="prenomLabel">Prénom</label>
-        <input class="prenom-input" id="prenomInput" type="text" maxlength="30" autocomplete="given-name" placeholder="—" oninput="updatePrenom()"/>
-      </div>
-
-      <div class="settings-section-label" id="themeSectionLabel">Thème</div>
-      <div class="theme-section">
-        <div class="theme-swatches" id="themeSwatches">
-          <div class="theme-swatch active" id="swatch-gonzaguois" onclick="setTheme('gonzaguois')">
-            <div class="theme-swatch-dot" style="background:#3a6b2a;"></div>
-            <span class="theme-swatch-name">Gonzaguois</span>
-          </div>
-          <div class="theme-swatch" id="swatch-campivallensien" onclick="setTheme('campivallensien')">
-            <div class="theme-swatch-dot" style="background:#1a4a8c;"></div>
-            <span class="theme-swatch-name">Campival&shy;lensien</span>
-          </div>
-          <div class="theme-swatch" id="swatch-stanicois" onclick="setTheme('stanicois')">
-            <div class="theme-swatch-dot" style="background:#1a7a5a;"></div>
-            <span class="theme-swatch-name">Staniçois</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dark mode toggle in settings -->
-      <label class="pref-row" style="border-top:1px solid var(--border);">
-        <span class="pref-row-label" id="darkModeLabel">Mode sombre</span>
-        <div class="pref-toggle">
-          <input type="checkbox" id="darkToggleInput" onchange="toggleDark()" role="switch" aria-checked="false" aria-label="Mode sombre"/>
-          <span class="pref-slider"></span>
-        </div>
-      </label>
-
-      <div class="settings-section-label" id="notifSectionLabel">Notifications</div>
-      <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez etre notifie.</div>
-      <label class="pref-row">
-        <span class="pref-row-label">Pont St-Louis-de-Gonzague</span>
-        <div class="pref-toggle">
-          <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"/>
-          <span class="pref-slider"></span>
-        </div>
-      </label>
-      <label class="pref-row" style="border-bottom:1px solid var(--border);">
-        <span class="pref-row-label">Pont Larocque (Valleyfield)</span>
-        <div class="pref-toggle">
-          <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"/>
-          <span class="pref-slider"></span>
-        </div>
-      </label>
-      <div class="settings-section-label" id="timeSectionLabel">Plages horaires</div>
-      <div class="settings-section-desc" id="settingsTimeDesc">Optionnel — recevez des notifications seulement pendant certaines heures. Laissez vide pour etre notifie en tout temps.</div>
-      <div class="time-range-row">
-        <span class="time-range-label" id="range1Label">Plage 1</span>
-        <div id="range1Start"></div>
-        <span class="time-sep">to</span>
-        <div id="range1End"></div>
-        <button class="time-clear" onclick="clearRange(1)" aria-label="Effacer plage 1">x</button>
-      </div>
-      <div class="time-range-row" style="border-bottom:none;">
-        <span class="time-range-label optional" id="range2Label">Plage 2</span>
-        <div id="range2Start"></div>
-        <span class="time-sep">to</span>
-        <div id="range2End"></div>
-        <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">x</button>
-      </div>
-      <div class="unsub-row">
-        <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">Desactiver les notifications</button>
-      </div>
-    </div>
-  </div>
-
   <div class="donation-card">
     <div class="donation-title" id="donationTitle">Soutenir ce projet</div>
     <div class="donation-desc" id="donationDesc">Ce projet est gratuit et maintenu benevolement. Un don est toujours apprecie !</div>
@@ -480,6 +406,84 @@
   <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
 
 </main>
+
+<!-- Settings drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="settings-drawer" id="settingsDrawer" aria-hidden="true" role="dialog" aria-label="Réglages">
+  <div class="drawer-header">
+    <span class="drawer-title" id="settingsTitle">Réglages</span>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Fermer">✕</button>
+  </div>
+
+  <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
+  <div class="prenom-row" style="border-bottom:1px solid var(--border);">
+    <label class="prenom-label" for="prenomInput" id="prenomLabel">Prénom</label>
+    <input class="prenom-input" id="prenomInput" type="text" maxlength="30" autocomplete="given-name" placeholder="—" oninput="updatePrenom()"/>
+  </div>
+
+  <div class="settings-section-label" id="themeSectionLabel">Thème</div>
+  <div class="theme-section">
+    <div class="theme-swatches" id="themeSwatches">
+      <div class="theme-swatch active" id="swatch-gonzaguois" onclick="setTheme('gonzaguois')">
+        <div class="theme-swatch-dot" style="background:#3a6b2a;"></div>
+        <span class="theme-swatch-name">Gonzaguois</span>
+      </div>
+      <div class="theme-swatch" id="swatch-campivallensien" onclick="setTheme('campivallensien')">
+        <div class="theme-swatch-dot" style="background:#1a4a8c;"></div>
+        <span class="theme-swatch-name">Campival&shy;lensien</span>
+      </div>
+      <div class="theme-swatch" id="swatch-stanicois" onclick="setTheme('stanicois')">
+        <div class="theme-swatch-dot" style="background:#1a7a5a;"></div>
+        <span class="theme-swatch-name">Staniçois</span>
+      </div>
+    </div>
+  </div>
+
+  <label class="pref-row" style="border-top:1px solid var(--border);">
+    <span class="pref-row-label" id="darkModeLabel">Mode sombre</span>
+    <div class="pref-toggle">
+      <input type="checkbox" id="darkToggleInput" onchange="toggleDark()" role="switch" aria-checked="false" aria-label="Mode sombre"/>
+      <span class="pref-slider"></span>
+    </div>
+  </label>
+
+  <div class="settings-section-label" id="notifSectionLabel">Notifications</div>
+  <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez être notifié.</div>
+  <label class="pref-row">
+    <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
+    <div class="pref-toggle">
+      <input type="checkbox" id="prefGonzague" checked onchange="updatePrefs()"/>
+      <span class="pref-slider"></span>
+    </div>
+  </label>
+  <label class="pref-row" style="border-bottom:1px solid var(--border);">
+    <span class="pref-row-label">🌉 Pont Larocque (Valleyfield)</span>
+    <div class="pref-toggle">
+      <input type="checkbox" id="prefLarocque" checked onchange="updatePrefs()"/>
+      <span class="pref-slider"></span>
+    </div>
+  </label>
+
+  <div class="settings-section-label" id="timeSectionLabel">Plages horaires</div>
+  <div class="settings-section-desc" id="settingsTimeDesc">Optionnel — recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.</div>
+  <div class="time-range-row">
+    <span class="time-range-label" id="range1Label">Plage 1</span>
+    <div id="range1Start"></div>
+    <span class="time-sep">→</span>
+    <div id="range1End"></div>
+    <button class="time-clear" onclick="clearRange(1)" aria-label="Effacer plage 1">×</button>
+  </div>
+  <div class="time-range-row" style="border-bottom:none;">
+    <span class="time-range-label optional" id="range2Label">Plage 2</span>
+    <div id="range2Start"></div>
+    <span class="time-sep">→</span>
+    <div id="range2End"></div>
+    <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">×</button>
+  </div>
+  <div class="unsub-row">
+    <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">Désactiver les notifications</button>
+  </div>
+</div>
 
 <script>
 const BACKEND='https://pont-st-louis-de-gonzague.onrender.com';
@@ -643,8 +647,19 @@ async function syncPrefs(){
   }catch(e){console.error(e);}
 }
 
-let lastData=null,settingsExpanded=false;
-function toggleSettings(){settingsExpanded=!settingsExpanded;document.getElementById('settingsCard').classList.toggle('expanded',settingsExpanded);document.getElementById('settingsHeader').setAttribute('aria-expanded',settingsExpanded?'true':'false');}
+let lastData=null;
+function openDrawer(){
+  document.getElementById('settingsDrawer').classList.add('open');
+  document.getElementById('settingsDrawer').removeAttribute('aria-hidden');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  document.getElementById('settingsDrawer').classList.remove('open');
+  document.getElementById('settingsDrawer').setAttribute('aria-hidden','true');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
 
 function fmtClosure(raw,lang){if(!raw)return null;return lang==='fr'?raw.replace(' until ',' au '):raw;}
 
@@ -868,12 +883,14 @@ async function updatePrefs(){localStorage.setItem('bridgePrefs',JSON.stringify(g
 function loadPrefs(){const s=localStorage.getItem('bridgePrefs');if(!s)return;const b=JSON.parse(s);document.getElementById('prefGonzague').checked=b.includes('gonzague');document.getElementById('prefLarocque').checked=b.includes('larocque');}
 
 function updateNotifyBtns(){
-  if(isFBWebView) return; // Never show notifications UI in WebView
+  if(isFBWebView) return;
   const en=localStorage.getItem('notificationsEnabled')==='true';
   const t=TR[currentLang];
-  const nb=document.getElementById('notifyBtn'),sc=document.getElementById('settingsCard');
-  if(en){hide(nb);sc.style.display='block';sc.removeAttribute('aria-hidden');document.getElementById('unsubBtn').textContent=t.ub;}
-  else{if(isMobile){nb.textContent=t.nb;show(nb);}sc.style.display='none';sc.setAttribute('aria-hidden','true');}
+  const nb=document.getElementById('notifyBtn');
+  if(en){ hide(nb); }
+  else { if(isMobile){nb.textContent=t.nb;show(nb);} }
+  const unsub=document.getElementById('unsubBtn');
+  if(unsub) unsub.textContent=t.ub;
 }
 
 function updateDisplay(){
@@ -1011,8 +1028,6 @@ if(isPWA){
   // In Facebook/Instagram WebView — show how to open in real browser
   // No notifications possible in WebView
   hide(notifyBtn); hide(installCard); hide(webviewBanner);
-  const sc=document.getElementById('settingsCard');
-  if(sc){ sc.style.display='none'; sc.setAttribute('aria-hidden','true'); }
   webviewBanner.style.display='block'; webviewBanner.removeAttribute('aria-hidden');
   if(isIOS){
     document.getElementById('webviewStepsIOS').style.display='block';
