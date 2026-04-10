@@ -187,49 +187,51 @@ async function fetchBridgeStatus() {
 }
 
 // ── Send notifications ────────────────────────────────────────────────
-async function sendNotifications(bridge, status) {
-  const bridgeName = bridge === 'gonzague'
-    ? 'St-Louis-de-Gonzague'
-    : 'Larocque (Valleyfield)';
+function getMessages(bridge, status, lang) {
+  const names = {
+    fr: { gonzague: 'Pont St-Louis-de-Gonzague', larocque: 'Pont Larocque (Valleyfield)' },
+    en: { gonzague: 'St-Louis-de-Gonzague Bridge', larocque: 'Larocque Bridge (Valleyfield)' }
+  };
+  const name = (names[lang] || names.fr)[bridge];
 
-  const messages = {
-    bientot_leve: {
-      title: `⚠️ Levage imminent`,
-      body: `Le pont ${bridgeName} sera levé sous peu.`
-    },
-    raising: {
-      title: `🔼 Pont en cours de levage`,
-      body: `Le pont ${bridgeName} est en train de se lever.`
-    },
-    leve: {
-      title: `🚢 Pont levé`,
-      body: `Le pont ${bridgeName} est levé pour laisser passer un navire.`
-    },
-    lowering: {
-      title: `🔽 Pont en cours de descente`,
-      body: `Le pont ${bridgeName} sera bientôt disponible.`
-    },
-    disponible: {
-      title: `✅ Pont disponible`,
-      body: `Le pont ${bridgeName} est de nouveau ouvert à la circulation.`
-    }
+  const fr = {
+    bientot_leve: { title: `⚠️ Levage imminent`, body: `Le ${name} sera levé sous peu.` },
+    raising:      { title: `🔼 En cours de levage`, body: `Le ${name} est en train de se lever.` },
+    leve:         { title: `🚢 Pont levé`, body: `Le ${name} est levé pour laisser passer un navire.` },
+    lowering:     { title: `🔽 En cours de descente`, body: `Le ${name} sera bientôt disponible.` },
+    disponible:   { title: `✅ Pont disponible`, body: `Le ${name} est de nouveau ouvert à la circulation.` }
+  };
+  const en = {
+    bientot_leve: { title: `⚠️ Lift imminent`, body: `The ${name} will be raised shortly.` },
+    raising:      { title: `🔼 Bridge raising`, body: `The ${name} is currently being raised.` },
+    leve:         { title: `🚢 Bridge lifted`, body: `The ${name} is raised for a vessel to pass.` },
+    lowering:     { title: `🔽 Bridge lowering`, body: `The ${name} will reopen soon.` },
+    disponible:   { title: `✅ Bridge available`, body: `The ${name} is open to traffic again.` }
   };
 
-  const msg = messages[status];
-  if (!msg) return;
+  return (lang === 'en' ? en : fr)[status] || null;
+}
 
-  const payload = JSON.stringify({ ...msg, bridge, persistent: status !== 'disponible' && status !== 'lowering' });
+async function sendNotifications(bridge, status) {
   console.log(`Sending [${bridge}] ${status} to ${subscriptions.length} subscribers`);
 
   for (const sub of [...subscriptions]) {
     const bridges = sub.bridges || ['gonzague', 'larocque'];
     if (!bridges.includes(bridge)) continue;
 
-    // Check time range
     if (!isInTimeRange(sub)) {
       console.log(`Skipping notification for subscriber (outside time range)`);
       continue;
     }
+
+    const lang = sub.lang || 'fr';
+    const msg = getMessages(bridge, status, lang);
+    if (!msg) continue;
+
+    const payload = JSON.stringify({
+      ...msg, bridge,
+      persistent: status !== 'disponible' && status !== 'lowering'
+    });
 
     try {
       await webpush.sendNotification(sub, payload);
@@ -297,12 +299,13 @@ app.post('/subscribe', async (req, res) => {
   if (existing) {
     existing.bridges = sub.bridges || ['gonzague', 'larocque'];
     existing.timeRanges = sub.timeRanges || [];
+    existing.lang = sub.lang || 'fr';
     await saveSubscription(existing);
-    console.log(`Updated subscriber. Bridges: ${existing.bridges}, Ranges: ${JSON.stringify(existing.timeRanges)}`);
+    console.log(`Updated subscriber. Lang: ${existing.lang}, Bridges: ${existing.bridges}`);
   } else {
     subscriptions.push(sub);
     await saveSubscription(sub);
-    console.log(`New subscriber! Bridges: ${sub.bridges}, Ranges: ${JSON.stringify(sub.timeRanges)}. Total: ${subscriptions.length}`);
+    console.log(`New subscriber! Lang: ${sub.lang}, Bridges: ${sub.bridges}. Total: ${subscriptions.length}`);
   }
   res.json({ ok: true });
 });
