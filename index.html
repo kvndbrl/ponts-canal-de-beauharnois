@@ -43,7 +43,7 @@
     .header{width:100%;max-width:430px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:0 4px;gap:12px;}
     .greeting-block{display:flex;flex-direction:column;min-width:0;flex:1;}
     .greeting-text{font-size:20px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
-    .weather-text{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .weather-text{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:3px;white-space:normal;line-height:1.5;}
 
     /* Name modal */
     .name-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);}
@@ -423,18 +423,11 @@ async function fetchWeather(){
       const minC=Math.round(w.daily.temperature_2m_min[0]);
       const city=g.address?.city||g.address?.town||g.address?.village||g.address?.municipality||'';
 
-      // Compact single line: 🌤️ Salaberry · 7°C · ↑12° ↓2°
-      const parts=[];
-      parts.push(wmoEmoji(code));
-      if(city) parts.push(city);
-      parts.push(c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F');
-      parts.push('\u2191'+maxC+'\u00B0 \u2193'+minC+'\u00B0');
-      document.getElementById('weatherText').textContent=parts.join(' \u00B7 ').replace(' \u00B7 '+wmoEmoji(code)+' \u00B7 ',wmoEmoji(code)+' ');
-      // Fix: build properly
-      let line=wmoEmoji(code)+' ';
-      if(city) line+=city+' \u00B7 ';
-      line+=c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F \u00B7 \u2191'+maxC+'\u00B0 \u2193'+minC+'\u00B0';
-      document.getElementById('weatherText').textContent=line;
+      // Two compact lines in header
+      let line1=wmoEmoji(code)+' '+c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F';
+      if(city) line1=wmoEmoji(code)+' '+city+' \u00B7 '+c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F';
+      const line2='\u2191'+maxC+'\u00B0  \u2193'+minC+'\u00B0';
+      document.getElementById('weatherText').textContent=line1+'   '+line2;
 
     }catch(e){console.log('Weather:',e);}
   },()=>{},{timeout:8000,maximumAge:300000});
