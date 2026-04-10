@@ -117,8 +117,6 @@
     .prenom-label{font-size:13px;font-weight:500;color:var(--text);flex-shrink:0;}
     .prenom-input{flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--sans);font-size:13px;outline:none;}
     .prenom-input:focus{border-color:var(--accent);}
-    .toggle-wrap{display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:50px;padding:6px 10px;box-shadow:var(--shadow);flex-shrink:0;}
-    .toggle-icon{font-size:13px;}
     .toggle-switch{position:relative;width:38px;height:20px;cursor:pointer;}
     .toggle-switch input{opacity:0;width:0;height:0;}
     .toggle-slider{position:absolute;inset:0;background:#b0b8cc;border-radius:20px;transition:background .3s;}
@@ -259,14 +257,6 @@
     <span class="greeting-text" id="greetingText">Bonjour !</span>
     <span class="weather-text" id="weatherText">—</span>
   </div>
-  <div class="toggle-wrap">
-    <span class="toggle-icon" aria-hidden="true">☀️</span>
-    <label class="toggle-switch" aria-label="Mode sombre">
-      <input type="checkbox" id="darkToggleInput" onchange="toggleDark()" role="switch" aria-checked="false"/>
-      <span class="toggle-slider"></span>
-    </label>
-    <span class="toggle-icon" aria-hidden="true">🌙</span>
-  </div>
 </header>
 
 <main>
@@ -372,19 +362,28 @@
       <div class="theme-section">
         <div class="theme-swatches" id="themeSwatches">
           <div class="theme-swatch active" id="swatch-gonzaguois" onclick="setTheme('gonzaguois')">
-            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#3a6b2a,#6ab84a);"></div>
+            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#1a3d0e 0%,#3a6b2a 40%,#6ab84a 100%);"></div>
             <span class="theme-swatch-name">Gonzaguois</span>
           </div>
           <div class="theme-swatch" id="swatch-campivallensien" onclick="setTheme('campivallensien')">
-            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#1a4a8c,#d4a017);"></div>
+            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#0a1e4a 0%,#1a4a8c 45%,#c8900a 100%);"></div>
             <span class="theme-swatch-name">Campival&shy;lensien</span>
           </div>
           <div class="theme-swatch" id="swatch-stanicois" onclick="setTheme('stanicois')">
-            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#1a7a5a,#3dbb8a);"></div>
+            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#0a3020 0%,#1a7a5a 45%,#3dbb8a 100%);"></div>
             <span class="theme-swatch-name">Staniçois</span>
           </div>
         </div>
       </div>
+
+      <!-- Dark mode toggle in settings -->
+      <label class="pref-row" style="border-top:1px solid var(--border);">
+        <span class="pref-row-label" id="darkModeLabel">☀️ Mode sombre 🌙</span>
+        <div class="pref-toggle">
+          <input type="checkbox" id="darkToggleInput" onchange="toggleDark()" role="switch" aria-checked="false" aria-label="Mode sombre"/>
+          <span class="pref-slider"></span>
+        </div>
+      </label>
 
       <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
       <div class="prenom-row">
@@ -626,7 +625,7 @@ const TR={
     ab:n=>'Le '+n+' est disponible',
     st:'R\u00E9glages',nsl:'\u{1F514} Notifications',
     prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
-    themeSectionLabel:'Th\u00E8me',
+    themeSectionLabel:'Th\u00E8me',darkModeLabel:'\u2600\uFE0F Mode sombre \uD83C\uDF19',
     modalTitle:'Comment vous appelez-vous\u00A0?',
     modalSub:'Votre pr\u00E9nom sera affich\u00E9 dans la salutation. Vous pourrez le modifier dans les r\u00E9glages.',
     modalBtn:'Continuer',modalSkip:'Passer',modalPlaceholder:'Pr\u00E9nom',
@@ -659,7 +658,7 @@ const TR={
     ab:n=>n+' is available',
     st:'Settings',nsl:'\u{1F514} Notifications',
     prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
-    themeSectionLabel:'Theme',
+    themeSectionLabel:'Theme',darkModeLabel:'\u2600\uFE0F Dark mode \uD83C\uDF19',
     modalTitle:'What\u2019s your name?',
     modalSub:'Your first name will be shown in the greeting. You can change it in Settings.',
     modalBtn:'Continue',modalSkip:'Skip',modalPlaceholder:'First name',
@@ -852,6 +851,8 @@ function applyTrans(){
   document.documentElement.lang=currentLang;
   updateGreeting();
   document.getElementById('themeSectionLabel').textContent=t.themeSectionLabel;
+  const dml=document.getElementById('darkModeLabel');
+  if(dml) dml.textContent=t.darkModeLabel;
   document.getElementById('prenomSectionLabel').textContent=t.prenomSectionLabel;
   document.getElementById('prenomLabel').textContent=t.prenomLabel;
   document.getElementById('prenomInput').placeholder=t.prenomPlaceholder;
