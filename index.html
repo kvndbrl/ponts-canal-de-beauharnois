@@ -189,8 +189,9 @@
     .settings-section-desc{padding:0 16px 10px;font-size:11px;color:var(--text3);line-height:1.55;}
 
     /* Gear button in header */
-    .gear-btn{background:none;border:none;font-size:22px;cursor:pointer;padding:4px;line-height:1;flex-shrink:0;opacity:.75;transition:opacity .2s;}
-    .gear-btn:hover{opacity:1;}
+    .gear-btn{background:var(--surface);border:none;border-radius:50px;box-shadow:var(--shadow);cursor:pointer;padding:8px 12px;line-height:1;flex-shrink:0;display:flex;flex-direction:column;gap:4px;transition:opacity .2s;}
+    .gear-btn:hover{opacity:.8;}
+    .burger-line{width:20px;height:2px;background:var(--text2);border-radius:2px;display:block;}
 
     /* Settings drawer */
     .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);}
@@ -274,7 +275,11 @@
     <span class="greeting-text" id="greetingText">Bonjour !</span>
     <span class="weather-text" id="weatherText">—</span>
   </div>
-  <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">⚙️</button>
+  <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+  </button>
 </header>
 
 <main>
