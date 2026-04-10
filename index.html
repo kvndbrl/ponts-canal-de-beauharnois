@@ -31,6 +31,26 @@
       --orange:#ffaa55;--accent:#4d9fff;--wave-color:#4d9fff;--wave-opacity:.18;
       --shadow:0 2px 16px rgba(0,0,0,.4);
     }
+
+    /* ── Thème Staniçois — vert/bleu/jaune SSK ── */
+    body.theme-stanicois{--accent:#2d7a3a;--wave-color:#2d7a3a;--wave-opacity:.08;}
+    body.theme-stanicois.dark{--accent:#4dbb5a;--wave-color:#4dbb5a;--wave-opacity:.16;}
+
+    /* ── Thème Campivallensien — bleu/or Valleyfield ── */
+    body.theme-campivallensien{--accent:#1a4a8c;--wave-color:#1a4a8c;--wave-opacity:.07;}
+    body.theme-campivallensien.dark{--accent:#4a7fd4;--wave-color:#4a7fd4;--wave-opacity:.18;}
+
+    /* ── Thème Gonzaguois — vert SLG ── */
+    body.theme-gonzaguois{--accent:#3a6b2a;--wave-color:#3a6b2a;--wave-opacity:.08;}
+    body.theme-gonzaguois.dark{--accent:#6ab84a;--wave-color:#6ab84a;--wave-opacity:.16;}
+
+    /* Theme swatches */
+    .theme-section{padding:10px 16px 14px;}
+    .theme-swatches{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+    .theme-swatch{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex:1;min-width:60px;}
+    .theme-swatch-dot{width:32px;height:32px;border-radius:50%;border:3px solid transparent;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+    .theme-swatch.active .theme-swatch-dot{border-color:var(--text);transform:scale(1.15);}
+    .theme-swatch-name{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);text-align:center;line-height:1.3;}
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:var(--sans);background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px;transition:background .3s;overflow-x:hidden;}
     .waves-bg{position:fixed;bottom:0;left:0;width:100%;height:140px;z-index:0;pointer-events:none;overflow:hidden;}
@@ -312,6 +332,28 @@
       <span class="settings-chevron" aria-hidden="true">&#x25BE;</span>
     </div>
     <div class="settings-body" id="settingsBody">
+      <div class="settings-section-label" id="themeSectionLabel">Thème</div>
+      <div class="theme-section">
+        <div class="theme-swatches" id="themeSwatches">
+          <div class="theme-swatch active" id="swatch-marin" onclick="setTheme('marin')">
+            <div class="theme-swatch-dot" style="background:#0055dd;"></div>
+            <span class="theme-swatch-name" id="swatchNameMarin">Marin</span>
+          </div>
+          <div class="theme-swatch" id="swatch-gonzaguois" onclick="setTheme('gonzaguois')">
+            <div class="theme-swatch-dot" style="background:#3a6b2a;"></div>
+            <span class="theme-swatch-name">Gonzaguois</span>
+          </div>
+          <div class="theme-swatch" id="swatch-campivallensien" onclick="setTheme('campivallensien')">
+            <div class="theme-swatch-dot" style="background:#1a4a8c;"></div>
+            <span class="theme-swatch-name">Campival&shy;lensien</span>
+          </div>
+          <div class="theme-swatch" id="swatch-stanicois" onclick="setTheme('stanicois')">
+            <div class="theme-swatch-dot" style="background:#2d7a3a;"></div>
+            <span class="theme-swatch-name">Staniçois</span>
+          </div>
+        </div>
+      </div>
+
       <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
       <div class="prenom-row">
         <label class="prenom-label" for="prenomInput" id="prenomLabel">Prénom</label>
@@ -552,6 +594,7 @@ const TR={
     ab:n=>'Le '+n+' est disponible',
     st:'R\u00E9glages',nsl:'\u{1F514} Notifications',
     prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
+    themeSectionLabel:'Th\u00E8me',swatchNameMarin:'Marin',
     modalTitle:'Comment vous appelez-vous\u00A0?',
     modalSub:'Votre pr\u00E9nom sera affich\u00E9 dans la salutation. Vous pourrez le modifier dans les r\u00E9glages.',
     modalBtn:'Continuer',modalSkip:'Passer',modalPlaceholder:'Pr\u00E9nom',
@@ -584,6 +627,7 @@ const TR={
     ab:n=>n+' is available',
     st:'Settings',nsl:'\u{1F514} Notifications',
     prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
+    themeSectionLabel:'Theme',swatchNameMarin:'Marine',
     modalTitle:'What\u2019s your name?',
     modalSub:'Your first name will be shown in the greeting. You can change it in Settings.',
     modalBtn:'Continue',modalSkip:'Skip',modalPlaceholder:'First name',
@@ -617,6 +661,26 @@ function applyDark(d){document.body.classList.toggle('dark',d);const i=document.
 function toggleDark(){const d=document.getElementById('darkToggleInput').checked;localStorage.setItem('darkMode',d?'1':'0');applyDark(d);}
 const sd=localStorage.getItem('darkMode');
 if(sd!==null)applyDark(sd==='1');else applyDark(window.matchMedia('(prefers-color-scheme:dark)').matches);
+
+// ── Themes ──────────────────────────────────────────────────────────
+const THEMES=['marin','gonzaguois','campivallensien','stanicois'];
+
+function setTheme(theme){
+  // Remove all theme classes
+  THEMES.forEach(t=>document.body.classList.remove('theme-'+t));
+  if(theme!=='marin') document.body.classList.add('theme-'+theme);
+  localStorage.setItem('appTheme',theme);
+  // Update active swatch
+  THEMES.forEach(t=>{
+    const el=document.getElementById('swatch-'+t);
+    if(el) el.classList.toggle('active',t===theme);
+  });
+}
+
+function loadTheme(){
+  const saved=localStorage.getItem('appTheme')||'marin';
+  setTheme(saved);
+}
 
 function show(el){el.style.display='block';el.removeAttribute('aria-hidden');}
 function hide(el){el.style.display='none';el.setAttribute('aria-hidden','true');}
@@ -757,6 +821,8 @@ function applyTrans(){
   const t=TR[currentLang];
   document.documentElement.lang=currentLang;
   updateGreeting();
+  document.getElementById('themeSectionLabel').textContent=t.themeSectionLabel;
+  document.getElementById('swatchNameMarin').textContent=t.swatchNameMarin;
   document.getElementById('prenomSectionLabel').textContent=t.prenomSectionLabel;
   document.getElementById('prenomLabel').textContent=t.prenomLabel;
   document.getElementById('prenomInput').placeholder=t.prenomPlaceholder;
@@ -904,7 +970,7 @@ document.addEventListener('touchend', async ()=>{
   ptPulling=false; ptStartY=0;
 });
 
-loadPrefs();loadTR();applyTrans();fetchWeather();
+loadPrefs();loadTR();loadTheme();applyTrans();fetchWeather();
 // Load saved prénom into settings field
 const savedName=getUserName();
 if(savedName) document.getElementById('prenomInput').value=savedName;
