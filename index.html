@@ -208,7 +208,8 @@
     /* Settings drawer */
     .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);}
     .drawer-overlay.open{opacity:1;pointer-events:all;}
-    .settings-drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,92vw);background:var(--surface);z-index:301;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.18);}
+    .settings-drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,92vw);background:var(--surface);z-index:301;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.18);}
+    .settings-drawer *{max-width:100%;box-sizing:border-box;}
     .settings-drawer.open{transform:translateX(0);}
     .drawer-header{display:flex;align-items:center;justify-content:space-between;padding:22px 16px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;}
     .drawer-title{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.2px;}
@@ -234,14 +235,16 @@
     .time-clear:hover{color:var(--red);}
     .unsub-row{padding:16px 16px 8px;border-top:1px solid var(--border);}
     .unsub-btn{background:none;border:none;font-family:var(--sans);font-size:13px;color:var(--text3);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;}
-    .donation-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:12px 16px;margin-top:auto;margin-bottom:12px;position:relative;z-index:1;flex-shrink:0;}
-    .donation-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
-    .donation-desc{font-size:10px;color:var(--text3);margin-bottom:10px;line-height:1.4;}
+
+    /* Donation card — prominent, lifted above boat */
+    .donation-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:14px 16px;margin-top:auto;margin-bottom:148px;position:relative;z-index:1;flex-shrink:0;}
+    .donation-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+    .donation-desc{font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.5;}
     .donation-amounts{display:flex;gap:8px;}
-    .donation-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 6px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);text-decoration:none;font-family:var(--sans);font-weight:700;font-size:15px;transition:all .2s;}
-    .donation-btn:hover{background:#003087;color:white;border-color:#003087;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,48,135,.25);}
-    .donation-btn .donation-label{font-size:9px;font-weight:500;color:var(--text3);margin-top:1px;font-family:var(--mono);}
-    .donation-btn:hover .donation-label{color:rgba(255,255,255,.7);}
+    .donation-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);text-decoration:none;font-family:var(--sans);font-weight:700;font-size:16px;transition:all .2s;}
+    .donation-btn:hover{background:var(--accent);color:white;border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.2);}
+    .donation-btn .donation-label{font-size:10px;font-weight:500;color:var(--text3);margin-top:2px;font-family:var(--mono);}
+    .donation-btn:hover .donation-label{color:rgba(255,255,255,.75);}
     .bottom-bar{display:none;}
     .disclaimer{display:none;}
     .error{color:var(--red);text-align:center;margin-top:8px;font-size:11px;font-family:var(--mono);position:relative;z-index:1;flex-shrink:0;}
