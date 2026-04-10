@@ -527,18 +527,19 @@ function getLiftTimerText(bridge,status,lang){
   }
 }
 
-// Update timer text every 30 seconds without full re-fetch
-setInterval(()=>{
-  if(!lastData)return;
+// Update timer every 10 seconds
+function refreshTimers(){
+  if(!lastData) return;
   ['gonzague','larocque'].forEach(b=>{
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     const s=lastData[b].status;
     if(s==='leve'||s==='bientot_leve'){
       const el=document.getElementById('timer'+C);
-      if(el)el.textContent=getLiftTimerText(b,s,currentLang);
+      if(el) el.textContent=getLiftTimerText(b,s,currentLang);
     }
   });
-},30000);
+}
+setInterval(refreshTimers, 10000);
 
 function updateCards(){
   if(!lastData)return;
@@ -630,6 +631,7 @@ async function fetchStatus(){
     trackLiftStatus('gonzague',d.gonzague.status);
     trackLiftStatus('larocque',d.larocque.status);
     updateDisplay();
+    refreshTimers();
   }catch(e){
     const t=TR[currentLang];retries++;
     if(retries<3){setTimeout(fetchStatus,10000);document.getElementById('errorMsg').textContent=t.rc+'... ('+retries+'/3)';}
