@@ -56,7 +56,21 @@
     .bridge-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border:1px solid var(--border);animation:fadeUp .4s ease both;}
     .bridge-card:nth-child(1){animation-delay:0s;}.bridge-card:nth-child(2){animation-delay:.05s;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-    .bridge-name{padding:14px 16px 0;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);}
+    .bridge-name{padding:14px 16px 0;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);display:flex;align-items:center;gap:8px;}
+    .closure-badge{position:relative;display:inline-flex;align-items:center;cursor:pointer;flex-shrink:0;}
+    .closure-badge-icon{font-size:14px;line-height:1;}
+    .closure-tooltip{
+      position:absolute;top:calc(100% + 8px);left:0;z-index:200;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:12px;box-shadow:var(--shadow);
+      padding:10px 14px;min-width:220px;max-width:280px;
+      font-family:var(--mono);font-size:11px;color:var(--text2);
+      line-height:1.6;display:none;
+    }
+    .closure-tooltip.open{display:block;}
+    .closure-tooltip-title{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;}
+    .closure-tooltip-item{padding:4px 0;border-bottom:1px solid var(--border);}
+    .closure-tooltip-item:last-child{border-bottom:none;padding-bottom:0;}
     .status-block{padding:12px 16px 16px;}
     .status-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:50px;font-size:13px;font-weight:700;transition:all .4s ease;}
     .status-pill.disponible{background:var(--green-bg);color:var(--green);}
@@ -64,8 +78,9 @@
     .status-pill.leve{background:var(--red-bg);color:var(--red);animation:blink 1.2s infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.65}}
     .status-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;}
-    .duration-block{display:none;padding:0 16px 14px;gap:8px;}
-    .duration-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:50px;font-size:11px;font-weight:600;background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-family:var(--mono);}
+    .duration-block{display:none;padding:0 16px 14px;align-items:center;gap:8px;}
+    .timer-icon{font-size:14px;flex-shrink:0;}
+    .timer-text{font-size:12px;font-weight:600;color:var(--text2);font-family:var(--mono);}
     .alt-info-block{display:none;align-items:center;gap:8px;margin:0 16px 14px;padding:8px 12px;border-radius:10px;background:var(--green-bg);border:1px solid rgba(26,92,42,.12);}
     body.dark .alt-info-block{border-color:rgba(61,221,106,.15);}
     .alt-info-icon{font-size:14px;flex-shrink:0;}
@@ -175,7 +190,16 @@
 <main>
 
   <section class="bridge-card" aria-label="Pont St-Louis-de-Gonzague">
-    <div class="bridge-name" aria-hidden="true">Pont St-Louis-de-Gonzague</div>
+    <div class="bridge-name" aria-hidden="true">
+      <span>Pont St-Louis-de-Gonzague</span>
+      <span class="closure-badge" id="closureBadgeGonzague" style="display:none;" onclick="toggleTooltip('Gonzague',event)" aria-label="Fermetures planifiées">
+        <span class="closure-badge-icon">⚠️</span>
+        <div class="closure-tooltip" id="closureTooltipGonzague">
+          <div class="closure-tooltip-title" id="closureTooltipTitleGonzague">Fermetures planifiées</div>
+          <div id="closureTooltipBodyGonzague"></div>
+        </div>
+      </span>
+    </div>
     <div class="status-block">
       <div class="status-pill disponible" id="pillGonzague" role="status" aria-live="polite">
         <span class="status-dot" aria-hidden="true"></span>
@@ -183,16 +207,14 @@
       </div>
     </div>
     <div class="duration-block" id="durationGonzague" aria-hidden="true">
-      <span class="duration-pill">&#x26F5; <span id="durPlaisanceGonzague">~10 min</span></span>
-      <span class="duration-pill">&#x1F6A2; <span id="durCommercialGonzague">~15 min</span></span>
+      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
+      <span class="timer-text" id="timerGonzague">—</span>
     </div>
     <div class="alt-info-block" id="altInfoGonzague" aria-hidden="true">
       <span class="alt-info-icon" aria-hidden="true">&#x2139;&#xFE0F;</span>
       <span class="alt-info-text" id="altInfoTextGonzague"></span>
     </div>
-    <div class="closure-inline" id="closureGonzague" aria-hidden="true">
-      <span aria-hidden="true">&#x1F6A7;</span><span id="closureValueGonzague"></span>
-    </div>
+
     <div class="lifts-block">
       <span class="lifts-icon" aria-hidden="true">&#x1F6A2;</span>
       <div>
@@ -204,7 +226,16 @@
   </section>
 
   <section class="bridge-card" aria-label="Pont Larocque">
-    <div class="bridge-name" aria-hidden="true">Pont Larocque — Valleyfield</div>
+    <div class="bridge-name" aria-hidden="true">
+      <span>Pont Larocque — Valleyfield</span>
+      <span class="closure-badge" id="closureBadgeLarocque" style="display:none;" onclick="toggleTooltip('Larocque',event)" aria-label="Fermetures planifiées">
+        <span class="closure-badge-icon">⚠️</span>
+        <div class="closure-tooltip" id="closureTooltipLarocque">
+          <div class="closure-tooltip-title" id="closureTooltipTitleLarocque">Fermetures planifiées</div>
+          <div id="closureTooltipBodyLarocque"></div>
+        </div>
+      </span>
+    </div>
     <div class="status-block">
       <div class="status-pill disponible" id="pillLarocque" role="status" aria-live="polite">
         <span class="status-dot" aria-hidden="true"></span>
@@ -212,16 +243,14 @@
       </div>
     </div>
     <div class="duration-block" id="durationLarocque" aria-hidden="true">
-      <span class="duration-pill">&#x26F5; <span id="durPlaisanceLarocque">~10 min</span></span>
-      <span class="duration-pill">&#x1F6A2; <span id="durCommercialLarocque">~15 min</span></span>
+      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
+      <span class="timer-text" id="timerLarocque">—</span>
     </div>
     <div class="alt-info-block" id="altInfoLarocque" aria-hidden="true">
       <span class="alt-info-icon" aria-hidden="true">&#x2139;&#xFE0F;</span>
       <span class="alt-info-text" id="altInfoTextLarocque"></span>
     </div>
-    <div class="closure-inline" id="closureLarocque" aria-hidden="true">
-      <span aria-hidden="true">&#x1F6A7;</span><span id="closureValueLarocque"></span>
-    </div>
+
     <div class="lifts-block">
       <span class="lifts-icon" aria-hidden="true">&#x1F6A2;</span>
       <div>
@@ -463,6 +492,53 @@ if(sd!==null)applyDark(sd==='1');else applyDark(window.matchMedia('(prefers-colo
 function show(el){el.style.display='block';el.removeAttribute('aria-hidden');}
 function hide(el){el.style.display='none';el.setAttribute('aria-hidden','true');}
 
+// Lift timer tracking
+const liftStartTimes={gonzague:null,larocque:null};
+const liftAvgMin=12; // avg between 10 (pleasure) and 15 (commercial)
+
+function trackLiftStatus(bridge,status){
+  if(status==='leve'||status==='bientot_leve'){
+    if(!liftStartTimes[bridge]) liftStartTimes[bridge]=Date.now();
+  } else {
+    liftStartTimes[bridge]=null;
+  }
+}
+
+function getLiftTimerText(bridge,status,lang){
+  const start=liftStartTimes[bridge];
+  if(!start){
+    // Just started this session — no elapsed time yet
+    return lang==='fr'
+      ?'Dur\u00E9e estim\u00E9e\u00A0: ~'+liftAvgMin+'\u00A0min'
+      :'Estimated duration: ~'+liftAvgMin+' min';
+  }
+  const elapsedMs=Date.now()-start;
+  const elapsedMin=Math.floor(elapsedMs/60000);
+  const remaining=Math.max(0,liftAvgMin-elapsedMin);
+  if(lang==='fr'){
+    if(elapsedMin<1) return 'Lev\u00E9 depuis moins d\u2019une minute \u2014 ~'+liftAvgMin+'\u00A0min restantes';
+    if(remaining<=0) return 'Lev\u00E9 depuis '+elapsedMin+'\u00A0min \u2014 Bient\u00F4t disponible';
+    return 'Lev\u00E9 depuis '+elapsedMin+'\u00A0min \u2014 ~'+remaining+'\u00A0min restantes';
+  } else {
+    if(elapsedMin<1) return 'Lifted less than a minute ago \u2014 ~'+liftAvgMin+' min remaining';
+    if(remaining<=0) return 'Lifted '+elapsedMin+' min ago \u2014 Should reopen soon';
+    return 'Lifted '+elapsedMin+' min ago \u2014 ~'+remaining+' min remaining';
+  }
+}
+
+// Update timer text every 30 seconds without full re-fetch
+setInterval(()=>{
+  if(!lastData)return;
+  ['gonzague','larocque'].forEach(b=>{
+    const C=b.charAt(0).toUpperCase()+b.slice(1);
+    const s=lastData[b].status;
+    if(s==='leve'||s==='bientot_leve'){
+      const el=document.getElementById('timer'+C);
+      if(el)el.textContent=getLiftTimerText(b,s,currentLang);
+    }
+  });
+},30000);
+
 function updateCards(){
   if(!lastData)return;
   const t=TR[currentLang];
@@ -472,15 +548,29 @@ function updateCards(){
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     const alt=b==='gonzague'?'larocque':'gonzague';
     const tL=b==='gonzague'?gL:lL,oL=b==='gonzague'?lL:gL;
-    const cl=lastData[b].closure;
+    const cl=lastData[b].closures;
     const db=document.getElementById('duration'+C),ab=document.getElementById('altInfo'+C);
-    const at=document.getElementById('altInfoText'+C),cb=document.getElementById('closure'+C),cv=document.getElementById('closureValue'+C);
-    if(tL){document.getElementById('durPlaisance'+C).textContent=t.dp;document.getElementById('durCommercial'+C).textContent=t.dc;db.style.display='flex';db.removeAttribute('aria-hidden');}
-    else{db.style.display='none';db.setAttribute('aria-hidden','true');}
+    const at=document.getElementById('altInfoText'+C);
+    const badge=document.getElementById('closureBadge'+C);
+    const tooltipBody=document.getElementById('closureTooltipBody'+C);
+    const tooltipTitle=document.getElementById('closureTooltipTitle'+C);
+    const timerEl=document.getElementById('timer'+C);
+    if(tL){
+      db.style.display='flex';db.removeAttribute('aria-hidden');
+      timerEl.textContent=getLiftTimerText(b,lastData[b].status,currentLang);
+    } else {db.style.display='none';db.setAttribute('aria-hidden','true');}
     if(tL&&!oL){at.textContent=t.ab(t.bn[alt]);ab.style.display='flex';ab.removeAttribute('aria-hidden');}
     else{ab.style.display='none';ab.setAttribute('aria-hidden','true');}
-    if(cl){cv.textContent=t.cp+fmtClosure(cl,currentLang);cb.style.display='flex';cb.removeAttribute('aria-hidden');}
-    else{cb.style.display='none';cb.setAttribute('aria-hidden','true');}
+    // Closures → badge + tooltip
+    if(cl&&cl.length>0){
+      tooltipTitle.textContent=t.closureTitle||(currentLang==='fr'?'Fermetures planifi\u00E9es':'Planned closures');
+      tooltipBody.innerHTML=cl.map(c=>
+        '<div class="closure-tooltip-item">'+fmtClosure(c,currentLang)+'</div>'
+      ).join('');
+      badge.style.display='inline-flex';
+    } else {
+      badge.style.display='none';
+    }
   });
 }
 
@@ -538,7 +628,10 @@ let retries=0;
 async function fetchStatus(){
   try{
     const r=await fetch(BACKEND+'/status',{signal:AbortSignal.timeout(10000)});
-    const d=await r.json();lastData=d;retries=0;document.getElementById('errorMsg').textContent='';updateDisplay();
+    const d=await r.json();lastData=d;retries=0;document.getElementById('errorMsg').textContent='';
+    trackLiftStatus('gonzague',d.gonzague.status);
+    trackLiftStatus('larocque',d.larocque.status);
+    updateDisplay();
   }catch(e){
     const t=TR[currentLang];retries++;
     if(retries<3){setTimeout(fetchStatus,10000);document.getElementById('errorMsg').textContent=t.rc+'... ('+retries+'/3)';}
@@ -575,6 +668,19 @@ if(isPWA){show(notifyBtn);hide(installCard);}
 else if(!isMobile){hide(notifyBtn);hide(installCard);}
 else if(isIOS){hide(notifyBtn);show(installCard);const el=document.getElementById('iosInstructions');el.style.display='flex';el.style.flexDirection='column';el.removeAttribute('aria-hidden');}
 else{hide(notifyBtn);show(installCard);const el=document.getElementById('androidInstructions');el.style.display='flex';el.style.flexDirection='column';el.removeAttribute('aria-hidden');}
+
+// Tooltip toggle
+function toggleTooltip(cap, e){
+  e.stopPropagation();
+  const tt=document.getElementById('closureTooltip'+cap);
+  const isOpen=tt.classList.contains('open');
+  // Close all tooltips first
+  document.querySelectorAll('.closure-tooltip').forEach(el=>el.classList.remove('open'));
+  if(!isOpen) tt.classList.add('open');
+}
+document.addEventListener('click',()=>{
+  document.querySelectorAll('.closure-tooltip').forEach(el=>el.classList.remove('open'));
+});
 
 // Format timestamp
 function formatRefresh(raw,lang){

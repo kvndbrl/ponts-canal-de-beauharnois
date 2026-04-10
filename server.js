@@ -120,12 +120,15 @@ async function fetchBridgeStatus() {
     return match ? match[1].trim() : 'No anticipated bridge lifts';
   }
 
-  function extractClosure(section) {
-    const matches = [...section.matchAll(/class="item-data[^"]*"[^>]*style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*>([^<]+)/gi)];
-    if (matches.length > 0) return matches[0][1].trim();
+  function extractClosures(section) {
+    const results = [];
+    const matches1 = [...section.matchAll(/class="item-data[^"]*"[^>]*style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*>([^<]+)/gi)];
     const matches2 = [...section.matchAll(/style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*class="item-data[^"]*"[^>]*>([^<]+)/gi)];
-    if (matches2.length > 0) return matches2[0][1].trim();
-    return null;
+    for (const m of [...matches1, ...matches2]) {
+      const val = m[1].trim();
+      if (val && !results.includes(val)) results.push(val);
+    }
+    return results.length > 0 ? results : null;
   }
 
   const gonzagueSection = html.match(/Gonzague[\s\S]{0,3000}?(?=Larocque|<\/body>)/i)?.[0] || '';
@@ -141,12 +144,12 @@ async function fetchBridgeStatus() {
     gonzague: {
       status: colorToStatus(colorGonzague),
       next_lifts: extractLifts(gonzagueSection),
-      closure: extractClosure(gonzagueSection)
+      closures: extractClosures(gonzagueSection)
     },
     larocque: {
       status: colorToStatus(colorLarocque),
       next_lifts: extractLifts(larocqueSection),
-      closure: extractClosure(larocqueSection)
+      closures: extractClosures(larocqueSection)
     },
     last_refreshed
   };
