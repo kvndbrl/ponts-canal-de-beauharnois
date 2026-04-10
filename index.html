@@ -868,6 +868,7 @@ async function updatePrefs(){localStorage.setItem('bridgePrefs',JSON.stringify(g
 function loadPrefs(){const s=localStorage.getItem('bridgePrefs');if(!s)return;const b=JSON.parse(s);document.getElementById('prefGonzague').checked=b.includes('gonzague');document.getElementById('prefLarocque').checked=b.includes('larocque');}
 
 function updateNotifyBtns(){
+  if(isFBWebView) return; // Never show notifications UI in WebView
   const en=localStorage.getItem('notificationsEnabled')==='true';
   const t=TR[currentLang];
   const nb=document.getElementById('notifyBtn'),sc=document.getElementById('settingsCard');
