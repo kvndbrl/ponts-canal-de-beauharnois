@@ -726,19 +726,18 @@ const liftAvgMin=12;
 
 function trackLiftStatus(bridge, status, raisedSince){
   if(status==='leve'){
-    if(!liftStartTimes[bridge]){
-      // Use raisedSince time from API if available
-      if(raisedSince){
-        // Parse "HH:MM" into today's timestamp
-        const now=new Date();
-        const [h,m]=raisedSince.split(':').map(Number);
-        const t=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0,0);
-        // If the time is in the future (past midnight edge case), subtract a day
-        if(t>now) t.setDate(t.getDate()-1);
-        liftStartTimes[bridge]=t.getTime();
-      } else {
-        liftStartTimes[bridge]=Date.now();
-      }
+    if(raisedSince){
+      // Always trust the exact time from the API — parse as local time
+      const now=new Date();
+      const [h,m]=raisedSince.split(':').map(Number);
+      const t=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0,0);
+      // If the parsed time is in the future (past midnight edge case), subtract a day
+      if(t>now) t.setDate(t.getDate()-1);
+      liftStartTimes[bridge]=t.getTime();
+      localStorage.setItem('liftStart_'+bridge, String(liftStartTimes[bridge]));
+    } else if(!liftStartTimes[bridge]){
+      // No exact time from API and nothing in memory — use now as fallback
+      liftStartTimes[bridge]=Date.now();
       localStorage.setItem('liftStart_'+bridge, String(liftStartTimes[bridge]));
     }
   } else {
