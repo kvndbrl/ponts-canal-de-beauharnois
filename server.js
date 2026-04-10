@@ -61,6 +61,9 @@ async function removeSubscription(sub) {
 
 let subscriptions = [];
 let lastStatus = { gonzague: null, larocque: null };
+// Track already-notified scheduled lifts to avoid duplicates
+// Key: "bridge:HH:MM" → true
+let notifiedLifts = {};
 
 // ── Time range check (Montreal time) ─────────────────────────────────
 function isInTimeRange(sub) {
@@ -212,6 +215,49 @@ function getMessages(bridge, status, lang) {
   return (lang === 'en' ? en : fr)[status] || null;
 }
 
+// Parse scheduled lift times from next_lifts text
+// Input: "Commercial Vessel: 14:30*\nPleasure Craft: 15:00" etc.
+function parseScheduledLifts(text) {
+  if (!text || text === 'No anticipated bridge lifts') return [];
+  const times = [];
+  const matches = text.matchAll(/(\d{1,2}:\d{2})/g);
+  for (const m of matches) {
+    times.push(m[1]);
+  }
+  return times;
+}
+
+// Send scheduled lift notification
+async function sendScheduledLiftNotification(bridge, time) {
+  const names = {
+    fr: { gonzague: 'Pont St-Louis-de-Gonzague', larocque: 'Pont Larocque (Valleyfield)' },
+    en: { gonzague: 'St-Louis-de-Gonzague Bridge', larocque: 'Larocque Bridge (Valleyfield)' }
+  };
+
+  console.log(`Sending scheduled lift notification [${bridge}] at ${time}`);
+
+  for (const sub of [...subscriptions]) {
+    const bridges = sub.bridges || ['gonzague', 'larocque'];
+    if (!bridges.includes(bridge)) continue;
+    if (!isInTimeRange(sub)) continue;
+
+    const lang = sub.lang || 'fr';
+    const name = (names[lang] || names.fr)[bridge];
+    const msg = lang === 'en'
+      ? { title: `📅 Lift scheduled at ${time}`, body: `${name} will be raised at ${time}.` }
+      : { title: `📅 Levée prévue à ${time}`, body: `Le ${name} sera levé à ${time}.` };
+
+    const payload = JSON.stringify({ ...msg, bridge, persistent: false });
+    try {
+      await webpush.sendNotification(sub, payload);
+    } catch(e) {
+      console.error('Failed scheduled lift notification:', e.statusCode);
+      subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
+      await removeSubscription(sub);
+    }
+  }
+}
+
 async function sendNotifications(bridge, status) {
   console.log(`Sending [${bridge}] ${status} to ${subscriptions.length} subscribers`);
 
@@ -251,6 +297,7 @@ async function monitor() {
 
     const notifications = [];
 
+    // Status change notifications
     if (lastStatus.gonzague !== null && lastStatus.gonzague !== data.gonzague.status) {
       notifications.push(sendNotifications('gonzague', data.gonzague.status));
     }
@@ -258,10 +305,35 @@ async function monitor() {
       notifications.push(sendNotifications('larocque', data.larocque.status));
     }
 
-    // Send all notifications in parallel so neither blocks the other
+    // Scheduled lift notifications (next 60 min)
+    for (const bridge of ['gonzague', 'larocque']) {
+      const lifts = parseScheduledLifts(data[bridge].next_lifts);
+      for (const time of lifts) {
+        const key = `${bridge}:${time}`;
+        if (!notifiedLifts[key]) {
+          notifiedLifts[key] = true;
+          notifications.push(sendScheduledLiftNotification(bridge, time));
+        }
+      }
+    }
+
+    // Clean up notifiedLifts — remove entries older than 2 hours
+    // by resetting when both bridges are disponible (no active lifts)
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+    for (const key of Object.keys(notifiedLifts)) {
+      const timePart = key.split(':').slice(1).join(':'); // "HH:MM"
+      const [h, m] = timePart.split(':').map(Number);
+      const liftMin = h * 60 + m;
+      // Remove if lift time was more than 2 hours ago
+      const diff = nowMin - liftMin;
+      if (diff > 120 || diff < -600) {
+        delete notifiedLifts[key];
+      }
+    }
+
     await Promise.all(notifications);
 
-    // Update last known status only after notifications are sent
     lastStatus.gonzague = data.gonzague.status;
     lastStatus.larocque = data.larocque.status;
 
