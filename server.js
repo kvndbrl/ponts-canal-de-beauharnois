@@ -61,9 +61,21 @@ async function removeSubscription(sub) {
 
 let subscriptions = [];
 let lastStatus = { gonzague: null, larocque: null };
-// Track already-notified scheduled lifts to avoid duplicates
-// Key: "bridge:HH:MM" → true
-let notifiedLifts = {};
+
+// ── Notified lifts — Redis-backed to survive server restarts ──────────
+async function isLiftNotified(key) {
+  try {
+    const val = await redisCommand('get', `lift:${key}`);
+    return val !== null;
+  } catch(e) { return false; }
+}
+
+async function markLiftNotified(key) {
+  try {
+    // Expire after 3 hours so Redis self-cleans
+    await redisCommand('set', `lift:${key}`, '1', 'EX', '10800');
+  } catch(e) { console.error('markLiftNotified error:', e.message); }
+}
 
 // ── Time range check (Montreal time) ─────────────────────────────────
 function isInTimeRange(sub) {
@@ -310,25 +322,11 @@ async function monitor() {
       const lifts = parseScheduledLifts(data[bridge].next_lifts);
       for (const time of lifts) {
         const key = `${bridge}:${time}`;
-        if (!notifiedLifts[key]) {
-          notifiedLifts[key] = true;
+        const alreadyNotified = await isLiftNotified(key);
+        if (!alreadyNotified) {
+          await markLiftNotified(key);
           notifications.push(sendScheduledLiftNotification(bridge, time));
         }
-      }
-    }
-
-    // Clean up notifiedLifts — remove entries older than 2 hours
-    // by resetting when both bridges are disponible (no active lifts)
-    const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    for (const key of Object.keys(notifiedLifts)) {
-      const timePart = key.split(':').slice(1).join(':'); // "HH:MM"
-      const [h, m] = timePart.split(':').map(Number);
-      const liftMin = h * 60 + m;
-      // Remove if lift time was more than 2 hours ago
-      const diff = nowMin - liftMin;
-      if (diff > 120 || diff < -600) {
-        delete notifiedLifts[key];
       }
     }
 
