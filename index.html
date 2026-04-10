@@ -88,18 +88,19 @@
     .theme-swatch.active .theme-swatch-dot{border-color:var(--text);transform:scale(1.15);box-shadow:0 3px 12px rgba(0,0,0,.3);}
     .theme-swatch-name{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);text-align:center;line-height:1.3;}
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:var(--sans);background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px;transition:background .3s;overflow-x:hidden;}
-    .waves-bg{position:fixed;bottom:0;left:0;width:100%;height:140px;z-index:0;pointer-events:none;overflow:hidden;}
+    html,body{height:100%;overflow:hidden;}
+    body{font-family:var(--sans);background:var(--bg);height:100dvh;display:flex;flex-direction:column;align-items:center;padding:16px 16px 12px;transition:background .3s;overflow:hidden;}
+    .waves-bg{position:fixed;bottom:0;left:0;width:100%;height:120px;z-index:0;pointer-events:none;overflow:hidden;}
     .waves-track{display:flex;width:200%;height:100%;animation:waveScroll 18s linear infinite;}
     .waves-track svg{width:50%;height:100%;flex-shrink:0;}
     .wave1{fill:var(--wave-color);opacity:var(--wave-opacity);}
     .wave2{fill:var(--wave-color);opacity:calc(var(--wave-opacity)*.6);}
     @keyframes waveScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
     .header,main{position:relative;z-index:1;}
-    .header{width:100%;max-width:430px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:0 4px;gap:12px;}
+    .header{width:100%;max-width:430px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 4px;gap:12px;flex-shrink:0;}
     .greeting-block{display:flex;flex-direction:column;min-width:0;flex:1;}
     .greeting-text{font-size:20px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
-    .weather-text{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:3px;white-space:normal;line-height:1.5;}
+    .weather-text{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px;white-space:normal;line-height:1.4;}
 
     /* Name modal */
     .name-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);}
@@ -123,8 +124,8 @@
     .toggle-slider:before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:white;border-radius:50%;transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
     .toggle-switch input:checked+.toggle-slider{background:var(--accent);}
     .toggle-switch input:checked+.toggle-slider:before{transform:translateX(18px);}
-    main{width:100%;max-width:430px;display:flex;flex-direction:column;align-items:stretch;}
-    .bridge-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border:1px solid var(--border);animation:fadeUp .4s ease both;}
+    main{width:100%;max-width:430px;flex:1;display:flex;flex-direction:column;align-items:stretch;overflow:hidden;min-height:0;}
+    .bridge-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:8px;overflow:hidden;border:1px solid var(--border);animation:fadeUp .4s ease both;flex-shrink:0;}
     .bridge-card:nth-child(1){animation-delay:0s;}.bridge-card:nth-child(2){animation-delay:.05s;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
     .bridge-name{padding:14px 16px 0;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);display:flex;align-items:center;gap:8px;}
@@ -222,21 +223,24 @@
     .time-clear:hover{color:var(--red);}
     .unsub-row{padding:12px 16px;border-top:1px solid var(--border);}
     .unsub-btn{background:none;border:none;font-family:var(--sans);font-size:12px;color:var(--text3);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;}
-    .donation-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:16px 16px 14px;margin-top:16px;position:relative;z-index:1;}
-    .donation-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
-    .donation-desc{font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.5;}
+    .donation-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:12px 16px;margin-top:auto;position:relative;z-index:1;flex-shrink:0;}
+    .donation-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+    .donation-desc{font-size:10px;color:var(--text3);margin-bottom:10px;line-height:1.4;}
     .donation-amounts{display:flex;gap:8px;}
-    .donation-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 8px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);text-decoration:none;font-family:var(--sans);font-weight:700;font-size:16px;transition:all .2s;}
+    .donation-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 6px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);text-decoration:none;font-family:var(--sans);font-weight:700;font-size:15px;transition:all .2s;}
     .donation-btn:hover{background:#003087;color:white;border-color:#003087;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,48,135,.25);}
-    .donation-btn .donation-label{font-size:10px;font-weight:500;color:var(--text3);margin-top:2px;font-family:var(--mono);}
+    .donation-btn .donation-label{font-size:9px;font-weight:500;color:var(--text3);margin-top:1px;font-family:var(--mono);}
     .donation-btn:hover .donation-label{color:rgba(255,255,255,.7);}
-    .bottom-bar{width:100%;display:flex;align-items:center;justify-content:flex-start;margin-top:16px;padding:0 4px;position:relative;z-index:1;}
-    .lang-btn{background:none;border:none;font-family:var(--mono);font-size:12px;color:var(--text3);cursor:pointer;letter-spacing:.5px;padding:4px 8px;}
+    .bottom-bar{display:none;}
+    .disclaimer{display:none;}
+    .error{color:var(--red);text-align:center;margin-top:8px;font-size:11px;font-family:var(--mono);position:relative;z-index:1;flex-shrink:0;}
+    .spacer{display:none;}
+    /* Disclaimer in drawer */
+    .drawer-disclaimer{font-size:11px;color:var(--text3);line-height:1.6;padding:16px;border-top:1px solid var(--border);margin-top:8px;}
+    .drawer-disclaimer a{color:var(--text2);text-decoration:underline;text-underline-offset:2px;}
+    .drawer-lang{padding:4px 16px 16px;}
+    .lang-btn{background:none;border:none;font-family:var(--mono);font-size:12px;color:var(--text3);cursor:pointer;letter-spacing:.5px;padding:4px 0;}
     .lang-btn:hover{color:var(--text2);}
-    .disclaimer{width:100%;margin-top:20px;font-size:11px;color:var(--text3);text-align:center;line-height:1.7;padding:0 8px;position:relative;z-index:1;}
-    .disclaimer a{color:var(--text2);text-decoration:underline;text-underline-offset:2px;}
-    .error{color:var(--red);text-align:center;margin-top:12px;font-size:12px;font-family:var(--mono);position:relative;z-index:1;}
-    .spacer{height:8px;position:relative;z-index:1;}
   </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -350,8 +354,6 @@
     </div>
   </section>
 
-  <div class="spacer"></div>
-
   <!-- WebView banner (Facebook/Instagram browser) -->
   <div class="webview-banner" id="webviewBanner" style="display:none;" aria-hidden="true">
     <div class="webview-banner-title">🌐 <span id="webviewTitle">Ouvrir dans votre navigateur</span></div>
@@ -401,12 +403,6 @@
       <a href="https://paypal.me/kvndbrl/10" target="_blank" rel="noopener noreferrer" class="donation-btn">10 $<span class="donation-label">CAD</span></a>
     </div>
   </div>
-
-  <div class="bottom-bar">
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
-  </div>
-
-  <p class="disclaimer" id="disclaimer">Cette application est independante et n'est pas affiliee a la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les donnees proviennent du site officiel seaway-greatlakes.com.</p>
 
   <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
 
@@ -487,6 +483,13 @@
   </div>
   <div class="unsub-row">
     <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">Désactiver les notifications</button>
+  </div>
+
+  <div class="drawer-lang">
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+  </div>
+  <div class="drawer-disclaimer">
+    <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
   </div>
 </div>
 
@@ -657,13 +660,11 @@ function openDrawer(){
   document.getElementById('settingsDrawer').classList.add('open');
   document.getElementById('settingsDrawer').removeAttribute('aria-hidden');
   document.getElementById('drawerOverlay').classList.add('open');
-  document.body.style.overflow='hidden';
 }
 function closeDrawer(){
   document.getElementById('settingsDrawer').classList.remove('open');
   document.getElementById('settingsDrawer').setAttribute('aria-hidden','true');
   document.getElementById('drawerOverlay').classList.remove('open');
-  document.body.style.overflow='';
 }
 
 function fmtClosure(raw,lang){if(!raw)return null;return lang==='fr'?raw.replace(' until ',' au '):raw;}
