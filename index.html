@@ -152,8 +152,8 @@
 <body>
 
 <div class="pull-indicator" id="pullIndicator">
-  <div class="pull-spinner"></div>
-  <span id="pullText">Mise à jour...</span>
+  <div class="pull-spinner" id="pullSpinner" style="display:none;"></div>
+  <span id="pullText">Tirer pour rafraîchir</span>
 </div>
 
 <div class="waves-bg" aria-hidden="true">
@@ -494,7 +494,7 @@ const liftAvgMin=12;
 });
 
 function trackLiftStatus(bridge,status){
-  if(status==='leve'||status==='bientot_leve'){
+  if(status==='leve'){
     if(!liftStartTimes[bridge]){
       liftStartTimes[bridge]=Date.now();
       localStorage.setItem('liftStart_'+bridge, String(liftStartTimes[bridge]));
@@ -533,7 +533,7 @@ function refreshTimers(){
   ['gonzague','larocque'].forEach(b=>{
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     const s=lastData[b].status;
-    if(s==='leve'||s==='bientot_leve'){
+    if(s==='leve'){
       const el=document.getElementById('timer'+C);
       if(el) el.textContent=getLiftTimerText(b,s,currentLang);
     }
@@ -550,16 +550,18 @@ function updateCards(){
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     const alt=b==='gonzague'?'larocque':'gonzague';
     const tL=b==='gonzague'?gL:lL,oL=b==='gonzague'?lL:gL;
+    const isLifted=lastData[b].status==='leve';
+    const isImminent=lastData[b].status==='bientot_leve';
     const cl=lastData[b].closures;
     const db=document.getElementById('duration'+C),ab=document.getElementById('altInfo'+C);
     const badge=document.getElementById('closureBadge'+C);
     const tooltipBody=document.getElementById('closureTooltipBody'+C);
     const tooltipTitle=document.getElementById('closureTooltipTitle'+C);
     const timerEl=document.getElementById('timer'+C);
-    if(tL){
-      db.style.display='flex';db.removeAttribute('aria-hidden');
+    if(isLifted){
+      db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=getLiftTimerText(b,lastData[b].status,currentLang);
-    } else {db.style.display='none';db.setAttribute('aria-hidden','true');}
+    } else { db.style.display='none'; db.setAttribute('aria-hidden','true'); }
     // Closures → badge + tooltip
     if(cl&&cl.length>0){
       tooltipTitle.textContent=t.closureTitle||(currentLang==='fr'?'Fermetures planifi\u00E9es':'Planned closures');
@@ -699,38 +701,52 @@ function formatRefresh(raw,lang){
 }
 
 // Pull-to-refresh
-let ptStartY=0,ptPulling=false,ptRefreshing=false;
+let ptStartY=0, ptPulling=false, ptRefreshing=false;
 const ptIndicator=document.getElementById('pullIndicator');
 const ptText=document.getElementById('pullText');
 
-function ptUpdateText(){
-  const t=TR[currentLang];
-  ptText.textContent=ptRefreshing?(t.rc||'Mise à jour...'):(currentLang==='fr'?'Tirer pour rafraîchir':'Pull to refresh');
+function ptUpdateText(pulling){
+  const spinner=document.getElementById('pullSpinner');
+  if(ptRefreshing){
+    spinner.style.display='block';
+    ptText.textContent=currentLang==='fr'?'Mise à jour...':'Refreshing...';
+  } else if(pulling){
+    spinner.style.display='none';
+    ptText.textContent=currentLang==='fr'?'Rel\u00E2cher pour rafra\u00EEchir':'Release to refresh';
+  } else {
+    spinner.style.display='none';
+    ptText.textContent=currentLang==='fr'?'Tirer pour rafra\u00EEchir':'Pull to refresh';
+  }
 }
 
-document.addEventListener('touchstart',e=>{
-  if(window.scrollY===0) ptStartY=e.touches[0].clientY;
-},{passive:true});
+document.addEventListener('touchstart', e=>{
+  ptStartY = e.touches[0].clientY;
+}, {passive:true});
 
-document.addEventListener('touchmove',e=>{
-  if(ptRefreshing||ptStartY===0)return;
-  const dy=e.touches[0].clientY-ptStartY;
-  if(dy>60&&window.scrollY===0&&!ptPulling){
-    ptPulling=true;
+document.addEventListener('touchmove', e=>{
+  if(ptRefreshing) return;
+  if(window.scrollY > 0){ ptStartY = 0; return; }
+  if(ptStartY === 0) return;
+  const dy = e.touches[0].clientY - ptStartY;
+  if(dy > 20){
+    ptPulling = true;
     ptIndicator.classList.add('visible');
-    ptUpdateText();
+    ptUpdateText(dy > 60);
+  } else {
+    if(!ptPulling) return;
   }
-},{passive:true});
+}, {passive:true});
 
-document.addEventListener('touchend',async ()=>{
-  if(ptPulling&&!ptRefreshing){
+document.addEventListener('touchend', async ()=>{
+  if(!ptPulling){ ptStartY=0; return; }
+  if(!ptRefreshing){
     ptRefreshing=true;
-    ptUpdateText();
+    ptUpdateText(false);
     await fetchStatus();
     ptRefreshing=false;
-    setTimeout(()=>{ptIndicator.classList.remove('visible');},600);
+    setTimeout(()=>{ ptIndicator.classList.remove('visible'); }, 800);
   }
-  ptPulling=false;ptStartY=0;
+  ptPulling=false; ptStartY=0;
 });
 
 loadPrefs();loadTR();applyTrans();fetchWeather();
