@@ -208,14 +208,20 @@ async function monitor() {
     const data = await fetchBridgeStatus();
     console.log(`[${new Date().toISOString()}] Gonzague: ${data.gonzague.status} | Larocque: ${data.larocque.status}`);
 
-    if (lastStatus.gonzague !== null && lastStatus.gonzague !== data.gonzague.status) {
-      await sendNotifications('gonzague', data.gonzague.status);
-    }
-    lastStatus.gonzague = data.gonzague.status;
+    const notifications = [];
 
-    if (lastStatus.larocque !== null && lastStatus.larocque !== data.larocque.status) {
-      await sendNotifications('larocque', data.larocque.status);
+    if (lastStatus.gonzague !== null && lastStatus.gonzague !== data.gonzague.status) {
+      notifications.push(sendNotifications('gonzague', data.gonzague.status));
     }
+    if (lastStatus.larocque !== null && lastStatus.larocque !== data.larocque.status) {
+      notifications.push(sendNotifications('larocque', data.larocque.status));
+    }
+
+    // Send all notifications in parallel so neither blocks the other
+    await Promise.all(notifications);
+
+    // Update last known status only after notifications are sent
+    lastStatus.gonzague = data.gonzague.status;
     lastStatus.larocque = data.larocque.status;
 
   } catch(e) {
