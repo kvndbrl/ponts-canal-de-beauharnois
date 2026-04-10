@@ -358,19 +358,25 @@
       <span class="settings-chevron" aria-hidden="true">&#x25BE;</span>
     </div>
     <div class="settings-body" id="settingsBody">
+      <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
+      <div class="prenom-row" style="border-bottom:1px solid var(--border);">
+        <label class="prenom-label" for="prenomInput" id="prenomLabel">Prénom</label>
+        <input class="prenom-input" id="prenomInput" type="text" maxlength="30" autocomplete="given-name" placeholder="—" oninput="updatePrenom()"/>
+      </div>
+
       <div class="settings-section-label" id="themeSectionLabel">Thème</div>
       <div class="theme-section">
         <div class="theme-swatches" id="themeSwatches">
           <div class="theme-swatch active" id="swatch-gonzaguois" onclick="setTheme('gonzaguois')">
-            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#1a3d0e 0%,#3a6b2a 40%,#6ab84a 100%);"></div>
+            <div class="theme-swatch-dot" style="background:#3a6b2a;"></div>
             <span class="theme-swatch-name">Gonzaguois</span>
           </div>
           <div class="theme-swatch" id="swatch-campivallensien" onclick="setTheme('campivallensien')">
-            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#0a1e4a 0%,#1a4a8c 45%,#c8900a 100%);"></div>
+            <div class="theme-swatch-dot" style="background:#1a4a8c;"></div>
             <span class="theme-swatch-name">Campival&shy;lensien</span>
           </div>
           <div class="theme-swatch" id="swatch-stanicois" onclick="setTheme('stanicois')">
-            <div class="theme-swatch-dot" style="background:linear-gradient(135deg,#0a3020 0%,#1a7a5a 45%,#3dbb8a 100%);"></div>
+            <div class="theme-swatch-dot" style="background:#1a7a5a;"></div>
             <span class="theme-swatch-name">Staniçois</span>
           </div>
         </div>
@@ -384,12 +390,6 @@
           <span class="pref-slider"></span>
         </div>
       </label>
-
-      <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
-      <div class="prenom-row">
-        <label class="prenom-label" for="prenomInput" id="prenomLabel">Prénom</label>
-        <input class="prenom-input" id="prenomInput" type="text" maxlength="30" autocomplete="given-name" placeholder="—" oninput="updatePrenom()"/>
-      </div>
 
       <div class="settings-section-label" id="notifSectionLabel">Notifications</div>
       <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez etre notifie.</div>
