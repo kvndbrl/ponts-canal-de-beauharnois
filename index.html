@@ -549,6 +549,9 @@
     <span class="pref-row-label" id="ntLabelOutage">🚧 Fermeture planifiée</span>
     <div class="pref-toggle"><input type="checkbox" id="ntOutage" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
   </label>
+  <div id="notifTypesWarning" style="display:none;padding:10px 16px;font-size:12px;color:var(--yellow);line-height:1.5;">
+    ⚠️ <span id="notifTypesWarningText">Aucun type sélectionné — vous ne recevrez aucune notification.</span>
+  </div>
 
   <div class="settings-section-label" id="timeSectionLabel">Plages horaires</div>
   <div class="settings-section-desc" id="settingsTimeDesc">Optionnel — recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.</div>
@@ -777,6 +780,7 @@ const TR={
     ntLabelDisponible:'\u2705 Disponible',
     ntLabelScheduled:'\uD83D\uDCC5 Lev\u00E9e planifi\u00E9e',
     ntLabelOutage:'\uD83D\uDEA7 Fermeture planifi\u00E9e',
+    notifTypesWarning:'Aucun type s\u00E9lectionn\u00E9 \u2014 vous ne recevrez aucune notification.',
     prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
     themeSectionLabel:'Th\u00E8me',darkModeLabel:'Mode sombre',
     modalTitle:'Comment vous appelez-vous\u00A0?',
@@ -825,6 +829,7 @@ const TR={
     ntLabelDisponible:'\u2705 Available',
     ntLabelScheduled:'\uD83D\uDCC5 Scheduled lift',
     ntLabelOutage:'\uD83D\uDEA7 Planned closure',
+    notifTypesWarning:'No types selected \u2014 you will not receive any notifications.',
     prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
     themeSectionLabel:'Theme',darkModeLabel:'Dark mode',
     modalTitle:'What\u2019s your name?',
@@ -1029,7 +1034,12 @@ function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 const NT_ID_MAP={bientot_leve:'Bientot_leve',raising:'Raising',leve:'Leve',lowering:'Lowering',disponible:'Disponible',scheduled:'Scheduled',outage:'Outage'};
 function getNotifTypeId(t){return 'nt'+(NT_ID_MAP[t]||capitalize(t));}
 async function updateNotifTypes(){
-  localStorage.setItem('notifTypes',JSON.stringify(getSelNotifTypes()));
+  const selected = getSelNotifTypes();
+  localStorage.setItem('notifTypes', JSON.stringify(selected));
+  const warning = document.getElementById('notifTypesWarning');
+  if(warning){
+    warning.style.display = selected.length === 0 ? 'block' : 'none';
+  }
   await syncPrefs();
 }
 function loadNotifTypes(){
@@ -1039,6 +1049,9 @@ function loadNotifTypes(){
     const el=document.getElementById(getNotifTypeId(t));
     if(el) el.checked=types.includes(t);
   });
+  // Show warning if none selected
+  const warning=document.getElementById('notifTypesWarning');
+  if(warning) warning.style.display=types.length===0?'block':'none';
 }
 
 function updateNotifyBtns(){
@@ -1088,6 +1101,8 @@ function applyTrans(){
     const el=document.getElementById('ntLabel'+k);
     if(el&&t['ntLabel'+k]) el.textContent=t['ntLabel'+k];
   });
+  const ntw=document.getElementById('notifTypesWarningText');
+  if(ntw&&t.notifTypesWarning) ntw.textContent=t.notifTypesWarning;
   document.getElementById('timeSectionLabel').textContent=t.tsl;
   document.getElementById('settingsTimeDesc').textContent=t.td;
   document.getElementById('range1Label').textContent=t.r1;
