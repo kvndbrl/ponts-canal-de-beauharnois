@@ -113,7 +113,14 @@
     .greeting-text{display:block;font-size:20px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
     .weather-text{display:block;font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:12px;white-space:normal;line-height:1.4;}
 
-    /* Name modal */
+    /* No notifications modal */
+    .no-notif-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);}
+    .no-notif-modal{background:var(--surface);border-radius:var(--radius);padding:32px 24px 24px;width:100%;max-width:320px;box-shadow:0 8px 40px rgba(0,0,0,.35);animation:fadeUp .3s ease both;text-align:center;}
+    .no-notif-modal-emoji{font-size:44px;margin-bottom:14px;display:block;}
+    .no-notif-modal-title{font-size:19px;font-weight:700;color:var(--text);margin-bottom:10px;}
+    .no-notif-modal-body{font-size:13px;color:var(--text3);line-height:1.6;margin-bottom:24px;}
+    .no-notif-modal-cta{width:100%;padding:14px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+    .no-notif-modal-cta:active{opacity:.85;}
     .name-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);}
     .name-modal{background:var(--surface);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:340px;box-shadow:0 8px 40px rgba(0,0,0,.3);animation:fadeUp .3s ease both;}
     .name-modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;}
@@ -781,6 +788,9 @@ const TR={
     ntLabelScheduled:'\uD83D\uDCC5 Lev\u00E9e planifi\u00E9e',
     ntLabelOutage:'\uD83D\uDEA7 Fermeture planifi\u00E9e',
     notifTypesWarning:'Aucun type s\u00E9lectionn\u00E9 \u2014 vous ne recevrez aucune notification.',
+    noNotifTitle:'Oups\u00A0!',
+    noNotifBody:'Vous avez d\u00E9sactiv\u00E9 tous les types de notifications. Vous ne recevrez plus aucune alerte pour les ponts.',
+    noNotifCta:'J\u2019ai compris',
     prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
     themeSectionLabel:'Th\u00E8me',darkModeLabel:'Mode sombre',
     modalTitle:'Comment vous appelez-vous\u00A0?',
@@ -830,6 +840,9 @@ const TR={
     ntLabelScheduled:'\uD83D\uDCC5 Scheduled lift',
     ntLabelOutage:'\uD83D\uDEA7 Planned closure',
     notifTypesWarning:'No types selected \u2014 you will not receive any notifications.',
+    noNotifTitle:'Oops!',
+    noNotifBody:'You\'ve disabled all notification types. You will no longer receive any bridge alerts.',
+    noNotifCta:'Got it',
     prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
     themeSectionLabel:'Theme',darkModeLabel:'Dark mode',
     modalTitle:'What\u2019s your name?',
@@ -1036,11 +1049,29 @@ function getNotifTypeId(t){return 'nt'+(NT_ID_MAP[t]||capitalize(t));}
 async function updateNotifTypes(){
   const selected = getSelNotifTypes();
   localStorage.setItem('notifTypes', JSON.stringify(selected));
+  // Inline warning above types list
   const warning = document.getElementById('notifTypesWarning');
-  if(warning){
-    warning.style.display = selected.length === 0 ? 'block' : 'none';
-  }
+  if(warning) warning.style.display = selected.length === 0 ? 'block' : 'none';
+  // Modal when all deselected
+  if(selected.length === 0) showNoNotifModal();
   await syncPrefs();
+}
+
+function showNoNotifModal(){
+  const t = TR[currentLang];
+  const el = document.getElementById('noNotifModalOverlay');
+  const title = document.getElementById('noNotifModalTitle');
+  const body = document.getElementById('noNotifModalBody');
+  const cta = document.getElementById('noNotifModalCta');
+  if(title) title.textContent = t.noNotifTitle || 'Oups !';
+  if(body) body.textContent = t.noNotifBody || 'Vous avez désactivé tous les types de notifications. Vous ne recevrez plus aucune alerte pour les ponts.';
+  if(cta) cta.textContent = t.noNotifCta || 'J\'ai compris';
+  if(el) el.style.display = 'flex';
+}
+
+function dismissNoNotifModal(){
+  const el = document.getElementById('noNotifModalOverlay');
+  if(el) el.style.display = 'none';
 }
 function loadNotifTypes(){
   const saved=localStorage.getItem('notifTypes');
@@ -1392,5 +1423,16 @@ fetchStatus();
 setInterval(fetchStatus,60000);
 setInterval(updateGreeting,60000);
 </script>
+  <!-- No notification types modal — inside drawer to respect stacking context -->
+  <div class="no-notif-modal-overlay" id="noNotifModalOverlay" style="display:none;position:fixed;inset:0;z-index:9999;">
+    <div class="no-notif-modal">
+      <span class="no-notif-modal-emoji">🔕</span>
+      <div class="no-notif-modal-title" id="noNotifModalTitle">Oups !</div>
+      <div class="no-notif-modal-body" id="noNotifModalBody">Vous avez désactivé tous les types de notifications. Vous ne recevrez plus aucune alerte pour les ponts.</div>
+      <button class="no-notif-modal-cta" id="noNotifModalCta" onclick="dismissNoNotifModal()">J'ai compris</button>
+    </div>
+  </div>
+
+</div><!-- end settings-drawer -->
 </body>
 </html>
