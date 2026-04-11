@@ -193,7 +193,27 @@ async function fetchBridgeStatus() {
     return match ? match[1].toUpperCase() : '#C1D6A8';
   }
 
-  function getBridgeStatus(section, color, bridgeName) {
+  function isCurrentlyInOutage(closures) {
+    if (!closures || closures.length === 0) return null;
+    const now = new Date();
+    const nowMontreal = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+    for (const c of closures) {
+      // Format: "2026-04-11 03:00 until 2026-04-11 15:00"
+      const m = c.match(/(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})\s+until\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/i);
+      if (!m) continue;
+      const start = new Date(m[1].replace(' ', 'T') + ':00');
+      const end   = new Date(m[2].replace(' ', 'T') + ':00');
+      if (nowMontreal >= start && nowMontreal <= end) {
+        return { closure: c, end };
+      }
+    }
+    return null;
+  }
+
+  function getBridgeStatus(section, color, bridgeName, closures) {
+    // Check active outage first — overrides all other statuses
+    const outage = isCurrentlyInOutage(closures);
+    if (outage) return { status: 'outage', raisedSince: null, outageEnd: outage.end, closure: outage.closure };
     const result = extractStatus(section, bridgeName);
     if (result.status) return { status: result.status, raisedSince: result.raisedSince };
     const colorStatus = colorToStatus(color);
@@ -219,8 +239,11 @@ async function fetchBridgeStatus() {
   const colorGonzague = extractColor(html, 'St[\\-\\s]Louis[\\-\\s]de[\\-\\s]Gonzague');
   const colorLarocque = extractColor(html, 'Larocque');
 
-  const gonzague = getBridgeStatus(gonzagueSection, colorGonzague, 'gonzague');
-  const larocque = getBridgeStatus(larocqueSection, colorLarocque, 'larocque');
+  const closuresGonzague = extractClosures(gonzagueSection);
+  const closuresLarocque = extractClosures(larocqueSection);
+
+  const gonzague = getBridgeStatus(gonzagueSection, colorGonzague, 'gonzague', closuresGonzague);
+  const larocque = getBridgeStatus(larocqueSection, colorLarocque, 'larocque', closuresLarocque);
 
   // Warn if sections look empty
   if (gonzagueSection.length < 100)
@@ -235,14 +258,16 @@ async function fetchBridgeStatus() {
     gonzague: {
       status: gonzague.status,
       raisedSince: gonzague.raisedSince,
+      outageEnd: gonzague.outageEnd || null,
       next_lifts: extractLifts(gonzagueSection),
-      closures: extractClosures(gonzagueSection)
+      closures: closuresGonzague
     },
     larocque: {
       status: larocque.status,
       raisedSince: larocque.raisedSince,
+      outageEnd: larocque.outageEnd || null,
       next_lifts: extractLifts(larocqueSection),
-      closures: extractClosures(larocqueSection)
+      closures: closuresLarocque
     },
     last_refreshed,
     _sections: { gonzague: gonzagueSection, larocque: larocqueSection }
@@ -262,14 +287,16 @@ function getMessages(bridge, status, lang) {
     raising:      { title: `🔼 En cours de levage`, body: `Le ${name} est en train de se lever.` },
     leve:         { title: `🚢 Pont levé`, body: `Le ${name} est levé pour laisser passer un navire.` },
     lowering:     { title: `🔽 En cours de descente`, body: `Le ${name} sera bientôt disponible.` },
-    disponible:   { title: `✅ Pont disponible`, body: `Le ${name} est de nouveau ouvert à la circulation.` }
+    disponible:   { title: `✅ Pont disponible`, body: `Le ${name} est de nouveau ouvert à la circulation.` },
+    outage:       { title: `🚧 Fermeture planifiée`, body: `Le ${name} est fermé pour maintenance. Il ne rouvrira pas avant la fin de la fermeture.` }
   };
   const en = {
     bientot_leve: { title: `⚠️ Lift imminent`, body: `The ${name} will be raised shortly.` },
     raising:      { title: `🔼 Bridge raising`, body: `The ${name} is currently being raised.` },
     leve:         { title: `🚢 Bridge lifted`, body: `The ${name} is raised for a vessel to pass.` },
     lowering:     { title: `🔽 Bridge lowering`, body: `The ${name} will reopen soon.` },
-    disponible:   { title: `✅ Bridge available`, body: `The ${name} is open to traffic again.` }
+    disponible:   { title: `✅ Bridge available`, body: `The ${name} is open to traffic again.` },
+    outage:       { title: `🚧 Planned closure`, body: `The ${name} is closed for maintenance and will not open until the closure ends.` }
   };
 
   return (lang === 'en' ? en : fr)[status] || null;
@@ -351,7 +378,7 @@ async function sendNotifications(bridge, status) {
 
     const payload = JSON.stringify({
       ...msg, bridge,
-      persistent: status !== 'disponible' && status !== 'lowering',
+      persistent: status === 'outage' || (status !== 'disponible' && status !== 'lowering'),
       icon: notifIcon(sub)
     });
 
@@ -453,7 +480,7 @@ app.post('/subscribe', async (req, res) => {
     existing.timeRanges = sub.timeRanges || [];
     existing.lang = sub.lang || 'fr';
     existing.theme = sub.theme || 'gonzaguois';
-    existing.notifTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled'];
+    existing.notifTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
     await saveSubscription(existing);
     console.log(`Updated subscriber. Lang: ${existing.lang}, Bridges: ${existing.bridges}`);
   } else {

@@ -161,6 +161,7 @@
     .status-pill.raising{background:var(--orange-bg);color:var(--orange);animation:blink 1.5s infinite;}
     .status-pill.leve{background:var(--red-bg);color:var(--red);animation:blink 1.2s infinite;}
     .status-pill.lowering{background:var(--yellow-bg);color:var(--yellow);animation:blink 2s infinite;}
+    .status-pill.outage{background:#3a0000;color:#ff6b6b;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.65}}
     .status-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;}
     .duration-block{display:none;padding:0 16px 14px;align-items:center;gap:8px;}
@@ -544,6 +545,10 @@
     <span class="pref-row-label" id="ntLabelScheduled">📅 Levée planifiée</span>
     <div class="pref-toggle"><input type="checkbox" id="ntScheduled" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
   </label>
+  <label class="pref-row" style="border-bottom:1px solid var(--border);">
+    <span class="pref-row-label" id="ntLabelOutage">🚧 Fermeture planifiée</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntOutage" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
 
   <div class="settings-section-label" id="timeSectionLabel">Plages horaires</div>
   <div class="settings-section-desc" id="settingsTimeDesc">Optionnel — recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.</div>
@@ -757,7 +762,7 @@ function fmtClosure(raw,lang){if(!raw)return null;return lang==='fr'?raw.replace
 
 const TR={
   fr:{
-    sl:{disponible:'Disponible',bientot_leve:'Levage imminent',raising:'En cours de levage',leve:'Lev\u00E9',lowering:'Bient\u00F4t disponible'},
+    sl:{disponible:'Disponible',bientot_leve:'Levage imminent',raising:'En cours de levage',leve:'Lev\u00E9',lowering:'Bient\u00F4t disponible',outage:'Fermeture planifi\u00E9e'},
     ll:'Lev\u00E9e pr\u00E9vue au cours des 60 prochaines minutes',nl:'Aucune lev\u00E9e pr\u00E9vue',
     dp:'~10 min \u00B7 Plaisance',dc:'~15 min \u00B7 Commercial',
     cp:'Fermeture\u00A0: ',
@@ -771,6 +776,7 @@ const TR={
     ntLabelLowering:'\uD83D\uDD3D En cours de descente',
     ntLabelDisponible:'\u2705 Disponible',
     ntLabelScheduled:'\uD83D\uDCC5 Lev\u00E9e planifi\u00E9e',
+    ntLabelOutage:'\uD83D\uDEA7 Fermeture planifi\u00E9e',
     prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
     themeSectionLabel:'Th\u00E8me',darkModeLabel:'Mode sombre',
     modalTitle:'Comment vous appelez-vous\u00A0?',
@@ -804,7 +810,7 @@ const TR={
     bn:{gonzague:'Pont St-Louis-de-Gonzague',larocque:'Pont Larocque'}
   },
   en:{
-    sl:{disponible:'Available',bientot_leve:'Lift imminent',raising:'Raising',leve:'Lifted',lowering:'Lowering'},
+    sl:{disponible:'Available',bientot_leve:'Lift imminent',raising:'Raising',leve:'Lifted',lowering:'Lowering',outage:'Planned closure'},
     ll:'Bridge lifts in the next 60 minutes',nl:'No anticipated bridge lifts',
     dp:'~10 min \u00B7 Pleasure craft',dc:'~15 min \u00B7 Commercial',
     cp:'Closure: ',
@@ -818,6 +824,7 @@ const TR={
     ntLabelLowering:'\uD83D\uDD3D Bridge lowering',
     ntLabelDisponible:'\u2705 Available',
     ntLabelScheduled:'\uD83D\uDCC5 Scheduled lift',
+    ntLabelOutage:'\uD83D\uDEA7 Planned closure',
     prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
     themeSectionLabel:'Theme',darkModeLabel:'Dark mode',
     modalTitle:'What\u2019s your name?',
@@ -950,17 +957,33 @@ function refreshTimers(){
 }
 setInterval(refreshTimers, 10000);
 
-function updateCards(){
+function getOutageTimerText(bridge, outageEnd, lang){
+  if(!outageEnd) return lang==='fr'?'Fermeture en cours':'Closure in progress';
+  const end=new Date(outageEnd);
+  const now=new Date();
+  const diffMs=end-now;
+  if(diffMs<=0) return lang==='fr'?'Fermeture termin\u00E9e':'Closure ended';
+  const diffH=Math.floor(diffMs/3600000);
+  const diffM=Math.floor((diffMs%3600000)/60000);
+  const timeStr=diffH>0
+    ?(lang==='fr'?`${diffH}h ${diffM}min restantes`:`${diffH}h ${diffM}min remaining`)
+    :(lang==='fr'?`${diffM}\u00A0min restantes`:`${diffM} min remaining`);
+  const endFmt=end.toLocaleTimeString(lang==='fr'?'fr-CA':'en-CA',{hour:'2-digit',minute:'2-digit'});
+  return lang==='fr'
+    ?`\uD83D\uDEA7 Fermeture jusqu'\u00E0 ${endFmt} \u2014 ${timeStr}`
+    :`\uD83D\uDEA7 Closed until ${endFmt} \u2014 ${timeStr}`;
+}
   if(!lastData)return;
   const t=TR[currentLang];
-  const gL=['leve','bientot_leve','raising','lowering'].includes(lastData.gonzague.status);
-  const lL=['leve','bientot_leve','raising','lowering'].includes(lastData.larocque.status);
+  const gL=['leve','bientot_leve','raising','lowering','outage'].includes(lastData.gonzague.status);
+  const lL=['leve','bientot_leve','raising','lowering','outage'].includes(lastData.larocque.status);
   ['gonzague','larocque'].forEach(b=>{
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     const alt=b==='gonzague'?'larocque':'gonzague';
     const tL=b==='gonzague'?gL:lL,oL=b==='gonzague'?lL:gL;
     const isLifted=lastData[b].status==='leve';
     const isLowering=lastData[b].status==='lowering';
+    const isOutage=lastData[b].status==='outage';
     const cl=lastData[b].closures;
     const db=document.getElementById('duration'+C),ab=document.getElementById('altInfo'+C);
     const badge=document.getElementById('closureBadge'+C);
@@ -973,6 +996,9 @@ function updateCards(){
     } else if(isLowering){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=currentLang==='fr'?'Le pont redescend \u2014 Bient\u00F4t disponible':'Bridge is lowering \u2014 Opening soon';
+    } else if(isOutage){
+      db.style.display='flex'; db.removeAttribute('aria-hidden');
+      timerEl.textContent=getOutageTimerText(b,lastData[b].outageEnd,currentLang);
     } else { db.style.display='none'; db.setAttribute('aria-hidden','true'); }
     // Closures → badge + tooltip
     if(cl&&cl.length>0){
@@ -992,12 +1018,14 @@ async function updatePrefs(){localStorage.setItem('bridgePrefs',JSON.stringify(g
 function loadPrefs(){const s=localStorage.getItem('bridgePrefs');if(!s)return;const b=JSON.parse(s);document.getElementById('prefGonzague').checked=b.includes('gonzague');document.getElementById('prefLarocque').checked=b.includes('larocque');}
 
 // Notification types
-const NT_TYPES=['bientot_leve','raising','leve','lowering','disponible','scheduled'];
+const NT_TYPES=['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
 function getSelNotifTypes(){
-  return NT_TYPES.filter(t=>document.getElementById('nt'+capitalize(t))?.checked!==false);
+  return NT_TYPES.filter(t=>document.getElementById(getNotifTypeId(t))?.checked!==false);
 }
 function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
-function getNotifTypeId(t){return 'nt'+t.charAt(0).toUpperCase()+t.slice(1);}
+// Map type key → element ID suffix
+const NT_ID_MAP={bientot_leve:'Bientot_leve',raising:'Raising',leve:'Leve',lowering:'Lowering',disponible:'Disponible',scheduled:'Scheduled',outage:'Outage'};
+function getNotifTypeId(t){return 'nt'+(NT_ID_MAP[t]||capitalize(t));}
 async function updateNotifTypes(){
   localStorage.setItem('notifTypes',JSON.stringify(getSelNotifTypes()));
   await syncPrefs();
@@ -1054,7 +1082,7 @@ function applyTrans(){
   document.getElementById('settingsBridgesDesc').textContent=t.bd;
   const ntsl=document.getElementById('notifTypesSectionLabel');if(ntsl)ntsl.textContent=t.notifTypesSectionLabel;
   const ntd=document.getElementById('notifTypesDesc');if(ntd)ntd.textContent=t.notifTypesDesc;
-  ['Bientot','Raising','Leve','Lowering','Disponible','Scheduled'].forEach(k=>{
+  ['Bientot','Raising','Leve','Lowering','Disponible','Scheduled','Outage'].forEach(k=>{
     const el=document.getElementById('ntLabel'+k);
     if(el&&t['ntLabel'+k]) el.textContent=t['ntLabel'+k];
   });
