@@ -723,7 +723,7 @@ function loadTR(){const s=localStorage.getItem('timeRanges');if(!s)return;JSON.p
 async function syncPrefs(){
   if(localStorage.getItem('notificationsEnabled')!=='true')return;
   try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();if(!sub)return;
-    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;
+    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;d.theme=localStorage.getItem("appTheme")||"gonzaguois";
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
   }catch(e){console.error(e);}
 }
@@ -842,6 +842,7 @@ function setTheme(theme){
     const el=document.getElementById('swatch-'+t);
     if(el) el.classList.toggle('active',t===theme);
   });
+  syncPrefs(); // update notification icon on server
 }
 
 function loadTheme(){
@@ -1045,7 +1046,7 @@ async function toggleNotifications(){
   if(p==='granted'){
     const reg=await navigator.serviceWorker.ready;
     const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'});
-    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;
+    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;d.theme=localStorage.getItem("appTheme")||"gonzaguois";
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
     localStorage.setItem('notificationsEnabled','true');updateNotifyBtns();
   }else{localStorage.removeItem('notificationsEnabled');alert(t.pd);}

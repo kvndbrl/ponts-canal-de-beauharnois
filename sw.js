@@ -3,29 +3,13 @@ self.addEventListener('push', function(event) {
   const title = data.title || 'Ponts Beauharnois';
   const options = {
     body: data.body || '',
-    icon: '/notification-icon.png',
-    badge: '/notification-icon.png',
-    tag: 'pont-beauharnois',
+    icon: data.icon || '/notification-icon-gonzaguois.png',
+    badge: '/notification-icon-gonzaguois.png',
+    tag: 'pont-' + (data.bridge || 'gonzague'),
     renotify: true,
     requireInteraction: data.persistent || false
   };
-
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true })
-      .then(function(clientList) {
-        // Si l'app est ouverte ET visible (premier plan), ne pas notifier
-        const appVisible = clientList.some(client =>
-          client.visibilityState === 'visible'
-        );
-
-        if (appVisible) {
-          console.log('App is in foreground, skipping notification');
-          return;
-        }
-
-        return self.registration.showNotification(title, options);
-      })
-  );
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 self.addEventListener('notificationclick', function(event) {

@@ -239,6 +239,15 @@ function parseScheduledLifts(text) {
   return times;
 }
 
+// ── Notification icon per theme ───────────────────────────────────────
+const BASE_URL = 'https://pont-st-louis-de-gonzague.vercel.app';
+const VALID_THEMES = ['gonzaguois', 'campivallensien', 'stanicois'];
+
+function notifIcon(sub) {
+  const theme = VALID_THEMES.includes(sub.theme) ? sub.theme : 'gonzaguois';
+  return `${BASE_URL}/notification-icon-${theme}.png`;
+}
+
 // Send scheduled lift notification
 async function sendScheduledLiftNotification(bridge, time) {
   const names = {
@@ -259,7 +268,7 @@ async function sendScheduledLiftNotification(bridge, time) {
       ? { title: `📅 Lift scheduled at ${time}`, body: `${name} will be raised at ${time}.` }
       : { title: `📅 Levée prévue à ${time}`, body: `Le ${name} sera levé à ${time}.` };
 
-    const payload = JSON.stringify({ ...msg, bridge, persistent: false });
+    const payload = JSON.stringify({ ...msg, bridge, persistent: false, icon: notifIcon(sub) });
     try {
       await webpush.sendNotification(sub, payload);
     } catch(e) {
@@ -288,7 +297,8 @@ async function sendNotifications(bridge, status) {
 
     const payload = JSON.stringify({
       ...msg, bridge,
-      persistent: status !== 'disponible' && status !== 'lowering'
+      persistent: status !== 'disponible' && status !== 'lowering',
+      icon: notifIcon(sub)
     });
 
     try {
@@ -370,6 +380,7 @@ app.post('/subscribe', async (req, res) => {
     existing.bridges = sub.bridges || ['gonzague', 'larocque'];
     existing.timeRanges = sub.timeRanges || [];
     existing.lang = sub.lang || 'fr';
+    existing.theme = sub.theme || 'gonzaguois';
     await saveSubscription(existing);
     console.log(`Updated subscriber. Lang: ${existing.lang}, Bridges: ${existing.bridges}`);
   } else {
