@@ -62,6 +62,23 @@ async function removeSubscription(sub) {
 let subscriptions = [];
 let lastStatus = { gonzague: null, larocque: null };
 
+// ── Persist lastStatus in Redis ───────────────────────────────────────
+async function saveLastStatus() {
+  try {
+    await redisCommand('set', 'lastStatus', JSON.stringify(lastStatus));
+  } catch(e) { console.error('saveLastStatus error:', e.message); }
+}
+
+async function loadLastStatus() {
+  try {
+    const val = await redisCommand('get', 'lastStatus');
+    if (val) {
+      lastStatus = JSON.parse(val);
+      console.log(`Restored lastStatus from Redis: Gonzague=${lastStatus.gonzague} Larocque=${lastStatus.larocque}`);
+    }
+  } catch(e) { console.error('loadLastStatus error:', e.message); }
+}
+
 // ── Notified lifts — Redis-backed to survive server restarts ──────────
 async function isLiftNotified(key) {
   try {
@@ -344,6 +361,7 @@ async function monitor() {
 
     lastStatus.gonzague = data.gonzague.status;
     lastStatus.larocque = data.larocque.status;
+    await saveLastStatus();
 
   } catch(e) {
     console.error('Monitor error:', e.message);
@@ -409,6 +427,7 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 async function start() {
   subscriptions = await loadSubscriptions();
+  await loadLastStatus();
   console.log(`Ready with ${subscriptions.length} subscriptions — starting monitor`);
   await monitor();
   setInterval(monitor, 60000);
