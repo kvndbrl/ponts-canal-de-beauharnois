@@ -518,6 +518,33 @@
     </div>
   </label>
 
+  <div class="settings-section-label" id="notifTypesSectionLabel">Types de notifications</div>
+  <div class="settings-section-desc" id="notifTypesDesc">Choisissez les événements pour lesquels vous souhaitez être notifié.</div>
+  <label class="pref-row">
+    <span class="pref-row-label" id="ntLabelBientot">⚠️ Levage imminent</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntBientot_leve" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+  <label class="pref-row">
+    <span class="pref-row-label" id="ntLabelRaising">🔼 En cours de levage</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntRaising" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+  <label class="pref-row">
+    <span class="pref-row-label" id="ntLabelLeve">🚢 Levé</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntLeve" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+  <label class="pref-row">
+    <span class="pref-row-label" id="ntLabelLowering">🔽 En cours de descente</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntLowering" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+  <label class="pref-row">
+    <span class="pref-row-label" id="ntLabelDisponible">✅ Disponible</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntDisponible" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+  <label class="pref-row" style="border-bottom:1px solid var(--border);">
+    <span class="pref-row-label" id="ntLabelScheduled">📅 Levée planifiée</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntScheduled" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+
   <div class="settings-section-label" id="timeSectionLabel">Plages horaires</div>
   <div class="settings-section-desc" id="settingsTimeDesc">Optionnel — recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.</div>
   <div class="time-range-row">
@@ -704,7 +731,12 @@ function loadTR(){const s=localStorage.getItem('timeRanges');if(!s)return;JSON.p
 async function syncPrefs(){
   if(localStorage.getItem('notificationsEnabled')!=='true')return;
   try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();if(!sub)return;
-    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;d.theme=localStorage.getItem("appTheme")||"gonzaguois";
+    const d=JSON.parse(JSON.stringify(sub));
+    d.bridges=getSelBridges();
+    d.timeRanges=getTR();
+    d.lang=currentLang;
+    d.theme=localStorage.getItem("appTheme")||"gonzaguois";
+    d.notifTypes=getSelNotifTypes();
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
   }catch(e){console.error(e);}
 }
@@ -731,6 +763,14 @@ const TR={
     cp:'Fermeture\u00A0: ',
     ab:n=>'Le '+n+' est disponible',
     st:'R\u00E9glages',nsl:'\u{1F514} Notifications',
+    notifTypesSectionLabel:'Types de notifications',
+    notifTypesDesc:'Choisissez les \u00E9v\u00E9nements pour lesquels vous souhaitez \u00EAtre notifi\u00E9.',
+    ntLabelBientot:'\u26A0\uFE0F Levage imminent',
+    ntLabelRaising:'\uD83D\uDD3C En cours de levage',
+    ntLabelLeve:'\uD83D\uDEA2 Lev\u00E9',
+    ntLabelLowering:'\uD83D\uDD3D En cours de descente',
+    ntLabelDisponible:'\u2705 Disponible',
+    ntLabelScheduled:'\uD83D\uDCC5 Lev\u00E9e planifi\u00E9e',
     prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
     themeSectionLabel:'Th\u00E8me',darkModeLabel:'Mode sombre',
     modalTitle:'Comment vous appelez-vous\u00A0?',
@@ -770,6 +810,14 @@ const TR={
     cp:'Closure: ',
     ab:n=>n+' is available',
     st:'Settings',nsl:'\u{1F514} Notifications',
+    notifTypesSectionLabel:'Notification types',
+    notifTypesDesc:'Choose which events you want to be notified about.',
+    ntLabelBientot:'\u26A0\uFE0F Lift imminent',
+    ntLabelRaising:'\uD83D\uDD3C Bridge raising',
+    ntLabelLeve:'\uD83D\uDEA2 Bridge lifted',
+    ntLabelLowering:'\uD83D\uDD3D Bridge lowering',
+    ntLabelDisponible:'\u2705 Available',
+    ntLabelScheduled:'\uD83D\uDCC5 Scheduled lift',
     prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
     themeSectionLabel:'Theme',darkModeLabel:'Dark mode',
     modalTitle:'What\u2019s your name?',
@@ -943,6 +991,26 @@ function getSelBridges(){const b=[];if(document.getElementById('prefGonzague').c
 async function updatePrefs(){localStorage.setItem('bridgePrefs',JSON.stringify(getSelBridges()));await syncPrefs();}
 function loadPrefs(){const s=localStorage.getItem('bridgePrefs');if(!s)return;const b=JSON.parse(s);document.getElementById('prefGonzague').checked=b.includes('gonzague');document.getElementById('prefLarocque').checked=b.includes('larocque');}
 
+// Notification types
+const NT_TYPES=['bientot_leve','raising','leve','lowering','disponible','scheduled'];
+function getSelNotifTypes(){
+  return NT_TYPES.filter(t=>document.getElementById('nt'+capitalize(t))?.checked!==false);
+}
+function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function getNotifTypeId(t){return 'nt'+t.charAt(0).toUpperCase()+t.slice(1);}
+async function updateNotifTypes(){
+  localStorage.setItem('notifTypes',JSON.stringify(getSelNotifTypes()));
+  await syncPrefs();
+}
+function loadNotifTypes(){
+  const saved=localStorage.getItem('notifTypes');
+  const types=saved?JSON.parse(saved):NT_TYPES; // default all on
+  NT_TYPES.forEach(t=>{
+    const el=document.getElementById(getNotifTypeId(t));
+    if(el) el.checked=types.includes(t);
+  });
+}
+
 function updateNotifyBtns(){
   if(isFBWebView) return;
   const en=localStorage.getItem('notificationsEnabled')==='true';
@@ -984,6 +1052,12 @@ function applyTrans(){
   document.getElementById('settingsTitle').textContent=t.st;
   document.getElementById('notifSectionLabel').textContent=t.nsl;
   document.getElementById('settingsBridgesDesc').textContent=t.bd;
+  const ntsl=document.getElementById('notifTypesSectionLabel');if(ntsl)ntsl.textContent=t.notifTypesSectionLabel;
+  const ntd=document.getElementById('notifTypesDesc');if(ntd)ntd.textContent=t.notifTypesDesc;
+  ['Bientot','Raising','Leve','Lowering','Disponible','Scheduled'].forEach(k=>{
+    const el=document.getElementById('ntLabel'+k);
+    if(el&&t['ntLabel'+k]) el.textContent=t['ntLabel'+k];
+  });
   document.getElementById('timeSectionLabel').textContent=t.tsl;
   document.getElementById('settingsTimeDesc').textContent=t.td;
   document.getElementById('range1Label').textContent=t.r1;
@@ -1026,7 +1100,7 @@ async function toggleNotifications(){
   if(p==='granted'){
     const reg=await navigator.serviceWorker.ready;
     const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'});
-    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;d.theme=localStorage.getItem("appTheme")||"gonzaguois";
+    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;d.theme=localStorage.getItem("appTheme")||"gonzaguois";d.notifTypes=getSelNotifTypes();
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
     localStorage.setItem('notificationsEnabled','true');updateNotifyBtns();
   }else{localStorage.removeItem('notificationsEnabled');alert(t.pd);}
@@ -1262,7 +1336,7 @@ document.getElementById('customAmount').addEventListener('keydown',e=>{
   if(e.key==='Enter') openCustomDonation();
 });
 
-loadPrefs();loadTR();loadTheme();applyTrans();fetchWeather();
+loadPrefs();loadNotifTypes();loadTR();loadTheme();applyTrans();fetchWeather();
 showNameModalIfNeeded();
 showInstallModalIfNeeded();
 // Load saved prénom into settings field
