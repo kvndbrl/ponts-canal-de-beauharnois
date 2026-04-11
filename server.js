@@ -224,9 +224,6 @@ async function fetchBridgeStatus() {
     return results.length > 0 ? results : null;
   }
 
-  const gonzagueSection = html.match(/Gonzague[\s\S]{0,3000}?(?=Larocque|<\/body>)/i)?.[0] || '';
-  const larocqueSection = html.match(/Larocque[\s\S]{0,3000}?(?=Gonzague|<\/body>)/i)?.[0] || '';
-
   const colorGonzague = extractColor(html, 'St[\\-\\s]Louis[\\-\\s]de[\\-\\s]Gonzague');
   const colorLarocque = extractColor(html, 'Larocque');
 
