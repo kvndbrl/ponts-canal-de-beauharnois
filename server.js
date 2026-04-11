@@ -162,12 +162,9 @@ async function fetchBridgeStatus() {
   }
 
   function extractStatus(section, bridgeName) {
-    // Only look at status-title elements — NOT the raw section text (avoids cross-contamination)
     const titleRegex = /<h1[^>]*status-title[^>]*>\s*<b>([^<]+)<\/b>/gi;
     const titles = [...section.matchAll(titleRegex)].map(m => m[1].trim().toLowerCase());
     const combined = titles.join(' ');
-
-    log(`🔍 [${bridgeName}] status titles: "${combined || '(none)'}"`);
 
     if (combined.includes('lowering')) return { status: 'lowering', raisedSince: null };
     if (combined.includes('raising')) return { status: 'raising', raisedSince: null };
@@ -175,10 +172,9 @@ async function fetchBridgeStatus() {
     const raisedMatch = combined.match(/raised since\s+(\d{1,2}:\d{2})/i);
     if (raisedMatch) return { status: 'leve', raisedSince: raisedMatch[1] };
 
-    // Fallback: check unavailable keyword
     if (combined.includes('unavailable')) return { status: 'leve', raisedSince: null };
 
-    return { status: null, raisedSince: null };
+    return { status: null, raisedSince: null, titles };
   }
 
   function colorToStatus(color) {
@@ -198,13 +194,9 @@ async function fetchBridgeStatus() {
   }
 
   function getBridgeStatus(section, color, bridgeName) {
-    const { status: subtitleStatus, raisedSince } = extractStatus(section, bridgeName);
-    if (subtitleStatus) {
-      log(`🔍 [${bridgeName}] subtitle → ${subtitleStatus}${raisedSince ? ' since '+raisedSince : ''}`);
-      return { status: subtitleStatus, raisedSince };
-    }
+    const result = extractStatus(section, bridgeName);
+    if (result.status) return { status: result.status, raisedSince: result.raisedSince };
     const colorStatus = colorToStatus(color);
-    log(`🔍 [${bridgeName}] color(${color}) → ${colorStatus}`);
     return { status: colorStatus, raisedSince: null };
   }
 
@@ -252,7 +244,8 @@ async function fetchBridgeStatus() {
       next_lifts: extractLifts(larocqueSection),
       closures: extractClosures(larocqueSection)
     },
-    last_refreshed
+    last_refreshed,
+    _sections: { gonzague: gonzagueSection, larocque: larocqueSection }
   };
 }
 
@@ -386,7 +379,11 @@ async function monitor() {
       if (prev === null) {
         log(`⚡ Boot [${bridge}] — statut initial: ${curr} (pas de notif)`);
       } else if (prev !== curr) {
-        log(`🔄 Changement [${bridge}]: ${prev} → ${curr}`);
+        // Log scraping details only when there's a change
+        const section = data._sections[bridge] || '';
+        const titleRegex = /<h1[^>]*status-title[^>]*>\s*<b>([^<]+)<\/b>/gi;
+        const titles = [...section.matchAll(titleRegex)].map(m => m[1].trim());
+        log(`🔄 Changement [${bridge}]: ${prev} → ${curr} | titres HTML: [${titles.join(' / ') || 'aucun'}]`);
         notifications.push(sendNotifications(bridge, curr));
       }
     }
@@ -481,9 +478,9 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 async function start() {
   subscriptions = await loadSubscriptions();
   await loadLastStatus();
-  console.log(`Ready with ${subscriptions.length} subscriptions — starting monitor`);
+  log(`Ready with ${subscriptions.length} subscriptions — polling every 30s`);
   await monitor();
-  setInterval(monitor, 60000);
+  setInterval(monitor, 30000); // 30s to catch short status windows
 }
 
 start();
