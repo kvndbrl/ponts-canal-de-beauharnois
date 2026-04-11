@@ -534,7 +534,7 @@
     <div id="range2End"></div>
     <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">×</button>
   </div>
-  <div class="unsub-row">
+  <div class="unsub-row" id="unsubRow" style="display:none;">
     <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">Désactiver les notifications</button>
   </div>
 
@@ -949,11 +949,13 @@ function updateNotifyBtns(){
   const t=TR[currentLang];
   const nb=document.getElementById('notifyBtn');
   if(isPWA){
-    if(en){ hide(nb); }
-    else { nb.textContent=t.nb; show(nb); }
+    if(en){ hide(nb); } else { nb.textContent=t.nb; show(nb); }
   } else {
     hide(nb);
   }
+  // Show unsub link only when subscribed
+  const unsubRow=document.getElementById('unsubRow');
+  if(unsubRow) unsubRow.style.display=en?'block':'none';
   const unsub=document.getElementById('unsubBtn');
   if(unsub) unsub.textContent=t.ub;
 }
@@ -1000,7 +1002,7 @@ function applyTrans(){
   const disc=document.getElementById('disclaimer');if(disc)disc.innerHTML=t.di;
   updateNotifyBtns();updateDisplay();
 }
-function toggleLang(){currentLang=currentLang==='fr'?'en':'fr';localStorage.setItem('appLang',currentLang);applyTrans();syncPrefs();if(isFBWebView)updateWebviewBanner();}
+function toggleLang(){currentLang=currentLang==='fr'?'en':'fr';localStorage.setItem('appLang',currentLang);applyTrans();syncPrefs();}
 
 let retries=0;
 async function fetchStatus(){
@@ -1034,10 +1036,25 @@ async function toggleNotifications(){
 }
 
 async function unsubscribe(){
-  try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();
-    if(sub){await fetch(BACKEND+'/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:sub.endpoint})});await sub.unsubscribe();}
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    const sub=await reg.pushManager.getSubscription();
+    if(sub){
+      await fetch(BACKEND+'/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:sub.endpoint})});
+      await sub.unsubscribe();
+    }
   }catch(e){console.error(e);}
-  localStorage.removeItem('notificationsEnabled');updateNotifyBtns();
+  localStorage.removeItem('notificationsEnabled');
+  updateNotifyBtns();
+  closeDrawer();
+  // Visual confirmation
+  const t=TR[currentLang];
+  const msg=document.getElementById('errorMsg');
+  if(msg){
+    msg.style.color='var(--green)';
+    msg.textContent=currentLang==='fr'?'✓ Notifications désactivées':'✓ Notifications disabled';
+    setTimeout(()=>{msg.textContent='';msg.style.color='';},3000);
+  }
 }
 
 // ── Platform detection & Install modal ──────────────────────────────

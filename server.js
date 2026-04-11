@@ -17,10 +17,13 @@ const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
 async function redisCommand(...args) {
-  const res = await fetch(`${REDIS_URL}/${args.map(encodeURIComponent).join('/')}`, {
+  // Build URL: first arg is command, rest are path segments
+  const path = args.map(a => encodeURIComponent(String(a))).join('/');
+  const res = await fetch(`${REDIS_URL}/${path}`, {
     headers: { Authorization: `Bearer ${REDIS_TOKEN}` }
   });
   const data = await res.json();
+  if (data.error) throw new Error(data.error);
   return data.result;
 }
 
@@ -132,17 +135,16 @@ async function fetchBridgeStatus() {
   const html = await res.text();
 
   function extractStatus(section) {
-    // Extract all status-title h1 text in this section
-    const titles = [...section.matchAll(/<h1[^>]*class="status-title"[^>]*>\s*<b>([^<]+)<\/b>/gi)]
-      .map(m => m[1].trim().toLowerCase());
+    // Match status-title h1 — handle attribute order variations and whitespace
+    const titleRegex = /<h1[^>]*status-title[^>]*>\s*<b>([^<]+)<\/b>/gi;
+    const titles = [...section.matchAll(titleRegex)].map(m => m[1].trim().toLowerCase());
 
-    // Combine into one string for pattern matching
-    const combined = titles.join(' ');
+    // Also check raw text for fallback (some pages may vary)
+    const combined = titles.join(' ') + ' ' + section.toLowerCase();
 
     if (combined.includes('lowering')) return { status: 'lowering', raisedSince: null };
-    if (combined.includes('raising')) return { status: 'raising', raisedSince: null };
+    if (combined.includes('(raising)')) return { status: 'raising', raisedSince: null };
 
-    // "raised since HH:MM"
     const raisedMatch = combined.match(/raised since\s+(\d{1,2}:\d{2})/i);
     if (raisedMatch) return { status: 'leve', raisedSince: raisedMatch[1] };
 
@@ -197,6 +199,12 @@ async function fetchBridgeStatus() {
 
   const gonzague = getBridgeStatus(gonzagueSection, colorGonzague);
   const larocque = getBridgeStatus(larocqueSection, colorLarocque);
+
+  // Warn if sections look empty (scraping may have failed)
+  if (!gonzagueSection || gonzagueSection.length < 100)
+    log(`⚠️ gonzagueSection semble vide ou trop court (${gonzagueSection.length} chars)`);
+  if (!larocqueSection || larocqueSection.length < 100)
+    log(`⚠️ larocqueSection semble vide ou trop court (${larocqueSection.length} chars)`);
 
   const refreshMatch = html.match(/Last Refreshed at[:\s]*([\d\-: ]+)/i);
   const last_refreshed = refreshMatch ? refreshMatch[1].trim() : '';
