@@ -948,12 +948,9 @@ function updateNotifyBtns(){
   const en=localStorage.getItem('notificationsEnabled')==='true';
   const t=TR[currentLang];
   const nb=document.getElementById('notifyBtn');
-  if(isPWA){
-    if(en){ hide(nb); } else { nb.textContent=t.nb; show(nb); }
-  } else {
-    hide(nb);
-  }
-  // Show unsub link only when subscribed
+  // Show activate button only in PWA when not subscribed
+  if(isPWA && !en){ nb.textContent=t.nb; show(nb); } else { hide(nb); }
+  // Always show unsub row when subscribed, regardless of PWA
   const unsubRow=document.getElementById('unsubRow');
   if(unsubRow) unsubRow.style.display=en?'block':'none';
   const unsub=document.getElementById('unsubBtn');
@@ -1271,7 +1268,6 @@ showInstallModalIfNeeded();
 // Load saved prénom into settings field
 const savedName=getUserName();
 if(savedName) document.getElementById('prenomInput').value=savedName;
-showNameModalIfNeeded();
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 fetchStatus();
 setInterval(fetchStatus,60000);
