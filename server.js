@@ -195,15 +195,23 @@ async function fetchBridgeStatus() {
 
   function isCurrentlyInOutage(closures) {
     if (!closures || closures.length === 0) return null;
-    const now = new Date();
-    const nowMontreal = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+    const nowUTC = new Date(); // UTC timestamp, same reference as parsed dates
+
     for (const c of closures) {
-      // Format: "2026-04-11 03:00 until 2026-04-11 15:00"
+      // Seaway format: "2026-04-11 03:00 until 2026-04-11 15:00" (times are in ET/Montreal)
       const m = c.match(/(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})\s+until\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2})/i);
       if (!m) continue;
-      const start = new Date(m[1].replace(' ', 'T') + ':00');
-      const end   = new Date(m[2].replace(' ', 'T') + ':00');
-      if (nowMontreal >= start && nowMontreal <= end) {
+
+      // Parse as Montreal time by appending ET offset
+      // Montreal is UTC-5 (EST) or UTC-4 (EDT — April is EDT)
+      const etOffset = '-04:00'; // April = EDT
+      const start = new Date(m[1].replace(' ', 'T') + ':00' + etOffset);
+      const end   = new Date(m[2].replace(' ', 'T') + ':00' + etOffset);
+
+      if (isNaN(start) || isNaN(end)) continue;
+
+      if (nowUTC >= start && nowUTC <= end) {
+        log(`🚧 Outage actif [closure]: ${c} → fin à ${end.toISOString()}`);
         return { closure: c, end };
       }
     }

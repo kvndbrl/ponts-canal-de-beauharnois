@@ -161,7 +161,7 @@
     .status-pill.raising{background:var(--orange-bg);color:var(--orange);animation:blink 1.5s infinite;}
     .status-pill.leve{background:var(--red-bg);color:var(--red);animation:blink 1.2s infinite;}
     .status-pill.lowering{background:var(--yellow-bg);color:var(--yellow);animation:blink 2s infinite;}
-    .status-pill.outage{background:#3a0000;color:#ff6b6b;}
+    .status-pill.outage{background:rgba(180,30,30,0.25);color:#ff6b6b;border:1px solid rgba(255,107,107,0.3);animation:blink 2s infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.65}}
     .status-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;}
     .duration-block{display:none;padding:0 16px 14px;align-items:center;gap:8px;}
@@ -973,6 +973,8 @@ function getOutageTimerText(bridge, outageEnd, lang){
     ?`\uD83D\uDEA7 Fermeture jusqu'\u00E0 ${endFmt} \u2014 ${timeStr}`
     :`\uD83D\uDEA7 Closed until ${endFmt} \u2014 ${timeStr}`;
 }
+
+function updateCards(){
   if(!lastData)return;
   const t=TR[currentLang];
   const gL=['leve','bientot_leve','raising','lowering','outage'].includes(lastData.gonzague.status);
