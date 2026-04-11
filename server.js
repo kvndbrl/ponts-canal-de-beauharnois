@@ -428,7 +428,12 @@ async function monitor() {
     }
 
     // Scheduled lift notifications (next 60 min)
+    // Skip if bridge is in outage — it's already closed, lift info is irrelevant
     for (const bridge of ['gonzague', 'larocque']) {
+      if (data[bridge].status === 'outage') {
+        log(`⏭️ Levées planifiées [${bridge}] ignorées — pont en fermeture`);
+        continue;
+      }
       const lifts = parseScheduledLifts(data[bridge].next_lifts);
       for (const time of lifts) {
         const key = `${bridge}:${time}`;
