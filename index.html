@@ -540,7 +540,7 @@
 
   <div class="drawer-lang">
     <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
-    <button class="install-link" id="installLink" onclick="showInstallModal()" style="display:none;">📲 <span id="installLinkLabel">Installer l'app</span></button>
+    <button class="install-link" id="installLink" onclick="showInstallModal()" style="display:none;"><span id="installLinkLabel">📲 Installer l'app</span></button>
   </div>
   <div class="drawer-disclaimer">
     <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
@@ -996,7 +996,7 @@ function applyTrans(){
   const customInput=document.getElementById('customAmount');
   if(customInput) customInput.placeholder=t.customPlaceholder;
   const lb=document.getElementById('langBtn');lb.textContent=t.lb;lb.setAttribute('aria-label',t.ll2);
-  const ill=document.getElementById('installLinkLabel');if(ill)ill.textContent=t.it||'Installer l\'app';
+  const ill=document.getElementById('installLinkLabel');if(ill)ill.textContent='\uD83D\uDCF2 '+(t.it||'Installer l\'app');
   const disc=document.getElementById('disclaimer');if(disc)disc.innerHTML=t.di;
   updateNotifyBtns();updateDisplay();
 }
