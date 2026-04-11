@@ -177,21 +177,24 @@
     .pull-indicator.visible{opacity:1;}
     .pull-spinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .install-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:20px;margin-bottom:12px;}
-    .install-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
-    .install-card-sub{font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.5;}
+    .install-card{display:none;}
+    .webview-banner{display:none;}
+    .install-btn{display:none;}
 
-    /* WebView banner */
-    .webview-banner{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:2px solid var(--accent);padding:18px;margin-bottom:12px;animation:fadeUp .4s ease both;}
-    .webview-banner-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
-    .webview-banner-sub{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.55;}
-    .webview-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;color:var(--text2);line-height:1.4;}
-    .webview-step:last-child{margin-bottom:0;}
-    .webview-step-num{width:22px;height:22px;min-width:22px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
-
-    /* Native install button (Android beforeinstallprompt) */
-    .install-btn{display:none;width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:all .2s;margin-bottom:12px;letter-spacing:.2px;}
-    .install-btn:hover{transform:translateY(-1px);}
+    /* Install modal — slides up from bottom */
+    .install-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+    .install-modal{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:500px;padding:28px 24px 40px;box-shadow:0 -8px 40px rgba(0,0,0,.25);animation:slideUp .35s cubic-bezier(.4,0,.2,1) both;}
+    @keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+    .install-modal-icon{font-size:36px;margin-bottom:12px;display:block;text-align:center;}
+    .install-modal-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;text-align:center;}
+    .install-modal-sub{font-size:13px;color:var(--text3);margin-bottom:22px;line-height:1.6;text-align:center;}
+    .install-modal-steps{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
+    .install-modal-steps li{display:flex;align-items:center;gap:14px;font-size:14px;color:var(--text2);line-height:1.4;}
+    .install-step-num{width:28px;height:28px;min-width:28px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+    .install-modal-cta{width:100%;padding:16px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:all .2s;margin-bottom:12px;}
+    .install-modal-cta:active{opacity:.9;}
+    .install-modal-skip{display:block;text-align:center;font-size:13px;color:var(--text3);cursor:pointer;background:none;border:none;font-family:var(--sans);text-decoration:underline;text-underline-offset:3px;width:100%;padding:4px;}
+    .install-link{font-size:11px;color:var(--text3);cursor:pointer;background:none;border:none;font-family:var(--mono);text-decoration:underline;text-underline-offset:3px;padding:4px 8px;}
     .steps-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
     .steps-list li{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text2);line-height:1.4;}
     .step-num{width:24px;height:24px;min-width:24px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
@@ -406,39 +409,16 @@
   </section>
 
   <!-- WebView banner (Facebook/Instagram browser) -->
-  <div class="webview-banner" id="webviewBanner" style="display:none;" aria-hidden="true">
-    <div class="webview-banner-title">🌐 <span id="webviewTitle">Ouvrir dans votre navigateur</span></div>
-    <div class="webview-banner-sub" id="webviewSub">Pour installer l'app et recevoir des notifications, vous devez ouvrir cette page dans votre navigateur.</div>
-    <div id="webviewStepsAndroid" style="display:none;">
-      <div class="webview-step"><span class="webview-step-num">1</span><span id="wvAnd1">Appuyez sur <strong>⋮</strong> en haut à droite</span></div>
-      <div class="webview-step"><span class="webview-step-num">2</span><span id="wvAnd2">Sélectionnez <strong>Ouvrir dans Chrome</strong></span></div>
+  <!-- Unified install modal -->
+  <div class="install-modal-overlay" id="installModalOverlay" style="display:none;" aria-modal="true" role="dialog">
+    <div class="install-modal" id="installModal">
+      <span class="install-modal-icon" id="installModalIcon">🌉</span>
+      <div class="install-modal-title" id="installModalTitle">Installer l'app</div>
+      <div class="install-modal-sub" id="installModalSub">Recevez des notifications en temps réel lors des levées de ponts.</div>
+      <ul class="install-modal-steps" id="installModalSteps"></ul>
+      <button class="install-modal-cta" id="installModalCta" onclick="installModalAction()">Installer</button>
+      <button class="install-modal-skip" id="installModalSkip" onclick="dismissInstallModal()">Plus tard</button>
     </div>
-    <div id="webviewStepsIOS" style="display:none;">
-      <div class="webview-step"><span class="webview-step-num">1</span><span id="wvIos1">Appuyez sur <strong>···</strong> en bas à droite</span></div>
-      <div class="webview-step"><span class="webview-step-num">2</span><span id="wvIos2">Sélectionnez <strong>Ouvrir dans Safari</strong></span></div>
-    </div>
-  </div>
-
-  <!-- Native Android install button (beforeinstallprompt) -->
-  <button class="install-btn" id="installBtn" onclick="nativeInstall()" aria-hidden="true">
-    📲 Installer l'app
-  </button>
-
-  <!-- Manual install instructions (iOS Safari / Android Chrome without prompt) -->
-  <div class="install-card" id="installCard" aria-hidden="true">
-    <div class="install-card-title" id="installTitle">Installer l'app</div>
-    <div class="install-card-sub" id="installSubtitle">Installez l'app pour recevoir des notifications lors des levages</div>
-    <ul class="steps-list" id="iosInstructions" style="display:none;">
-      <li><span class="step-num">1</span><span id="ios1">Appuyez sur <strong>Partager</strong> en bas de Safari</span></li>
-      <li><span class="step-num">2</span><span id="ios2">Sélectionnez <strong>Sur l'écran d'accueil</strong></span></li>
-      <li><span class="step-num">3</span><span id="ios3">Appuyez sur <strong>Ajouter</strong> en haut à droite</span></li>
-      <li><span class="step-num">4</span><span id="ios4">Ouvrez l'app depuis votre écran d'accueil</span></li>
-    </ul>
-    <ul class="steps-list" id="androidInstructions" style="display:none;">
-      <li><span class="step-num">1</span><span id="and1">Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome</span></li>
-      <li><span class="step-num">2</span><span id="and2">Sélectionnez <strong>Ajouter à l'écran d'accueil</strong></span></li>
-      <li><span class="step-num">3</span><span id="and3">Appuyez sur <strong>Ajouter</strong></span></li>
-    </ul>
   </div>
 
   <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()" aria-hidden="true" style="display:none;">
@@ -560,6 +540,7 @@
 
   <div class="drawer-lang">
     <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+    <button class="install-link" id="installLink" onclick="showInstallModal()" style="display:none;">📲 <span id="installLinkLabel">Installer l'app</span></button>
   </div>
   <div class="drawer-disclaimer">
     <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
@@ -967,8 +948,12 @@ function updateNotifyBtns(){
   const en=localStorage.getItem('notificationsEnabled')==='true';
   const t=TR[currentLang];
   const nb=document.getElementById('notifyBtn');
-  if(en){ hide(nb); }
-  else { if(isMobile){nb.textContent=t.nb;show(nb);} }
+  if(isPWA){
+    if(en){ hide(nb); }
+    else { nb.textContent=t.nb; show(nb); }
+  } else {
+    hide(nb);
+  }
   const unsub=document.getElementById('unsubBtn');
   if(unsub) unsub.textContent=t.ub;
 }
@@ -1004,19 +989,15 @@ function applyTrans(){
   document.getElementById('settingsTimeDesc').textContent=t.td;
   document.getElementById('range1Label').textContent=t.r1;
   document.getElementById('range2Label').textContent=t.r2;
-  document.getElementById('donationTitle').textContent=t.dt;
-  document.getElementById('donationDesc').textContent=t.dd;
+  const donTitle=document.getElementById('donationTitle');if(donTitle)donTitle.textContent=t.dt;
+  const donDesc=document.getElementById('donationDesc');if(donDesc)donDesc.textContent=t.dd;
   const customLabel=document.getElementById('customDonateLabel');
   if(customLabel) customLabel.textContent=t.customDonate;
   const customInput=document.getElementById('customAmount');
   if(customInput) customInput.placeholder=t.customPlaceholder;
-  document.getElementById('installTitle').textContent=t.it;
-  document.getElementById('installSubtitle').textContent=t.is;
   const lb=document.getElementById('langBtn');lb.textContent=t.lb;lb.setAttribute('aria-label',t.ll2);
-  document.getElementById('disclaimer').innerHTML=t.di;
-  document.getElementById('ios1').innerHTML=t.i1;document.getElementById('ios2').innerHTML=t.i2;
-  document.getElementById('ios3').innerHTML=t.i3;document.getElementById('ios4').innerHTML=t.i4;
-  document.getElementById('and1').innerHTML=t.a1;document.getElementById('and2').innerHTML=t.a2;document.getElementById('and3').innerHTML=t.a3;
+  const ill=document.getElementById('installLinkLabel');if(ill)ill.textContent=t.it||'Installer l\'app';
+  const disc=document.getElementById('disclaimer');if(disc)disc.innerHTML=t.di;
   updateNotifyBtns();updateDisplay();
 }
 function toggleLang(){currentLang=currentLang==='fr'?'en':'fr';localStorage.setItem('appLang',currentLang);applyTrans();syncPrefs();if(isFBWebView)updateWebviewBanner();}
@@ -1059,77 +1040,118 @@ async function unsubscribe(){
   localStorage.removeItem('notificationsEnabled');updateNotifyBtns();
 }
 
-// ── Platform detection ──────────────────────────────────────────────
+// ── Platform detection & Install modal ──────────────────────────────
 const isPWA=window.matchMedia('(display-mode:standalone)').matches;
 const notifyBtn=document.getElementById('notifyBtn');
-const installCard=document.getElementById('installCard');
-const installBtn=document.getElementById('installBtn');
-const webviewBanner=document.getElementById('webviewBanner');
-
-// Detect Facebook/Instagram WebView
 const ua=navigator.userAgent||'';
 const isFBWebView=ua.includes('FBAN')||ua.includes('FBAV')||ua.includes('Instagram')||ua.includes('FB_IAB');
 
-// Native install prompt (Android Chrome)
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
   deferredPrompt=e;
-  // Show native install button if not in webview and not already installed
-  if(!isPWA&&!isFBWebView&&isMobile&&!isIOS){
-    installBtn.textContent=TR[currentLang].it||'📲 Installer l\'app';
-    installBtn.style.display='block';
-    installBtn.removeAttribute('aria-hidden');
-    hide(installCard);
-  }
 });
 
-function nativeInstall(){
-  if(!deferredPrompt)return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(r=>{
-    if(r.outcome==='accepted'){
-      installBtn.style.display='none';
-      installBtn.setAttribute('aria-hidden','true');
-    }
-    deferredPrompt=null;
-  });
+function makeStep(num, html){
+  const li=document.createElement('li');
+  li.innerHTML=`<span class="install-step-num">${num}</span><span>${html}</span>`;
+  return li;
 }
 
-function updateWebviewBanner(){
+function showInstallModal(){
   const t=TR[currentLang];
-  document.getElementById('webviewTitle').textContent=t.webviewTitle||'Ouvrir dans votre navigateur';
-  document.getElementById('webviewSub').textContent=t.webviewSub||'Pour installer l\'app et recevoir des notifications, vous devez ouvrir cette page dans votre navigateur.';
-  document.getElementById('wvAnd1').innerHTML=t.wvAnd1||'Appuyez sur <strong>⋮</strong> en haut à droite';
-  document.getElementById('wvAnd2').innerHTML=t.wvAnd2||'Sélectionnez <strong>Ouvrir dans Chrome</strong>';
-  document.getElementById('wvIos1').innerHTML=t.wvIos1||'Appuyez sur <strong>···</strong> en bas à droite';
-  document.getElementById('wvIos2').innerHTML=t.wvIos2||'Sélectionnez <strong>Ouvrir dans Safari</strong>';
+  const overlay=document.getElementById('installModalOverlay');
+  const steps=document.getElementById('installModalSteps');
+  const cta=document.getElementById('installModalCta');
+  const title=document.getElementById('installModalTitle');
+  const sub=document.getElementById('installModalSub');
+  const icon=document.getElementById('installModalIcon');
+  const skip=document.getElementById('installModalSkip');
+  steps.innerHTML='';
+
+  if(isFBWebView){
+    icon.textContent='🌐';
+    title.textContent=t.webviewTitle||'Ouvrir dans votre navigateur';
+    sub.textContent=t.webviewSub||'Pour installer l\'app et recevoir des notifications, ouvrez cette page dans votre navigateur.';
+    if(isIOS){
+      steps.appendChild(makeStep(1, t.wvIos1||'Appuyez sur <strong>···</strong> en bas à droite'));
+      steps.appendChild(makeStep(2, t.wvIos2||'Sélectionnez <strong>Ouvrir dans Safari</strong>'));
+    } else {
+      steps.appendChild(makeStep(1, t.wvAnd1||'Appuyez sur <strong>⋮</strong> en haut à droite'));
+      steps.appendChild(makeStep(2, t.wvAnd2||'Sélectionnez <strong>Ouvrir dans Chrome</strong>'));
+    }
+    cta.style.display='none';
+  } else if(deferredPrompt){
+    icon.textContent='📲';
+    title.textContent=t.it||'Installer l\'app';
+    sub.textContent=t.is||'Installez l\'app pour recevoir des notifications lors des levages.';
+    steps.style.display='none';
+    cta.style.display='block';
+    cta.textContent=t.it||'📲 Installer l\'app';
+  } else if(isIOS){
+    icon.textContent='📲';
+    title.textContent=t.it||'Installer l\'app';
+    sub.textContent=t.is||'Installez l\'app pour recevoir des notifications lors des levages.';
+    steps.appendChild(makeStep(1, t.i1||'Appuyez sur <strong>Partager</strong> ↑ en bas de Safari'));
+    steps.appendChild(makeStep(2, t.i2||'Sélectionnez <strong>Sur l\'écran d\'accueil</strong>'));
+    steps.appendChild(makeStep(3, t.i3||'Appuyez sur <strong>Ajouter</strong> en haut à droite'));
+    steps.appendChild(makeStep(4, t.i4||'Ouvrez l\'app depuis votre écran d\'accueil'));
+    cta.style.display='none';
+  } else {
+    icon.textContent='📲';
+    title.textContent=t.it||'Installer l\'app';
+    sub.textContent=t.is||'Installez l\'app pour recevoir des notifications lors des levages.';
+    steps.appendChild(makeStep(1, t.a1||'Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome'));
+    steps.appendChild(makeStep(2, t.a2||'Sélectionnez <strong>Ajouter à l\'écran d\'accueil</strong>'));
+    steps.appendChild(makeStep(3, t.a3||'Appuyez sur <strong>Ajouter</strong>'));
+    cta.style.display='none';
+  }
+
+  skip.textContent=t.modalSkip||'Plus tard';
+  overlay.style.display='flex';
+  localStorage.setItem('installPromptSeen','1');
 }
 
-if(isPWA){
-  show(notifyBtn); hide(installCard); hide(webviewBanner);
-} else if(isFBWebView){
-  // In Facebook/Instagram WebView — show how to open in real browser
-  // No notifications possible in WebView
-  hide(notifyBtn); hide(installCard); hide(webviewBanner);
-  webviewBanner.style.display='block'; webviewBanner.removeAttribute('aria-hidden');
-  if(isIOS){
-    document.getElementById('webviewStepsIOS').style.display='block';
-  } else {
-    document.getElementById('webviewStepsAndroid').style.display='block';
+function dismissInstallModal(){
+  document.getElementById('installModalOverlay').style.display='none';
+}
+
+function installModalAction(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(r=>{
+      deferredPrompt=null;
+      dismissInstallModal();
+      if(r.outcome==='accepted') updateNotifyBtns();
+    });
   }
-  updateWebviewBanner();
+}
+
+function showInstallModalIfNeeded(){
+  if(isPWA) return;                                    // already installed
+  if(isFBWebView){                                     // always show in webview
+    setTimeout(showInstallModal, 1200); return;
+  }
+  if(!isMobile) return;                                // desktop — skip
+  if(localStorage.getItem('installPromptSeen')) return; // already seen
+  setTimeout(showInstallModal, 1500);
+}
+
+// Show install link in drawer for non-PWA mobile
+if(!isPWA && isMobile){
+  const link=document.getElementById('installLink');
+  if(link){ link.style.display='inline-block'; link.removeAttribute('aria-hidden'); }
+}
+
+// Handle PWA / notifications
+if(isPWA){
+  show(notifyBtn);
+} else if(isFBWebView){
+  hide(notifyBtn);
 } else if(!isMobile){
-  hide(notifyBtn); hide(installCard); hide(webviewBanner);
-} else if(isIOS){
-  hide(notifyBtn); hide(webviewBanner); show(installCard);
-  const iosEl=document.getElementById('iosInstructions');
-  iosEl.style.display='flex'; iosEl.style.flexDirection='column'; iosEl.removeAttribute('aria-hidden');
+  hide(notifyBtn);
 } else {
-  // Android Chrome — show manual instructions, native button will replace if prompt fires
-  hide(notifyBtn); hide(webviewBanner); show(installCard);
-  const andEl=document.getElementById('androidInstructions');
-  andEl.style.display='flex'; andEl.style.flexDirection='column'; andEl.removeAttribute('aria-hidden');
+  hide(notifyBtn);
 }
 
 // Tooltip toggle
@@ -1227,6 +1249,8 @@ document.getElementById('customAmount').addEventListener('keydown',e=>{
 });
 
 loadPrefs();loadTR();loadTheme();applyTrans();fetchWeather();
+showNameModalIfNeeded();
+showInstallModalIfNeeded();
 // Load saved prénom into settings field
 const savedName=getUserName();
 if(savedName) document.getElementById('prenomInput').value=savedName;
