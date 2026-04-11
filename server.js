@@ -134,19 +134,49 @@ async function fetchBridgeStatus() {
   );
   const html = await res.text();
 
-  function extractStatus(section) {
-    // Match status-title h1 — handle attribute order variations and whitespace
+  // Split HTML into two bridge sections more reliably
+  // Find the two information-container divs
+  const containers = [...html.matchAll(/<div[^>]*class="[^"]*information-container[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/gi)];
+
+  // Identify which container belongs to which bridge by looking for bridge names nearby
+  let gonzagueSection = '';
+  let larocqueSection = '';
+
+  if (containers.length >= 2) {
+    // Find sections by looking at the surrounding context
+    const gonzagueIdx = html.toLowerCase().indexOf('gonzague');
+    const larocqueIdx = html.toLowerCase().indexOf('larocque');
+
+    // Get the HTML chunk for each bridge based on position
+    if (gonzagueIdx < larocqueIdx) {
+      gonzagueSection = html.slice(gonzagueIdx, larocqueIdx);
+      larocqueSection = html.slice(larocqueIdx, larocqueIdx + 3000);
+    } else {
+      larocqueSection = html.slice(larocqueIdx, gonzagueIdx);
+      gonzagueSection = html.slice(gonzagueIdx, gonzagueIdx + 3000);
+    }
+  } else {
+    // Fallback to original method
+    gonzagueSection = html.match(/Gonzague[\s\S]{0,3000}?(?=Larocque|<\/body>)/i)?.[0] || '';
+    larocqueSection = html.match(/Larocque[\s\S]{0,3000}?(?=Gonzague|<\/body>)/i)?.[0] || '';
+  }
+
+  function extractStatus(section, bridgeName) {
+    // Only look at status-title elements — NOT the raw section text (avoids cross-contamination)
     const titleRegex = /<h1[^>]*status-title[^>]*>\s*<b>([^<]+)<\/b>/gi;
     const titles = [...section.matchAll(titleRegex)].map(m => m[1].trim().toLowerCase());
+    const combined = titles.join(' ');
 
-    // Also check raw text for fallback (some pages may vary)
-    const combined = titles.join(' ') + ' ' + section.toLowerCase();
+    log(`🔍 [${bridgeName}] status titles: "${combined || '(none)'}"`);
 
     if (combined.includes('lowering')) return { status: 'lowering', raisedSince: null };
-    if (combined.includes('(raising)')) return { status: 'raising', raisedSince: null };
+    if (combined.includes('raising')) return { status: 'raising', raisedSince: null };
 
     const raisedMatch = combined.match(/raised since\s+(\d{1,2}:\d{2})/i);
     if (raisedMatch) return { status: 'leve', raisedSince: raisedMatch[1] };
+
+    // Fallback: check unavailable keyword
+    if (combined.includes('unavailable')) return { status: 'leve', raisedSince: null };
 
     return { status: null, raisedSince: null };
   }
@@ -167,12 +197,15 @@ async function fetchBridgeStatus() {
     return match ? match[1].toUpperCase() : '#C1D6A8';
   }
 
-  function getBridgeStatus(section, color) {
-    const { status: subtitleStatus, raisedSince } = extractStatus(section);
-    // Subtitle takes priority for raising/lowering/raised since
-    if (subtitleStatus) return { status: subtitleStatus, raisedSince };
-    // Fall back to color
-    return { status: colorToStatus(color), raisedSince: null };
+  function getBridgeStatus(section, color, bridgeName) {
+    const { status: subtitleStatus, raisedSince } = extractStatus(section, bridgeName);
+    if (subtitleStatus) {
+      log(`🔍 [${bridgeName}] subtitle → ${subtitleStatus}${raisedSince ? ' since '+raisedSince : ''}`);
+      return { status: subtitleStatus, raisedSince };
+    }
+    const colorStatus = colorToStatus(color);
+    log(`🔍 [${bridgeName}] color(${color}) → ${colorStatus}`);
+    return { status: colorStatus, raisedSince: null };
   }
 
   function extractLifts(section) {
@@ -197,14 +230,14 @@ async function fetchBridgeStatus() {
   const colorGonzague = extractColor(html, 'St[\\-\\s]Louis[\\-\\s]de[\\-\\s]Gonzague');
   const colorLarocque = extractColor(html, 'Larocque');
 
-  const gonzague = getBridgeStatus(gonzagueSection, colorGonzague);
-  const larocque = getBridgeStatus(larocqueSection, colorLarocque);
+  const gonzague = getBridgeStatus(gonzagueSection, colorGonzague, 'gonzague');
+  const larocque = getBridgeStatus(larocqueSection, colorLarocque, 'larocque');
 
-  // Warn if sections look empty (scraping may have failed)
-  if (!gonzagueSection || gonzagueSection.length < 100)
-    log(`⚠️ gonzagueSection semble vide ou trop court (${gonzagueSection.length} chars)`);
-  if (!larocqueSection || larocqueSection.length < 100)
-    log(`⚠️ larocqueSection semble vide ou trop court (${larocqueSection.length} chars)`);
+  // Warn if sections look empty
+  if (gonzagueSection.length < 100)
+    log(`⚠️ gonzagueSection trop court (${gonzagueSection.length} chars) — scraping peut avoir échoué`);
+  if (larocqueSection.length < 100)
+    log(`⚠️ larocqueSection trop court (${larocqueSection.length} chars) — scraping peut avoir échoué`);
 
   const refreshMatch = html.match(/Last Refreshed at[:\s]*([\d\-: ]+)/i);
   const last_refreshed = refreshMatch ? refreshMatch[1].trim() : '';
