@@ -265,6 +265,9 @@ function notifIcon(sub) {
   return `${BASE_URL}/notification-icon-${theme}.png`;
 }
 
+// ── Logging helper ───────────────────────────────────────────────────
+function log(msg) { console.log(`[${new Date().toISOString()}] ${msg}`); }
+
 // Send scheduled lift notification
 async function sendScheduledLiftNotification(bridge, time) {
   const names = {
@@ -272,12 +275,12 @@ async function sendScheduledLiftNotification(bridge, time) {
     en: { gonzague: 'St-Louis-de-Gonzague Bridge', larocque: 'Larocque Bridge (Valleyfield)' }
   };
 
-  console.log(`Sending scheduled lift notification [${bridge}] at ${time}`);
+  let sent = 0, skippedRange = 0, skippedBridge = 0, failed = 0;
 
   for (const sub of [...subscriptions]) {
     const bridges = sub.bridges || ['gonzague', 'larocque'];
-    if (!bridges.includes(bridge)) continue;
-    if (!isInTimeRange(sub)) continue;
+    if (!bridges.includes(bridge)) { skippedBridge++; continue; }
+    if (!isInTimeRange(sub)) { skippedRange++; continue; }
 
     const lang = sub.lang || 'fr';
     const name = (names[lang] || names.fr)[bridge];
@@ -288,29 +291,28 @@ async function sendScheduledLiftNotification(bridge, time) {
     const payload = JSON.stringify({ ...msg, bridge, persistent: false, icon: notifIcon(sub) });
     try {
       await webpush.sendNotification(sub, payload);
+      sent++;
     } catch(e) {
-      console.error('Failed scheduled lift notification:', e.statusCode);
+      failed++;
+      log(`❌ Push failed [${bridge}] scheduled ${time} — HTTP ${e.statusCode}: ${e.message}`);
       subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
       await removeSubscription(sub);
     }
   }
+  log(`📅 Levée planifiée [${bridge}] ${time} — ✅ ${sent} envoyées | ⏰ ${skippedRange} hors plage | 🚫 ${skippedBridge} pont non suivi | ❌ ${failed} échouées`);
 }
 
 async function sendNotifications(bridge, status) {
-  console.log(`Sending [${bridge}] ${status} to ${subscriptions.length} subscribers`);
+  let sent = 0, skippedRange = 0, skippedBridge = 0, skippedNoMsg = 0, failed = 0;
 
   for (const sub of [...subscriptions]) {
     const bridges = sub.bridges || ['gonzague', 'larocque'];
-    if (!bridges.includes(bridge)) continue;
-
-    if (!isInTimeRange(sub)) {
-      console.log(`Skipping notification for subscriber (outside time range)`);
-      continue;
-    }
+    if (!bridges.includes(bridge)) { skippedBridge++; continue; }
+    if (!isInTimeRange(sub)) { skippedRange++; continue; }
 
     const lang = sub.lang || 'fr';
     const msg = getMessages(bridge, status, lang);
-    if (!msg) continue;
+    if (!msg) { skippedNoMsg++; continue; }
 
     const payload = JSON.stringify({
       ...msg, bridge,
@@ -320,28 +322,35 @@ async function sendNotifications(bridge, status) {
 
     try {
       await webpush.sendNotification(sub, payload);
+      sent++;
     } catch(e) {
-      console.error('Failed notification, removing sub:', e.statusCode, e.message);
+      failed++;
+      log(`❌ Push failed [${bridge}] ${status} — HTTP ${e.statusCode}: ${e.message}`);
       subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
       await removeSubscription(sub);
     }
   }
+  log(`🔔 Notification [${bridge}] ${status} — ✅ ${sent} envoyées | ⏰ ${skippedRange} hors plage | 🚫 ${skippedBridge} pont non suivi | ❌ ${failed} échouées`);
 }
 
 // ── Monitor ───────────────────────────────────────────────────────────
 async function monitor() {
   try {
     const data = await fetchBridgeStatus();
-    console.log(`[${new Date().toISOString()}] Gonzague: ${data.gonzague.status} | Larocque: ${data.larocque.status}`);
+    log(`🌉 Gonzague: ${data.gonzague.status} | Larocque: ${data.larocque.status} | Abonnés: ${subscriptions.length}`);
 
     const notifications = [];
 
     // Status change notifications
-    if (lastStatus.gonzague !== null && lastStatus.gonzague !== data.gonzague.status) {
-      notifications.push(sendNotifications('gonzague', data.gonzague.status));
-    }
-    if (lastStatus.larocque !== null && lastStatus.larocque !== data.larocque.status) {
-      notifications.push(sendNotifications('larocque', data.larocque.status));
+    for (const bridge of ['gonzague', 'larocque']) {
+      const prev = lastStatus[bridge];
+      const curr = data[bridge].status;
+      if (prev === null) {
+        log(`⚡ Boot [${bridge}] — statut initial: ${curr} (pas de notif)`);
+      } else if (prev !== curr) {
+        log(`🔄 Changement [${bridge}]: ${prev} → ${curr}`);
+        notifications.push(sendNotifications(bridge, curr));
+      }
     }
 
     // Scheduled lift notifications (next 60 min)
@@ -351,10 +360,15 @@ async function monitor() {
         const key = `${bridge}:${time}`;
         const alreadyNotified = await isLiftNotified(key);
         if (!alreadyNotified) {
+          log(`📅 Nouvelle levée planifiée [${bridge}] à ${time}`);
           await markLiftNotified(key);
           notifications.push(sendScheduledLiftNotification(bridge, time));
         }
       }
+    }
+
+    if (notifications.length === 0) {
+      log(`💤 Aucun changement détecté`);
     }
 
     await Promise.all(notifications);
@@ -364,7 +378,8 @@ async function monitor() {
     await saveLastStatus();
 
   } catch(e) {
-    console.error('Monitor error:', e.message);
+    log(`🚨 Monitor error: ${e.message}`);
+    console.error(e);
   }
 }
 
