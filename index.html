@@ -215,8 +215,9 @@
     .flash-highlight{animation:flashSection .4s ease 2;}
     .notify-btn{display:none;width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,85,221,.35);transition:all .2s;letter-spacing:.2px;}
     .notify-btn:hover{transform:translateY(-1px);}
-    .settings-section-label{padding:20px 16px 6px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--accent);font-family:var(--sans);}
-    .settings-section-desc{padding:0 16px 12px;font-size:12px;color:var(--text3);line-height:1.6;}
+    .settings-section-label{padding:24px 16px 6px;font-size:15px;font-weight:700;color:var(--text);font-family:var(--sans);}
+    .settings-section-sub-label{padding:16px 16px 4px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--accent);font-family:var(--sans);}
+    .settings-section-desc{padding:0 16px 10px;font-size:12px;color:var(--text3);line-height:1.5;font-family:var(--sans);}
 
     /* Gear button in header */
     .gear-btn{background:var(--surface);border:none;border-radius:50px;box-shadow:var(--shadow);cursor:pointer;padding:8px 12px;line-height:1;flex-shrink:0;display:flex;flex-direction:column;gap:4px;transition:opacity .2s;}
@@ -545,7 +546,7 @@
     </div>
   </label>
 
-  <div class="settings-section-label" id="notifTypesSectionLabel">Types de notifications</div>
+  <div class="settings-section-sub-label" id="notifTypesSectionLabel">Types de notifications</div>
   <div class="settings-section-desc" id="notifTypesDesc">Choisissez les événements pour lesquels vous souhaitez être notifié.</div>
   <label class="pref-row">
     <span class="pref-row-label" id="ntLabelBientot">⚠️ Levage imminent</span>
@@ -579,9 +580,9 @@
     ⚠️ <span id="notifTypesWarningText">Aucun type sélectionné — vous ne recevrez aucune notification.</span>
   </div>
 
-  <div class="settings-section-label" id="timeSectionLabel">Plages horaires</div>
+  <div class="settings-section-sub-label" id="timeSectionLabel">Plages horaires</div>
   <div class="settings-section-desc" id="settingsTimeDesc">Optionnel — recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.</div>
-  <div class="settings-section-label" style="font-size:10px;padding:14px 16px 4px;" id="dayFilterLabel">Jours</div>
+  <div class="settings-section-sub-label" id="dayFilterLabel">Jours</div>
   <div class="day-filter-row" id="dayFilterRow">
     <button class="day-pill active" id="day0" onclick="toggleDay(0)">D</button>
     <button class="day-pill active" id="day1" onclick="toggleDay(1)">L</button>
