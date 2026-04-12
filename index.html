@@ -427,6 +427,14 @@
     Activer les notifications
   </button>
 
+  <!-- Install CTA on main page — shown only when not installed -->
+  <div id="mainInstallBanner" style="display:none;width:100%;margin-bottom:12px;position:relative;z-index:1;">
+    <button onclick="showInstallModal()" style="width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span>📲</span><span id="mainInstallLabel">Installer l'app</span>
+    </button>
+    <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:7px;font-family:var(--mono);" id="mainInstallSub">Recevez des notifications sur votre écran d'accueil</p>
+  </div>
+
   <div class="donation-card">
     <div class="donation-header">
       <span>🙏</span>
@@ -469,6 +477,14 @@
   <div class="drawer-header">
     <span class="drawer-title" id="settingsTitle">Réglages</span>
     <button class="drawer-close" onclick="closeDrawer()" aria-label="Fermer">✕</button>
+  </div>
+
+  <!-- Install banner — shown only when not installed -->
+  <div id="installBanner" style="display:none;padding:12px 16px;border-bottom:1px solid var(--border);">
+    <button onclick="showInstallModal()" style="width:100%;padding:14px;border-radius:50px;border:none;background:var(--accent);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span>📲</span><span id="installBannerLabel">Installer l'app</span>
+    </button>
+    <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px;font-family:var(--mono);" id="installBannerSub">Recevez des notifications sur votre écran d'accueil</p>
   </div>
 
   <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
@@ -838,6 +854,7 @@ const TR={
     r1:'Plage 1',r2:'Plage 2',
     dt:'Vous aimez l\'app\u00A0?',dd:'Votre soutien garde ce projet vivant et gratuit pour toute la communaut\u00E9.',customDonate:'Donner',customPlaceholder:'Autre montant',
     it:'\u{1F4F2} Installer l\'app',is:'Installez l\'app pour recevoir des notifications lors des levages',
+    installBannerLabel:'Installer l\'app',installBannerSub:'Recevez des notifications sur votre \u00E9cran d\u2019accueil',
     webviewTitle:'Ouvrir dans votre navigateur',
     webviewSub:'Pour installer l\'app et recevoir des notifications, ouvrez cette page dans votre navigateur.',
     wvAnd1:'Appuyez sur <strong>\u22EE</strong> en haut à droite',
@@ -890,6 +907,7 @@ const TR={
     r1:'Range 1',r2:'Range 2',
     dt:'Enjoying the app?',dd:'Your support keeps this project alive and free for the whole community.',customDonate:'Donate',customPlaceholder:'Other amount',
     it:'\u{1F4F2} Install the app',is:'Install the app to receive bridge lift notifications',
+    installBannerLabel:'Install the app',installBannerSub:'Get notifications on your home screen',
     webviewTitle:'Open in your browser',
     webviewSub:'To install the app and receive notifications, open this page in your browser.',
     wvAnd1:'Tap <strong>\u22EE</strong> in the top right',
@@ -1183,6 +1201,10 @@ function applyTrans(){
   if(customInput) customInput.placeholder=t.customPlaceholder;
   const lb=document.getElementById('langBtn');lb.textContent=t.lb;lb.setAttribute('aria-label',t.ll2);
   const ill=document.getElementById('installLinkLabel');if(ill)ill.textContent=t.it||'📲 Installer l\'app';
+  const ibl=document.getElementById('installBannerLabel');if(ibl)ibl.textContent=t.installBannerLabel||'Installer l\'app';
+  const ibs=document.getElementById('installBannerSub');if(ibs)ibs.textContent=t.installBannerSub||'Recevez des notifications sur votre écran d\'accueil';
+  const mil=document.getElementById('mainInstallLabel');if(mil)mil.textContent=t.installBannerLabel||'Installer l\'app';
+  const mis=document.getElementById('mainInstallSub');if(mis)mis.textContent=t.installBannerSub||'Recevez des notifications sur votre écran d\'accueil';
   const disc=document.getElementById('disclaimer');if(disc)disc.innerHTML=t.di;
   applyDayLabels();
   updateNotifyBtns();updateDisplay();
@@ -1343,6 +1365,10 @@ function showInstallModalIfNeeded(){
 if(!isPWA && isMobile){
   const link=document.getElementById('installLink');
   if(link){ link.style.display='inline-block'; link.removeAttribute('aria-hidden'); }
+  const banner=document.getElementById('installBanner');
+  if(banner) banner.style.display='block';
+  const main=document.getElementById('mainInstallBanner');
+  if(main) main.style.display='block';
 }
 
 // Handle PWA / notifications
