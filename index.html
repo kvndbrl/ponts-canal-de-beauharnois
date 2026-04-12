@@ -37,14 +37,14 @@
       --bg:#f2f5ef;--surface:#fafcf8;--surface2:#eef3ea;
       --border:rgba(40,80,20,.08);
       --text:#0d1a09;--text2:#2d4a20;--text3:#5a7248;
-      --accent:#3a6b2a;--wave-color:#3a6b2a;--wave-opacity:.09;
+      --accent:#3a6b2a;--accent-rgb:58,107,42;--wave-color:#3a6b2a;--wave-opacity:.09;
       --shadow:0 2px 16px rgba(40,80,20,.1);
     }
     body.theme-gonzaguois.dark{
       --bg:#080f06;--surface:#0f1c0c;--surface2:#142410;
       --border:rgba(100,200,60,.08);
       --text:#e8f5e0;--text2:#a0c880;--text3:#6a9450;
-      --accent:#6ab84a;--wave-color:#4a9030;--wave-opacity:.18;
+      --accent:#6ab84a;--accent-rgb:106,184,74;--wave-color:#4a9030;--wave-opacity:.18;
       --shadow:0 2px 16px rgba(0,0,0,.5);
     }
 
@@ -53,14 +53,14 @@
       --bg:#eef2f8;--surface:#f8fafd;--surface2:#e8eef8;
       --border:rgba(20,50,120,.08);
       --text:#080e1f;--text2:#1a3060;--text3:#4a6090;
-      --accent:#1a4a8c;--wave-color:#1a4a8c;--wave-opacity:.09;
+      --accent:#1a4a8c;--accent-rgb:26,74,140;--wave-color:#1a4a8c;--wave-opacity:.09;
       --shadow:0 2px 16px rgba(20,50,120,.1);
     }
     body.theme-campivallensien.dark{
       --bg:#06090f;--surface:#0c1220;--surface2:#101828;
       --border:rgba(60,120,220,.08);
       --text:#e0eaff;--text2:#90aae0;--text3:#5878b0;
-      --accent:#4a7fd4;--wave-color:#2a5ab0;--wave-opacity:.2;
+      --accent:#4a7fd4;--accent-rgb:74,127,212;--wave-color:#2a5ab0;--wave-opacity:.2;
       --shadow:0 2px 16px rgba(0,0,0,.5);
     }
 
@@ -69,14 +69,14 @@
       --bg:#eef8f4;--surface:#f6fcf9;--surface2:#e4f4ee;
       --border:rgba(20,100,70,.08);
       --text:#071410;--text2:#1a4a36;--text3:#3a7060;
-      --accent:#1a7a5a;--wave-color:#1a7a5a;--wave-opacity:.09;
+      --accent:#1a7a5a;--accent-rgb:26,122,90;--wave-color:#1a7a5a;--wave-opacity:.09;
       --shadow:0 2px 16px rgba(20,100,70,.1);
     }
     body.theme-stanicois.dark{
       --bg:#050e0a;--surface:#0a1c14;--surface2:#0e241a;
       --border:rgba(40,180,120,.08);
       --text:#d8f5ea;--text2:#70c8a0;--text3:#409870;
-      --accent:#3dbb8a;--wave-color:#20906a;--wave-opacity:.2;
+      --accent:#3dbb8a;--accent-rgb:61,187,138;--wave-color:#20906a;--wave-opacity:.2;
       --shadow:0 2px 16px rgba(0,0,0,.5);
     }
 
@@ -211,6 +211,8 @@
     .day-pill{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface2);color:var(--text3);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:var(--sans);}
     .day-pill.active{background:var(--accent);border-color:var(--accent);color:#fff;}
     .day-pill:active{transform:scale(.92);}
+    @keyframes flashSection{0%,100%{background:transparent}50%{background:rgba(var(--accent-rgb),.18)}}
+    .flash-highlight{animation:flashSection .4s ease 2;}
     .notify-btn{display:none;width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,85,221,.35);transition:all .2s;letter-spacing:.2px;}
     .notify-btn:hover{transform:translateY(-1px);}
     .settings-section-label{padding:20px 16px 6px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--accent);font-family:var(--sans);}
@@ -429,10 +431,10 @@
 
   <!-- Install CTA on main page — shown only when not installed -->
   <div id="mainInstallBanner" style="display:none;width:100%;margin-top:8px;margin-bottom:24px;position:relative;z-index:1;">
-    <button onclick="showInstallModal()" style="width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;gap:8px;">
-      <span>📲</span><span id="mainInstallLabel">Installer l'app</span>
+    <button onclick="mainCtaAction()" style="width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span>🔔</span><span id="mainInstallLabel">Activer les notifications</span>
     </button>
-    <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:7px;font-family:var(--mono);" id="mainInstallSub">Recevez des notifications sur votre écran d'accueil</p>
+    <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:7px;font-family:var(--mono);" id="mainInstallSub">Recevez des alertes lors des levées de ponts</p>
   </div>
 
   <div class="donation-card">
@@ -519,7 +521,14 @@
     </div>
   </label>
 
-  <div class="settings-section-label" id="notifSectionLabel">Notifications</div>
+  <div class="settings-section-label" id="notifSectionLabel" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px;">
+    <span id="notifSectionLabelText">🔔 Notifications</span>
+    <div class="pref-toggle" style="flex-shrink:0;">
+      <input type="checkbox" id="notifMasterToggle" onchange="toggleNotificationsMaster()"/>
+      <span class="pref-slider"></span>
+    </div>
+  </div>
+  <div id="notifSectionContent">
   <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez être notifié.</div>
   <label class="pref-row">
     <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
@@ -599,6 +608,7 @@
   <div class="unsub-row" id="unsubRow" style="display:none;">
     <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">Désactiver les notifications</button>
   </div>
+  </div><!-- end notifSectionContent -->
 
   <div class="drawer-lang">
     <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
@@ -1144,10 +1154,14 @@ function updateNotifyBtns(){
   if(isFBWebView) return;
   const en=localStorage.getItem('notificationsEnabled')==='true';
   const t=TR[currentLang];
-  const nb=document.getElementById('notifyBtn');
-  // Show activate button only in PWA when not subscribed
-  if(isPWA && !en){ nb.textContent=t.nb; show(nb); } else { hide(nb); }
-  // Always show unsub row when subscribed, regardless of PWA
+  hide(document.getElementById('notifyBtn'));
+  // Sync master toggle
+  const mt=document.getElementById('notifMasterToggle');
+  if(mt) mt.checked=en;
+  // Hide main CTA when already subscribed
+  const mainBanner=document.getElementById('mainInstallBanner');
+  if(mainBanner && en) mainBanner.style.display='none';
+  // Unsub row
   const unsubRow=document.getElementById('unsubRow');
   if(unsubRow) unsubRow.style.display=en?'block':'none';
   const unsub=document.getElementById('unsubBtn');
@@ -1227,8 +1241,37 @@ async function fetchStatus(){
   }
 }
 
+function mainCtaAction(){
+  // Always open drawer and scroll to notifs section
+  openDrawerToNotifs();
+}
+
+async function toggleNotificationsMaster(){
+  const mt=document.getElementById('notifMasterToggle');
+  if(!mt) return;
+  if(mt.checked){
+    await toggleNotifications();
+    // If permission denied, uncheck
+    if(localStorage.getItem('notificationsEnabled')!=='true') mt.checked=false;
+  } else {
+    await unsubscribe();
+  }
+}
+
+function openDrawerToNotifs(){
+  openDrawer();
+  setTimeout(()=>{
+    const section=document.getElementById('notifSectionLabel');
+    if(!section) return;
+    section.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>{
+      const content=document.getElementById('notifSectionContent');
+      if(content){ content.classList.add('flash-highlight'); setTimeout(()=>content.classList.remove('flash-highlight'),900); }
+    }, 400);
+  }, 320);
+}
+
 async function toggleNotifications(){
-  const t=TR[currentLang];
   const inst=window.matchMedia('(display-mode:standalone)').matches;
   if(isIOS&&!inst){alert(t.ia);return;}
   if(!('Notification'in window)||!('serviceWorker'in navigator)){alert(t.ns);return;}
