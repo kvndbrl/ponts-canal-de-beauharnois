@@ -521,14 +521,14 @@
     </div>
   </label>
 
-  <div class="settings-section-label" id="notifSectionLabel" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px;">
+  <div class="settings-section-label" id="notifSectionLabel" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px;cursor:pointer;" onclick="toggleNotificationsMaster()">
     <span id="notifSectionLabelText">🔔 Notifications</span>
-    <div class="pref-toggle" style="flex-shrink:0;">
-      <input type="checkbox" id="notifMasterToggle" onchange="toggleNotificationsMaster()"/>
+    <div class="pref-toggle" style="flex-shrink:0;pointer-events:none;">
+      <input type="checkbox" id="notifMasterToggle"/>
       <span class="pref-slider"></span>
     </div>
   </div>
-  <div id="notifSectionContent">
+  <div id="notifSectionContent" style="display:none;">
   <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez être notifié.</div>
   <label class="pref-row">
     <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
@@ -605,14 +605,10 @@
     <div id="range2End"></div>
     <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">×</button>
   </div>
-  <div class="unsub-row" id="unsubRow" style="display:none;">
-    <button class="unsub-btn" id="unsubBtn" onclick="unsubscribe()">Désactiver les notifications</button>
-  </div>
   </div><!-- end notifSectionContent -->
 
   <div class="drawer-lang">
     <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
-    <button class="install-link" id="installLink" onclick="showInstallModal()" style="display:none;"><span id="installLinkLabel">📲 Installer l'app</span></button>
   </div>
   <div class="drawer-disclaimer">
     <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
@@ -623,6 +619,9 @@
 const BACKEND='https://pont-st-louis-de-gonzague.onrender.com';
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
 const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+const isPWA=window.matchMedia('(display-mode:standalone)').matches;
+const ua=navigator.userAgent||'';
+const isFBWebView=ua.includes('FBAN')||ua.includes('FBAV')||ua.includes('Instagram')||ua.includes('FB_IAB');
 
 // WMO weather code → emoji
 function wmoEmoji(code){
@@ -1160,14 +1159,12 @@ function updateNotifyBtns(){
   // Sync master toggle
   const mt=document.getElementById('notifMasterToggle');
   if(mt) mt.checked=en;
-  // Hide main CTA when already subscribed
+  // Show/hide notification options
+  const content=document.getElementById('notifSectionContent');
+  if(content) content.style.display=en?'block':'none';
+  // Hide main CTA when subscribed
   const mainBanner=document.getElementById('mainInstallBanner');
   if(mainBanner && en) mainBanner.style.display='none';
-  // Unsub row
-  const unsubRow=document.getElementById('unsubRow');
-  if(unsubRow) unsubRow.style.display=en?'block':'none';
-  const unsub=document.getElementById('unsubBtn');
-  if(unsub) unsub.textContent=t.ub;
 }
 
 function updateDisplay(){
@@ -1195,7 +1192,7 @@ function applyTrans(){
   document.getElementById('prenomLabel').textContent=t.prenomLabel;
   document.getElementById('prenomInput').placeholder=t.prenomPlaceholder;
   document.getElementById('settingsTitle').textContent=t.st;
-  document.getElementById('notifSectionLabel').textContent=t.nsl;
+  const nsl=document.getElementById('notifSectionLabelText');if(nsl)nsl.textContent=t.nsl;
   document.getElementById('settingsBridgesDesc').textContent=t.bd;
   const ntsl=document.getElementById('notifTypesSectionLabel');if(ntsl)ntsl.textContent=t.notifTypesSectionLabel;
   const ntd=document.getElementById('notifTypesDesc');if(ntd)ntd.textContent=t.notifTypesDesc;
@@ -1251,12 +1248,26 @@ function mainCtaAction(){
 async function toggleNotificationsMaster(){
   const mt=document.getElementById('notifMasterToggle');
   if(!mt) return;
-  if(mt.checked){
+  const willEnable = !mt.checked; // flip state
+  mt.checked = willEnable;
+  if(willEnable){
     await toggleNotifications();
-    // If permission denied, uncheck
     if(localStorage.getItem('notificationsEnabled')!=='true') mt.checked=false;
   } else {
-    await unsubscribe();
+    // Unsubscribe but stay in drawer
+    try{
+      const reg=await navigator.serviceWorker.ready;
+      const sub=await reg.pushManager.getSubscription();
+      if(sub){
+        await fetch(BACKEND+'/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({endpoint:sub.endpoint})});
+        await sub.unsubscribe();
+      }
+    }catch(e){console.error(e);}
+    localStorage.removeItem('notificationsEnabled');
+    updateNotifyBtns();
+    // Show main CTA again
+    const mainBanner=document.getElementById('mainInstallBanner');
+    if(mainBanner && isMobile) mainBanner.style.display='block';
   }
 }
 
@@ -1267,24 +1278,43 @@ function openDrawerToNotifs(){
     if(!section) return;
     section.scrollIntoView({behavior:'smooth',block:'center'});
     setTimeout(()=>{
-      const content=document.getElementById('notifSectionContent');
-      if(content){ content.classList.add('flash-highlight'); setTimeout(()=>content.classList.remove('flash-highlight'),900); }
+      const target=document.getElementById('notifSectionLabel');
+      if(target){
+        target.classList.add('flash-highlight');
+        setTimeout(()=>target.classList.remove('flash-highlight'),900);
+      }
     }, 400);
   }, 320);
 }
 
 async function toggleNotifications(){
-  const inst=window.matchMedia('(display-mode:standalone)').matches;
-  if(isIOS&&!inst){alert(t.ia);return;}
+  const t=TR[currentLang];
+  if(isFBWebView){alert(t.ns||'Non supporté dans ce navigateur');return;}
   if(!('Notification'in window)||!('serviceWorker'in navigator)){alert(t.ns);return;}
-  const p=await Notification.requestPermission();
-  if(p==='granted'){
+  try{
+    const p=await Notification.requestPermission();
+    if(p!=='granted'){
+      localStorage.removeItem('notificationsEnabled');
+      alert(t.pd);
+      return;
+    }
     const reg=await navigator.serviceWorker.ready;
-    const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'});
-    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;d.theme=localStorage.getItem("appTheme")||"gonzaguois";d.notifTypes=getSelNotifTypes();d.notifDays=getSelDays();
+    const sub=await reg.pushManager.subscribe({
+      userVisibleOnly:true,
+      applicationServerKey:'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'
+    });
+    const d=JSON.parse(JSON.stringify(sub));
+    d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;
+    d.theme=localStorage.getItem('appTheme')||'gonzaguois';
+    d.notifTypes=getSelNotifTypes();d.notifDays=getSelDays();
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
-    localStorage.setItem('notificationsEnabled','true');updateNotifyBtns();
-  }else{localStorage.removeItem('notificationsEnabled');alert(t.pd);}
+    localStorage.setItem('notificationsEnabled','true');
+    updateNotifyBtns();
+  }catch(e){
+    console.error('Notification error:',e);
+    localStorage.removeItem('notificationsEnabled');
+    alert((t.pd||'Erreur')+': '+e.message);
+  }
 }
 
 async function unsubscribe(){
@@ -1310,11 +1340,6 @@ async function unsubscribe(){
 }
 
 // ── Platform detection & Install modal ──────────────────────────────
-const isPWA=window.matchMedia('(display-mode:standalone)').matches;
-const notifyBtn=document.getElementById('notifyBtn');
-const ua=navigator.userAgent||'';
-const isFBWebView=ua.includes('FBAN')||ua.includes('FBAV')||ua.includes('Instagram')||ua.includes('FB_IAB');
-
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
