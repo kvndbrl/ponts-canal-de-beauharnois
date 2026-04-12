@@ -110,7 +110,7 @@
     .header,main{position:relative;z-index:1;}
     .header{width:100%;max-width:430px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding:0 4px;gap:12px;flex-shrink:0;}
     .greeting-block{display:flex;flex-direction:column;min-width:0;flex:1;}
-    .greeting-text{display:block;font-size:20px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
+    .greeting-text{display:block;font-size:clamp(16px,5vw,22px);font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
     .weather-text{display:block;font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:12px;white-space:normal;line-height:1.4;}
 
     /* No notifications modal */
@@ -150,10 +150,10 @@
     .closure-badge{position:relative;display:inline-flex;align-items:center;cursor:pointer;flex-shrink:0;}
     .closure-badge-icon{font-size:14px;line-height:1;}
     .closure-tooltip{
-      position:absolute;top:calc(100% + 8px);left:0;z-index:200;
+      position:fixed;top:auto;left:16px;right:16px;z-index:400;
       background:var(--surface);border:1px solid var(--border);
       border-radius:12px;box-shadow:var(--shadow);
-      padding:10px 14px;min-width:220px;max-width:280px;
+      padding:10px 14px;max-width:calc(100vw - 32px);
       font-family:var(--mono);font-size:11px;color:var(--text2);
       line-height:1.6;display:none;
     }
@@ -206,6 +206,11 @@
     .steps-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
     .steps-list li{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text2);line-height:1.4;}
     .step-num{width:24px;height:24px;min-width:24px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+    /* Day filter pills */
+    .day-filter-row{display:flex;gap:6px;padding:12px 16px 14px;flex-wrap:wrap;}
+    .day-pill{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface2);color:var(--text3);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:var(--sans);}
+    .day-pill.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+    .day-pill:active{transform:scale(.92);}
     .notify-btn{display:none;width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,85,221,.35);transition:all .2s;letter-spacing:.2px;}
     .notify-btn:hover{transform:translateY(-1px);}
     .settings-section-label{padding:20px 16px 6px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--accent);font-family:var(--sans);}
@@ -562,6 +567,16 @@
 
   <div class="settings-section-label" id="timeSectionLabel">Plages horaires</div>
   <div class="settings-section-desc" id="settingsTimeDesc">Optionnel — recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.</div>
+  <div class="settings-section-label" style="font-size:10px;padding:14px 16px 4px;" id="dayFilterLabel">Jours</div>
+  <div class="day-filter-row" id="dayFilterRow">
+    <button class="day-pill active" id="day0" onclick="toggleDay(0)">D</button>
+    <button class="day-pill active" id="day1" onclick="toggleDay(1)">L</button>
+    <button class="day-pill active" id="day2" onclick="toggleDay(2)">M</button>
+    <button class="day-pill active" id="day3" onclick="toggleDay(3)">M</button>
+    <button class="day-pill active" id="day4" onclick="toggleDay(4)">J</button>
+    <button class="day-pill active" id="day5" onclick="toggleDay(5)">V</button>
+    <button class="day-pill active" id="day6" onclick="toggleDay(6)">S</button>
+  </div>
   <div class="time-range-row">
     <span class="time-range-label" id="range1Label">Plage 1</span>
     <div id="range1Start"></div>
@@ -743,6 +758,38 @@ function getTR(){const r=[];['1','2'].forEach(n=>{const s=gTV('range'+n+'StartIn
 async function saveTR(){localStorage.setItem('timeRanges',JSON.stringify(getTR()));await syncPrefs();}
 function loadTR(){const s=localStorage.getItem('timeRanges');if(!s)return;JSON.parse(s).forEach((r,i)=>{if(i<2){sTV('range'+(i+1)+'StartInput',r.start);sTV('range'+(i+1)+'EndInput',r.end);}});}
 
+// Day filter — 0=Sun,1=Mon,...,6=Sat (all active by default)
+function getSelDays(){
+  return [0,1,2,3,4,5,6].filter(d=>document.getElementById('day'+d)?.classList.contains('active'));
+}
+function toggleDay(d){
+  const el=document.getElementById('day'+d);
+  if(!el)return;
+  el.classList.toggle('active');
+  saveDays();
+}
+async function saveDays(){
+  localStorage.setItem('notifDays',JSON.stringify(getSelDays()));
+  await syncPrefs();
+}
+function loadDays(){
+  const saved=localStorage.getItem('notifDays');
+  const days=saved?JSON.parse(saved):[0,1,2,3,4,5,6];
+  [0,1,2,3,4,5,6].forEach(d=>{
+    const el=document.getElementById('day'+d);
+    if(el) el.classList.toggle('active',days.includes(d));
+  });
+}
+function applyDayLabels(){
+  const fr=['D','L','M','M','J','V','S'];
+  const en=['S','M','T','W','T','F','S'];
+  const labels=currentLang==='fr'?fr:en;
+  labels.forEach((l,i)=>{
+    const el=document.getElementById('day'+i);
+    if(el) el.textContent=l;
+  });
+}
+
 async function syncPrefs(){
   if(localStorage.getItem('notificationsEnabled')!=='true')return;
   try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();if(!sub)return;
@@ -752,6 +799,7 @@ async function syncPrefs(){
     d.lang=currentLang;
     d.theme=localStorage.getItem("appTheme")||"gonzaguois";
     d.notifTypes=getSelNotifTypes();
+    d.notifDays=getSelDays();
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
   }catch(e){console.error(e);}
 }
@@ -797,7 +845,7 @@ const TR={
     modalSub:'Votre pr\u00E9nom sera affich\u00E9 dans la salutation. Vous pourrez le modifier dans les r\u00E9glages.',
     modalBtn:'Continuer',modalSkip:'Passer',modalPlaceholder:'Pr\u00E9nom',
     tsl:'\u23F0 Plages horaires',
-    td:'Optionnel \u2014 recevez des notifications seulement pendant certaines heures. Laissez vide pour \u00EAtre notifi\u00E9 en tout temps.',
+    td:'Choisissez les jours et jusqu\u2019\u00E0 deux plages horaires pendant lesquelles vous souhaitez recevoir des notifications. Laissez tout vide pour \u00EAtre notifi\u00E9 en tout temps.',
     r1:'Plage 1',r2:'Plage 2',
     dt:'Vous aimez l\'app\u00A0?',dd:'Votre soutien garde ce projet vivant et gratuit pour toute la communaut\u00E9.',customDonate:'Donner',customPlaceholder:'Autre montant',
     it:'\u{1F4F2} Installer l\'app',is:'Installez l\'app pour recevoir des notifications lors des levages',
@@ -849,7 +897,7 @@ const TR={
     modalSub:'Your first name will be shown in the greeting. You can change it in Settings.',
     modalBtn:'Continue',modalSkip:'Skip',modalPlaceholder:'First name',
     tsl:'\u23F0 Time ranges',
-    td:'Optional \u2014 receive notifications only during certain hours. Leave empty to be notified at any time.',
+    td:'Choose the days and up to two time ranges during which you want to receive notifications. Leave everything empty to be notified at any time.',
     r1:'Range 1',r2:'Range 2',
     dt:'Enjoying the app?',dd:'Your support keeps this project alive and free for the whole community.',customDonate:'Donate',customPlaceholder:'Other amount',
     it:'\u{1F4F2} Install the app',is:'Install the app to receive bridge lift notifications',
@@ -1145,8 +1193,9 @@ function applyTrans(){
   const customInput=document.getElementById('customAmount');
   if(customInput) customInput.placeholder=t.customPlaceholder;
   const lb=document.getElementById('langBtn');lb.textContent=t.lb;lb.setAttribute('aria-label',t.ll2);
-  const ill=document.getElementById('installLinkLabel');if(ill)ill.textContent='\uD83D\uDCF2 '+(t.it||'Installer l\'app');
+  const ill=document.getElementById('installLinkLabel');if(ill)ill.textContent=t.it||'📲 Installer l\'app';
   const disc=document.getElementById('disclaimer');if(disc)disc.innerHTML=t.di;
+  applyDayLabels();
   updateNotifyBtns();updateDisplay();
 }
 function toggleLang(){currentLang=currentLang==='fr'?'en':'fr';localStorage.setItem('appLang',currentLang);applyTrans();syncPrefs();}
@@ -1176,7 +1225,7 @@ async function toggleNotifications(){
   if(p==='granted'){
     const reg=await navigator.serviceWorker.ready;
     const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:'BMjW0aCDUfXyOKOFpPcg7XLJKQTUpAxBfbEbQQZlaT_PgM3ZZ0n-p4gDhYmXxgjk_bkuWzfcXW0VvpsqpP-RDz0'});
-    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;d.theme=localStorage.getItem("appTheme")||"gonzaguois";d.notifTypes=getSelNotifTypes();
+    const d=JSON.parse(JSON.stringify(sub));d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;d.theme=localStorage.getItem("appTheme")||"gonzaguois";d.notifTypes=getSelNotifTypes();d.notifDays=getSelDays();
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
     localStorage.setItem('notificationsEnabled','true');updateNotifyBtns();
   }else{localStorage.removeItem('notificationsEnabled');alert(t.pd);}
@@ -1412,7 +1461,7 @@ document.getElementById('customAmount').addEventListener('keydown',e=>{
   if(e.key==='Enter') openCustomDonation();
 });
 
-loadPrefs();loadNotifTypes();loadTR();loadTheme();applyTrans();fetchWeather();
+loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();
 showNameModalIfNeeded();
 showInstallModalIfNeeded();
 // Load saved prénom into settings field

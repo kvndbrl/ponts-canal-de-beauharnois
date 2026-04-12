@@ -99,27 +99,27 @@ async function markLiftNotified(key) {
 
 // ── Time range check (Montreal time) ─────────────────────────────────
 function isInTimeRange(sub) {
-  const ranges = sub.timeRanges;
-  // No ranges configured → always notify
-  if (!ranges || ranges.length === 0) return true;
-
-  // Get current Montreal time
   const now = new Date();
   const montreal = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
-  const currentMinutes = montreal.getHours() * 60 + montreal.getMinutes();
 
+  // Day filter (0=Sun … 6=Sat) — default all days
+  const allowedDays = sub.notifDays && sub.notifDays.length > 0 ? sub.notifDays : [0,1,2,3,4,5,6];
+  if (!allowedDays.includes(montreal.getDay())) return false;
+
+  // Time range filter
+  const ranges = sub.timeRanges;
+  if (!ranges || ranges.length === 0) return true;
+
+  const currentMinutes = montreal.getHours() * 60 + montreal.getMinutes();
   for (const range of ranges) {
     if (!range.start || !range.end) continue;
     const [startH, startM] = range.start.split(':').map(Number);
     const [endH, endM] = range.end.split(':').map(Number);
     const startMinutes = startH * 60 + startM;
     const endMinutes = endH * 60 + endM;
-
     if (startMinutes <= endMinutes) {
-      // Normal range e.g. 09:00 → 17:00
       if (currentMinutes >= startMinutes && currentMinutes <= endMinutes) return true;
     } else {
-      // Overnight range e.g. 22:00 → 06:00
       if (currentMinutes >= startMinutes || currentMinutes <= endMinutes) return true;
     }
   }
@@ -494,6 +494,7 @@ app.post('/subscribe', async (req, res) => {
     existing.lang = sub.lang || 'fr';
     existing.theme = sub.theme || 'gonzaguois';
     existing.notifTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
+    existing.notifDays = sub.notifDays !== undefined ? sub.notifDays : [0,1,2,3,4,5,6];
     await saveSubscription(existing);
     console.log(`Updated subscriber. Lang: ${existing.lang}, Bridges: ${existing.bridges}`);
   } else {
