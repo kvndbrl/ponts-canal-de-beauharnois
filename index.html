@@ -530,6 +530,7 @@
     </div>
   </div>
   <div id="notifSectionContent" style="display:none;">
+  <div class="settings-section-sub-label" id="bridgesSectionLabel">Ponts</div>
   <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez être notifié.</div>
   <label class="pref-row">
     <span class="pref-row-label">🌉 Pont St-Louis-de-Gonzague</span>
@@ -1194,6 +1195,7 @@ function applyTrans(){
   document.getElementById('prenomInput').placeholder=t.prenomPlaceholder;
   document.getElementById('settingsTitle').textContent=t.st;
   const nsl=document.getElementById('notifSectionLabelText');if(nsl)nsl.textContent=t.nsl;
+  const bsl=document.getElementById('bridgesSectionLabel');if(bsl)bsl.textContent=currentLang==='fr'?'Ponts':'Bridges';
   document.getElementById('settingsBridgesDesc').textContent=t.bd;
   const ntsl=document.getElementById('notifTypesSectionLabel');if(ntsl)ntsl.textContent=t.notifTypesSectionLabel;
   const ntd=document.getElementById('notifTypesDesc');if(ntd)ntd.textContent=t.notifTypesDesc;
