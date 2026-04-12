@@ -423,17 +423,6 @@
 
   <!-- WebView banner (Facebook/Instagram browser) -->
   <!-- Unified install modal -->
-  <div class="install-modal-overlay" id="installModalOverlay" style="display:none;" aria-modal="true" role="dialog">
-    <div class="install-modal" id="installModal">
-      <span class="install-modal-icon" id="installModalIcon">🌉</span>
-      <div class="install-modal-title" id="installModalTitle">Installer l'app</div>
-      <div class="install-modal-sub" id="installModalSub">Recevez des notifications en temps réel lors des levées de ponts.</div>
-      <ul class="install-modal-steps" id="installModalSteps"></ul>
-      <button class="install-modal-cta" id="installModalCta" onclick="installModalAction()">Installer</button>
-      <button class="install-modal-skip" id="installModalSkip" onclick="dismissInstallModal()">Plus tard</button>
-    </div>
-  </div>
-
   <button class="notify-btn" id="notifyBtn" onclick="toggleNotifications()" aria-hidden="true" style="display:none;">
     Activer les notifications
   </button>
@@ -1472,6 +1461,18 @@ fetchStatus();
 setInterval(fetchStatus,60000);
 setInterval(updateGreeting,60000);
 </script>
+  <!-- Install modal — inside drawer to override stacking context -->
+  <div class="install-modal-overlay" id="installModalOverlay" style="display:none;position:fixed;inset:0;z-index:9999;" aria-modal="true" role="dialog">
+    <div class="install-modal" id="installModal">
+      <span class="install-modal-icon" id="installModalIcon">🌉</span>
+      <div class="install-modal-title" id="installModalTitle">Installer l'app</div>
+      <div class="install-modal-sub" id="installModalSub">Recevez des notifications en temps réel lors des levées de ponts.</div>
+      <ul class="install-modal-steps" id="installModalSteps"></ul>
+      <button class="install-modal-cta" id="installModalCta" onclick="installModalAction()">Installer</button>
+      <button class="install-modal-skip" id="installModalSkip" onclick="dismissInstallModal()">Plus tard</button>
+    </div>
+  </div>
+
   <!-- No notification types modal — inside drawer to respect stacking context -->
   <div class="no-notif-modal-overlay" id="noNotifModalOverlay" style="display:none;position:fixed;inset:0;z-index:9999;">
     <div class="no-notif-modal">
