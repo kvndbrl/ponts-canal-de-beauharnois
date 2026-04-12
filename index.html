@@ -1410,8 +1410,13 @@ if(!isPWA && isMobile){
   if(link){ link.style.display='inline-block'; link.removeAttribute('aria-hidden'); }
   const banner=document.getElementById('installBanner');
   if(banner) banner.style.display='block';
+}
+
+// Show main notif CTA for all mobile users not yet subscribed
+if(isMobile && !isFBWebView){
+  const en=localStorage.getItem('notificationsEnabled')==='true';
   const main=document.getElementById('mainInstallBanner');
-  if(main) main.style.display='block';
+  if(main && !en) main.style.display='block';
 }
 
 // Handle PWA / notifications
