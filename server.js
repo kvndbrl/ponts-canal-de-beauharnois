@@ -283,28 +283,47 @@ async function fetchBridgeStatus() {
 }
 
 // ── Send notifications ────────────────────────────────────────────────
-function getMessages(bridge, status, lang) {
-  const names = {
-    fr: { gonzague: 'Pont St-Louis-de-Gonzague', larocque: 'Pont Larocque (Valleyfield)' },
-    en: { gonzague: 'St-Louis-de-Gonzague Bridge', larocque: 'Larocque Bridge (Valleyfield)' }
+const MAPS_URL = {
+  gonzague: {
+    google: 'https://www.google.com/maps/search/pont+alternatif+Saint-Louis-de-Gonzague',
+    apple:  'https://maps.apple.com/?q=pont+alternatif+Saint-Louis-de-Gonzague'
+  },
+  larocque: {
+    google: 'https://www.google.com/maps/search/pont+alternatif+Valleyfield',
+    apple:  'https://maps.apple.com/?q=pont+alternatif+Valleyfield'
+  }
+};
+
+function getMessages(bridge, status, lang, data) {
+  const shortNames = {
+    fr: { gonzague: 'Pont Gonzague', larocque: 'Pont Larocque' },
+    en: { gonzague: 'Gonzague Bridge', larocque: 'Larocque Bridge' }
   };
-  const name = (names[lang] || names.fr)[bridge];
+  const n = (shortNames[lang] || shortNames.fr)[bridge];
+
+  // Build outage time string if available
+  let outageStr = '';
+  if (status === 'outage' && data && data.outageEnd) {
+    const end = new Date(data.outageEnd);
+    const hm = end.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
+    outageStr = lang === 'fr' ? ` · Fermé jusqu'à ${hm}` : ` · Closed until ${hm}`;
+  }
 
   const fr = {
-    bientot_leve: { title: `⚠️ Levage imminent`, body: `Le ${name} sera levé sous peu.` },
-    raising:      { title: `🔼 En cours de levage`, body: `Le ${name} est en train de se lever.` },
-    leve:         { title: `🚢 Pont levé`, body: `Le ${name} est levé pour laisser passer un navire.` },
-    lowering:     { title: `🔽 En cours de descente`, body: `Le ${name} sera bientôt disponible.` },
-    disponible:   { title: `✅ Pont disponible`, body: `Le ${name} est de nouveau ouvert à la circulation.` },
-    outage:       { title: `🚧 Fermeture planifiée`, body: `Le ${name} est fermé pour maintenance. Il ne rouvrira pas avant la fin de la fermeture.` }
+    bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai` },
+    raising:      { title: `🔼 ${n}`, body: `En cours de levage · Circulation interrompue` },
+    leve:         { title: `🚢 ${n}`, body: `Pont levé · Passage d'un navire` },
+    lowering:     { title: `🔽 ${n}`, body: `Pont redescend · Bientôt disponible` },
+    disponible:   { title: `✅ ${n}`, body: `Disponible · Circulation normale` },
+    outage:       { title: `🚧 ${n}`, body: `Fermeture planifiée${outageStr}` }
   };
   const en = {
-    bientot_leve: { title: `⚠️ Lift imminent`, body: `The ${name} will be raised shortly.` },
-    raising:      { title: `🔼 Bridge raising`, body: `The ${name} is currently being raised.` },
-    leve:         { title: `🚢 Bridge lifted`, body: `The ${name} is raised for a vessel to pass.` },
-    lowering:     { title: `🔽 Bridge lowering`, body: `The ${name} will reopen soon.` },
-    disponible:   { title: `✅ Bridge available`, body: `The ${name} is open to traffic again.` },
-    outage:       { title: `🚧 Planned closure`, body: `The ${name} is closed for maintenance and will not open until the closure ends.` }
+    bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expect delays` },
+    raising:      { title: `🔼 ${n}`, body: `Bridge raising · Traffic interrupted` },
+    leve:         { title: `🚢 ${n}`, body: `Bridge lifted · Vessel passing` },
+    lowering:     { title: `🔽 ${n}`, body: `Bridge lowering · Opening soon` },
+    disponible:   { title: `✅ ${n}`, body: `Available · Traffic normal` },
+    outage:       { title: `🚧 ${n}`, body: `Planned closure${outageStr}` }
   };
 
   return (lang === 'en' ? en : fr)[status] || null;
@@ -370,23 +389,28 @@ async function sendScheduledLiftNotification(bridge, time) {
   log(`📅 Levée planifiée [${bridge}] ${time} — ✅ ${sent} envoyées | ⏰ ${skippedRange} hors plage | 🚫 ${skippedBridge} pont non suivi | ❌ ${failed} échouées`);
 }
 
-async function sendNotifications(bridge, status) {
+async function sendNotifications(bridge, status, bridgeData = {}) {
   let sent = 0, skippedRange = 0, skippedBridge = 0, skippedNoMsg = 0, failed = 0;
 
   for (const sub of [...subscriptions]) {
     const bridges = sub.bridges || ['gonzague', 'larocque'];
     if (!bridges.includes(bridge)) { skippedBridge++; continue; }
     if (!isInTimeRange(sub)) { skippedRange++; continue; }
-    const allowedTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled'];
+    const allowedTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
     if (!allowedTypes.includes(status)) { skippedNoMsg++; continue; }
 
     const lang = sub.lang || 'fr';
-    const msg = getMessages(bridge, status, lang);
+    const msg = getMessages(bridge, status, lang, bridgeData);
     if (!msg) { skippedNoMsg++; continue; }
+
+    // Detect iOS by endpoint (heuristic) — default to Google Maps
+    const mapsUrl = MAPS_URL[bridge]?.google || '';
 
     const payload = JSON.stringify({
       ...msg, bridge,
-      persistent: status === 'outage' || (status !== 'disponible' && status !== 'lowering'),
+      tag: `pont-${bridge}`,           // same tag = replaces previous notification
+      persistent: true,                 // always persistent — user dismisses manually
+      mapsUrl,
       icon: notifIcon(sub)
     });
 
@@ -423,7 +447,7 @@ async function monitor() {
         const titleRegex = /<h1[^>]*status-title[^>]*>\s*<b>([^<]+)<\/b>/gi;
         const titles = [...section.matchAll(titleRegex)].map(m => m[1].trim());
         log(`🔄 Changement [${bridge}]: ${prev} → ${curr} | titres HTML: [${titles.join(' / ') || 'aucun'}]`);
-        notifications.push(sendNotifications(bridge, curr));
+        notifications.push(sendNotifications(bridge, curr, data[bridge]));
       }
     }
 
