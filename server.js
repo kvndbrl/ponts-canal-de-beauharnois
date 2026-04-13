@@ -101,22 +101,31 @@ async function markLiftNotified(key) {
 function isInTimeRange(sub) {
   const now = new Date();
   const montreal = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
-
-  // Day filter (0=Sun … 6=Sat) — default all days
-  const allowedDays = sub.notifDays && sub.notifDays.length > 0 ? sub.notifDays : [0,1,2,3,4,5,6];
-  if (!allowedDays.includes(montreal.getDay())) return false;
-
-  // Time range filter
-  const ranges = sub.timeRanges;
-  if (!ranges || ranges.length === 0) return true;
-
+  const currentDay = montreal.getDay();
   const currentMinutes = montreal.getHours() * 60 + montreal.getMinutes();
-  for (const range of ranges) {
+
+  const ranges = sub.timeRanges;
+  // No ranges → check day filter only
+  if (!ranges || ranges.length === 0) {
+    const allowedDays = sub.notifDays && sub.notifDays.length > 0 ? sub.notifDays : [0,1,2,3,4,5,6];
+    return allowedDays.includes(currentDay);
+  }
+
+  // Check each range with its corresponding day filter
+  for (let i = 0; i < ranges.length; i++) {
+    const range = ranges[i];
     if (!range.start || !range.end) continue;
+
+    // Day filter: range 0 uses notifDays, range 1 uses notifDays2
+    const daysKey = i === 0 ? 'notifDays' : 'notifDays2';
+    const allowedDays = sub[daysKey] && sub[daysKey].length > 0 ? sub[daysKey] : [0,1,2,3,4,5,6];
+    if (!allowedDays.includes(currentDay)) continue;
+
     const [startH, startM] = range.start.split(':').map(Number);
     const [endH, endM] = range.end.split(':').map(Number);
     const startMinutes = startH * 60 + startM;
     const endMinutes = endH * 60 + endM;
+
     if (startMinutes <= endMinutes) {
       if (currentMinutes >= startMinutes && currentMinutes <= endMinutes) return true;
     } else {
@@ -519,6 +528,7 @@ app.post('/subscribe', async (req, res) => {
     existing.theme = sub.theme || 'gonzaguois';
     existing.notifTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
     existing.notifDays = sub.notifDays !== undefined ? sub.notifDays : [0,1,2,3,4,5,6];
+    existing.notifDays2 = sub.notifDays2 !== undefined ? sub.notifDays2 : [0,1,2,3,4,5,6];
     await saveSubscription(existing);
     console.log(`Updated subscriber. Lang: ${existing.lang}, Bridges: ${existing.bridges}`);
   } else {

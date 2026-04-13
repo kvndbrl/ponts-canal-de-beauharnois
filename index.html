@@ -491,12 +491,14 @@
   </div>
 
   <div class="settings-section-label" id="prenomSectionLabel">Prénom</div>
+  <div class="settings-section-desc" id="prenomDesc">Affiché dans la salutation du haut.</div>
   <div class="prenom-row" style="border-bottom:1px solid var(--border);">
     <label class="prenom-label" for="prenomInput" id="prenomLabel">Prénom</label>
     <input class="prenom-input" id="prenomInput" type="text" maxlength="30" autocomplete="given-name" placeholder="—" oninput="updatePrenom()"/>
   </div>
 
   <div class="settings-section-label" id="themeSectionLabel">Thème</div>
+  <div class="settings-section-desc" id="themeDesc">Personnalisez les couleurs de l'app.</div>
   <div class="theme-section">
     <div class="theme-swatches" id="themeSwatches">
       <div class="theme-swatch active" id="swatch-gonzaguois" onclick="setTheme('gonzaguois')">
@@ -581,9 +583,11 @@
     ⚠️ <span id="notifTypesWarningText">Aucun type sélectionné — vous ne recevrez aucune notification.</span>
   </div>
 
+
   <div class="settings-section-sub-label" id="timeSectionLabel">Plages horaires</div>
-  <div class="settings-section-desc" id="settingsTimeDesc">Optionnel — recevez des notifications seulement pendant certaines heures. Laissez vide pour être notifié en tout temps.</div>
-  <div class="settings-section-sub-label" id="dayFilterLabel">Jours</div>
+  <div class="settings-section-desc" id="settingsTimeDesc">Choisissez les jours et jusqu'à deux plages horaires pendant lesquelles vous souhaitez recevoir des notifications. Laissez tout vide pour être notifié en tout temps.</div>
+
+  <div class="settings-section-sub-label" id="dayFilterLabel" style="padding-bottom:2px;">Plage 1 — Jours</div>
   <div class="day-filter-row" id="dayFilterRow">
     <button class="day-pill active" id="day0" onclick="toggleDay(0)">D</button>
     <button class="day-pill active" id="day1" onclick="toggleDay(1)">L</button>
@@ -599,6 +603,17 @@
     <span class="time-sep">→</span>
     <div id="range1End"></div>
     <button class="time-clear" onclick="clearRange(1)" aria-label="Effacer plage 1">×</button>
+  </div>
+
+  <div class="settings-section-sub-label" id="day2FilterLabel" style="padding-bottom:2px;">Plage 2 — Jours</div>
+  <div class="day-filter-row" id="dayFilterRow2">
+    <button class="day-pill active" id="day2_0" onclick="toggleDay2(0)">D</button>
+    <button class="day-pill active" id="day2_1" onclick="toggleDay2(1)">L</button>
+    <button class="day-pill active" id="day2_2" onclick="toggleDay2(2)">M</button>
+    <button class="day-pill active" id="day2_3" onclick="toggleDay2(3)">M</button>
+    <button class="day-pill active" id="day2_4" onclick="toggleDay2(4)">J</button>
+    <button class="day-pill active" id="day2_5" onclick="toggleDay2(5)">V</button>
+    <button class="day-pill active" id="day2_6" onclick="toggleDay2(6)">S</button>
   </div>
   <div class="time-range-row" style="border-bottom:none;">
     <span class="time-range-label optional" id="range2Label">Plage 2</span>
@@ -779,13 +794,12 @@ function getSelDays(){
   return [0,1,2,3,4,5,6].filter(d=>document.getElementById('day'+d)?.classList.contains('active'));
 }
 function toggleDay(d){
-  const el=document.getElementById('day'+d);
-  if(!el)return;
-  el.classList.toggle('active');
+  document.getElementById('day'+d)?.classList.toggle('active');
   saveDays();
 }
 async function saveDays(){
   localStorage.setItem('notifDays',JSON.stringify(getSelDays()));
+  localStorage.setItem('notifDays2',JSON.stringify(getSelDays2()));
   await syncPrefs();
 }
 function loadDays(){
@@ -795,6 +809,19 @@ function loadDays(){
     const el=document.getElementById('day'+d);
     if(el) el.classList.toggle('active',days.includes(d));
   });
+  const saved2=localStorage.getItem('notifDays2');
+  const days2=saved2?JSON.parse(saved2):[0,1,2,3,4,5,6];
+  [0,1,2,3,4,5,6].forEach(d=>{
+    const el=document.getElementById('day2_'+d);
+    if(el) el.classList.toggle('active',days2.includes(d));
+  });
+}
+function getSelDays2(){
+  return [0,1,2,3,4,5,6].filter(d=>document.getElementById('day2_'+d)?.classList.contains('active'));
+}
+function toggleDay2(d){
+  document.getElementById('day2_'+d)?.classList.toggle('active');
+  saveDays();
 }
 function applyDayLabels(){
   const fr=['D','L','M','M','J','V','S'];
@@ -803,6 +830,8 @@ function applyDayLabels(){
   labels.forEach((l,i)=>{
     const el=document.getElementById('day'+i);
     if(el) el.textContent=l;
+    const el2=document.getElementById('day2_'+i);
+    if(el2) el2.textContent=l;
   });
 }
 
@@ -816,6 +845,7 @@ async function syncPrefs(){
     d.theme=localStorage.getItem("appTheme")||"gonzaguois";
     d.notifTypes=getSelNotifTypes();
     d.notifDays=getSelDays();
+    d.notifDays2=getSelDays2();
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
   }catch(e){console.error(e);}
 }
@@ -855,7 +885,7 @@ const TR={
     noNotifTitle:'Oups\u00A0!',
     noNotifBody:'Vous avez d\u00E9sactiv\u00E9 tous les types de notifications. Vous ne recevrez plus aucune alerte pour les ponts.',
     noNotifCta:'J\u2019ai compris',
-    prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',
+    prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',prenomDesc:'Affich\u00E9 dans la salutation.',themeDesc:'Personnalisez les couleurs de l\u2019app.',day2FilterLabel:'Plage 2 \u2014 Jours',
     themeSectionLabel:'Th\u00E8me',darkModeLabel:'Mode sombre',
     modalTitle:'Comment vous appelez-vous\u00A0?',
     modalSub:'Votre pr\u00E9nom sera affich\u00E9 dans la salutation. Vous pourrez le modifier dans les r\u00E9glages.',
@@ -909,7 +939,7 @@ const TR={
     noNotifTitle:'Oops!',
     noNotifBody:'You\'ve disabled all notification types. You will no longer receive any bridge alerts.',
     noNotifCta:'Got it',
-    prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',
+    prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',prenomDesc:'Displayed in the greeting.',themeDesc:'Customize the app colors.',day2FilterLabel:'Range 2 \u2014 Days',
     themeSectionLabel:'Theme',darkModeLabel:'Dark mode',
     modalTitle:'What\u2019s your name?',
     modalSub:'Your first name will be shown in the greeting. You can change it in Settings.',
@@ -1197,6 +1227,9 @@ function applyTrans(){
   const nsl=document.getElementById('notifSectionLabelText');if(nsl)nsl.textContent=t.nsl;
   const bsl=document.getElementById('bridgesSectionLabel');if(bsl)bsl.textContent=currentLang==='fr'?'Ponts':'Bridges';
   document.getElementById('settingsBridgesDesc').textContent=t.bd;
+  const pd=document.getElementById('prenomDesc');if(pd)pd.textContent=t.prenomDesc||'';
+  const td=document.getElementById('themeDesc');if(td)td.textContent=t.themeDesc||'';
+  const d2fl=document.getElementById('day2FilterLabel');if(d2fl)d2fl.textContent=t.day2FilterLabel||'Plage 2 — Jours';
   const ntsl=document.getElementById('notifTypesSectionLabel');if(ntsl)ntsl.textContent=t.notifTypesSectionLabel;
   const ntd=document.getElementById('notifTypesDesc');if(ntd)ntd.textContent=t.notifTypesDesc;
   ['Bientot','Raising','Leve','Lowering','Disponible','Scheduled','Outage'].forEach(k=>{
@@ -1309,7 +1342,7 @@ async function toggleNotifications(){
     const d=JSON.parse(JSON.stringify(sub));
     d.bridges=getSelBridges();d.timeRanges=getTR();d.lang=currentLang;
     d.theme=localStorage.getItem('appTheme')||'gonzaguois';
-    d.notifTypes=getSelNotifTypes();d.notifDays=getSelDays();
+    d.notifTypes=getSelNotifTypes();d.notifDays=getSelDays();d.notifDays2=getSelDays2();
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
     localStorage.setItem('notificationsEnabled','true');
     updateNotifyBtns();
