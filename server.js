@@ -296,8 +296,8 @@ const MAPS_URL = {
 
 function getMessages(bridge, status, lang, data) {
   const shortNames = {
-    fr: { gonzague: 'Pont Gonzague', larocque: 'Pont Larocque' },
-    en: { gonzague: 'Gonzague Bridge', larocque: 'Larocque Bridge' }
+    fr: { gonzague: 'Pont St-Louis', larocque: 'Pont Larocque' },
+    en: { gonzague: 'St-Louis Bridge', larocque: 'Larocque Bridge' }
   };
   const n = (shortNames[lang] || shortNames.fr)[bridge];
 
