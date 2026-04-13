@@ -531,6 +531,7 @@
       <span class="pref-slider"></span>
     </div>
   </div>
+  <div class="settings-section-desc" id="notifSectionDesc">Activez pour recevoir des alertes lors des changements de statut des ponts.</div>
   <div id="notifSectionContent" style="display:none;">
   <div class="settings-section-sub-label" id="bridgesSectionLabel">Ponts</div>
   <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez être notifié.</div>
@@ -871,7 +872,7 @@ const TR={
     dp:'~10 min \u00B7 Plaisance',dc:'~15 min \u00B7 Commercial',
     cp:'Fermeture\u00A0: ',
     ab:n=>'Le '+n+' est disponible',
-    st:'R\u00E9glages',nsl:'\u{1F514} Notifications',
+    st:'R\u00E9glages',nsl:'\u{1F514} Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
     notifTypesSectionLabel:'Types de notifications',
     notifTypesDesc:'Choisissez les \u00E9v\u00E9nements pour lesquels vous souhaitez \u00EAtre notifi\u00E9.',
     ntLabelBientot:'\u26A0\uFE0F Levage imminent',
@@ -925,7 +926,7 @@ const TR={
     dp:'~10 min \u00B7 Pleasure craft',dc:'~15 min \u00B7 Commercial',
     cp:'Closure: ',
     ab:n=>n+' is available',
-    st:'Settings',nsl:'\u{1F514} Notifications',
+    st:'Settings',nsl:'\u{1F514} Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
     notifTypesSectionLabel:'Notification types',
     notifTypesDesc:'Choose which events you want to be notified about.',
     ntLabelBientot:'\u26A0\uFE0F Lift imminent',
@@ -1225,6 +1226,7 @@ function applyTrans(){
   document.getElementById('prenomInput').placeholder=t.prenomPlaceholder;
   document.getElementById('settingsTitle').textContent=t.st;
   const nsl=document.getElementById('notifSectionLabelText');if(nsl)nsl.textContent=t.nsl;
+  const nsd=document.getElementById('notifSectionDesc');if(nsd)nsd.textContent=t.notifSectionDesc||'';
   const bsl=document.getElementById('bridgesSectionLabel');if(bsl)bsl.textContent=currentLang==='fr'?'Ponts':'Bridges';
   document.getElementById('settingsBridgesDesc').textContent=t.bd;
   const pd=document.getElementById('prenomDesc');if(pd)pd.textContent=t.prenomDesc||'';
