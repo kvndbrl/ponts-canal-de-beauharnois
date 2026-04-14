@@ -215,9 +215,16 @@
     .flash-highlight{animation:flashSection .4s ease 2;}
     .notify-btn{display:none;width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,85,221,.35);transition:all .2s;letter-spacing:.2px;}
     .notify-btn:hover{transform:translateY(-1px);}
-    .settings-section-label{padding:24px 16px 6px;font-size:15px;font-weight:700;color:var(--text);font-family:var(--sans);}
-    .settings-section-sub-label{padding:16px 16px 4px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--accent);font-family:var(--sans);}
-    .settings-section-desc{padding:0 16px 10px;font-size:12px;color:var(--text3);line-height:1.5;font-family:var(--sans);}
+    /* ── Drawer typography ───────────────────────────────── */
+    .section-primary{padding:24px 16px 2px;}
+    .section-primary-title{font-size:15px;font-weight:600;color:var(--text);font-family:var(--sans);display:flex;align-items:center;}
+    .section-primary-desc{font-size:12px;color:var(--text3);line-height:1.5;margin-top:3px;}
+    .settings-section-label{padding:24px 16px 2px;font-size:15px;font-weight:600;color:var(--text);font-family:var(--sans);}
+    .settings-section-sub-label{padding:14px 16px 2px;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);font-family:var(--sans);}
+    .settings-section-desc{padding:0 16px 8px;font-size:12px;color:var(--text3);line-height:1.5;font-family:var(--sans);}
+    .settings-section-label+.settings-section-desc,.indented-desc{padding-left:16px;}
+    .section-sub-label{padding:14px 16px 2px;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);font-family:var(--sans);}
+    .section-sub-desc{padding:0 16px 8px;font-size:12px;color:var(--text3);line-height:1.5;}
 
     /* Gear button in header */
     .gear-btn{background:var(--surface);border:none;border-radius:50px;box-shadow:var(--shadow);cursor:pointer;padding:8px 12px;line-height:1;flex-shrink:0;display:flex;flex-direction:column;gap:4px;transition:opacity .2s;}
@@ -280,9 +287,9 @@
     /* Disclaimer in drawer */
     .drawer-disclaimer{font-size:11px;color:var(--text3);line-height:1.65;padding:16px;border-top:1px solid var(--border);margin-top:4px;}
     .drawer-disclaimer a{color:var(--text2);text-decoration:underline;text-underline-offset:2px;}
-    .drawer-lang{padding:8px 16px 4px;}
-    .lang-btn{background:none;border:none;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;letter-spacing:.3px;padding:4px 0;}
-    .lang-btn:hover{color:var(--text2);}
+    .drawer-lang{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
+    .lang-btn{background:var(--surface2);border:1.5px solid var(--border);font-family:var(--sans);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;letter-spacing:.5px;padding:8px 18px;border-radius:50px;transition:all .18s;}
+    .lang-btn:active{background:var(--accent);color:#fff;border-color:var(--accent);}
   </style>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -490,8 +497,12 @@
     <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px;font-family:var(--mono);" id="installBannerSub">Recevez des notifications sur votre écran d'accueil</p>
   </div>
 
+  <div class="section-primary">
+    <div class="section-primary-title" id="personalisationLabel"><span id="personalisationLabelText">Personnalisation</span></div>
+  </div>
+
   <div class="settings-section-sub-label" id="prenomSectionLabel">Prénom</div>
-  <div class="settings-section-desc" id="prenomDesc">Affiché dans la salutation du haut.</div>
+  <div class="settings-section-desc" id="prenomDesc">Affiché dans la salutation.</div>
   <div class="prenom-row" style="border-bottom:1px solid var(--border);">
     <label class="prenom-label" for="prenomInput" id="prenomLabel">Prénom</label>
     <input class="prenom-input" id="prenomInput" type="text" maxlength="30" autocomplete="given-name" placeholder="—" oninput="updatePrenom()"/>
@@ -524,14 +535,16 @@
     </div>
   </label>
 
-  <div class="settings-section-label" id="notifSectionLabel" style="display:flex;align-items:center;justify-content:space-between;padding-right:16px;cursor:pointer;" onclick="toggleNotificationsMaster()">
-    <span id="notifSectionLabelText">🔔 Notifications</span>
-    <div class="pref-toggle" style="flex-shrink:0;pointer-events:none;">
-      <input type="checkbox" id="notifMasterToggle"/>
-      <span class="pref-slider"></span>
+  <div class="section-primary" id="notifSectionLabel" style="cursor:pointer;" onclick="toggleNotificationsMaster()">
+    <div class="section-primary-title">
+      <span id="notifSectionLabelText">Notifications</span>
+      <div class="pref-toggle" style="margin-left:auto;flex-shrink:0;pointer-events:none;">
+        <input type="checkbox" id="notifMasterToggle"/>
+        <span class="pref-slider"></span>
+      </div>
     </div>
+    <div class="section-primary-desc" id="notifSectionDesc">Activez pour recevoir des alertes lors des changements de statut des ponts.</div>
   </div>
-  <div class="settings-section-desc" id="notifSectionDesc">Activez pour recevoir des alertes lors des changements de statut des ponts.</div>
   <div id="notifSectionContent" style="display:none;">
   <div class="settings-section-sub-label" id="bridgesSectionLabel">Ponts</div>
   <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez être notifié.</div>
@@ -626,6 +639,7 @@
   </div><!-- end notifSectionContent -->
 
   <div class="drawer-lang">
+    <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
     <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
   </div>
   <div class="drawer-disclaimer">
@@ -872,7 +886,7 @@ const TR={
     dp:'~10 min \u00B7 Plaisance',dc:'~15 min \u00B7 Commercial',
     cp:'Fermeture\u00A0: ',
     ab:n=>'Le '+n+' est disponible',
-    st:'R\u00E9glages',nsl:'\u{1F514} Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
+    st:'R\u00E9glages',nsl:'Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
     notifTypesSectionLabel:'Types de notifications',
     notifTypesDesc:'Choisissez les \u00E9v\u00E9nements pour lesquels vous souhaitez \u00EAtre notifi\u00E9.',
     ntLabelBientot:'\u26A0\uFE0F Levage imminent',
@@ -886,7 +900,7 @@ const TR={
     noNotifTitle:'Oups\u00A0!',
     noNotifBody:'Vous avez d\u00E9sactiv\u00E9 tous les types de notifications. Vous ne recevrez plus aucune alerte pour les ponts.',
     noNotifCta:'J\u2019ai compris',
-    prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',prenomDesc:'Affich\u00E9 dans la salutation.',themeDesc:'Personnalisez les couleurs de l\u2019app.',day2FilterLabel:'Plage 2 \u2014 Jours',
+    personalisationLabel:'\u2728 Personnalisation',personalisationDesc:'Pr\u00E9nom et apparence de l\u2019app.',prenomSectionLabel:'Pr\u00E9nom',prenomLabel:'Pr\u00E9nom',prenomPlaceholder:'Votre pr\u00E9nom',prenomDesc:'Affich\u00E9 dans la salutation.',themeDesc:'Personnalisez les couleurs de l\u2019app.',day2FilterLabel:'Plage 2 \u2014 Jours',
     themeSectionLabel:'Th\u00E8me',darkModeLabel:'Mode sombre',
     modalTitle:'Comment vous appelez-vous\u00A0?',
     modalSub:'Votre pr\u00E9nom sera affich\u00E9 dans la salutation. Vous pourrez le modifier dans les r\u00E9glages.',
@@ -926,7 +940,7 @@ const TR={
     dp:'~10 min \u00B7 Pleasure craft',dc:'~15 min \u00B7 Commercial',
     cp:'Closure: ',
     ab:n=>n+' is available',
-    st:'Settings',nsl:'\u{1F514} Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
+    st:'Settings',nsl:'Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
     notifTypesSectionLabel:'Notification types',
     notifTypesDesc:'Choose which events you want to be notified about.',
     ntLabelBientot:'\u26A0\uFE0F Lift imminent',
@@ -940,7 +954,7 @@ const TR={
     noNotifTitle:'Oops!',
     noNotifBody:'You\'ve disabled all notification types. You will no longer receive any bridge alerts.',
     noNotifCta:'Got it',
-    prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',prenomDesc:'Displayed in the greeting.',themeDesc:'Customize the app colors.',day2FilterLabel:'Range 2 \u2014 Days',
+    personalisationLabel:'\u2728 Personalisation',personalisationDesc:'Name and app appearance.',prenomSectionLabel:'First name',prenomLabel:'First name',prenomPlaceholder:'Your first name',prenomDesc:'Displayed in the greeting.',themeDesc:'Customize the app colors.',day2FilterLabel:'Range 2 \u2014 Days',
     themeSectionLabel:'Theme',darkModeLabel:'Dark mode',
     modalTitle:'What\u2019s your name?',
     modalSub:'Your first name will be shown in the greeting. You can change it in Settings.',
@@ -1229,6 +1243,8 @@ function applyTrans(){
   const nsd=document.getElementById('notifSectionDesc');if(nsd)nsd.textContent=t.notifSectionDesc||'';
   const bsl=document.getElementById('bridgesSectionLabel');if(bsl)bsl.textContent=currentLang==='fr'?'Ponts':'Bridges';
   document.getElementById('settingsBridgesDesc').textContent=t.bd;
+  const pl=document.getElementById('personalisationLabelText');if(pl)pl.textContent=currentLang==='fr'?'Personnalisation':'Personalisation';
+  const plDesc=document.getElementById('personalisationDesc');if(plDesc)plDesc.textContent=t.personalisationDesc||'';
   const pd=document.getElementById('prenomDesc');if(pd)pd.textContent=t.prenomDesc||'';
   const td=document.getElementById('themeDesc');if(td)td.textContent=t.themeDesc||'';
   const d2fl=document.getElementById('day2FilterLabel');if(d2fl)d2fl.textContent=t.day2FilterLabel||'Plage 2 — Jours';
@@ -1250,7 +1266,8 @@ function applyTrans(){
   if(customLabel) customLabel.textContent=t.customDonate;
   const customInput=document.getElementById('customAmount');
   if(customInput) customInput.placeholder=t.customPlaceholder;
-  const lb=document.getElementById('langBtn');lb.textContent=t.lb;lb.setAttribute('aria-label',t.ll2);
+  const lb=document.getElementById('langBtn');lb.textContent=currentLang==='fr'?'EN':'FR';lb.setAttribute('aria-label',t.ll2);
+  const ll=document.getElementById('langLabel');if(ll)ll.textContent=currentLang==='fr'?'Langue':'Language';
   const ill=document.getElementById('installLinkLabel');if(ill)ill.textContent=t.it||'📲 Installer l\'app';
   const ibl=document.getElementById('installBannerLabel');if(ibl)ibl.textContent=t.installBannerLabel||'Installer l\'app';
   const ibs=document.getElementById('installBannerSub');if(ibs)ibs.textContent=t.installBannerSub||'Recevez des notifications sur votre écran d\'accueil';
