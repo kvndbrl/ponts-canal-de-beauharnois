@@ -1059,23 +1059,21 @@ function trackLiftStatus(bridge, status, raisedSince){
       const t=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0,0);
       if(t>now) t.setDate(t.getDate()-1);
       liftStartTimes[bridge]=t.getTime();
-    } else if(!liftStartTimes[bridge]){
-      liftStartTimes[bridge]=Date.now();
     }
+    // No raisedSince → leave liftStartTimes[bridge] as null, show avg only
   } else {
-    // Bridge is not lifted — always clear the timer
     liftStartTimes[bridge]=null;
   }
 }
 
 function getLiftTimerText(bridge,status,lang){
   const start=liftStartTimes[bridge];
-  // Use real average from server history if available, fallback to static estimate
-  const avgMin = (lastData&&lastData[bridge]?.avgLiftDuration) || liftAvgMin;
+  const avgMin=(lastData&&lastData[bridge]?.avgLiftDuration)||liftAvgMin;
   if(!start){
+    // Don't know when it started — just show average
     return lang==='fr'
-      ?'Dur\u00E9e estim\u00E9e\u00A0: ~'+avgMin+'\u00A0min'
-      :'Estimated duration: ~'+avgMin+' min';
+      ?'Dur\u00E9e moyenne\u00A0: ~'+avgMin+'\u00A0min'
+      :'Average duration: ~'+avgMin+' min';
   }
   const elapsedMs=Date.now()-start;
   const elapsedMin=Math.floor(elapsedMs/60000);
@@ -1307,6 +1305,15 @@ async function fetchStatus(){
     trackLiftStatus('larocque',d.larocque.status,d.larocque.raisedSince);
     updateDisplay();
     refreshTimers();
+    // Track subscriber count once per session
+    if(!sessionStorage.getItem('subTracked')){
+      try{
+        const sr=await fetch(BACKEND+'/subscribers');
+        const sd=await sr.json();
+        track('subscriber_count',{count:sd.count||0});
+        sessionStorage.setItem('subTracked','1');
+      }catch(e){}
+    }
   }catch(e){
     const t=TR[currentLang];retries++;
     if(retries<3){setTimeout(fetchStatus,10000);document.getElementById('errorMsg').textContent=t.rc+'... ('+retries+'/3)';}
