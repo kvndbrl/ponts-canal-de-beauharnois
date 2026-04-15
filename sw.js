@@ -7,22 +7,14 @@ self.addEventListener('push', function(event) {
     data.body.includes('normale') || data.body.includes('normal')
   );
 
-  const actions = [];
-  if (data.mapsUrl && !isAvailable) {
-    actions.push({ action: 'maps', title: '🗺 Itinéraire alternatif' });
-  }
-
   const options = {
     body: data.body || '',
     icon: data.icon || '/notification-icon.png',
     badge: '/notification-icon.png',
     tag: tag,
     renotify: true,
-    // disponible auto-dismisses after 8s, other statuses stay until dismissed
     requireInteraction: !isAvailable,
-    silent: isAvailable, // no sound/vibration for disponible
-    actions: actions,
-    data: { mapsUrl: data.mapsUrl }
+    silent: isAvailable
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
@@ -30,11 +22,5 @@ self.addEventListener('push', function(event) {
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  const mapsUrl = event.notification.data?.mapsUrl;
-
-  if (event.action === 'maps' && mapsUrl) {
-    event.waitUntil(clients.openWindow(mapsUrl));
-  } else {
-    event.waitUntil(clients.openWindow('/'));
-  }
+  event.waitUntil(clients.openWindow('/'));
 });

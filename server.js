@@ -369,16 +369,6 @@ async function fetchBridgeStatus() {
 }
 
 // ── Send notifications ────────────────────────────────────────────────
-const MAPS_URL = {
-  gonzague: {
-    google: 'https://www.google.com/maps/search/pont+alternatif+Saint-Louis-de-Gonzague',
-    apple:  'https://maps.apple.com/?q=pont+alternatif+Saint-Louis-de-Gonzague'
-  },
-  larocque: {
-    google: 'https://www.google.com/maps/search/pont+alternatif+Valleyfield',
-    apple:  'https://maps.apple.com/?q=pont+alternatif+Valleyfield'
-  }
-};
 
 function getMessages(bridge, status, lang, data) {
   const shortNames = {
@@ -506,14 +496,10 @@ async function sendNotifications(bridge, status, bridgeData = {}) {
     const msg = getMessages(bridge, status, lang, bridgeData);
     if (!msg) { skippedNoMsg++; continue; }
 
-    // Detect iOS by endpoint (heuristic) — default to Google Maps
-    const mapsUrl = MAPS_URL[bridge]?.google || '';
-
     const payload = JSON.stringify({
       ...msg, bridge,
-      tag: `pont-${bridge}`,           // same tag = replaces previous notification
-      persistent: true,                 // always persistent — user dismisses manually
-      mapsUrl,
+      tag: `pont-${bridge}`,
+      persistent: true,
       icon: notifIcon(sub)
     });
 
