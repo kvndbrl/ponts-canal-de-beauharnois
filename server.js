@@ -97,7 +97,69 @@ async function loadLastStatus() {
   } catch(e) { console.error('loadLastStatus error:', e.message); }
 }
 
-// ── Notified lifts — Redis-backed to survive server restarts ──────────
+// ── Lift history — track duration of each lift for estimations ────────
+let liftHistory = { gonzague: [], larocque: [] }; // [{raisedAt, loweredAt, duration}]
+let liftActive = { gonzague: null, larocque: null }; // timestamp when lift started
+
+async function saveLiftHistory() {
+  try {
+    await redisCommand('set', 'liftHistory', JSON.stringify(liftHistory));
+  } catch(e) { console.error('saveLiftHistory error:', e.message); }
+}
+
+async function loadLiftHistory() {
+  try {
+    const val = await redisCommand('get', 'liftHistory');
+    if (val) {
+      liftHistory = JSON.parse(val);
+      log(`📊 Historique chargé: Gonzague=${liftHistory.gonzague.length} levées, Larocque=${liftHistory.larocque.length} levées`);
+    }
+  } catch(e) { console.error('loadLiftHistory error:', e.message); }
+}
+
+function getAvgLiftDuration(bridge) {
+  const h = liftHistory[bridge];
+  if (!h || h.length === 0) return null;
+  const recent = h.slice(-20); // use last 20 lifts
+  const avg = recent.reduce((a, b) => a + b.duration, 0) / recent.length;
+  return Math.round(avg / 60000); // return minutes
+}
+
+function getAvgLoweringDuration(bridge) {
+  const h = liftHistory[bridge];
+  if (!h || h.length === 0) return null;
+  const withLowering = h.slice(-20).filter(e => e.loweringDuration);
+  if (!withLowering.length) return null;
+  const avg = withLowering.reduce((a, b) => a + b.loweringDuration, 0) / withLowering.length;
+  return Math.round(avg / 60000);
+}
+
+function trackStatusTransition(bridge, prev, curr) {
+  const now = Date.now();
+  if ((curr === 'raising' || curr === 'leve') && !liftActive[bridge]) {
+    liftActive[bridge] = { raisedAt: now };
+  }
+  if (curr === 'lowering' && liftActive[bridge] && !liftActive[bridge].loweredAt) {
+    liftActive[bridge].loweredAt = now;
+    liftActive[bridge].duration = now - liftActive[bridge].raisedAt;
+  }
+  if (curr === 'disponible' && liftActive[bridge]) {
+    const entry = liftActive[bridge];
+    const loweringDuration = entry.loweredAt ? (now - entry.loweredAt) : null;
+    liftHistory[bridge].push({
+      raisedAt: entry.raisedAt,
+      duration: entry.loweredAt ? (entry.loweredAt - entry.raisedAt) : (now - entry.raisedAt),
+      loweringDuration,
+      day: new Date(entry.raisedAt).getDay(),
+      hour: new Date(entry.raisedAt).getHours()
+    });
+    // Keep last 100 entries
+    if (liftHistory[bridge].length > 100) liftHistory[bridge].shift();
+    liftActive[bridge] = null;
+    saveLiftHistory();
+    log(`📊 Levée [${bridge}] enregistrée: ~${Math.round((entry.loweredAt||now) - entry.raisedAt) / 60000} min`);
+  }
+}
 async function isLiftNotified(key) {
   try {
     const val = await redisCommand('get', `lift:${key}`);
@@ -333,19 +395,31 @@ function getMessages(bridge, status, lang, data) {
     outageStr = lang === 'fr' ? ` · Fermé jusqu'à ${hm}` : ` · Closed until ${hm}`;
   }
 
+  // Estimated lowering duration
+  const avgLow = data?.avgLoweringDuration;
+  const lowerStr = avgLow
+    ? (lang === 'fr' ? ` · ~${avgLow} min avant réouverture` : ` · ~${avgLow} min to reopen`)
+    : '';
+
+  // Estimated lift duration
+  const avgLift = data?.avgLiftDuration;
+  const liftStr = avgLift
+    ? (lang === 'fr' ? ` · Durée moyenne ~${avgLift} min` : ` · Avg duration ~${avgLift} min`)
+    : '';
+
   const fr = {
-    bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai` },
-    raising:      { title: `🔼 ${n}`, body: `En cours de levage · Circulation interrompue` },
-    leve:         { title: `🚢 ${n}`, body: `Pont levé · Passage d'un navire` },
-    lowering:     { title: `🔽 ${n}`, body: `Pont redescend · Bientôt disponible` },
+    bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai${liftStr}` },
+    raising:      { title: `🔼 ${n}`, body: `En cours de levage · Circulation interrompue${liftStr}` },
+    leve:         { title: `🚢 ${n}`, body: `Pont levé · Passage d'un navire${liftStr}` },
+    lowering:     { title: `🔽 ${n}`, body: `Pont redescend · Bientôt disponible${lowerStr}` },
     disponible:   { title: `✅ ${n}`, body: `Disponible · Circulation normale` },
     outage:       { title: `🚧 ${n}`, body: `Fermeture planifiée${outageStr}` }
   };
   const en = {
-    bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expect delays` },
-    raising:      { title: `🔼 ${n}`, body: `Bridge raising · Traffic interrupted` },
-    leve:         { title: `🚢 ${n}`, body: `Bridge lifted · Vessel passing` },
-    lowering:     { title: `🔽 ${n}`, body: `Bridge lowering · Opening soon` },
+    bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expect delays${liftStr}` },
+    raising:      { title: `🔼 ${n}`, body: `Bridge raising · Traffic interrupted${liftStr}` },
+    leve:         { title: `🚢 ${n}`, body: `Bridge lifted · Vessel passing${liftStr}` },
+    lowering:     { title: `🔽 ${n}`, body: `Bridge lowering · Opening soon${lowerStr}` },
     disponible:   { title: `✅ ${n}`, body: `Available · Traffic normal` },
     outage:       { title: `🚧 ${n}`, body: `Planned closure${outageStr}` }
   };
@@ -471,11 +545,11 @@ async function monitor() {
       if (prev === null) {
         log(`⚡ Boot [${bridge}] — statut initial: ${curr} (pas de notif)`);
       } else if (prev !== curr) {
-        // Log scraping details only when there's a change
         const section = data._sections[bridge] || '';
         const titleRegex = /<h1[^>]*status-title[^>]*>\s*<b>([^<]+)<\/b>/gi;
         const titles = [...section.matchAll(titleRegex)].map(m => m[1].trim());
         log(`🔄 Changement [${bridge}]: ${prev} → ${curr} | titres HTML: [${titles.join(' / ') || 'aucun'}]`);
+        trackStatusTransition(bridge, prev, curr);
         notifications.push(sendNotifications(bridge, curr, data[bridge]));
       }
     }
@@ -532,6 +606,16 @@ app.get('/ping', (req, res) => res.send('OK'));
 app.get('/status', async (req, res) => {
   try {
     const data = await fetchBridgeStatus();
+    // Enrich with lift history data
+    for (const bridge of ['gonzague', 'larocque']) {
+      data[bridge].avgLiftDuration = getAvgLiftDuration(bridge);
+      data[bridge].avgLoweringDuration = getAvgLoweringDuration(bridge);
+      data[bridge].liftCount = liftHistory[bridge].length;
+      // If currently lifting, how long so far
+      if (liftActive[bridge]) {
+        data[bridge].liftingSince = liftActive[bridge].raisedAt;
+      }
+    }
     res.json(data);
   } catch(e) {
     res.status(500).json({ error: e.message });
@@ -568,6 +652,13 @@ app.post('/unsubscribe', async (req, res) => {
   res.json({ ok: true });
 });
 
+app.get('/history', (req, res) => {
+  res.json({
+    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague') },
+    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque') }
+  });
+});
+
 app.get('/subscribers', (req, res) => {
   res.json({ count: subscriptions.length });
 });
@@ -578,6 +669,7 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 async function start() {
   subscriptions = await loadSubscriptions();
   await loadLastStatus();
+  await loadLiftHistory();
   log(`Ready with ${subscriptions.length} subscriptions — polling every 30s`);
   await monitor();
   setInterval(monitor, 30000); // 30s to catch short status windows
