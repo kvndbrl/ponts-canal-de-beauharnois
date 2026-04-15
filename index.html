@@ -650,6 +650,8 @@
 
 <script>
 const BACKEND='https://pont-st-louis-de-gonzague.onrender.com';
+// Disable Umami tracking if ?notrack param present (persists via localStorage)
+if(new URLSearchParams(location.search).has('notrack')) localStorage.setItem('umami.disabled','1');
 function track(event,props){
   try{
     if(window.umami){
