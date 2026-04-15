@@ -1041,32 +1041,24 @@ function hide(el){el.style.display='none';el.setAttribute('aria-hidden','true');
 // Lift timer — persisted in localStorage so it survives page refresh
 const liftStartTimes={gonzague:null,larocque:null};
 const liftAvgMin=12;
-
-// Restore saved start times on boot
-['gonzague','larocque'].forEach(b=>{
-  const saved=localStorage.getItem('liftStart_'+b);
-  if(saved) liftStartTimes[b]=parseInt(saved,10);
-});
+// Clear any stale lift times from previous sessions
+localStorage.removeItem('liftStart_gonzague');
+localStorage.removeItem('liftStart_larocque');
 
 function trackLiftStatus(bridge, status, raisedSince){
-  if(status==='leve'){
+  if(status==='leve'||status==='raising'||status==='bientot_leve'){
     if(raisedSince){
-      // Always trust the exact time from the API — parse as local time
       const now=new Date();
       const [h,m]=raisedSince.split(':').map(Number);
       const t=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0,0);
-      // If the parsed time is in the future (past midnight edge case), subtract a day
       if(t>now) t.setDate(t.getDate()-1);
       liftStartTimes[bridge]=t.getTime();
-      localStorage.setItem('liftStart_'+bridge, String(liftStartTimes[bridge]));
     } else if(!liftStartTimes[bridge]){
-      // No exact time from API and nothing in memory — use now as fallback
       liftStartTimes[bridge]=Date.now();
-      localStorage.setItem('liftStart_'+bridge, String(liftStartTimes[bridge]));
     }
   } else {
+    // Bridge is not lifted — always clear the timer
     liftStartTimes[bridge]=null;
-    localStorage.removeItem('liftStart_'+bridge);
   }
 }
 
