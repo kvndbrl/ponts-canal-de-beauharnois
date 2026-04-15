@@ -476,6 +476,10 @@
         <span id="customDonateLabel">Donner</span>
       </a>
     </div>
+    <a href="https://ko-fi.com/kevindubreuil" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:'kofi'})" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;padding:11px;border-radius:14px;border:1.5px solid #FF5E5B;background:rgba(255,94,91,.07);color:#FF5E5B;text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:700;transition:all .2s;" id="kofiBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF5E5B" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.88-.023c2.554-.213 2.647-2.571 2.647-2.571V16.81c1.919 1.524 3.769 1.087 3.769 1.087 2.731-.562 2.977-3.949 2.977-3.949V8.948zm-2.981 5.027c0 .679-.57 1.233-1.271 1.233H19.6v-2.466h.029c.701 0 1.271.554 1.271 1.233zm-2.476-2.467h-.883v4.934h.883v-4.934zm-3.094 0h-.883v4.934h.883v-4.934zm-3.094 4.934H9.353V11.508h2.883v4.934zm-4.766 0H4.587v-4.934h2.883v4.934z"/></svg>
+      <span id="kofiLabel">Soutenir sur Ko-fi</span>
+    </a>
   </div>
 
   <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
@@ -927,7 +931,7 @@ const TR={
     tsl:'\u23F0 Plages horaires',
     td:'Choisissez les jours et jusqu\u2019\u00E0 deux plages horaires pendant lesquelles vous souhaitez recevoir des notifications. Laissez tout vide pour \u00EAtre notifi\u00E9 en tout temps.',
     r1:'Plage 1',r2:'Plage 2',
-    dt:'Vous aimez l\'app\u00A0?',dd:'Votre soutien garde ce projet vivant et gratuit pour toute la communaut\u00E9.',customDonate:'Donner',customPlaceholder:'Autre montant',
+    dt:'Vous aimez l\'app\u00A0?',dd:'Votre soutien garde ce projet vivant et gratuit pour toute la communaut\u00E9.',customDonate:'Donner',customPlaceholder:'Autre montant',kofiLabel:'Soutenir sur Ko-fi',
     it:'\u{1F4F2} Installer l\'app',is:'Installez l\'app pour recevoir des notifications lors des levages',
     installBannerLabel:'Installer l\'app',installBannerSub:'Recevez des notifications sur votre \u00E9cran d\u2019accueil',
     mainCtaLabel:'Activer les notifications',mainCtaSub:'Recevez des alertes lors des lev\u00E9es de ponts',
@@ -981,7 +985,7 @@ const TR={
     tsl:'\u23F0 Time ranges',
     td:'Choose the days and up to two time ranges during which you want to receive notifications. Leave everything empty to be notified at any time.',
     r1:'Range 1',r2:'Range 2',
-    dt:'Enjoying the app?',dd:'Your support keeps this project alive and free for the whole community.',customDonate:'Donate',customPlaceholder:'Other amount',
+    dt:'Enjoying the app?',dd:'Your support keeps this project alive and free for the whole community.',customDonate:'Donate',customPlaceholder:'Other amount',kofiLabel:'Support on Ko-fi',
     it:'\u{1F4F2} Install the app',is:'Install the app to receive bridge lift notifications',
     installBannerLabel:'Install the app',installBannerSub:'Get notifications on your home screen',
     mainCtaLabel:'Enable notifications',mainCtaSub:'Get alerts for bridge lifts',
@@ -1277,6 +1281,8 @@ function applyTrans(){
   const donDesc=document.getElementById('donationDesc');if(donDesc)donDesc.textContent=t.dd;
   const customLabel=document.getElementById('customDonateLabel');
   if(customLabel) customLabel.textContent=t.customDonate;
+  const kofiLabel=document.getElementById('kofiLabel');
+  if(kofiLabel) kofiLabel.textContent=t.kofiLabel||'Soutenir sur Ko-fi';
   const customInput=document.getElementById('customAmount');
   if(customInput) customInput.placeholder=t.customPlaceholder;
   const lb=document.getElementById('langBtn');lb.textContent=currentLang==='fr'?'EN':'FR';lb.setAttribute('aria-label',t.ll2);
