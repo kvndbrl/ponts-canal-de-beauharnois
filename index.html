@@ -1563,11 +1563,11 @@ function formatRefresh(raw,lang){
   return(lang==='fr'?'Mis à jour ':'Updated ')+date+' '+time;
 }
 
-// Pull-to-refresh + edge swipe to open drawer
+// Pull-to-refresh + edge swipe to open/close drawer
 let ptStartY=0, ptPulling=false, ptRefreshing=false;
 let swipeStartX=0, swipeStartY=0;
-const EDGE_ZONE=40; // px from right edge
 const SWIPE_MIN=60; // min horizontal distance
+const SWIPE_MAX_DY=80; // max vertical drift
 const ptIndicator=document.getElementById('pullIndicator');
 const ptText=document.getElementById('pullText');
 
@@ -1611,12 +1611,17 @@ document.addEventListener('touchend', async e=>{
   const dx=swipeStartX-t.clientX; // positive = swipe left
   const dy=Math.abs(swipeStartY-t.clientY);
   const drawer=document.getElementById('settingsDrawer');
+  const isHorizontal=Math.abs(dx)>SWIPE_MIN && dy<SWIPE_MAX_DY;
 
-  // Swipe left from right edge → open drawer
-  if(!ptPulling && dx>SWIPE_MIN && dy<80 &&
-     swipeStartX>window.innerWidth-EDGE_ZONE &&
-     !drawer.classList.contains('open')){
-    openDrawer(); swipeStartX=0; return;
+  if(!ptPulling && isHorizontal){
+    // Swipe left from right half → open drawer
+    if(dx>0 && swipeStartX>window.innerWidth/2 && !drawer.classList.contains('open')){
+      openDrawer(); swipeStartX=0; return;
+    }
+    // Swipe right anywhere → close drawer
+    if(dx<0 && drawer.classList.contains('open')){
+      closeDrawer(); swipeStartX=0; return;
+    }
   }
 
   if(!ptPulling){ ptStartY=0; return; }
