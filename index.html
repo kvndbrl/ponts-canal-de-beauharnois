@@ -1563,8 +1563,11 @@ function formatRefresh(raw,lang){
   return(lang==='fr'?'Mis à jour ':'Updated ')+date+' '+time;
 }
 
-// Pull-to-refresh
+// Pull-to-refresh + edge swipe to open drawer
 let ptStartY=0, ptPulling=false, ptRefreshing=false;
+let swipeStartX=0, swipeStartY=0;
+const EDGE_ZONE=40; // px from right edge
+const SWIPE_MIN=60; // min horizontal distance
 const ptIndicator=document.getElementById('pullIndicator');
 const ptText=document.getElementById('pullText');
 
@@ -1583,7 +1586,10 @@ function ptUpdateText(pulling){
 }
 
 document.addEventListener('touchstart', e=>{
-  ptStartY = e.touches[0].clientY;
+  const t=e.touches[0];
+  ptStartY=t.clientY;
+  swipeStartX=t.clientX;
+  swipeStartY=t.clientY;
 }, {passive:true});
 
 document.addEventListener('touchmove', e=>{
@@ -1600,7 +1606,19 @@ document.addEventListener('touchmove', e=>{
   }
 }, {passive:true});
 
-document.addEventListener('touchend', async ()=>{
+document.addEventListener('touchend', async e=>{
+  const t=e.changedTouches[0];
+  const dx=swipeStartX-t.clientX; // positive = swipe left
+  const dy=Math.abs(swipeStartY-t.clientY);
+  const drawer=document.getElementById('settingsDrawer');
+
+  // Swipe left from right edge → open drawer
+  if(!ptPulling && dx>SWIPE_MIN && dy<80 &&
+     swipeStartX>window.innerWidth-EDGE_ZONE &&
+     !drawer.classList.contains('open')){
+    openDrawer(); swipeStartX=0; return;
+  }
+
   if(!ptPulling){ ptStartY=0; return; }
   if(!ptRefreshing){
     ptRefreshing=true;
