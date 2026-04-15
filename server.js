@@ -7,6 +7,36 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ── Umami server-side tracking ────────────────────────────────────────
+const UMAMI_URL = 'https://cloud.umami.is/api/send';
+const UMAMI_WEBSITE_ID = '1786c8da-b13f-4fec-b8d2-7d2e7102c29b';
+
+async function umamiTrack(eventName, data = {}) {
+  try {
+    await fetch(UMAMI_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'PontsBeau/1.0 (Server)'
+      },
+      body: JSON.stringify({
+        type: 'event',
+        payload: {
+          website: UMAMI_WEBSITE_ID,
+          url: '/server',
+          name: eventName,
+          data,
+          hostname: 'pont-st-louis-de-gonzague.onrender.com',
+          language: 'fr-CA',
+          screen: '0x0'
+        }
+      })
+    });
+  } catch(e) {
+    // Never let tracking break the app
+  }
+}
+
 webpush.setVapidDetails(
   process.env.VAPID_EMAIL,
   process.env.VAPID_PUBLIC_KEY,
@@ -472,6 +502,7 @@ async function sendScheduledLiftNotification(bridge, time) {
       log(`❌ Push failed [${bridge}] scheduled ${time} — HTTP ${e.statusCode}: ${e.message}`);
       subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
       await removeSubscription(sub);
+      umamiTrack('subscription_lost', { reason: 'push_failed', total: subscriptions.length });
     }
   }
   log(`📅 Levée planifiée [${bridge}] ${time} — ✅ ${sent} envoyées | ⏰ ${skippedRange} hors plage | 🚫 ${skippedBridge} pont non suivi | ❌ ${failed} échouées`);
@@ -511,6 +542,7 @@ async function sendNotifications(bridge, status, bridgeData = {}) {
       log(`❌ Push failed [${bridge}] ${status} — HTTP ${e.statusCode}: ${e.message}`);
       subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
       await removeSubscription(sub);
+      umamiTrack('subscription_lost', { reason: 'push_failed', total: subscriptions.length });
     }
   }
   log(`🔔 Notification [${bridge}] ${status} — ✅ ${sent} envoyées | ⏰ ${skippedRange} hors plage | 🚫 ${skippedBridge} pont non suivi | ❌ ${failed} échouées`);
@@ -625,6 +657,7 @@ app.post('/subscribe', async (req, res) => {
     subscriptions.push(sub);
     await saveSubscription(sub);
     console.log(`New subscriber! Lang: ${sub.lang}, Bridges: ${sub.bridges}. Total: ${subscriptions.length}`);
+    umamiTrack('subscription_new', { total: subscriptions.length, lang: sub.lang || 'fr' });
   }
   res.json({ ok: true });
 });
@@ -635,6 +668,7 @@ app.post('/unsubscribe', async (req, res) => {
   const key = `sub:${Buffer.from(endpoint).toString('base64').slice(0, 50)}`;
   await redisCommand('del', key);
   console.log(`Unsubscribed. Total: ${subscriptions.length}`);
+  umamiTrack('subscription_lost', { reason: 'user', total: subscriptions.length });
   res.json({ ok: true });
 });
 
@@ -657,6 +691,7 @@ async function start() {
   await loadLastStatus();
   await loadLiftHistory();
   log(`Ready with ${subscriptions.length} subscriptions — polling every 30s`);
+  umamiTrack('subscription_count', { count: subscriptions.length });
   await monitor();
   setInterval(monitor, 30000); // 30s to catch short status windows
 }
