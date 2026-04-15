@@ -357,14 +357,11 @@
     <span class="greeting-text" id="greetingText">Bonjour !</span>
     <span class="weather-text" id="weatherText">—</span>
   </div>
-  <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
-    <button onclick="enterCarMode()" aria-label="Mode voiture" style="background:var(--surface);border:none;border-radius:50px;box-shadow:var(--shadow);cursor:pointer;padding:8px 10px;font-size:16px;line-height:1;">🚗</button>
-    <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">
-      <span class="burger-line"></span>
-      <span class="burger-line"></span>
-      <span class="burger-line"></span>
-    </button>
-  </div>
+  <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+  </button>
 </header>
 
 <main>
@@ -441,19 +438,7 @@
     Activer les notifications
   </button>
 
-  <!-- Install CTA on main page — shown only when not installed -->
-  <!-- Je suis bloqué button -->
-  <div id="blockedBanner" style="display:none;width:100%;margin-bottom:12px;position:relative;z-index:1;">
-    <button onclick="toggleBlocked()" id="blockedBtn" style="width:100%;padding:14px;border-radius:50px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text2);font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-      <span id="blockedBtnIcon">🚗</span><span id="blockedBtnLabel">Je suis bloqué — avertis-moi à la réouverture</span>
-    </button>
-  </div>
-
-  <!-- Mode voiture -->
-  <div id="carModeOverlay" style="display:none;position:fixed;inset:0;z-index:800;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:24px;">
-    <div style="font-size:13px;color:var(--text3);font-family:var(--mono);" id="carModeTitle">MODE VOITURE</div>
-    <div style="font-size:72px;font-weight:800;color:var(--text);font-family:var(--sans);text-align:center;line-height:1;" id="carModePill">—</div>
-    <div style="font-size:22px;color:var(--text2);font-family:var(--mono);text-align:center;" id="carModeTimer">—</div>
+  <!-- Install CTA on main page — shown only when not installed -->    <div style="font-size:22px;color:var(--text2);font-family:var(--mono);text-align:center;" id="carModeTimer">—</div>
     <button onclick="exitCarMode()" style="margin-top:16px;padding:14px 32px;border-radius:50px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text3);font-family:var(--sans);font-size:14px;cursor:pointer;" id="carModeExit">Quitter</button>
   </div>
     <button onclick="mainCtaAction()" style="width:100%;padding:15px;border-radius:50px;border:none;background:var(--accent);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;gap:8px;">
@@ -463,12 +448,9 @@
   </div>
 
   <div class="donation-card">
-    <div class="donation-header" style="justify-content:space-between;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span>🙏</span>
-        <span class="donation-title" id="donationTitle">Vous aimez l'app ?</span>
-      </div>
-      <button onclick="shareStatus()" aria-label="Partager" style="background:none;border:none;font-size:18px;cursor:pointer;padding:0 4px;">📤</button>
+    <div class="donation-header">
+      <span>🙏</span>
+      <span class="donation-title" id="donationTitle">Vous aimez l'app ?</span>
     </div>
     <div class="donation-desc" id="donationDesc">Votre soutien garde ce projet vivant et gratuit pour toute la communauté.</div>
     <div class="donation-amounts">
@@ -947,7 +929,7 @@ const TR={
     dt:'Vous aimez l\'app\u00A0?',dd:'Votre soutien garde ce projet vivant et gratuit pour toute la communaut\u00E9.',customDonate:'Donner',customPlaceholder:'Autre montant',
     it:'\u{1F4F2} Installer l\'app',is:'Installez l\'app pour recevoir des notifications lors des levages',
     installBannerLabel:'Installer l\'app',installBannerSub:'Recevez des notifications sur votre \u00E9cran d\u2019accueil',
-    mainCtaLabel:'Activer les notifications',mainCtaSub:'Recevez des alertes lors des lev\u00E9es de ponts',blockedLabel:'Je suis bloqu\u00E9 \u2014 avertis-moi \u00E0 la r\u00E9ouverture',blockedActive:'Notifi\u00E9 \u00E0 la r\u00E9ouverture \u2014 appuyer pour annuler',
+    mainCtaLabel:'Activer les notifications',mainCtaSub:'Recevez des alertes lors des lev\u00E9es de ponts'
     webviewTitle:'Ouvrir dans votre navigateur',
     webviewSub:'Pour installer l\'app et recevoir des notifications, ouvrez cette page dans votre navigateur.',
     wvAnd1:'Appuyez sur <strong>\u22EE</strong> en haut à droite',
@@ -1001,7 +983,7 @@ const TR={
     dt:'Enjoying the app?',dd:'Your support keeps this project alive and free for the whole community.',customDonate:'Donate',customPlaceholder:'Other amount',
     it:'\u{1F4F2} Install the app',is:'Install the app to receive bridge lift notifications',
     installBannerLabel:'Install the app',installBannerSub:'Get notifications on your home screen',
-    mainCtaLabel:'Enable notifications',mainCtaSub:'Get alerts for bridge lifts',blockedLabel:'I am stuck \u2014 alert me when it reopens',blockedActive:'Will notify when open \u2014 tap to cancel',
+    mainCtaLabel:'Enable notifications',mainCtaSub:'Get alerts for bridge lifts'
     webviewTitle:'Open in your browser',
     webviewSub:'To install the app and receive notifications, open this page in your browser.',
     wvAnd1:'Tap <strong>\u22EE</strong> in the top right',
@@ -1264,9 +1246,6 @@ function updateDisplay(){
     document.getElementById('refresh'+C).innerHTML=formatRefresh(lastData.last_refreshed,currentLang);
   });
   updateCards();
-  updateBlockedBtn();
-  checkBlockedReopened();
-  updateCarMode();
 }
 
 function applyTrans(){
@@ -1438,138 +1417,6 @@ async function unsubscribe(){
   }
 }
 
-// ── Je suis bloqué ─────────────────────────────────────────────────────
-let blockedBridges = new Set();
-
-function toggleBlocked(){
-  // Which bridges are currently active (leve, raising, outage)?
-  if(!lastData) return;
-  const active=['leve','raising','outage','lowering','bientot_leve'];
-  const blocked=['gonzague','larocque'].filter(b=>active.includes(lastData[b]?.status));
-  if(blocked.length===0) return;
-  blocked.forEach(b=>{
-    if(blockedBridges.has(b)) blockedBridges.delete(b);
-    else blockedBridges.add(b);
-  });
-  updateBlockedBtn();
-  track('blocked_mode_toggled',{bridges:blocked.join(','),active:blockedBridges.size>0});
-}
-
-function updateBlockedBtn(){
-  const btn=document.getElementById('blockedBanner');
-  const label=document.getElementById('blockedBtnLabel');
-  const icon=document.getElementById('blockedBtnIcon');
-  const t=TR[currentLang];
-  if(!lastData) return;
-  const active=['leve','raising','outage','lowering','bientot_leve'];
-  const hasActive=['gonzague','larocque'].some(b=>active.includes(lastData[b]?.status));
-  btn.style.display=hasActive?'block':'none';
-  if(blockedBridges.size>0){
-    icon.textContent='✅';
-    label.textContent=t.blockedActive||'Notifié à la réouverture — appuyer pour annuler';
-    document.getElementById('blockedBtn').style.background='var(--green-bg)';
-    document.getElementById('blockedBtn').style.color='var(--green)';
-  } else {
-    icon.textContent='🚗';
-    label.textContent=t.blockedLabel||'Je suis bloqué — avertis-moi à la réouverture';
-    document.getElementById('blockedBtn').style.background='var(--surface2)';
-    document.getElementById('blockedBtn').style.color='var(--text2)';
-  }
-}
-
-// Check if blocked bridges reopened
-function checkBlockedReopened(){
-  if(blockedBridges.size===0||!lastData) return;
-  for(const bridge of [...blockedBridges]){
-    if(lastData[bridge]?.status==='disponible'){
-      blockedBridges.delete(bridge);
-      const name=bridge==='gonzague'
-        ?(currentLang==='fr'?'Pont St-Louis':'St-Louis Bridge')
-        :(currentLang==='fr'?'Pont Larocque':'Larocque Bridge');
-      // Show alert since we can't send push from client
-      const msg=currentLang==='fr'
-        ?`✅ ${name} est maintenant disponible !`
-        :`✅ ${name} is now available!`;
-      if('Notification'in window && Notification.permission==='granted'){
-        new Notification(msg,{icon:'/notification-icon.png',tag:'blocked-'+bridge});
-      }
-      updateBlockedBtn();
-    }
-  }
-}
-
-// ── Mode voiture ────────────────────────────────────────────────────────
-let carModeInterval=null;
-
-function enterCarMode(){
-  document.getElementById('carModeOverlay').style.display='flex';
-  updateCarMode();
-  carModeInterval=setInterval(updateCarMode,10000);
-  track('car_mode_entered');
-  // Keep screen on if supported
-  if('wakeLock'in navigator){
-    navigator.wakeLock.request('screen').catch(()=>{});
-  }
-}
-
-function exitCarMode(){
-  document.getElementById('carModeOverlay').style.display='none';
-  clearInterval(carModeInterval);
-  carModeInterval=null;
-}
-
-function updateCarMode(){
-  if(!lastData) return;
-  // Show combined status — worst of the two bridges
-  const priority=['outage','leve','raising','bientot_leve','lowering','disponible'];
-  let worst=null, worstBridge=null;
-  for(const b of ['gonzague','larocque']){
-    const s=lastData[b]?.status;
-    const rank=priority.indexOf(s);
-    if(rank!==-1&&(worst===null||rank<priority.indexOf(worst))){worst=s;worstBridge=b;}
-  }
-  const t=TR[currentLang];
-  const pill=document.getElementById('carModePill');
-  const timer=document.getElementById('carModeTimer');
-  const overlay=document.getElementById('carModeOverlay');
-  if(!worst){return;}
-  pill.textContent=t.sl[worst]||worst;
-  // Color
-  const colors={disponible:'var(--green)',bientot_leve:'var(--yellow)',raising:'var(--orange)',leve:'var(--red)',lowering:'var(--yellow)',outage:'#ff6b6b'};
-  pill.style.color=colors[worst]||'var(--text)';
-  // Timer
-  if(worst==='leve'&&worstBridge){
-    timer.textContent=getLiftTimerText(worstBridge,'leve',currentLang);
-  } else if(worst==='lowering'&&worstBridge){
-    const avgLow=lastData[worstBridge]?.avgLoweringDuration;
-    timer.textContent=avgLow?(currentLang==='fr'?`~${avgLow} min`:`~${avgLow} min`):'';
-  } else if(worst==='outage'&&worstBridge){
-    timer.textContent=getOutageTimerText(worstBridge,lastData[worstBridge]?.outageEnd,currentLang);
-  } else {
-    timer.textContent='';
-  }
-}
-
-// ── Share status ────────────────────────────────────────────────────────
-function shareStatus(){
-  if(!lastData) return;
-  const t=TR[currentLang];
-  const lines=['gonzague','larocque'].map(b=>{
-    const name=b==='gonzague'?'Pont St-Louis':'Pont Larocque';
-    const status=t.sl[lastData[b]?.status]||lastData[b]?.status||'—';
-    return `${name}: ${status}`;
-  });
-  const text=lines.join('\n')+'\n\nhttps://ponts-canal-de-beauharnois.vercel.app';
-  if(navigator.share){
-    navigator.share({title:'Ponts Beauharnois',text}).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(text).then(()=>{
-      const msg=currentLang==='fr'?'Statut copié !':'Status copied!';
-      alert(msg);
-    });
-  }
-  track('status_shared');
-}
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
