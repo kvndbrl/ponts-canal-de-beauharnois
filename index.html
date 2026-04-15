@@ -1104,7 +1104,7 @@ function refreshTimers(){
     }
   });
 }
-setInterval(refreshTimers, 10000);
+// Timers managed by visibilitychange below
 
 function getOutageTimerText(bridge, outageEnd, lang){
   if(!outageEnd) return lang==='fr'?'Fermeture en cours':'Closure in progress';
@@ -1636,8 +1636,25 @@ const savedName=getUserName();
 if(savedName) document.getElementById('prenomInput').value=savedName;
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 fetchStatus();
-setInterval(fetchStatus,60000);
-setInterval(updateGreeting,60000);
+
+// Pause polling when tab is hidden, resume and refresh immediately when visible
+let _fetchInterval=setInterval(fetchStatus,60000);
+let _greetInterval=setInterval(updateGreeting,60000);
+let _timerInterval=setInterval(refreshTimers,10000);
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    clearInterval(_fetchInterval);
+    clearInterval(_greetInterval);
+    clearInterval(_timerInterval);
+  } else {
+    fetchStatus();
+    updateGreeting();
+    refreshTimers();
+    _fetchInterval=setInterval(fetchStatus,60000);
+    _greetInterval=setInterval(updateGreeting,60000);
+    _timerInterval=setInterval(refreshTimers,10000);
+  }
+});
 </script>
   <!-- Install modal — inside drawer to override stacking context -->
   <div class="install-modal-overlay" id="installModalOverlay" style="display:none;position:fixed;inset:0;z-index:9999;" aria-modal="true" role="dialog">

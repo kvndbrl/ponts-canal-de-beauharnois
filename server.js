@@ -31,12 +31,20 @@ async function loadSubscriptions() {
   try {
     const keys = await redisCommand('keys', 'sub:*');
     if (!keys || keys.length === 0) return [];
-    const subs = [];
-    for (const key of keys) {
-      const val = await redisCommand('get', key);
-      if (val) subs.push(JSON.parse(val));
-    }
-    console.log(`Loaded ${subs.length} subscriptions from Redis`);
+
+    // Use Upstash pipeline to batch all GETs in one HTTP request
+    const pipeline = keys.map(k => ['get', k]);
+    const res = await fetch(`${REDIS_URL}/pipeline`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${REDIS_TOKEN}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(pipeline)
+    });
+    const results = await res.json();
+    const subs = results
+      .map(r => r.result)
+      .filter(Boolean)
+      .map(v => JSON.parse(v));
+    log(`Loaded ${subs.length} subscriptions from Redis (1 pipeline request)`);
     return subs;
   } catch(e) {
     console.error('Error loading subscriptions:', e.message);
@@ -44,13 +52,20 @@ async function loadSubscriptions() {
   }
 }
 
+// Throttled save — prevents Redis spam on rapid preference changes
+const _savePending = new Map();
 async function saveSubscription(sub) {
-  try {
-    const key = `sub:${Buffer.from(sub.endpoint).toString('base64').slice(0, 50)}`;
-    await redisCommand('set', key, JSON.stringify(sub));
-  } catch(e) {
-    console.error('Error saving subscription:', e.message);
-  }
+  const key = `sub:${Buffer.from(sub.endpoint).toString('base64').slice(0, 50)}`;
+  // Clear existing timer for this sub if any
+  if (_savePending.has(key)) clearTimeout(_savePending.get(key));
+  _savePending.set(key, setTimeout(async () => {
+    _savePending.delete(key);
+    try {
+      await redisCommand('set', key, JSON.stringify(sub));
+    } catch(e) {
+      console.error('Error saving subscription:', e.message);
+    }
+  }, 2000)); // 2s debounce
 }
 
 async function removeSubscription(sub) {
