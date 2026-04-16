@@ -387,6 +387,13 @@
       <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
       <span class="timer-text" id="timerGonzague">—</span>
     </div>
+    <div id="vesselGonzague" style="display:none;padding:0 16px 12px;display:none;align-items:center;gap:10px;">
+      <img id="vesselImgGonzague" src="" alt="" width="36" height="36"
+        style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;"
+        onerror="this.style.display='none';document.getElementById('vesselIconGonzague').style.display='flex'"/>
+      <div id="vesselIconGonzague" style="display:none;width:36px;height:36px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🚢</div>
+      <span id="vesselNameGonzague" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span>
+    </div>
 
 
     <div class="lifts-block">
@@ -419,6 +426,13 @@
     <div class="duration-block" id="durationLarocque" aria-hidden="true">
       <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
       <span class="timer-text" id="timerLarocque">—</span>
+    </div>
+    <div id="vesselLarocque" style="display:none;padding:0 16px 12px;display:none;align-items:center;gap:10px;">
+      <img id="vesselImgLarocque" src="" alt="" width="36" height="36"
+        style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;"
+        onerror="this.style.display='none';document.getElementById('vesselIconLarocque').style.display='flex'"/>
+      <div id="vesselIconLarocque" style="display:none;width:36px;height:36px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🚢</div>
+      <span id="vesselNameLarocque" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span>
     </div>
 
 
@@ -1159,13 +1173,40 @@ function updateCards(){
     if(isLifted){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=getLiftTimerText(b,lastData[b].status,currentLang);
+      // Show vessel name if available
+      const vesselEl=document.getElementById('vessel'+C);
+      const vesselNameEl=document.getElementById('vesselName'+C);
+      if(vesselEl&&vesselNameEl&&lastData[b].vessel?.name){
+        const v=lastData[b].vessel;
+        const conf=v.confidence||0;
+        const confLabel=conf>=80?'':'~';
+        vesselNameEl.textContent=confLabel+v.name;
+        // Set vessel image
+        const imgEl=document.getElementById('vesselImg'+C);
+        const iconEl=document.getElementById('vesselIcon'+C);
+        if(imgEl&&v.mmsi){
+          imgEl.src=`https://photos.marinetraffic.com/ais/showphoto.aspx?mmsi=${v.mmsi}&size=thumb300`;
+          imgEl.style.display='block';
+          if(iconEl) iconEl.style.display='none';
+        } else if(iconEl){
+          if(imgEl) imgEl.style.display='none';
+          iconEl.style.display='flex';
+        }
+        vesselEl.style.display='flex';
+      } else if(vesselEl){
+        vesselEl.style.display='none';
+      }
     } else if(isLowering){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=currentLang==='fr'?'Le pont redescend \u2014 Bient\u00F4t disponible':'Bridge is lowering \u2014 Opening soon';
     } else if(isOutage){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=getOutageTimerText(b,lastData[b].outageEnd,currentLang);
-    } else { db.style.display='none'; db.setAttribute('aria-hidden','true'); }
+    } else { 
+      db.style.display='none'; db.setAttribute('aria-hidden','true');
+      const vesselEl=document.getElementById('vessel'+C);
+      if(vesselEl) vesselEl.style.display='none';
+    }
     // Closures → badge + tooltip
     if(cl&&cl.length>0){
       tooltipTitle.textContent=t.closureTitle||(currentLang==='fr'?'Fermetures planifi\u00E9es':'Planned closures');

@@ -2,10 +2,184 @@ const express = require('express');
 const webpush = require('web-push');
 const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
 const cors = require('cors');
+const WebSocket = require('ws');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// ── AIS vessel tracking ───────────────────────────────────────────────
+const AIS_API_KEY = process.env.AIS_API_KEY || '863161f597fc75bcafa5a947c4b00c97210e84bb';
+
+// Bounding box around canal de Beauharnois
+// [minLat, minLon], [maxLat, maxLon]
+const AIS_BBOX = [[45.18, -74.02], [45.22, -73.95]];
+
+// Last known vessel in zone per bridge
+let vesselNearBridge = { gonzague: null, larocque: null };
+
+// Exact bridge coordinates
+const BRIDGES = {
+  gonzague: { lat: 45.2053, lon: -73.9855 },
+  larocque: { lat: 45.1942, lon: -74.0020 }
+};
+
+// Canal de Beauharnois runs roughly E-W
+// Valid headings for eastbound (lake → river): 60-120°
+// Valid headings for westbound (river → lake): 240-300°
+const VALID_HEADINGS = [[60, 120], [240, 300]];
+
+// Track vessel history per MMSI: last N positions + metadata
+const vesselHistory = new Map(); // mmsi → [{lat, lon, heading, ts}]
+const MAX_HISTORY = 20;
+
+function isValidHeading(cog) {
+  if (cog === undefined || cog === null || cog === 511) return true; // unknown → don't filter
+  return VALID_HEADINGS.some(([min, max]) => cog >= min && cog <= max);
+}
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function getBestVesselForBridge(bridge) {
+  const bp = BRIDGES[bridge];
+  const now = Date.now();
+  const candidates = [];
+
+  for (const [mmsi, history] of vesselHistory.entries()) {
+    if (!history.length) continue;
+
+    // Only consider positions from last 5 minutes
+    const recent = history.filter(p => now - p.ts < 300000);
+    if (!recent.length) continue;
+
+    const latest = recent[recent.length - 1];
+    const distKm = haversineKm(latest.lat, latest.lon, bp.lat, bp.lon);
+
+    // Must be within 2km of the bridge
+    if (distKm > 2.0) continue;
+
+    // Check if vessel is moving toward or through the bridge
+    // (has more than 1 position point showing movement)
+    const isMoving = recent.length > 1;
+    const headingOk = isValidHeading(latest.cog);
+
+    let confidence = 0;
+    confidence += Math.max(0, 100 - distKm * 50); // closer = higher confidence
+    if (headingOk) confidence += 20;
+    if (isMoving) confidence += 10;
+    // Bonus if vessel has been tracked crossing through bridge zone
+    const crossed = recent.some(p => haversineKm(p.lat, p.lon, bp.lat, bp.lon) < 0.3);
+    if (crossed) confidence += 30;
+
+    candidates.push({ mmsi, name: latest.name, distKm, confidence, cog: latest.cog });
+  }
+
+  if (!candidates.length) return null;
+
+  // Sort by confidence desc
+  candidates.sort((a, b) => b.confidence - a.confidence);
+  const best = candidates[0];
+
+  // Only return if confidence is reasonable
+  if (best.confidence < 40) return null;
+
+  return {
+    name: best.name,
+    mmsi: best.mmsi,
+    distKm: Math.round(best.distKm * 10) / 10,
+    confidence: Math.round(best.confidence),
+    cog: best.cog
+  };
+}
+
+function startAISTracking() {
+  let ws;
+
+  function connect() {
+    ws = new WebSocket('wss://stream.aisstream.io/v0/stream');
+
+    ws.on('open', () => {
+      log('🚢 AIS WebSocket connecté');
+      ws.send(JSON.stringify({
+        APIKey: AIS_API_KEY,
+        BoundingBoxes: [AIS_BBOX],
+        FilterMessageTypes: ['PositionReport', 'ShipStaticData']
+      }));
+    });
+
+    ws.on('message', (data) => {
+      try {
+        const msg = JSON.parse(data);
+        const meta = msg.MetaData;
+        if (!meta) return;
+
+        const lat = meta.latitude;
+        const lon = meta.longitude;
+        const mmsi = String(meta.MMSI || '');
+        const name = meta.ShipName?.trim().replace(/[^\x20-\x7E]/g, '').trim() || null;
+        if (!name || name === '!!!ANYSUCHVESSEL!!!' || !mmsi) return;
+
+        // Get COG from PositionReport if available
+        const cog = msg.Message?.PositionReport?.Cog ?? null;
+
+        // Update vessel history
+        if (!vesselHistory.has(mmsi)) vesselHistory.set(mmsi, []);
+        const hist = vesselHistory.get(mmsi);
+        hist.push({ lat, lon, cog, name, ts: Date.now() });
+        if (hist.length > MAX_HISTORY) hist.shift();
+
+        // Update best vessel per bridge
+        for (const bridge of ['gonzague', 'larocque']) {
+          const best = getBestVesselForBridge(bridge);
+          if (best) {
+            vesselNearBridge[bridge] = { ...best, updatedAt: Date.now() };
+            if (!vesselNearBridge[bridge]._logged) {
+              log(`🚢 Navire détecté [${bridge}]: ${best.name} à ${best.distKm}km (confiance: ${best.confidence})`);
+              vesselNearBridge[bridge]._logged = true;
+            }
+          }
+        }
+      } catch(e) {}
+    });
+
+    ws.on('close', () => {
+      log('🚢 AIS WebSocket déconnecté — reconnexion dans 30s');
+      setTimeout(connect, 30000);
+    });
+
+    ws.on('error', (e) => {
+      log(`🚢 AIS erreur: ${e.message}`);
+    });
+  }
+
+  connect();
+}
+
+// Cleanup stale vessel data every minute
+setInterval(() => {
+  const now = Date.now();
+  // Remove old history entries
+  for (const [mmsi, hist] of vesselHistory.entries()) {
+    const recent = hist.filter(p => now - p.ts < 600000);
+    if (!recent.length) vesselHistory.delete(mmsi);
+    else vesselHistory.set(mmsi, recent);
+  }
+  // Re-evaluate best vessel per bridge
+  for (const bridge of ['gonzague', 'larocque']) {
+    const best = getBestVesselForBridge(bridge);
+    if (best) {
+      vesselNearBridge[bridge] = { ...best, updatedAt: now };
+    } else {
+      vesselNearBridge[bridge] = null;
+    }
+  }
+}, 60000);
 
 // ── Umami server-side tracking ────────────────────────────────────────
 const UMAMI_URL = 'https://cloud.umami.is/api/send';
@@ -407,6 +581,11 @@ function getMessages(bridge, status, lang, data) {
   };
   const n = (shortNames[lang] || shortNames.fr)[bridge];
 
+  // Build vessel string if available
+  const vesselStr = data?.vessel?.name
+    ? (lang === 'fr' ? ` · Navire: ${data.vessel.name}` : ` · Vessel: ${data.vessel.name}`)
+    : '';
+
   // Build outage time string if available
   let outageStr = '';
   if (status === 'outage' && data && data.outageEnd) {
@@ -430,7 +609,7 @@ function getMessages(bridge, status, lang, data) {
   const fr = {
     bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai${liftStr}` },
     raising:      { title: `🔼 ${n}`, body: `En cours de levage · Circulation interrompue${liftStr}` },
-    leve:         { title: `🚢 ${n}`, body: `Pont levé · Passage d'un navire${liftStr}` },
+    leve:         { title: `🚢 ${n}`, body: `Pont levé${vesselStr||(' · Passage d\'un navire')}${liftStr}` },
     lowering:     { title: `🔽 ${n}`, body: `Pont redescend · Bientôt disponible${lowerStr}` },
     disponible:   { title: `✅ ${n}`, body: `Disponible · Circulation normale` },
     outage:       { title: `🚧 ${n}`, body: `Fermeture planifiée${outageStr}` }
@@ -438,7 +617,7 @@ function getMessages(bridge, status, lang, data) {
   const en = {
     bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expect delays${liftStr}` },
     raising:      { title: `🔼 ${n}`, body: `Bridge raising · Traffic interrupted${liftStr}` },
-    leve:         { title: `🚢 ${n}`, body: `Bridge lifted · Vessel passing${liftStr}` },
+    leve:         { title: `🚢 ${n}`, body: `Bridge lifted${vesselStr||' · Vessel passing'}${liftStr}` },
     lowering:     { title: `🔽 ${n}`, body: `Bridge lowering · Opening soon${lowerStr}` },
     disponible:   { title: `✅ ${n}`, body: `Available · Traffic normal` },
     outage:       { title: `🚧 ${n}`, body: `Planned closure${outageStr}` }
@@ -628,9 +807,12 @@ app.get('/status', async (req, res) => {
       data[bridge].avgLiftDuration = getAvgLiftDuration(bridge);
       data[bridge].avgLoweringDuration = getAvgLoweringDuration(bridge);
       data[bridge].liftCount = liftHistory[bridge].length;
-      // If currently lifting, how long so far
       if (liftActive[bridge]) {
         data[bridge].liftingSince = liftActive[bridge].raisedAt;
+      }
+      // Add vessel info if available
+      if (vesselNearBridge[bridge]) {
+        data[bridge].vessel = vesselNearBridge[bridge];
       }
     }
     res.json(data);
@@ -726,6 +908,7 @@ async function start() {
   await loadLiftHistory();
   log(`Ready with ${subscriptions.length} subscriptions — polling every 30s`);
   umamiTrack('subscription_count', { count: subscriptions.length });
+  startAISTracking();
   await monitor();
   setInterval(monitor, 30000); // 30s to catch short status windows
 }
