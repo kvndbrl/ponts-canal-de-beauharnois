@@ -1328,7 +1328,6 @@ function applyTrans(){
   if(customInput) customInput.placeholder=t.customPlaceholder;
   const lb=document.getElementById('langBtn');lb.textContent=currentLang==='fr'?'EN':'FR';lb.setAttribute('aria-label',t.ll2);
   const ll=document.getElementById('langLabel');if(ll)ll.textContent=currentLang==='fr'?'Langue':'Language';
-  const ill=document.getElementById('installLinkLabel');if(ill)ill.textContent=t.it||'📲 Installer l\'app';
   const ibl=document.getElementById('installBannerLabel');if(ibl)ibl.textContent=t.installBannerLabel||'Installer l\'app';
   const ibs=document.getElementById('installBannerSub');if(ibs)ibs.textContent=t.installBannerSub||'Recevez des notifications sur votre écran d\'accueil';
   const mil=document.getElementById('mainInstallLabel');if(mil)mil.textContent=t.mainCtaLabel||'🔔 Activer les notifications';
@@ -1570,8 +1569,6 @@ function showInstallModalIfNeeded(){
 
 // Show install link in drawer for non-PWA mobile
 if(!isPWA && isMobile){
-  const link=document.getElementById('installLink');
-  if(link){ link.style.display='inline-block'; link.removeAttribute('aria-hidden'); }
   const banner=document.getElementById('installBanner');
   if(banner) banner.style.display='block';
 }
