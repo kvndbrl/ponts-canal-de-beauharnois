@@ -601,15 +601,12 @@ function getMessages(bridge, status, lang, data) {
     : '';
 
   // Estimated lift duration + reopen clock time
-  const avgLift = data?.avgLiftDuration;
-  let liftStr = '';
-  if (avgLift) {
-    const reopenTime = new Date(Date.now() + avgLift * 60000);
-    const hm = reopenTime.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
-    liftStr = lang === 'fr'
-      ? ` · Réouverture prévue ~${hm}`
-      : ` · Expected reopen ~${hm}`;
-  }
+  const avgLift = data?.avgLiftDuration || 12; // fallback 12 min
+  const reopenTime = new Date(Date.now() + avgLift * 60000);
+  const hm = reopenTime.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
+  const liftStr = lang === 'fr'
+    ? ` · Réouverture prévue ~${hm}`
+    : ` · Expected reopen ~${hm}`;
 
   const fr = {
     bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai${liftStr}` },
