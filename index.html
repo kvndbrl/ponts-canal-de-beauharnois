@@ -720,6 +720,13 @@
     <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
     <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
   </div>
+  <div style="padding:4px 16px 12px;text-align:center;">
+    <a id="contactLink" href="https://tally.so/r/A7b2kz" target="_blank" rel="noopener noreferrer"
+      onclick="track('feedback_clicked',{source:'drawer'})"
+      style="font-size:12px;color:var(--text3);font-family:var(--mono);text-decoration:underline;text-underline-offset:3px;cursor:pointer;">
+      💬 <span id="contactLinkLabel">Commentaires ou suggestions</span>
+    </a>
+  </div>
   <div class="drawer-disclaimer">
     <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
   </div>
@@ -1475,6 +1482,10 @@ function applyTrans(){
   if(customInput) customInput.placeholder=t.customPlaceholder;
   const lb=document.getElementById('langBtn');lb.textContent=currentLang==='fr'?'EN':'FR';lb.setAttribute('aria-label',t.ll2);
   const ll=document.getElementById('langLabel');if(ll)ll.textContent=currentLang==='fr'?'Langue':'Language';
+  const cl=document.getElementById('contactLink');
+  if(cl) cl.href=currentLang==='fr'?'https://tally.so/r/A7b2kz':'https://tally.so/r/gDNdyl';
+  const cll=document.getElementById('contactLinkLabel');
+  if(cll) cll.textContent=currentLang==='fr'?'Commentaires ou suggestions':'Feedback or suggestions';
   const ibl=document.getElementById('installBannerLabel');if(ibl)ibl.textContent=t.installBannerLabel||'Installer l\'app';
   const ibs=document.getElementById('installBannerSub');if(ibs)ibs.textContent=t.installBannerSub||'Recevez des notifications sur votre écran d\'accueil';
   const mil=document.getElementById('mainInstallLabel');if(mil)mil.textContent=t.mainCtaLabel||'🔔 Activer les notifications';
