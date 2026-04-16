@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="theme-color" content="#080b14"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -177,11 +177,11 @@
     .timeline-track{display:flex;align-items:flex-start;padding:4px 0;gap:0;}
     .timeline-step{display:flex;flex-direction:column;align-items:center;flex:1;gap:6px;}
     .timeline-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;transition:all .4s;overflow:hidden;}
-    .timeline-dot svg{width:20px;height:20px;fill:var(--text3);transition:fill .4s;}
+    .timeline-dot svg{width:20px;height:20px;fill:var(--text3);color:var(--text3);transition:fill .4s,color .4s;}
     .timeline-dot.active{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 4px rgba(var(--accent-rgb),.2);}
-    .timeline-dot.active svg{fill:#fff;}
+    .timeline-dot.active svg{fill:#fff;color:#fff;}
     .timeline-dot.done{border-color:var(--accent);background:var(--surface);}
-    .timeline-dot.done svg{fill:var(--accent);}
+    .timeline-dot.done svg{fill:var(--accent);color:var(--accent);}
     .timeline-label{font-size:9px;color:var(--text3);font-family:var(--mono);text-align:center;}
     .timeline-label.active{color:var(--accent);font-weight:700;}
     .timeline-connector{flex:1;height:2px;background:var(--border);transition:background .4s;margin:0 -2px;flex-shrink:1;align-self:center;margin-top:-20px;}
@@ -279,22 +279,22 @@
     .unsub-btn{background:none;border:none;font-family:var(--sans);font-size:13px;color:var(--text3);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;}
 
     /* Donation card — prominent, lifted above boat */
-    .donation-card{background:linear-gradient(135deg,var(--surface) 0%,rgba(var(--accent-rgb),.07) 100%);border-radius:var(--radius);box-shadow:0 4px 24px rgba(var(--accent-rgb),.18),var(--shadow);border:1.5px solid rgba(var(--accent-rgb),.35);border-top:3px solid var(--accent);padding:14px 16px 16px;margin-top:auto;margin-bottom:160px;position:relative;z-index:1;flex-shrink:0;}
-    .donation-header{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+    .donation-card{background:linear-gradient(135deg,var(--surface) 0%,rgba(var(--accent-rgb),.07) 100%);border-radius:var(--radius);box-shadow:0 4px 24px rgba(var(--accent-rgb),.18),var(--shadow);border:1.5px solid rgba(var(--accent-rgb),.35);border-top:3px solid var(--accent);padding:10px 14px 12px;margin-top:auto;margin-bottom:160px;position:relative;z-index:1;flex-shrink:0;}
+    .donation-header{display:flex;align-items:center;gap:8px;margin-bottom:2px;}
     .donation-title{font-size:15px;font-weight:700;color:var(--text);}
-    .donation-desc{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5;}
-    .donation-amounts{display:flex;gap:8px;margin-bottom:10px;}
-    .donation-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-radius:14px;border:1.5px solid var(--accent);background:var(--surface2);color:var(--text);text-decoration:none;font-family:var(--sans);font-weight:700;font-size:15px;transition:all .2s;gap:3px;}
+    .donation-desc{font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.4;}
+    .donation-amounts{display:flex;gap:6px;margin-bottom:8px;}
+    .donation-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:12px;border:1.5px solid var(--accent);background:var(--surface2);color:var(--text);text-decoration:none;font-family:var(--sans);font-weight:700;font-size:15px;transition:all .2s;gap:3px;}
     .donation-btn:hover,.donation-btn:active{background:var(--accent);color:white;border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.2);}
     .donation-btn .pp-icon{opacity:.5;transition:opacity .2s;}
     .donation-btn:hover .pp-icon,.donation-btn:active .pp-icon{opacity:.9;}
     .donation-btn .donation-label{font-size:9px;font-weight:500;color:var(--text3);font-family:var(--mono);}
     .donation-btn:hover .donation-label,.donation-btn:active .donation-label{color:rgba(255,255,255,.75);}
     .donation-custom{display:flex;gap:8px;align-items:center;}
-    .donation-custom-input{flex:1;padding:10px 12px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--sans);font-size:15px;font-weight:600;outline:none;width:0;}
+    .donation-custom-input{flex:1;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--sans);font-size:15px;font-weight:600;outline:none;width:0;}
     .donation-custom-input:focus{border-color:var(--accent);}
     .donation-custom-input::placeholder{color:var(--text3);font-weight:400;}
-    .donation-custom-btn{display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:12px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s;flex-shrink:0;}
+    .donation-custom-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s;flex-shrink:0;}
     .donation-custom-btn:hover{opacity:.88;transform:translateY(-1px);}
     .bottom-bar{display:none;}
     .disclaimer{display:none;}
@@ -539,7 +539,7 @@
         <span id="customDonateLabel">Donner</span>
       </a>
     </div>
-    <a href="https://ko-fi.com/kevindubreuil" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:'kofi'})" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;padding:11px;border-radius:14px;border:1.5px solid #FF5E5B;background:rgba(255,94,91,.07);color:#FF5E5B;text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:700;transition:all .2s;" id="kofiBtn">
+    <a href="https://ko-fi.com/kevindubreuil" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:'kofi'})" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:9px;border-radius:12px;border:1.5px solid #FF5E5B;background:rgba(255,94,91,.07);color:#FF5E5B;text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:700;transition:all .2s;" id="kofiBtn">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF5E5B" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.88-.023c2.554-.213 2.647-2.571 2.647-2.571V16.81c1.919 1.524 3.769 1.087 3.769 1.087 2.731-.562 2.977-3.949 2.977-3.949V8.948zm-2.981 5.027c0 .679-.57 1.233-1.271 1.233H19.6v-2.466h.029c.701 0 1.271.554 1.271 1.233zm-2.476-2.467h-.883v4.934h.883v-4.934zm-3.094 0h-.883v4.934h.883v-4.934zm-3.094 4.934H9.353V11.508h2.883v4.934zm-4.766 0H4.587v-4.934h2.883v4.934z"/></svg>
       <span id="kofiLabel">Soutenir sur Ko-fi</span>
     </a>
