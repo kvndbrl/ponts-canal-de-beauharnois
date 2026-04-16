@@ -600,11 +600,16 @@ function getMessages(bridge, status, lang, data) {
     ? (lang === 'fr' ? ` · ~${avgLow} min avant réouverture` : ` · ~${avgLow} min to reopen`)
     : '';
 
-  // Estimated lift duration
+  // Estimated lift duration + reopen clock time
   const avgLift = data?.avgLiftDuration;
-  const liftStr = avgLift
-    ? (lang === 'fr' ? ` · Durée moyenne ~${avgLift} min` : ` · Avg duration ~${avgLift} min`)
-    : '';
+  let liftStr = '';
+  if (avgLift) {
+    const reopenTime = new Date(Date.now() + avgLift * 60000);
+    const hm = reopenTime.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
+    liftStr = lang === 'fr'
+      ? ` · Réouverture prévue ~${hm}`
+      : ` · Expected reopen ~${hm}`;
+  }
 
   const fr = {
     bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai${liftStr}` },
