@@ -100,12 +100,15 @@ function getBestVesselForBridge(bridge) {
 
 function startAISTracking() {
   let ws;
+  let reconnectDelay = 30000;
+  const MAX_DELAY = 300000; // 5 min max
 
   function connect() {
     ws = new WebSocket('wss://stream.aisstream.io/v0/stream');
 
     ws.on('open', () => {
       log('🚢 AIS WebSocket connecté');
+      reconnectDelay = 30000; // reset on success
       ws.send(JSON.stringify({
         APIKey: AIS_API_KEY,
         BoundingBoxes: [AIS_BBOX],
@@ -149,12 +152,14 @@ function startAISTracking() {
     });
 
     ws.on('close', () => {
-      log('🚢 AIS WebSocket déconnecté — reconnexion dans 30s');
-      setTimeout(connect, 30000);
+      log(`🚢 AIS WebSocket déconnecté — reconnexion dans ${reconnectDelay/1000}s`);
+      setTimeout(connect, reconnectDelay);
+      reconnectDelay = Math.min(reconnectDelay * 2, MAX_DELAY);
     });
 
     ws.on('error', (e) => {
       log(`🚢 AIS erreur: ${e.message}`);
+      reconnectDelay = Math.min(reconnectDelay * 2, MAX_DELAY);
     });
   }
 
