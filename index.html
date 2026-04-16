@@ -570,33 +570,37 @@
 
   <div class="settings-section-sub-label" id="notifTypesSectionLabel">Types de notifications</div>
   <div class="settings-section-desc" id="notifTypesDesc">Choisissez les événements pour lesquels vous souhaitez être notifié.</div>
+
+  <div class="settings-section-sub-label" style="font-size:9px;padding:10px 16px 2px;opacity:.7;" id="ntSuggestedLabel">SUGGÉRÉES</div>
   <label class="pref-row">
     <span class="pref-row-label" id="ntLabelBientot">⚠️ Levage imminent</span>
     <div class="pref-toggle"><input type="checkbox" id="ntBientot_leve" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
   </label>
   <label class="pref-row">
-    <span class="pref-row-label" id="ntLabelRaising">🔼 En cours de levage</span>
-    <div class="pref-toggle"><input type="checkbox" id="ntRaising" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row">
     <span class="pref-row-label" id="ntLabelLeve">🚢 Levé</span>
     <div class="pref-toggle"><input type="checkbox" id="ntLeve" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row">
-    <span class="pref-row-label" id="ntLabelLowering">🔽 En cours de descente</span>
-    <div class="pref-toggle"><input type="checkbox" id="ntLowering" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row">
-    <span class="pref-row-label" id="ntLabelDisponible">✅ Disponible</span>
-    <div class="pref-toggle"><input type="checkbox" id="ntDisponible" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row" style="border-bottom:1px solid var(--border);">
-    <span class="pref-row-label" id="ntLabelScheduled">📅 Levée planifiée</span>
-    <div class="pref-toggle"><input type="checkbox" id="ntScheduled" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
   </label>
   <label class="pref-row" style="border-bottom:1px solid var(--border);">
     <span class="pref-row-label" id="ntLabelOutage">🚧 Fermeture planifiée</span>
     <div class="pref-toggle"><input type="checkbox" id="ntOutage" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+
+  <div class="settings-section-sub-label" style="font-size:9px;padding:10px 16px 2px;opacity:.7;" id="ntOptionalLabel">OPTIONNELLES</div>
+  <label class="pref-row">
+    <span class="pref-row-label" id="ntLabelRaising">🔼 En cours de levage</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntRaising" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+  <label class="pref-row">
+    <span class="pref-row-label" id="ntLabelLowering">🔽 En cours de descente</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntLowering" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+  <label class="pref-row">
+    <span class="pref-row-label" id="ntLabelDisponible">✅ Disponible</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntDisponible" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
+  </label>
+  <label class="pref-row" style="border-bottom:1px solid var(--border);">
+    <span class="pref-row-label" id="ntLabelScheduled">📅 Levée planifiée</span>
+    <div class="pref-toggle"><input type="checkbox" id="ntScheduled" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
   </label>
   <div id="notifTypesWarning" style="display:none;padding:10px 16px;font-size:12px;color:var(--yellow);line-height:1.5;">
     ⚠️ <span id="notifTypesWarningText">Aucun type sélectionné — vous ne recevrez aucune notification.</span>
@@ -912,7 +916,7 @@ const TR={
     st:'R\u00E9glages',nsl:'Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
     notifTypesSectionLabel:'Types de notifications',
     notifTypesDesc:'Choisissez les \u00E9v\u00E9nements pour lesquels vous souhaitez \u00EAtre notifi\u00E9.',
-    ntLabelBientot:'\u26A0\uFE0F Levage imminent',
+    ntSuggestedLabel:'SUGG\u00C9R\u00C9ES',ntOptionalLabel:'OPTIONNELLES',ntLabelBientot:'\u26A0\uFE0F Levage imminent',
     ntLabelRaising:'\uD83D\uDD3C En cours de levage',
     ntLabelLeve:'\uD83D\uDEA2 Lev\u00E9',
     ntLabelLowering:'\uD83D\uDD3D En cours de descente',
@@ -966,7 +970,7 @@ const TR={
     st:'Settings',nsl:'Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
     notifTypesSectionLabel:'Notification types',
     notifTypesDesc:'Choose which events you want to be notified about.',
-    ntLabelBientot:'\u26A0\uFE0F Lift imminent',
+    ntSuggestedLabel:'SUGGESTED',ntOptionalLabel:'OPTIONAL',ntLabelBientot:'\u26A0\uFE0F Lift imminent',
     ntLabelRaising:'\uD83D\uDD3C Bridge raising',
     ntLabelLeve:'\uD83D\uDEA2 Bridge lifted',
     ntLabelLowering:'\uD83D\uDD3D Bridge lowering',
@@ -1024,8 +1028,7 @@ if(sd!==null)applyDark(sd==='1');else applyDark(window.matchMedia('(prefers-colo
 // ── Themes ──────────────────────────────────────────────────────────
 const THEMES=['gonzaguois','campivallensien','stanicois'];
 
-function setTheme(theme){
-  track('theme_changed',{theme});
+function applyTheme(theme){
   THEMES.forEach(t=>document.body.classList.remove('theme-'+t));
   document.body.classList.add('theme-'+theme);
   localStorage.setItem('appTheme',theme);
@@ -1033,12 +1036,18 @@ function setTheme(theme){
     const el=document.getElementById('swatch-'+t);
     if(el) el.classList.toggle('active',t===theme);
   });
-  syncPrefs(); // update notification icon on server
+}
+
+function setTheme(theme){
+  applyTheme(theme);
+  track('theme_changed',{theme}); // only called by user click
+  syncPrefs();
 }
 
 function loadTheme(){
   const saved=localStorage.getItem('appTheme')||'gonzaguois';
-  setTheme(saved);
+  applyTheme(saved); // no tracking on boot
+  syncPrefs();
 }
 
 function show(el){el.style.display='block';el.removeAttribute('aria-hidden');}
@@ -1167,6 +1176,7 @@ function loadPrefs(){const s=localStorage.getItem('bridgePrefs');if(!s)return;co
 
 // Notification types
 const NT_TYPES=['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
+const NT_DEFAULT=['bientot_leve','leve','outage']; // suggested defaults only
 function getSelNotifTypes(){
   return NT_TYPES.filter(t=>document.getElementById(getNotifTypeId(t))?.checked!==false);
 }
@@ -1203,12 +1213,11 @@ function dismissNoNotifModal(){
 }
 function loadNotifTypes(){
   const saved=localStorage.getItem('notifTypes');
-  const types=saved?JSON.parse(saved):NT_TYPES; // default all on
+  const types=saved?JSON.parse(saved):NT_DEFAULT; // default suggested only
   NT_TYPES.forEach(t=>{
     const el=document.getElementById(getNotifTypeId(t));
     if(el) el.checked=types.includes(t);
   });
-  // Show warning if none selected
   const warning=document.getElementById('notifTypesWarning');
   if(warning) warning.style.display=types.length===0?'block':'none';
 }
@@ -1265,6 +1274,8 @@ function applyTrans(){
   const d2fl=document.getElementById('day2FilterLabel');if(d2fl)d2fl.textContent=t.day2FilterLabel||'Plage 2 — Jours';
   const ntsl=document.getElementById('notifTypesSectionLabel');if(ntsl)ntsl.textContent=t.notifTypesSectionLabel;
   const ntd=document.getElementById('notifTypesDesc');if(ntd)ntd.textContent=t.notifTypesDesc;
+  const ntSug=document.getElementById('ntSuggestedLabel');if(ntSug)ntSug.textContent=t.ntSuggestedLabel||'SUGGÉRÉES';
+  const ntOpt=document.getElementById('ntOptionalLabel');if(ntOpt)ntOpt.textContent=t.ntOptionalLabel||'OPTIONNELLES';
   ['Bientot','Raising','Leve','Lowering','Disponible','Scheduled','Outage'].forEach(k=>{
     const el=document.getElementById('ntLabel'+k);
     if(el&&t['ntLabel'+k]) el.textContent=t['ntLabel'+k];
@@ -1346,6 +1357,7 @@ async function toggleNotificationsMaster(){
     }catch(e){console.error(e);}
     localStorage.removeItem('notificationsEnabled');
     track('notifications_disabled');
+    track('subscription_lost');
     updateNotifyBtns();
     // Show main CTA again
     const mainBanner=document.getElementById('mainInstallBanner');
@@ -1392,6 +1404,7 @@ async function toggleNotifications(){
     await fetch(BACKEND+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
     localStorage.setItem('notificationsEnabled','true');
     track('notifications_enabled');
+    track('subscription_new');
     updateNotifyBtns();
   }catch(e){
     console.error('Notification error:',e);
@@ -1411,6 +1424,7 @@ async function unsubscribe(){
   }catch(e){console.error(e);}
   localStorage.removeItem('notificationsEnabled');
   track('notifications_disabled');
+  track('subscription_lost');
   updateNotifyBtns();
   closeDrawer();
   // Visual confirmation
@@ -1460,32 +1474,38 @@ function showInstallModal(){
     }
     cta.style.display='none';
   } else if(deferredPrompt){
-    icon.textContent='📲';
-    title.textContent=t.it||'Installer l\'app';
-    sub.textContent=t.is||'Installez l\'app pour recevoir des notifications lors des levages.';
+    icon.textContent='🌉';
+    title.textContent=currentLang==='fr'?'Soyez alerté en temps réel':'Get real-time bridge alerts';
+    sub.textContent=currentLang==='fr'
+      ?'Installez l\'app pour recevoir des notifications dès qu\'un pont se lève — même téléphone verrouillé.'
+      :'Install the app to get notified the moment a bridge lifts — even when your phone is locked.';
     steps.style.display='none';
     cta.style.display='block';
-    cta.textContent=t.it||'📲 Installer l\'app';
+    cta.textContent=currentLang==='fr'?'📲 Installer gratuitement':'📲 Install for free';
   } else if(isIOS){
-    icon.textContent='📲';
-    title.textContent=t.it||'Installer l\'app';
-    sub.textContent=t.is||'Installez l\'app pour recevoir des notifications lors des levages.';
+    icon.textContent='🌉';
+    title.textContent=currentLang==='fr'?'Soyez alerté en temps réel':'Get real-time bridge alerts';
+    sub.textContent=currentLang==='fr'
+      ?'Installez l\'app en 3 secondes pour recevoir des notifications de levée de ponts.'
+      :'Install in 3 seconds to get bridge lift notifications.';
     steps.appendChild(makeStep(1, t.i1||'Appuyez sur <strong>Partager</strong> ↑ en bas de Safari'));
     steps.appendChild(makeStep(2, t.i2||'Sélectionnez <strong>Sur l\'écran d\'accueil</strong>'));
     steps.appendChild(makeStep(3, t.i3||'Appuyez sur <strong>Ajouter</strong> en haut à droite'));
     steps.appendChild(makeStep(4, t.i4||'Ouvrez l\'app depuis votre écran d\'accueil'));
     cta.style.display='none';
   } else {
-    icon.textContent='📲';
-    title.textContent=t.it||'Installer l\'app';
-    sub.textContent=t.is||'Installez l\'app pour recevoir des notifications lors des levages.';
+    icon.textContent='🌉';
+    title.textContent=currentLang==='fr'?'Soyez alerté en temps réel':'Get real-time bridge alerts';
+    sub.textContent=currentLang==='fr'
+      ?'Installez l\'app en 2 secondes pour recevoir des notifications de levée de ponts.'
+      :'Install in 2 seconds to get bridge lift notifications.';
     steps.appendChild(makeStep(1, t.a1||'Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome'));
     steps.appendChild(makeStep(2, t.a2||'Sélectionnez <strong>Ajouter à l\'écran d\'accueil</strong>'));
     steps.appendChild(makeStep(3, t.a3||'Appuyez sur <strong>Ajouter</strong>'));
     cta.style.display='none';
   }
 
-  skip.textContent=t.modalSkip||'Plus tard';
+  skip.textContent=currentLang==='fr'?'Pas maintenant':'Not now';
   overlay.style.display='flex';
   localStorage.setItem('installPromptSeen','1');
 }
@@ -1506,13 +1526,13 @@ function installModalAction(){
 }
 
 function showInstallModalIfNeeded(){
-  if(isPWA) return;                                    // already installed
-  if(isFBWebView){                                     // always show in webview
-    setTimeout(showInstallModal, 1200); return;
-  }
-  if(!isMobile) return;                                // desktop — skip
-  if(localStorage.getItem('installPromptSeen')) return; // already seen
-  setTimeout(showInstallModal, 1500);
+  if(isPWA) return;
+  if(isFBWebView){ setTimeout(showInstallModal, 1200); return; }
+  if(!isMobile) return;
+  if(localStorage.getItem('installPromptSeen')) return;
+  if(localStorage.getItem('notificationsEnabled')==='true') return; // already subscribed
+  // Wait for status to load so user sees value first
+  setTimeout(showInstallModal, 4000);
 }
 
 // Show install link in drawer for non-PWA mobile

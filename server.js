@@ -515,13 +515,12 @@ async function sendNotifications(bridge, status, bridgeData = {}) {
     const bridges = sub.bridges || ['gonzague', 'larocque'];
     if (!bridges.includes(bridge)) { skippedBridge++; continue; }
 
-    // Always send 'disponible' regardless of time range — closes persistent notification
+    // Always send 'disponible' regardless of time range or type filter — closes persistent notification
     const isClosing = status === 'disponible';
     if (!isClosing && !isInTimeRange(sub)) { skippedRange++; continue; }
 
-    const allowedTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
-    if (!allowedTypes.includes(status)) { skippedNoMsg++; continue; }
-    if (!allowedTypes.includes(status)) { skippedNoMsg++; continue; }
+    const allowedTypes = sub.notifTypes || ['bientot_leve','leve','outage'];
+    if (!isClosing && !allowedTypes.includes(status)) { skippedNoMsg++; continue; }
 
     const lang = sub.lang || 'fr';
     const msg = getMessages(bridge, status, lang, bridgeData);
