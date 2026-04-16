@@ -678,6 +678,41 @@ app.get('/history', (req, res) => {
   });
 });
 
+// ── Milestone push notification ───────────────────────────────────────
+app.post('/milestone-notif', async (req, res) => {
+  const { endpoint, milestone, lang } = req.body;
+  if (!endpoint || !milestone) return res.status(400).json({ error: 'missing params' });
+
+  const sub = subscriptions.find(s => s.endpoint === endpoint);
+  if (!sub) return res.status(404).json({ error: 'subscriber not found' });
+
+  const isFr = (lang || sub.lang || 'fr') === 'fr';
+  const messages = {
+    7:  { fr: { title: '🌉 Une semaine ensemble !', body: 'Ça fait 7 jours que l\'app veille sur vos traversées. Un petit mot ?' },
+              en: { title: '🌉 One week together!',  body: 'The app has been watching over your crossings for 7 days. Share a thought?' } },
+    30: { fr: { title: '📅 Un mois déjà !',         body: 'Merci de nous faire confiance depuis un mois. Votre avis nous aide à améliorer l\'app.' },
+              en: { title: '📅 One month already!',  body: 'Thanks for trusting us for a month. Your feedback helps improve the app.' } },
+    90: { fr: { title: '🏅 3 mois de traversées !', body: 'Vous faites partie de nos utilisateurs les plus fidèles. Un immense merci !' },
+              en: { title: '🏅 3 months of crossings!', body: 'You\'re one of our most loyal users. Thank you so much!' } }
+  };
+
+  const msg = (messages[milestone] || {})[isFr ? 'fr' : 'en'];
+  if (!msg) return res.status(400).json({ error: 'invalid milestone' });
+
+  try {
+    await webpush.sendNotification(sub, JSON.stringify({
+      ...msg,
+      tag: `milestone-${milestone}`,
+      persistent: false,
+      icon: notifIcon(sub)
+    }));
+    umamiTrack('milestone_push_sent', { milestone });
+    res.json({ ok: true });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.get('/subscribers', (req, res) => {
   res.json({ count: subscriptions.length });
 });

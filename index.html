@@ -446,7 +446,10 @@
     <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:7px;font-family:var(--mono);" id="mainInstallSub">Recevez des alertes lors des levées de ponts</p>
   </div>
 
-  <div class="donation-card">
+  <!-- Milestone banner — replaces donation card header contextually -->
+  <div id="milestoneBanner" style="display:none;margin-bottom:0;"></div>
+
+  <div class="donation-card" id="donationCard">
     <div class="donation-header">
       <span>🙏</span>
       <span class="donation-title" id="donationTitle">Vous aimez l'app ?</span>
@@ -1469,6 +1472,111 @@ async function unsubscribe(){
   }
 }
 
+// ── Milestone system ─────────────────────────────────────────────────
+const TALLY_URL = { fr: 'https://tally.so/r/1A2Xyp', en: 'https://tally.so/r/0QjdYN' };
+
+function initFirstOpen() {
+  if (!localStorage.getItem('firstOpenDate')) {
+    localStorage.setItem('firstOpenDate', String(Date.now()));
+  }
+}
+
+function getDaysSinceFirst() {
+  const first = parseInt(localStorage.getItem('firstOpenDate') || '0', 10);
+  if (!first) return 0;
+  return Math.floor((Date.now() - first) / 86400000);
+}
+
+function getMilestone(days) {
+  if (days >= 90 && !localStorage.getItem('milestone_90')) return 90;
+  if (days >= 30 && !localStorage.getItem('milestone_30')) return 30;
+  if (days >= 7  && !localStorage.getItem('milestone_7'))  return 7;
+  return null;
+}
+
+function renderMilestoneBanner(milestone) {
+  const banner = document.getElementById('milestoneBanner');
+  if (!banner) return;
+  const name = getUserName();
+  const isFr = currentLang === 'fr';
+  const tallyUrl = TALLY_URL[currentLang] || TALLY_URL.fr;
+  let emoji, title, desc, cta1, cta2;
+  if (milestone === 7) {
+    emoji = '🌉';
+    title = isFr ? (name?name+', une':'Une')+' semaine ensemble !' : (name?name+', one':'One')+' week together!';
+    desc = isFr ? 'Ça fait 7 jours que l\'app veille sur vos traversées. On espère vous avoir évité quelques mauvaises surprises !' : 'The app has been watching over your crossings for 7 days. We hope we\'ve saved you a few frustrating waits!';
+    cta1 = isFr ? '💬 Laisser un commentaire' : '💬 Leave feedback';
+    cta2 = isFr ? '☕ Soutenir le projet' : '☕ Support the project';
+  } else if (milestone === 30) {
+    emoji = '📅';
+    title = isFr ? (name?name+', un':'Un')+' mois déjà !' : (name?name+', one':'One')+' month already!';
+    desc = isFr ? 'Merci d\'utiliser l\'app depuis un mois ! Votre avis nous aide à l\'améliorer pour toute la communauté.' : 'Thanks for using the app for a month! Your feedback helps us improve it for the whole community.';
+    cta1 = isFr ? '💬 Donner mon avis' : '💬 Share my feedback';
+    cta2 = isFr ? '☕ Faire un don' : '☕ Make a donation';
+  } else {
+    emoji = '🏅';
+    title = isFr ? (name?name+', 3':'3')+' mois de traversées !' : (name?name+', 3':'3')+' months of crossings!';
+    desc = isFr ? 'Vous faites partie des utilisateurs les plus fidèles. Merci de faire partie de cette aventure communautaire !' : 'You\'re one of our most loyal users. Thank you for being part of this community project!';
+    cta1 = isFr ? '💬 Partager votre expérience' : '💬 Share your experience';
+    cta2 = isFr ? '☕ Soutenir le projet' : '☕ Support the project';
+  }
+  banner.innerHTML = `
+    <div style="text-align:center;padding:4px 0 12px;">
+      <div style="font-size:32px;margin-bottom:6px;">${emoji}</div>
+      <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">${title}</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:14px;">${desc}</div>
+      <div style="display:flex;gap:8px;">
+        <a href="${tallyUrl}" target="_blank" rel="noopener noreferrer"
+          onclick="track('feedback_clicked',{milestone:${milestone}})"
+          style="flex:1;padding:11px 8px;border-radius:14px;border:1.5px solid var(--accent);background:rgba(var(--accent-rgb),.1);color:var(--accent);text-decoration:none;font-family:var(--sans);font-size:12px;font-weight:700;text-align:center;">
+          ${cta1}
+        </a>
+        <a href="https://ko-fi.com/kevindubreuil" target="_blank" rel="noopener noreferrer"
+          onclick="track('donation_clicked',{amount:'milestone_${milestone}'})"
+          style="flex:1;padding:11px 8px;border-radius:14px;border:1.5px solid #FF5E5B;background:rgba(255,94,91,.07);color:#FF5E5B;text-decoration:none;font-family:var(--sans);font-size:12px;font-weight:700;text-align:center;">
+          ${cta2}
+        </a>
+      </div>
+      <button onclick="dismissMilestone(${milestone})"
+        style="margin-top:10px;background:none;border:none;font-size:11px;color:var(--text3);cursor:pointer;font-family:var(--mono);">
+        ${isFr?'Fermer':'Dismiss'}
+      </button>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0 14px;">
+  `;
+  banner.style.display = 'block';
+  track('milestone_shown', { milestone });
+}
+
+function dismissMilestone(milestone) {
+  localStorage.setItem('milestone_' + milestone, '1');
+  document.getElementById('milestoneBanner').style.display = 'none';
+}
+
+async function checkMilestone() {
+  initFirstOpen();
+  const days = getDaysSinceFirst();
+  const milestone = getMilestone(days);
+  if (!milestone) return;
+  renderMilestoneBanner(milestone);
+  // Send push notification if subscribed and not already sent
+  if (localStorage.getItem('notificationsEnabled')==='true' &&
+      !localStorage.getItem('milestone_push_'+milestone)) {
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      if (sub) {
+        await fetch(BACKEND+'/milestone-notif', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ endpoint: sub.endpoint, milestone, lang: currentLang })
+        });
+        localStorage.setItem('milestone_push_'+milestone, '1');
+      }
+    } catch(e) {}
+  }
+}
+
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
@@ -1703,6 +1811,7 @@ document.getElementById('customAmount').addEventListener('keydown',e=>{
 });
 
 loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();
+checkMilestone();
 showNameModalIfNeeded();
 showInstallModalIfNeeded();
 // Load saved prénom into settings field
