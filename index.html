@@ -762,6 +762,108 @@
 
 <script>
 const BACKEND='https://pont-st-louis-de-gonzague.onrender.com';
+
+// ── AIS vessel tracking (client-side) ────────────────────────────────
+const AIS_KEY = 'f34af67c17c71094f8c307646b6e5db74f860168';
+const AIS_BBOX = [[45.18, -74.02], [45.22, -73.95]];
+const BRIDGES_COORDS = {
+  gonzague: { lat: 45.2053, lon: -73.9855 },
+  larocque: { lat: 45.1942, lon: -74.0020 }
+};
+
+const vesselHistory = new Map();
+let aisWs = null;
+let aisReconnectDelay = 30000;
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function getBestVessel(bridge) {
+  const bp = BRIDGES_COORDS[bridge];
+  const now = Date.now();
+  let best = null, bestScore = 0;
+  for (const [mmsi, hist] of vesselHistory.entries()) {
+    const recent = hist.filter(p => now - p.ts < 300000);
+    if (!recent.length) continue;
+    const latest = recent[recent.length - 1];
+    const distKm = haversineKm(latest.lat, latest.lon, bp.lat, bp.lon);
+    if (distKm > 2.0) continue;
+    let score = Math.max(0, 100 - distKm * 50);
+    const cog = latest.cog;
+    if (cog !== null && ((cog >= 60 && cog <= 120) || (cog >= 240 && cog <= 300))) score += 20;
+    if (recent.length > 1) score += 10;
+    if (recent.some(p => haversineKm(p.lat, p.lon, bp.lat, bp.lon) < 0.3)) score += 30;
+    if (score > bestScore) { bestScore = score; best = { name: latest.name, mmsi, confidence: Math.round(score), cog }; }
+  }
+  return bestScore >= 40 ? best : null;
+}
+
+async function sendVesselUpdate(bridge, vessel) {
+  try {
+    await fetch(BACKEND + '/vessel-update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(vessel ? { bridge, ...vessel } : { bridge, name: null, mmsi: null })
+    });
+  } catch(e) {}
+}
+
+function startAISClient() {
+  if (aisWs) { try { aisWs.close(); } catch(e) {} }
+  aisWs = new WebSocket('wss://stream.aisstream.io/v0/stream');
+
+  aisWs.onopen = () => {
+    console.log('🚢 AIS client connecté');
+    aisReconnectDelay = 30000;
+    aisWs.send(JSON.stringify({
+      APIKey: AIS_KEY,
+      BoundingBoxes: [AIS_BBOX],
+      FilterMessageTypes: ['PositionReport', 'ShipStaticData']
+    }));
+  };
+
+  aisWs.onmessage = (event) => {
+    try {
+      const msg = JSON.parse(event.data);
+      const meta = msg.MetaData;
+      if (!meta) return;
+      const { latitude: lat, longitude: lon, MMSI: mmsi, ShipName } = meta;
+      const name = ShipName?.trim().replace(/[^\x20-\x7E]/g, '').trim();
+      if (!name || name === '!!!ANYSUCHVESSEL!!!' || !mmsi) return;
+      const cog = msg.Message?.PositionReport?.Cog ?? null;
+      const key = String(mmsi);
+      if (!vesselHistory.has(key)) vesselHistory.set(key, []);
+      const hist = vesselHistory.get(key);
+      hist.push({ lat, lon, cog, name, ts: Date.now() });
+      if (hist.length > 20) hist.shift();
+      // Update best vessel per bridge and notify backend
+      for (const bridge of ['gonzague', 'larocque']) {
+        const best = getBestVessel(bridge);
+        sendVesselUpdate(bridge, best);
+      }
+    } catch(e) {}
+  };
+
+  aisWs.onerror = () => {};
+  aisWs.onclose = () => {
+    console.log(`🚢 AIS client déconnecté — reconnexion dans ${aisReconnectDelay/1000}s`);
+    setTimeout(startAISClient, aisReconnectDelay);
+    aisReconnectDelay = Math.min(aisReconnectDelay * 2, 300000);
+  };
+}
+
+// Cleanup stale vessel history every 5 min
+setInterval(() => {
+  const now = Date.now();
+  for (const [mmsi, hist] of vesselHistory.entries()) {
+    const recent = hist.filter(p => now - p.ts < 600000);
+    if (!recent.length) vesselHistory.delete(mmsi);
+    else vesselHistory.set(mmsi, recent);
+  }
+}, 300000);
 // Disable Umami tracking if ?notrack param present (persists via localStorage)
 if(new URLSearchParams(location.search).has('notrack')) localStorage.setItem('umami.disabled','1');
 // ── Bridge timeline ───────────────────────────────────────────────────
@@ -1995,7 +2097,7 @@ document.getElementById('customAmount').addEventListener('keydown',e=>{
   if(e.key==='Enter') openCustomDonation();
 });
 
-loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();
+loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();startAISClient();
 checkMilestone();
 showNameModalIfNeeded();
 showInstallModalIfNeeded();

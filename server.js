@@ -827,6 +827,19 @@ setInterval(async () => {
 app.get('/', (req, res) => res.send('Ponts Beauharnois API'));
 app.get('/ping', (req, res) => res.send('OK'));
 
+// ── Vessel update from frontend AIS ──────────────────────────────────
+app.post('/vessel-update', (req, res) => {
+  const { bridge, name, mmsi, confidence, cog } = req.body;
+  if (!bridge || !['gonzague','larocque'].includes(bridge)) return res.status(400).json({ error: 'Invalid bridge' });
+  if (name && mmsi) {
+    vesselNearBridge[bridge] = { name, mmsi, confidence: confidence || 50, cog, updatedAt: Date.now() };
+    log(`🚢 Navire [${bridge}] via client: ${name} (confiance: ${confidence})`);
+  } else {
+    vesselNearBridge[bridge] = null;
+  }
+  res.json({ ok: true });
+});
+
 app.get('/status', async (req, res) => {
   try {
     const data = await fetchBridgeStatus();
@@ -1013,7 +1026,8 @@ async function start() {
   await loadLiftHistory();
   log(`Ready with ${subscriptions.length} subscriptions — polling every 30s`);
   umamiTrack('subscription_count', { count: subscriptions.length });
-  startAISTracking();
+  // AIS tracking moved to frontend to avoid Render IP rate limiting
+  // startAISTracking();
   await monitor();
   setInterval(monitor, 30000); // 30s to catch short status windows
 }
