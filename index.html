@@ -696,7 +696,7 @@
     <div class="pref-toggle"><input type="checkbox" id="ntScheduled" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
   </div>
   <div class="pref-row">
-    <span class="pref-row-label" id="ntLabelAchalandage"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 52 Q8 40 20 38 Q24 30 32 30 Q40 30 44 38 Q56 40 56 52"/><circle cx="32" cy="20" r="8"/><circle cx="14" cy="26" r="6"/><circle cx="50" cy="26" r="6"/></svg></span>Période achalandée</span>
+    <span class="pref-row-label" id="ntLabelAchalandage"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 38 L14 26 Q15 23 18 23 L30 23 Q33 23 34 26 L38 38 Z"/><rect x="10" y="38" width="28" height="10" rx="3"/><circle cx="17" cy="50" r="4" fill="currentColor" stroke="none"/><circle cx="31" cy="50" r="4" fill="currentColor" stroke="none"/><line x1="14" y1="33" x2="34" y2="33"/><line x1="44" y1="28" x2="56" y2="28"/><line x1="44" y1="36" x2="54" y2="36"/><line x1="44" y1="44" x2="52" y2="44"/></svg></span>Période achalandée</span>
     <div class="pref-toggle"><input type="checkbox" id="ntAchalandage" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
   </label>
   </div>
@@ -1366,7 +1366,7 @@ async function updatePrefs(){localStorage.setItem('bridgePrefs',JSON.stringify(g
 function loadPrefs(){const s=localStorage.getItem('bridgePrefs');if(!s)return;const b=JSON.parse(s);document.getElementById('prefGonzague').checked=b.includes('gonzague');document.getElementById('prefLarocque').checked=b.includes('larocque');}
 
 // Notification types
-const NT_TYPES=['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
+const NT_TYPES=['bientot_leve','raising','leve','lowering','disponible','scheduled','outage','achalandage'];
 const NT_DEFAULT=['bientot_leve','leve','outage']; // suggested defaults only
 function getSelNotifTypes(){
   return NT_TYPES.filter(t=>document.getElementById(getNotifTypeId(t))?.checked!==false);
@@ -1418,7 +1418,7 @@ function loadNotifTypes(){
     if(el) el.checked=types.includes(t);
   });
   // Auto-expand optional section if any optional type is enabled
-  const optionalTypes=['raising','lowering','disponible','scheduled'];
+  const optionalTypes=['raising','lowering','disponible','scheduled','achalandage'];
   const anyOptional=optionalTypes.some(t=>types.includes(t));
   if(anyOptional){
     const content=document.getElementById('ntOptionalContent');
