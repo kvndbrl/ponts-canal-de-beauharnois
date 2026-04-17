@@ -1369,7 +1369,10 @@ function loadPrefs(){const s=localStorage.getItem('bridgePrefs');if(!s)return;co
 const NT_TYPES=['bientot_leve','raising','leve','lowering','disponible','scheduled','outage','achalandage'];
 const NT_DEFAULT=['bientot_leve','leve','outage']; // suggested defaults only
 function getSelNotifTypes(){
-  return NT_TYPES.filter(t=>document.getElementById(getNotifTypeId(t))?.checked!==false);
+  return NT_TYPES.filter(t=>{
+    const el=document.getElementById(getNotifTypeId(t));
+    return el ? el.checked : false;
+  });
 }
 function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 // Map type key → element ID suffix
