@@ -822,10 +822,14 @@ async function monitor() {
 
 // ── VesselFinder/MarineTraffic scraper ───────────────────────────────
 // Try multiple endpoints to find vessels in the canal area
-const VF_URLS = [
-  'https://www.marinetraffic.com/getData/get_data_json_4/sw_x:-74.20/sw_y:45.10/ne_x:-73.70/ne_y:45.35/zoom:12/station:0',
-  'https://www.marinetraffic.com/en/ais/getData/get_data_json_4/sw_x:-74.20/sw_y:45.10/ne_x:-73.70/ne_y:45.35/zoom:12/station:0',
-];
+// MarineTraffic tile coordinates for canal de Beauharnois at zoom 13
+// X: 2409-2414, Y: 2939-2941
+const MT_TILES = [];
+for (let x = 2409; x <= 2414; x++) {
+  for (let y = 2939; y <= 2941; y++) {
+    MT_TILES.push(`https://www.marinetraffic.com/getData/get_data_json_4/z:13/X:${x}/Y:${y}/station:0`);
+  }
+}
 
 let vfPollInterval = null;
 
@@ -836,54 +840,65 @@ function haversineKmServer(lat1, lon1, lat2, lon2) {
 }
 
 async function pollVesselFinder() {
-  for (const url of VF_URLS) {
-    try {
-      const res = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120.0.0.0 Mobile Safari/537.36',
-          'Accept': 'application/json, text/plain, */*',
-          'Accept-Language': 'fr-CA,fr;q=0.9',
-          'Referer': url.includes('marinetraffic') ? 'https://www.marinetraffic.com/' : 'https://www.vesselfinder.com/',
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      });
-      if (!res.ok) { log(`🚢 VF poll error ${url.slice(8,30)}: ${res.status}`); continue; }
-      const text = await res.text();
-      let vessels = [];
-      try { vessels = JSON.parse(text); } catch(e) {
-        // Try extracting data array from MarineTraffic response
-        const m = text.match(/"data"\s*:\s*(\[[\s\S]*?\])/);
-        if (m) vessels = JSON.parse(m[1]);
-      }
-      if (!Array.isArray(vessels) || !vessels.length) { log(`🚢 VF: pas de navires (${url.slice(8,30)})`); continue; }
+  const allVessels = [];
+  const headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'fr-CA,fr;q=0.9',
+    'Referer': 'https://www.marinetraffic.com/',
+    'X-Requested-With': 'XMLHttpRequest'
+  };
 
-      log(`🚢 VF: ${vessels.length} navires trouvés`);
-      for (const bridge of ['gonzague', 'larocque']) {
-        const bp = BRIDGES[bridge];
-        let best = null, bestDist = 999;
-        for (const v of vessels) {
-          // Try various formats
-          const lat = parseFloat(v.LAT || v.lat || v[1]/600000 || 0);
-          const lon = parseFloat(v.LON || v.lon || v[2]/600000 || 0);
-          const name = (v.SHIPNAME || v.name || v[6] || v[5] || '').trim();
-          const mmsi = String(v.MMSI || v.mmsi || v[0] || '');
-          if (!name || !lat || !lon) continue;
-          const dist = haversineKmServer(lat, lon, bp.lat, bp.lon);
-          if (dist < 5 && dist < bestDist) {
-            bestDist = dist;
-            best = { name, mmsi, distKm: Math.round(dist*10)/10, confidence: Math.max(40, Math.round(100 - dist*12)) };
-          }
-        }
-        if (best) {
-          vesselNearBridge[bridge] = { ...best, updatedAt: Date.now() };
-          log(`🚢 [${bridge}]: ${best.name} à ${best.distKm}km`);
-        } else {
-          vesselNearBridge[bridge] = null;
-        }
+  // Fetch a few key tiles in parallel
+  const keyTiles = [
+    MT_TILES[7],  // center tile
+    MT_TILES[6],
+    MT_TILES[8],
+    MT_TILES[3],
+    MT_TILES[4],
+  ].filter(Boolean);
+
+  const results = await Promise.allSettled(keyTiles.map(url =>
+    fetch(url, { headers }).then(r => r.ok ? r.json() : null)
+  ));
+
+  for (const r of results) {
+    if (r.status !== 'fulfilled' || !r.value) continue;
+    const data = r.value;
+    // MarineTraffic returns {data: [...]} or array directly
+    const vessels = Array.isArray(data) ? data : (data?.data || []);
+    allVessels.push(...vessels);
+  }
+
+  if (!allVessels.length) {
+    log('🚢 MT: aucun navire reçu');
+    return;
+  }
+
+  log(`🚢 MT: ${allVessels.length} navires trouvés`);
+
+  for (const bridge of ['gonzague', 'larocque']) {
+    const bp = BRIDGES[bridge];
+    let best = null, bestDist = 999;
+
+    for (const v of allVessels) {
+      const lat = parseFloat(v.LAT || v.lat || v[0] || 0);
+      const lon = parseFloat(v.LON || v.lon || v[1] || 0);
+      const name = (v.SHIPNAME || v.name || v[2] || '').trim();
+      const mmsi = String(v.MMSI || v.mmsi || v[3] || '');
+      if (!name || !lat || !lon) continue;
+      const dist = haversineKmServer(lat, lon, bp.lat, bp.lon);
+      if (dist < 5 && dist < bestDist) {
+        bestDist = dist;
+        best = { name, mmsi, distKm: Math.round(dist*10)/10, confidence: Math.max(40, Math.round(100 - dist*12)) };
       }
-      return; // success — no need to try other URLs
-    } catch(e) {
-      log(`🚢 VF erreur: ${e.message}`);
+    }
+
+    if (best) {
+      vesselNearBridge[bridge] = { ...best, updatedAt: Date.now() };
+      log(`🚢 [${bridge}]: ${best.name} à ${best.distKm}km`);
+    } else {
+      vesselNearBridge[bridge] = null;
     }
   }
 }
