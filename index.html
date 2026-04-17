@@ -302,7 +302,7 @@
     .unsub-btn{background:none;border:none;font-family:var(--sans);font-size:13px;color:var(--text3);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;}
 
     /* Donation card — prominent, lifted above boat */
-    .donation-card{background:linear-gradient(135deg,var(--surface) 0%,rgba(var(--accent-rgb),.07) 100%);border-radius:var(--radius);box-shadow:0 4px 24px rgba(var(--accent-rgb),.18),var(--shadow);border:1.5px solid rgba(var(--accent-rgb),.35);border-top:3px solid var(--accent);padding:10px 14px 12px;margin-top:auto;margin-bottom:160px;position:relative;z-index:1;flex-shrink:0;}
+    .donation-card{background:var(--surface);border-radius:var(--radius);box-shadow:0 4px 24px rgba(var(--accent-rgb),.18),var(--shadow);border:1.5px solid rgba(var(--accent-rgb),.35);border-top:3px solid var(--accent);padding:10px 14px 12px;margin-top:auto;margin-bottom:160px;position:relative;z-index:1;flex-shrink:0;}
     .donation-header{display:flex;align-items:center;gap:8px;margin-bottom:2px;}
     .donation-title{font-size:15px;font-weight:700;color:var(--text);}
     .donation-desc{font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.4;}
@@ -552,12 +552,6 @@
       </div>
     </div>
 
-    <!-- Ko-fi — secondary link -->
-    <a href="https://ko-fi.com/kevindubreuil" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:'kofi',platform:'kofi'})"
-      style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:8px;border-radius:10px;border:1px solid rgba(247,103,79,.25);background:transparent;text-decoration:none;color:var(--text3);">
-      <span style="display:inline-flex;width:24px;height:24px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"> <!-- White background circle/sticker shape --> <rect x="4" y="4" width="92" height="92" rx="24" fill="white"/> <!-- Dark outline --> <rect x="4" y="4" width="92" height="92" rx="24" fill="none" stroke="#1a1a1a" stroke-width="5"/> <!-- Cup body --> <path d="M22 38 L22 72 Q22 80 30 80 L62 80 Q70 80 70 72 L70 62 L76 62 Q84 62 84 54 Q84 46 76 46 L70 46 L70 38 Z" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-linejoin="round"/> <!-- Cup handle --> <path d="M70 48 L76 48 Q80 48 80 54 Q80 60 76 60 L70 60" fill="none" stroke="#1a1a1a" stroke-width="4.5" stroke-linejoin="round"/> <!-- Cup fill --> <path d="M24 40 L24 72 Q24 78 30 78 L62 78 Q68 78 68 72 L68 40 Z" fill="#1a1a1a" opacity="0.06"/> <!-- Orange heart --> <path d="M46 68 C46 68 30 58 30 48 Q30 42 36 42 Q41 42 46 48 Q51 42 56 42 Q62 42 62 48 C62 58 46 68 46 68 Z" fill="#F7674F"/> </svg></span>
-      <span id="kofiLabel" style="font-family:var(--sans);font-size:12px;font-weight:500;">Soutenir sur Ko-fi</span>
-    </a>
   </div>
 
   <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
@@ -1526,8 +1520,6 @@ function applyTrans(){
   const donDesc=document.getElementById('donationDesc');if(donDesc)donDesc.textContent=t.dd;
   const customLabel=document.getElementById('customDonateLabel');
   if(customLabel) customLabel.textContent=t.customDonate;
-  const kofiLabel=document.getElementById('kofiLabel');
-  if(kofiLabel) kofiLabel.textContent=t.kofiLabel||'Soutenir sur Ko-fi';
   const customInput=document.getElementById('customAmount');
   if(customInput) customInput.placeholder=t.customPlaceholder;
   const lb=document.getElementById('langBtn');lb.textContent=currentLang==='fr'?'EN':'FR';lb.setAttribute('aria-label',t.ll2);
@@ -1733,9 +1725,9 @@ function renderMilestoneBanner(milestone) {
           style="flex:1;padding:11px 8px;border-radius:14px;border:1.5px solid var(--accent);background:rgba(var(--accent-rgb),.1);color:var(--accent);text-decoration:none;font-family:var(--sans);font-size:12px;font-weight:700;text-align:center;">
           ${cta1}
         </a>
-        <a href="https://ko-fi.com/kevindubreuil" target="_blank" rel="noopener noreferrer"
+        <a href="https://paypal.me/kvndbrl" target="_blank" rel="noopener noreferrer"
           onclick="track('donation_clicked',{amount:'milestone_${milestone}'})"
-          style="flex:1;padding:11px 8px;border-radius:14px;border:1.5px solid #FF5E5B;background:rgba(255,94,91,.07);color:#FF5E5B;text-decoration:none;font-family:var(--sans);font-size:12px;font-weight:700;text-align:center;">
+          style="flex:1;padding:11px 8px;border-radius:14px;border:1.5px solid #0070BA;background:rgba(0,112,186,.07);color:#0070BA;text-decoration:none;font-family:var(--sans);font-size:12px;font-weight:700;text-align:center;">
           ${cta2}
         </a>
       </div>
