@@ -857,7 +857,7 @@ app.post('/subscribe', async (req, res) => {
     existing.timeRanges = sub.timeRanges || [];
     existing.lang = sub.lang || 'fr';
     existing.theme = sub.theme || 'gonzaguois';
-    existing.notifTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled','outage'];
+    existing.notifTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled','outage','achalandage'];
     existing.notifDays = sub.notifDays !== undefined ? sub.notifDays : [0,1,2,3,4,5,6];
     existing.notifDays2 = sub.notifDays2 !== undefined ? sub.notifDays2 : [0,1,2,3,4,5,6];
     await saveSubscription(existing);
@@ -927,7 +927,82 @@ app.get('/subscribers', (req, res) => {
   res.json({ count: subscriptions.length });
 });
 
-const PORT = process.env.PORT || 3000;
+// ── Busy period advance notifications ────────────────────────────────
+// Track which bridge+day combos have already sent a busy alert today
+const busyAlertSentToday = { gonzague: null, larocque: null }; // stores date string
+
+function getBusyHoursForBridge(bridge) {
+  const h = liftHistory[bridge];
+  if (!h || h.length < 5) return [];
+  // Count lifts per hour slot
+  const counts = {};
+  for (const entry of h) {
+    counts[entry.hour] = (counts[entry.hour] || 0) + 1;
+  }
+  // Return hours where count >= 3 OR >= 25% of total
+  const threshold = Math.max(3, h.length * 0.15);
+  return Object.entries(counts)
+    .filter(([, count]) => count >= threshold)
+    .map(([hour]) => parseInt(hour));
+}
+
+async function checkBusyPeriodAlerts() {
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const currentHour = now.getHours();
+  const currentMin = now.getMinutes();
+
+  for (const bridge of ['gonzague', 'larocque']) {
+    // Only send once per day per bridge
+    if (busyAlertSentToday[bridge] === todayStr) continue;
+
+    const busyHours = getBusyHoursForBridge(bridge);
+    if (!busyHours.length) continue;
+
+    // Check if any busy hour starts in ~25-35 min from now
+    const inRange = busyHours.some(h => {
+      const minsUntil = (h * 60) - (currentHour * 60 + currentMin);
+      return minsUntil >= 25 && minsUntil <= 35;
+    });
+
+    if (!inRange) continue;
+
+    busyAlertSentToday[bridge] = todayStr;
+    log(`🔔 Alerte achalandage [${bridge}] — envoi notifications`);
+    umamiTrack('busy_alert_sent', { bridge });
+
+    const bridgeName = { fr: { gonzague: 'Pont St-Louis', larocque: 'Pont Larocque' }, en: { gonzague: 'St-Louis Bridge', larocque: 'Larocque Bridge' } };
+    let sent = 0, skipped = 0;
+
+    for (const sub of subscriptions) {
+      try {
+        const allowedTypes = sub.notifTypes || ['bientot_leve', 'leve', 'outage'];
+        if (!allowedTypes.includes('achalandage')) { skipped++; continue; }
+        if (sub.bridges && !sub.bridges.includes(bridge)) { skipped++; continue; }
+
+        const lang = sub.lang || 'fr';
+        const name = bridgeName[lang]?.[bridge] || bridgeName.fr[bridge];
+        const notifIcon = sub.theme === 'gonzaguois' ? '/notification-icon-gonzaguois.png'
+          : sub.theme === 'campivallensien' ? '/notification-icon-campivallensien.png'
+          : sub.theme === 'stanicois' ? '/notification-icon-stanicois.png'
+          : '/notification-icon.png';
+
+        const payload = lang === 'fr'
+          ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min · Prévoir un itinéraire alternatif`, icon: notifIcon, tag: `pont-busy-${bridge}`, renotify: true }
+          : { title: `⚠️ ${name}`, body: `Busy period in ~30 min · Consider an alternate route`, icon: notifIcon, tag: `pont-busy-${bridge}`, renotify: true };
+
+        await webpush.sendNotification(sub.subscription, JSON.stringify(payload));
+        sent++;
+      } catch (e) {
+        if (e.statusCode === 410) subscriptions = subscriptions.filter(s => s !== sub);
+      }
+    }
+    log(`🔔 Alerte achalandage [${bridge}] — ✅ ${sent} envoyées | ⏭ ${skipped} ignorées`);
+  }
+}
+
+// Check every 5 minutes
+setInterval(checkBusyPeriodAlerts, 5 * 60 * 1000);
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 async function start() {
