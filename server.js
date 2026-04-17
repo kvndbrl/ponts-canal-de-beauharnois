@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // ── AIS vessel tracking ───────────────────────────────────────────────
-const AIS_API_KEY = process.env.AIS_API_KEY || '863161f597fc75bcafa5a947c4b00c97210e84bb';
+const AIS_API_KEY = process.env.AIS_API_KEY || 'f34af67c17c71094f8c307646b6e5db74f860168';
 
 // Bounding box around canal de Beauharnois
 // [minLat, minLon], [maxLat, maxLon]
