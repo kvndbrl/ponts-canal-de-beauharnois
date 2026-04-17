@@ -807,13 +807,83 @@ async function monitor() {
     lastStatus.larocque = data.larocque.status;
     await saveLastStatus();
 
+    // Start VesselFinder polling when any bridge is active, stop when all disponible
+    const anyActive = ['gonzague','larocque'].some(b =>
+      ['raising','leve','bientot_leve'].includes(data[b].status)
+    );
+    if (anyActive) startVesselFinderPolling();
+    else stopVesselFinderPolling();
+
   } catch(e) {
     log(`🚨 Monitor error: ${e.message}`);
     console.error(e);
   }
 }
 
-// ── Auto-ping ─────────────────────────────────────────────────────────
+// ── VesselFinder scraper ──────────────────────────────────────────────
+// Poll VesselFinder when a bridge is lifted to identify vessels
+const VF_URL = 'https://www.vesselfinder.com/vesselsonmap' +
+  '?minlat=45.10&maxlat=45.35&minlon=-74.20&maxlon=-73.70&z=12&mmsi=0&show_names=1&select=0';
+
+let vfPollInterval = null;
+
+function haversineKmServer(lat1, lon1, lat2, lon2) {
+  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+async function pollVesselFinder() {
+  try {
+    const res = await fetch(VF_URL, {
+      headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json', 'Referer': 'https://www.vesselfinder.com/' }
+    });
+    if (!res.ok) { log(`🚢 VF poll error: ${res.status}`); return; }
+    const data = await res.json();
+    // VesselFinder returns array of vessels: [mmsi, lat*600000, lon*600000, cog, sog, name, ...]
+    if (!Array.isArray(data)) return;
+    for (const bridge of ['gonzague', 'larocque']) {
+      const bp = BRIDGES[bridge];
+      let best = null, bestDist = 999;
+      for (const v of data) {
+        // Format: [mmsi, lat*600000, lon*600000, cog, sog, heading, name, ...]
+        const lat = v[1] / 600000;
+        const lon = v[2] / 600000;
+        const name = v[6] || v[5] || '';
+        const mmsi = String(v[0]);
+        if (!name || !mmsi) continue;
+        const dist = haversineKmServer(lat, lon, bp.lat, bp.lon);
+        if (dist < 5 && dist < bestDist) {
+          bestDist = dist;
+          best = { name: name.trim(), mmsi, distKm: Math.round(dist*10)/10, confidence: Math.max(40, Math.round(100 - dist*12)) };
+        }
+      }
+      if (best) {
+        vesselNearBridge[bridge] = { ...best, updatedAt: Date.now() };
+        log(`🚢 VesselFinder [${bridge}]: ${best.name} à ${best.distKm}km`);
+      } else {
+        vesselNearBridge[bridge] = null;
+      }
+    }
+  } catch(e) {
+    log(`🚢 VF erreur: ${e.message}`);
+  }
+}
+
+function startVesselFinderPolling() {
+  if (vfPollInterval) return;
+  log('🚢 VesselFinder polling démarré');
+  pollVesselFinder();
+  vfPollInterval = setInterval(pollVesselFinder, 30000);
+}
+
+function stopVesselFinderPolling() {
+  if (vfPollInterval) {
+    clearInterval(vfPollInterval);
+    vfPollInterval = null;
+    log('🚢 VesselFinder polling arrêté');
+  }
+}
 setInterval(async () => {
   try {
     await fetch('https://pont-st-louis-de-gonzague.onrender.com/ping');
