@@ -343,6 +343,21 @@ function getAvgLoweringDuration(bridge) {
   return Math.round(avg / 60000);
 }
 
+// Returns true if the current hour is historically busy for this bridge
+// "Busy" = this 2-hour window has ≥3 lifts historically (out of all recorded)
+function isBusyPeriod(bridge) {
+  const h = liftHistory[bridge];
+  if (!h || h.length < 5) return false; // not enough data
+  const now = new Date();
+  const currentHour = now.getHours();
+  // Count lifts in same day-of-week ± same 2h window
+  const window = h.filter(e =>
+    Math.abs(e.hour - currentHour) <= 1
+  );
+  // Busy if this window represents ≥25% of all lifts or ≥3 entries
+  return window.length >= 3 || (window.length / h.length) >= 0.25;
+}
+
 function trackStatusTransition(bridge, prev, curr) {
   const now = Date.now();
   if ((curr === 'raising' || curr === 'leve') && !liftActive[bridge]) {
@@ -613,17 +628,23 @@ function getMessages(bridge, status, lang, data) {
     ? ` · Réouverture prévue ~${hm}`
     : ` · Expected reopen ~${hm}`;
 
+  // Busy period warning
+  const busy = isBusyPeriod(bridge);
+  const busyStr = busy
+    ? (lang === 'fr' ? ' · Période achalandée — prévoir un itinéraire alternatif' : ' · Busy period — consider an alternate route')
+    : '';
+
   const fr = {
-    bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai${liftStr}` },
-    raising:      { title: `🔼 ${n}`, body: `En cours de levage · Circulation interrompue${liftStr}` },
+    bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai${liftStr}${busyStr}` },
+    raising:      { title: `🔼 ${n}`, body: `En cours de levage · Circulation interrompue${liftStr}${busyStr}` },
     leve:         { title: `🚢 ${n}`, body: `Pont levé${vesselStr||(' · Passage d\'un navire')}${liftStr}` },
     lowering:     { title: `🔽 ${n}`, body: `Pont redescend · Bientôt disponible${lowerStr}` },
     disponible:   { title: `✅ ${n}`, body: `Disponible · Circulation normale` },
     outage:       { title: `🚧 ${n}`, body: `Fermeture planifiée${outageStr}` }
   };
   const en = {
-    bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expect delays${liftStr}` },
-    raising:      { title: `🔼 ${n}`, body: `Bridge raising · Traffic interrupted${liftStr}` },
+    bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expect delays${liftStr}${busyStr}` },
+    raising:      { title: `🔼 ${n}`, body: `Bridge raising · Traffic interrupted${liftStr}${busyStr}` },
     leve:         { title: `🚢 ${n}`, body: `Bridge lifted${vesselStr||' · Vessel passing'}${liftStr}` },
     lowering:     { title: `🔽 ${n}`, body: `Bridge lowering · Opening soon${lowerStr}` },
     disponible:   { title: `✅ ${n}`, body: `Available · Traffic normal` },
