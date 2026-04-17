@@ -395,6 +395,7 @@
   <div class="greeting-block" aria-live="polite">
     <span class="greeting-text" id="greetingText">Bonjour !</span>
     <span class="weather-text" id="weatherText">—</span>
+    <span id="aisDebug" style="display:block;font-size:10px;font-family:var(--mono);margin-top:6px;color:var(--text3);">🔴 AIS: init...</span>
   </div>
   <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">
     <span class="burger-line"></span>
@@ -811,12 +812,19 @@ async function sendVesselUpdate(bridge, vessel) {
   } catch(e) {}
 }
 
+function aisDebug(msg) {
+  const el = document.getElementById('aisDebug');
+  if (el) el.textContent = msg;
+}
+
 function startAISClient() {
   if (aisWs) { try { aisWs.close(); } catch(e) {} }
+  aisDebug('🟡 AIS: connexion...');
   aisWs = new WebSocket('wss://stream.aisstream.io/v0/stream');
 
   aisWs.onopen = () => {
     console.log('🚢 AIS client connecté');
+    aisDebug('🟢 AIS: connecté — en attente de navires');
     aisReconnectDelay = 30000;
     aisWs.send(JSON.stringify({
       APIKey: AIS_KEY,
@@ -839,6 +847,7 @@ function startAISClient() {
       const hist = vesselHistory.get(key);
       hist.push({ lat, lon, cog, name, ts: Date.now() });
       if (hist.length > 20) hist.shift();
+      aisDebug(`🟢 AIS: navire détecté — ${name}`);
       // Update best vessel per bridge and notify backend
       for (const bridge of ['gonzague', 'larocque']) {
         const best = getBestVessel(bridge);
@@ -847,8 +856,9 @@ function startAISClient() {
     } catch(e) {}
   };
 
-  aisWs.onerror = () => {};
+  aisWs.onerror = () => { aisDebug('🔴 AIS: erreur'); };
   aisWs.onclose = () => {
+    aisDebug(`🔴 AIS: déconnecté — reconnexion dans ${aisReconnectDelay/1000}s`);
     console.log(`🚢 AIS client déconnecté — reconnexion dans ${aisReconnectDelay/1000}s`);
     setTimeout(startAISClient, aisReconnectDelay);
     aisReconnectDelay = Math.min(aisReconnectDelay * 2, 300000);
