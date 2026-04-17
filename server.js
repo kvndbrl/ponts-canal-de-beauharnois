@@ -836,7 +836,16 @@ function haversineKmServer(lat1, lon1, lat2, lon2) {
 async function pollVesselFinder() {
   try {
     const res = await fetch(VF_URL, {
-      headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json', 'Referer': 'https://www.vesselfinder.com/' }
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'fr-CA,fr;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://www.vesselfinder.com/',
+        'Origin': 'https://www.vesselfinder.com',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Connection': 'keep-alive'
+      }
     });
     if (!res.ok) { log(`🚢 VF poll error: ${res.status}`); return; }
     const data = await res.json();
