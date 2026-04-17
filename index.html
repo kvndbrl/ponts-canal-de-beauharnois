@@ -395,7 +395,6 @@
   <div class="greeting-block" aria-live="polite">
     <span class="greeting-text" id="greetingText">Bonjour !</span>
     <span class="weather-text" id="weatherText">—</span>
-    <span id="aisDebug" style="display:block;font-size:10px;font-family:var(--mono);margin-top:6px;color:var(--text3);">🔴 AIS: init...</span>
   </div>
   <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">
     <span class="burger-line"></span>
@@ -428,11 +427,6 @@
       <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
       <span class="timer-text" id="timerGonzague">—</span>
     </div>
-    <div id="vesselGonzague" style="display:none;padding:0 16px 12px;display:none;align-items:center;gap:10px;">
-      <img id="vesselImgGonzague" src="" alt="" width="36" height="36"
-        style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;"
-        onerror="this.style.display='none';document.getElementById('vesselIconGonzague').style.display='flex'"/>
-      <div id="vesselIconGonzague" style="display:none;width:36px;height:36px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);align-items:center;justify-content:center;font-size:18px;flex-shrink:0;"><span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"> <!-- Water line --> <rect x="2" y="50" rx="1.2" opacity="0.3"/> <!-- Left approach road --> <rect x="2" y="44" width="16" height="3" rx="1.5"/> <!-- Right approach road --> <rect x="46" y="44" width="16" height="3" rx="1.5"/> <!-- Left tower --> <rect x="17" y="18" width="4" height="29" rx="1.5"/> <!-- Right tower --> <rect x="43" y="18" width="4" height="29" rx="1.5"/> <!-- Bascule raised vertical ~90 degrees --> <g transform="rotate(-88, 21, 45.5)"> <rect x="21" y="43" width="24" height="3" rx="1.5"/> </g> <!-- Left cable taut --> <path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Right cable --> <path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Ship passing through --> <path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/> <path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/> </svg></span></div>
       <span id="vesselNameGonzague" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span>
     </div>
     <div class="bridge-timeline" id="timelineGonzague">
@@ -483,11 +477,6 @@
       <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
       <span class="timer-text" id="timerLarocque">—</span>
     </div>
-    <div id="vesselLarocque" style="display:none;padding:0 16px 12px;display:none;align-items:center;gap:10px;">
-      <img id="vesselImgLarocque" src="" alt="" width="36" height="36"
-        style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;"
-        onerror="this.style.display='none';document.getElementById('vesselIconLarocque').style.display='flex'"/>
-      <div id="vesselIconLarocque" style="display:none;width:36px;height:36px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);align-items:center;justify-content:center;font-size:18px;flex-shrink:0;"><span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"> <!-- Water line --> <rect x="2" y="50" rx="1.2" opacity="0.3"/> <!-- Left approach road --> <rect x="2" y="44" width="16" height="3" rx="1.5"/> <!-- Right approach road --> <rect x="46" y="44" width="16" height="3" rx="1.5"/> <!-- Left tower --> <rect x="17" y="18" width="4" height="29" rx="1.5"/> <!-- Right tower --> <rect x="43" y="18" width="4" height="29" rx="1.5"/> <!-- Bascule raised vertical ~90 degrees --> <g transform="rotate(-88, 21, 45.5)"> <rect x="21" y="43" width="24" height="3" rx="1.5"/> </g> <!-- Left cable taut --> <path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Right cable --> <path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Ship passing through --> <path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/> <path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/> </svg></span></div>
       <span id="vesselNameLarocque" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span>
     </div>
     <div class="bridge-timeline" id="timelineLarocque">
@@ -764,116 +753,6 @@
 <script>
 const BACKEND='https://pont-st-louis-de-gonzague.onrender.com';
 
-// ── AIS vessel tracking (client-side) ────────────────────────────────
-const AIS_KEY = 'f34af67c17c71094f8c307646b6e5db74f860168';
-const AIS_BBOX = [[45.10, -74.20], [45.35, -73.70]];
-const BRIDGES_COORDS = {
-  gonzague: { lat: 45.2053, lon: -73.9855 },
-  larocque: { lat: 45.1942, lon: -74.0020 }
-};
-
-const vesselHistory = new Map();
-let aisWs = null;
-let aisReconnectDelay = 30000;
-
-function haversineKm(lat1, lon1, lat2, lon2) {
-  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-function getBestVessel(bridge) {
-  const bp = BRIDGES_COORDS[bridge];
-  const now = Date.now();
-  let best = null, bestScore = 0;
-  for (const [mmsi, hist] of vesselHistory.entries()) {
-    const recent = hist.filter(p => now - p.ts < 300000);
-    if (!recent.length) continue;
-    const latest = recent[recent.length - 1];
-    const distKm = haversineKm(latest.lat, latest.lon, bp.lat, bp.lon);
-    if (distKm > 2.0) continue;
-    let score = Math.max(0, 100 - distKm * 50);
-    const cog = latest.cog;
-    if (cog !== null && ((cog >= 60 && cog <= 120) || (cog >= 240 && cog <= 300))) score += 20;
-    if (recent.length > 1) score += 10;
-    if (recent.some(p => haversineKm(p.lat, p.lon, bp.lat, bp.lon) < 0.3)) score += 30;
-    if (score > bestScore) { bestScore = score; best = { name: latest.name, mmsi, confidence: Math.round(score), cog }; }
-  }
-  return bestScore >= 40 ? best : null;
-}
-
-async function sendVesselUpdate(bridge, vessel) {
-  try {
-    await fetch(BACKEND + '/vessel-update', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(vessel ? { bridge, ...vessel } : { bridge, name: null, mmsi: null })
-    });
-  } catch(e) {}
-}
-
-function aisDebug(msg) {
-  const el = document.getElementById('aisDebug');
-  if (el) el.textContent = msg;
-}
-
-function startAISClient() {
-  if (aisWs) { try { aisWs.close(); } catch(e) {} }
-  aisDebug('🟡 AIS: connexion...');
-  aisWs = new WebSocket('wss://stream.aisstream.io/v0/stream');
-
-  aisWs.onopen = () => {
-    console.log('🚢 AIS client connecté');
-    aisDebug('🟢 AIS: connecté — en attente de navires');
-    aisReconnectDelay = 30000;
-    aisWs.send(JSON.stringify({
-      APIKey: AIS_KEY,
-      BoundingBoxes: [AIS_BBOX],
-      FilterMessageTypes: ['PositionReport', 'ShipStaticData']
-    }));
-  };
-
-  aisWs.onmessage = (event) => {
-    try {
-      const msg = JSON.parse(event.data);
-      const meta = msg.MetaData;
-      if (!meta) return;
-      const { latitude: lat, longitude: lon, MMSI: mmsi, ShipName } = meta;
-      const name = ShipName?.trim().replace(/[^\x20-\x7E]/g, '').trim();
-      if (!name || name === '!!!ANYSUCHVESSEL!!!' || !mmsi) return;
-      const cog = msg.Message?.PositionReport?.Cog ?? null;
-      const key = String(mmsi);
-      if (!vesselHistory.has(key)) vesselHistory.set(key, []);
-      const hist = vesselHistory.get(key);
-      hist.push({ lat, lon, cog, name, ts: Date.now() });
-      if (hist.length > 20) hist.shift();
-      aisDebug(`🟢 AIS: navire détecté — ${name}`);
-      // Update best vessel per bridge and notify backend
-      for (const bridge of ['gonzague', 'larocque']) {
-        const best = getBestVessel(bridge);
-        sendVesselUpdate(bridge, best);
-      }
-    } catch(e) {}
-  };
-
-  aisWs.onerror = () => { aisDebug('🔴 AIS: erreur'); };
-  aisWs.onclose = () => {
-    aisDebug(`🔴 AIS: déconnecté — reconnexion dans ${aisReconnectDelay/1000}s`);
-    console.log(`🚢 AIS client déconnecté — reconnexion dans ${aisReconnectDelay/1000}s`);
-    setTimeout(startAISClient, aisReconnectDelay);
-    aisReconnectDelay = Math.min(aisReconnectDelay * 2, 300000);
-  };
-}
-
-// Cleanup stale vessel history every 5 min
-setInterval(() => {
-  const now = Date.now();
-  for (const [mmsi, hist] of vesselHistory.entries()) {
-    const recent = hist.filter(p => now - p.ts < 600000);
-    if (!recent.length) vesselHistory.delete(mmsi);
-    else vesselHistory.set(mmsi, recent);
-  }
-}, 300000);
 // Disable Umami tracking if ?notrack param present (persists via localStorage)
 if(new URLSearchParams(location.search).has('notrack')) localStorage.setItem('umami.disabled','1');
 // ── Bridge timeline ───────────────────────────────────────────────────
@@ -1472,29 +1351,6 @@ function updateCards(){
     if(isLifted){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=getLiftTimerText(b,lastData[b].status,currentLang);
-      // Show vessel name if available
-      const vesselEl=document.getElementById('vessel'+C);
-      const vesselNameEl=document.getElementById('vesselName'+C);
-      if(vesselEl&&vesselNameEl&&lastData[b].vessel?.name){
-        const v=lastData[b].vessel;
-        const conf=v.confidence||0;
-        const confLabel=conf>=80?'':'~';
-        vesselNameEl.textContent=confLabel+v.name;
-        // Set vessel image
-        const imgEl=document.getElementById('vesselImg'+C);
-        const iconEl=document.getElementById('vesselIcon'+C);
-        if(imgEl&&v.mmsi){
-          imgEl.src=`https://photos.marinetraffic.com/ais/showphoto.aspx?mmsi=${v.mmsi}&size=thumb300`;
-          imgEl.style.display='block';
-          if(iconEl) iconEl.style.display='none';
-        } else if(iconEl){
-          if(imgEl) imgEl.style.display='none';
-          iconEl.style.display='flex';
-        }
-        vesselEl.style.display='flex';
-      } else if(vesselEl){
-        vesselEl.style.display='none';
-      }
     } else if(isLowering){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=currentLang==='fr'?'Le pont redescend \u2014 Bient\u00F4t disponible':'Bridge is lowering \u2014 Opening soon';
@@ -2156,7 +2012,7 @@ document.getElementById('customAmount').addEventListener('keydown',e=>{
   if(e.key==='Enter') openCustomDonation();
 });
 
-loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();startAISClient();
+loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();
 setTimeout(showChangelog, 1200);
 checkMilestone();
 showNameModalIfNeeded();
