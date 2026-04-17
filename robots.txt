@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ponts-canal-de-beauharnois.vercel.app/sitemap.xml
