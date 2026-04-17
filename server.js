@@ -991,7 +991,7 @@ async function checkBusyPeriodAlerts() {
           ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min · Prévoir un itinéraire alternatif`, icon: notifIcon, tag: `pont-busy-${bridge}`, renotify: true }
           : { title: `⚠️ ${name}`, body: `Busy period in ~30 min · Consider an alternate route`, icon: notifIcon, tag: `pont-busy-${bridge}`, renotify: true };
 
-        await webpush.sendNotification(sub.subscription, JSON.stringify(payload));
+        await webpush.sendNotification(sub, JSON.stringify(payload));
         sent++;
       } catch (e) {
         if (e.statusCode === 410) subscriptions = subscriptions.filter(s => s !== sub);
@@ -1003,6 +1003,8 @@ async function checkBusyPeriodAlerts() {
 
 // Check every 5 minutes
 setInterval(checkBusyPeriodAlerts, 5 * 60 * 1000);
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 async function start() {
