@@ -382,12 +382,76 @@
 </div>
 
 <div id="nameModalOverlay" class="name-modal-overlay" style="display:none;" aria-modal="true" role="dialog">
-  <div class="name-modal">
-    <div class="name-modal-title" id="modalTitle">Comment vous appelez-vous ?</div>
-    <div class="name-modal-sub" id="modalSub">Votre prénom sera affiché dans la salutation. Vous pourrez le modifier dans les réglages.</div>
-    <input class="name-modal-input" id="nameModalInput" type="text" maxlength="30" autocomplete="given-name" placeholder="Prénom"/>
-    <button class="name-modal-btn" id="modalBtn" onclick="saveName()">Continuer</button>
-    <button class="name-modal-skip" id="modalSkip" onclick="skipName()">Passer</button>
+  <div class="name-modal" style="max-width:380px;">
+
+    <!-- Step indicator -->
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:20px;justify-content:center;">
+      <div id="ob-dot-1" style="width:8px;height:8px;border-radius:50%;background:var(--accent);transition:all .3s;"></div>
+      <div id="ob-dot-2" style="width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s;"></div>
+      <div id="ob-dot-3" style="width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s;"></div>
+    </div>
+
+    <!-- Step 1: Prénom -->
+    <div id="ob-step-1">
+      <div class="name-modal-title" id="modalTitle">Comment vous appelez-vous ?</div>
+      <div class="name-modal-sub" id="modalSub">Votre prénom sera affiché dans la salutation.</div>
+      <input class="name-modal-input" id="nameModalInput" type="text" maxlength="30" autocomplete="given-name" placeholder="Prénom"/>
+      <button class="name-modal-btn" id="modalBtn" onclick="obNext1()">Continuer</button>
+      <button class="name-modal-skip" id="modalSkip" onclick="obNext1()">Passer</button>
+    </div>
+
+    <!-- Step 2: Ponts -->
+    <div id="ob-step-2" style="display:none;">
+      <div class="name-modal-title" id="obBridgeTitle">Quels ponts suivre ?</div>
+      <div class="name-modal-sub" id="obBridgeSub">Choisissez les ponts pour lesquels vous souhaitez recevoir des notifications.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+        <label style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;border:2px solid var(--accent);background:rgba(var(--accent-rgb),.08);cursor:pointer;">
+          <input type="checkbox" id="ob-bridge-gonzague" checked style="width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;"/>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text);font-family:var(--sans);" id="obGonzagueLabel">Pont St-Louis-de-Gonzague</div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--mono);">St-Louis-de-Gonzague</div>
+          </div>
+        </label>
+        <label style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;border:2px solid var(--accent);background:rgba(var(--accent-rgb),.08);cursor:pointer;">
+          <input type="checkbox" id="ob-bridge-larocque" checked style="width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;"/>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text);font-family:var(--sans);" id="obLarocqueLabel">Pont Larocque</div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--mono);">Valleyfield</div>
+          </div>
+        </label>
+      </div>
+      <button class="name-modal-btn" onclick="obNext2()" id="obBridgeBtn">Continuer</button>
+    </div>
+
+    <!-- Step 3: Types de notifications -->
+    <div id="ob-step-3" style="display:none;">
+      <div class="name-modal-title" id="obNotifTitle">Quelles notifications ?</div>
+      <div class="name-modal-sub" id="obNotifSub">Choisissez les événements pour lesquels vous voulez être alerté.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-bientot" checked style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
+          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtBientotLabel">Levage imminent</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-leve" checked style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
+          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtLeveLabel">Pont levé</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-disponible" style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
+          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtDispoLabel">Pont disponible</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-outage" checked style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
+          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtOutageLabel">Fermeture planifiée</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-achalandage" style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
+          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtAchalandageLabel">Période achalandée</span>
+        </label>
+      </div>
+      <button class="name-modal-btn" onclick="obFinish()" id="obNotifBtn">Terminer</button>
+    </div>
+
   </div>
 </div>
 
@@ -948,15 +1012,55 @@ function updateGreeting(){
   }
 }
 
-function saveName(){
-  const val=document.getElementById('nameModalInput').value.trim();
+// ── Onboarding ────────────────────────────────────────────────────────
+function obSetStep(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById(`ob-step-${i}`).style.display = i===n ? 'block' : 'none';
+    const dot = document.getElementById(`ob-dot-${i}`);
+    dot.style.background = i===n ? 'var(--accent)' : i<n ? 'var(--accent)' : 'var(--border)';
+    dot.style.opacity = i<=n ? '1' : '0.4';
+  });
+}
+
+function obNext1() {
+  const val = document.getElementById('nameModalInput').value.trim();
   localStorage.setItem('userName', val);
-  localStorage.setItem('nameAsked', '1');
-  document.getElementById('nameModalOverlay').style.display='none';
-  // Sync input in settings
-  const si=document.getElementById('prenomInput');
-  if(si) si.value=val;
+  const si = document.getElementById('prenomInput');
+  if(si) si.value = val;
   updateGreeting();
+  obSetStep(2);
+}
+
+function obNext2() {
+  const g = document.getElementById('ob-bridge-gonzague').checked;
+  const l = document.getElementById('ob-bridge-larocque').checked;
+  const bridges = [g && 'gonzague', l && 'larocque'].filter(Boolean);
+  if (!bridges.length) { alert(currentLang==='fr' ? 'Sélectionnez au moins un pont.' : 'Select at least one bridge.'); return; }
+  localStorage.setItem('bridges', JSON.stringify(bridges));
+  // Update drawer checkboxes
+  const cg = document.getElementById('bridgeGonzague');
+  const cl = document.getElementById('bridgeLarocque');
+  if(cg) cg.checked = g;
+  if(cl) cl.checked = l;
+  obSetStep(3);
+}
+
+function obFinish() {
+  const types = [];
+  if(document.getElementById('ob-nt-bientot')?.checked) types.push('bientot_leve');
+  if(document.getElementById('ob-nt-leve')?.checked) types.push('leve');
+  if(document.getElementById('ob-nt-disponible')?.checked) types.push('disponible');
+  if(document.getElementById('ob-nt-outage')?.checked) types.push('outage');
+  if(document.getElementById('ob-nt-achalandage')?.checked) types.push('achalandage');
+  localStorage.setItem('notifTypes', JSON.stringify(types.length ? types : ['bientot_leve','leve','outage']));
+  localStorage.setItem('nameAsked', '1');
+  loadNotifTypes(); // sync drawer toggles
+  document.getElementById('nameModalOverlay').style.display = 'none';
+  syncPrefs();
+}
+
+function saveName(){
+  obNext1();
 }
 
 function skipName(){
@@ -973,12 +1077,28 @@ function updatePrenom(){
 function showNameModalIfNeeded(){
   if(localStorage.getItem('nameAsked')) return;
   const t=TR[currentLang];
+  // Step 1 labels
   document.getElementById('modalTitle').textContent=t.modalTitle||'Comment vous appelez-vous\u00A0?';
-  document.getElementById('modalSub').textContent=t.modalSub||'Votre prénom sera affiché dans la salutation. Vous pourrez le modifier dans les réglages.';
+  document.getElementById('modalSub').textContent=t.modalSub||'Votre prénom sera affiché dans la salutation.';
   document.getElementById('modalBtn').textContent=t.modalBtn||'Continuer';
   document.getElementById('modalSkip').textContent=t.modalSkip||'Passer';
   document.getElementById('nameModalInput').placeholder=t.modalPlaceholder||'Prénom';
-  // Small delay so app loads first
+  // Step 2 labels
+  if(document.getElementById('obBridgeTitle')) document.getElementById('obBridgeTitle').textContent=currentLang==='fr'?'Quels ponts suivre ?':'Which bridges to follow?';
+  if(document.getElementById('obBridgeSub')) document.getElementById('obBridgeSub').textContent=currentLang==='fr'?'Choisissez les ponts pour lesquels vous souhaitez recevoir des notifications.':'Choose which bridges to receive notifications for.';
+  if(document.getElementById('obGonzagueLabel')) document.getElementById('obGonzagueLabel').textContent='Pont St-Louis-de-Gonzague';
+  if(document.getElementById('obLarocqueLabel')) document.getElementById('obLarocqueLabel').textContent=currentLang==='fr'?'Pont Larocque':'Larocque Bridge';
+  if(document.getElementById('obBridgeBtn')) document.getElementById('obBridgeBtn').textContent=t.modalBtn||'Continuer';
+  // Step 3 labels
+  if(document.getElementById('obNotifTitle')) document.getElementById('obNotifTitle').textContent=currentLang==='fr'?'Quelles notifications ?':'Which notifications?';
+  if(document.getElementById('obNotifSub')) document.getElementById('obNotifSub').textContent=currentLang==='fr'?'Choisissez les événements pour lesquels vous voulez être alerté.':'Choose which events you want to be alerted for.';
+  if(document.getElementById('obNtBientotLabel')) document.getElementById('obNtBientotLabel').textContent=currentLang==='fr'?'Levage imminent':'Lift imminent';
+  if(document.getElementById('obNtLeveLabel')) document.getElementById('obNtLeveLabel').textContent=currentLang==='fr'?'Pont levé':'Bridge lifted';
+  if(document.getElementById('obNtDispoLabel')) document.getElementById('obNtDispoLabel').textContent=currentLang==='fr'?'Pont disponible':'Bridge available';
+  if(document.getElementById('obNtOutageLabel')) document.getElementById('obNtOutageLabel').textContent=currentLang==='fr'?'Fermeture planifiée':'Planned closure';
+  if(document.getElementById('obNtAchalandageLabel')) document.getElementById('obNtAchalandageLabel').textContent=currentLang==='fr'?'Période achalandée':'Busy period';
+  if(document.getElementById('obNotifBtn')) document.getElementById('obNotifBtn').textContent=currentLang==='fr'?'Terminer':'Done';
+  obSetStep(1);
   setTimeout(()=>{
     document.getElementById('nameModalOverlay').style.display='flex';
     document.getElementById('nameModalInput').focus();
