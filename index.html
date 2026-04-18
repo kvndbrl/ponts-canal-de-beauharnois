@@ -428,25 +428,40 @@
       <div class="name-modal-title" id="obNotifTitle">Quelles notifications ?</div>
       <div class="name-modal-sub" id="obNotifSub">Choisissez les événements pour lesquels vous voulez être alerté.</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
-          <input type="checkbox" id="ob-nt-bientot" checked style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
-          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtBientotLabel">Levage imminent</span>
+        <label style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-bientot" checked style="width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;margin-top:2px;"/>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);font-family:var(--sans);" id="obNtBientotLabel">Levage imminent</div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;" id="obNtBientotDesc">Avisé quelques minutes avant que le pont commence à se lever.</div>
+          </div>
         </label>
-        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
-          <input type="checkbox" id="ob-nt-leve" checked style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
-          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtLeveLabel">Pont levé</span>
+        <label style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-leve" checked style="width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;margin-top:2px;"/>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);font-family:var(--sans);" id="obNtLeveLabel">Pont levé</div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;" id="obNtLeveDesc">Notifié dès que le pont est levé, avec l'heure de réouverture estimée.</div>
+          </div>
         </label>
-        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
-          <input type="checkbox" id="ob-nt-disponible" style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
-          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtDispoLabel">Pont disponible</span>
+        <label style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-disponible" style="width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;margin-top:2px;"/>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);font-family:var(--sans);" id="obNtDispoLabel">Pont disponible</div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;" id="obNtDispoDesc">Avisé dès que la circulation reprend après une levée.</div>
+          </div>
         </label>
-        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
-          <input type="checkbox" id="ob-nt-outage" checked style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
-          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtOutageLabel">Fermeture planifiée</span>
+        <label style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-outage" checked style="width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;margin-top:2px;"/>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);font-family:var(--sans);" id="obNtOutageLabel">Fermeture planifiée</div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;" id="obNtOutageDesc">Prévenu à l'avance des fermetures planifiées connues.</div>
+          </div>
         </label>
-        <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
-          <input type="checkbox" id="ob-nt-achalandage" style="width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;"/>
-          <span style="font-size:13px;color:var(--text);font-family:var(--sans);" id="obNtAchalandageLabel">Période achalandée</span>
+        <label style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:12px;background:var(--surface2);cursor:pointer;">
+          <input type="checkbox" id="ob-nt-achalandage" style="width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;margin-top:2px;"/>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);font-family:var(--sans);" id="obNtAchalandageLabel">Période achalandée</div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;" id="obNtAchalandageDesc">Alerte 30 min avant une période historiquement chargée en levées.</div>
+          </div>
         </label>
       </div>
       <button class="name-modal-btn" onclick="obFinish()" id="obNotifBtn">Terminer</button>
@@ -1093,10 +1108,15 @@ function showNameModalIfNeeded(){
   if(document.getElementById('obNotifTitle')) document.getElementById('obNotifTitle').textContent=currentLang==='fr'?'Quelles notifications ?':'Which notifications?';
   if(document.getElementById('obNotifSub')) document.getElementById('obNotifSub').textContent=currentLang==='fr'?'Choisissez les événements pour lesquels vous voulez être alerté.':'Choose which events you want to be alerted for.';
   if(document.getElementById('obNtBientotLabel')) document.getElementById('obNtBientotLabel').textContent=currentLang==='fr'?'Levage imminent':'Lift imminent';
+  if(document.getElementById('obNtBientotDesc')) document.getElementById('obNtBientotDesc').textContent=currentLang==='fr'?'Avisé quelques minutes avant que le pont commence à se lever.':'Notified a few minutes before the bridge starts to rise.';
   if(document.getElementById('obNtLeveLabel')) document.getElementById('obNtLeveLabel').textContent=currentLang==='fr'?'Pont levé':'Bridge lifted';
+  if(document.getElementById('obNtLeveDesc')) document.getElementById('obNtLeveDesc').textContent=currentLang==='fr'?'Notifié dès que le pont est levé, avec l\'heure de réouverture estimée.':'Notified as soon as the bridge is lifted, with estimated reopen time.';
   if(document.getElementById('obNtDispoLabel')) document.getElementById('obNtDispoLabel').textContent=currentLang==='fr'?'Pont disponible':'Bridge available';
+  if(document.getElementById('obNtDispoDesc')) document.getElementById('obNtDispoDesc').textContent=currentLang==='fr'?'Avisé dès que la circulation reprend après une levée.':'Notified as soon as traffic resumes after a lift.';
   if(document.getElementById('obNtOutageLabel')) document.getElementById('obNtOutageLabel').textContent=currentLang==='fr'?'Fermeture planifiée':'Planned closure';
+  if(document.getElementById('obNtOutageDesc')) document.getElementById('obNtOutageDesc').textContent=currentLang==='fr'?'Prévenu à l\'avance des fermetures planifiées connues.':'Advance notice of known planned closures.';
   if(document.getElementById('obNtAchalandageLabel')) document.getElementById('obNtAchalandageLabel').textContent=currentLang==='fr'?'Période achalandée':'Busy period';
+  if(document.getElementById('obNtAchalandageDesc')) document.getElementById('obNtAchalandageDesc').textContent=currentLang==='fr'?'Alerte 30 min avant une période historiquement chargée en levées.':'Alert 30 min before a historically busy period.';
   if(document.getElementById('obNotifBtn')) document.getElementById('obNotifBtn').textContent=currentLang==='fr'?'Terminer':'Done';
   obSetStep(1);
   setTimeout(()=>{
