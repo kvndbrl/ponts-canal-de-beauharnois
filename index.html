@@ -1143,6 +1143,7 @@ function obTriggerInstall() {
 
 function obClose() {
   localStorage.setItem('nameAsked','1');
+  localStorage.setItem('nameAskedAt', Date.now().toString());
   document.getElementById('nameModalOverlay').style.display = 'none';
   syncPrefs();
   setTimeout(showChangelog, 600);
@@ -2089,8 +2090,10 @@ function showInstallModalIfNeeded(){
   if(isFBWebView){ setTimeout(showInstallModal, 1200); return; }
   if(!isMobile) return;
   if(localStorage.getItem('installPromptSeen')) return;
-  if(localStorage.getItem('notificationsEnabled')==='true') return; // already subscribed
-  // Wait for status to load so user sees value first
+  if(localStorage.getItem('notificationsEnabled')==='true') return;
+  // Don't show if onboarding was just completed (user already saw install CTA in step 5)
+  const nameAskedAt = localStorage.getItem('nameAskedAt');
+  if(nameAskedAt && Date.now() - parseInt(nameAskedAt) < 60000) return;
   setTimeout(showInstallModal, 4000);
 }
 
