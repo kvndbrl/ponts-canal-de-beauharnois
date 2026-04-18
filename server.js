@@ -681,8 +681,8 @@ function log(msg) { console.log(`[${new Date().toISOString()}] ${msg}`); }
 // Send scheduled lift notification
 async function sendScheduledLiftNotification(bridge, time) {
   const names = {
-    fr: { gonzague: 'Pont St-Louis-de-Gonzague', larocque: 'Pont Larocque (Valleyfield)' },
-    en: { gonzague: 'St-Louis-de-Gonzague Bridge', larocque: 'Larocque Bridge (Valleyfield)' }
+    fr: { gonzague: 'Pont St-Louis', larocque: 'Pont Larocque (Valleyfield)' },
+    en: { gonzague: 'St-Louis Bridge', larocque: 'Larocque Bridge (Valleyfield)' }
   };
 
   let sent = 0, skippedRange = 0, skippedBridge = 0, failed = 0;
@@ -811,8 +811,7 @@ async function monitor() {
     const anyActive = ['gonzague','larocque'].some(b =>
       ['raising','leve','bientot_leve'].includes(data[b].status)
     );
-    if (anyActive) startVesselFinderPolling();
-    else stopVesselFinderPolling();
+    // VesselFinder polling disabled — no reliable free AIS source for this area
 
   } catch(e) {
     log(`🚨 Monitor error: ${e.message}`);
@@ -821,20 +820,6 @@ async function monitor() {
 }
 
 
-function startVesselFinderPolling() {
-  if (vfPollInterval) return;
-  log('🚢 VesselFinder polling démarré');
-  pollVesselFinder();
-  vfPollInterval = setInterval(pollVesselFinder, 30000);
-}
-
-function stopVesselFinderPolling() {
-  if (vfPollInterval) {
-    clearInterval(vfPollInterval);
-    vfPollInterval = null;
-    log('🚢 VesselFinder polling arrêté');
-  }
-}
 setInterval(async () => {
   try {
     await fetch('https://pont-st-louis-de-gonzague.onrender.com/ping');
