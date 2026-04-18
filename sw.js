@@ -10,7 +10,7 @@ self.addEventListener('push', function(event) {
   const options = {
     body: data.body || '',
     icon: data.icon || '/notification-icon.png',
-    badge: '/notification-icon.png',
+    badge: data.badge || '/notification-icon.png',
     tag: tag,
     renotify: true,
     requireInteraction: !isAvailable,
