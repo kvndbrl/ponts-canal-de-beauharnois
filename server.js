@@ -1016,14 +1016,11 @@ async function checkBusyPeriodAlerts() {
 
         const lang = sub.lang || 'fr';
         const name = bridgeName[lang]?.[bridge] || bridgeName.fr[bridge];
-        const notifIcon = sub.theme === 'gonzaguois' ? '/notification-icon-gonzaguois.png'
-          : sub.theme === 'campivallensien' ? '/notification-icon-campivallensien.png'
-          : sub.theme === 'stanicois' ? '/notification-icon-stanicois.png'
-          : '/notification-icon.png';
+        const icon = notifIcon(sub);
 
         const payload = lang === 'fr'
-          ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min · Prévoir un itinéraire alternatif`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true }
-          : { title: `⚠️ ${name}`, body: `Busy period in ~30 min · Consider an alternate route`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true };
+          ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min · Prévoir un itinéraire alternatif`, icon: icon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true }
+          : { title: `⚠️ ${name}`, body: `Busy period in ~30 min · Consider an alternate route`, icon: icon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true };
 
         await webpush.sendNotification(sub, JSON.stringify(payload));
         sent++;
