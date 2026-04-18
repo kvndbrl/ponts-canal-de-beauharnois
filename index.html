@@ -1113,9 +1113,9 @@ function obNext2() {
   const l = document.getElementById('ob-bridge-larocque').checked;
   const bridges = [g && 'gonzague', l && 'larocque'].filter(Boolean);
   if (!bridges.length) { alert(currentLang==='fr' ? 'Sélectionnez au moins un pont.' : 'Select at least one bridge.'); return; }
-  localStorage.setItem('bridges', JSON.stringify(bridges));
-  const cg = document.getElementById('bridgeGonzague');
-  const cl = document.getElementById('bridgeLarocque');
+  localStorage.setItem('bridgePrefs', JSON.stringify(bridges));
+  const cg = document.getElementById('prefGonzague');
+  const cl = document.getElementById('prefLarocque');
   if(cg) cg.checked = g;
   if(cl) cl.checked = l;
   obSetStep(3);
