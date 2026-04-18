@@ -2095,7 +2095,13 @@ function showInstallModalIfNeeded(){
 }
 
 // Show install link in drawer for non-PWA mobile
-if(!isPWA && isMobile){
+const isInstalled = isPWA
+  || window.matchMedia('(display-mode:fullscreen)').matches
+  || window.matchMedia('(display-mode:minimal-ui)').matches
+  || navigator.standalone === true
+  || document.referrer.includes('android-app://');
+
+if(!isInstalled && isMobile){
   const banner=document.getElementById('installBanner');
   if(banner) banner.style.display='block';
 }
