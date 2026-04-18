@@ -389,6 +389,7 @@
       <div id="ob-dot-1" style="width:8px;height:8px;border-radius:50%;background:var(--accent);transition:all .3s;"></div>
       <div id="ob-dot-2" style="width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s;"></div>
       <div id="ob-dot-3" style="width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s;"></div>
+      <div id="ob-dot-4" style="width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s;"></div>
     </div>
 
     <!-- Step 1: Prénom -->
@@ -465,6 +466,32 @@
         </label>
       </div>
       <button class="name-modal-btn" onclick="obFinish()" id="obNotifBtn">Terminer</button>
+    </div>
+
+    <!-- Step 4: Activer les notifications -->
+    <div id="ob-step-4" style="display:none;text-align:center;">
+      <div style="display:flex;justify-content:center;margin-bottom:16px;">
+        <span style="display:inline-flex;width:56px;height:56px;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8 a16 16 0 0 1 16 16 v12 l6 8 H10 l6 -8 V24 a16 16 0 0 1 16 -16 Z"/><path d="M26 52 a6 6 0 0 0 12 0"/><line x1="32" y1="8" x2="32" y2="4"/></svg></span>
+      </div>
+      <div class="name-modal-title" id="obNotifActivateTitle">Activer les notifications</div>
+      <div class="name-modal-sub" id="obNotifActivateSub">Recevez des alertes en temps réel sur votre téléphone lors des levées de ponts.</div>
+      <button class="name-modal-btn" id="obActivateBtn" onclick="obActivateNotifs()">Activer les notifications</button>
+      <button class="name-modal-skip" onclick="obSkipNotifs()" id="obSkipNotifsBtn">Plus tard</button>
+    </div>
+
+    <!-- Step 5: Confirmation -->
+    <div id="ob-step-5" style="display:none;text-align:center;padding:8px 0;">
+      <div style="display:flex;justify-content:center;margin-bottom:16px;">
+        <span style="display:inline-flex;width:56px;height:56px;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="22"/><path d="M20 32 L28 42 L44 24"/></svg></span>
+      </div>
+      <div class="name-modal-title" id="obDoneTitle">Vous êtes prêt !</div>
+      <div class="name-modal-sub" id="obDoneSub">Vous recevrez des notifications lors des levées de ponts.</div>
+      <div id="obInstallCta" style="display:none;margin-bottom:12px;padding:14px;border-radius:16px;background:rgba(var(--accent-rgb),.08);border:1.5px solid rgba(var(--accent-rgb),.2);">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;font-family:var(--sans);" id="obInstallTitle">Installer l'app</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-bottom:10px;" id="obInstallDesc">Ajoutez l'app sur votre écran d'accueil pour un accès rapide.</div>
+        <button onclick="obTriggerInstall()" class="name-modal-btn" style="margin-top:0;padding:11px;" id="obInstallBtn">Installer</button>
+      </div>
+      <button class="name-modal-btn" onclick="obClose()" id="obCloseBtn">Commencer</button>
     </div>
 
   </div>
@@ -1028,12 +1055,18 @@ function updateGreeting(){
 }
 
 // ── Onboarding ────────────────────────────────────────────────────────
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstallPrompt = e; });
+
 function obSetStep(n) {
-  [1,2,3].forEach(i => {
-    document.getElementById(`ob-step-${i}`).style.display = i===n ? 'block' : 'none';
+  [1,2,3,4,5].forEach(i => {
+    const step = document.getElementById(`ob-step-${i}`);
+    if(step) step.style.display = i===n ? 'block' : 'none';
     const dot = document.getElementById(`ob-dot-${i}`);
-    dot.style.background = i===n ? 'var(--accent)' : i<n ? 'var(--accent)' : 'var(--border)';
-    dot.style.opacity = i<=n ? '1' : '0.4';
+    if(dot) {
+      dot.style.background = i <= n ? 'var(--accent)' : 'var(--border)';
+      dot.style.opacity = i <= n ? '1' : '0.4';
+    }
   });
 }
 
@@ -1052,7 +1085,6 @@ function obNext2() {
   const bridges = [g && 'gonzague', l && 'larocque'].filter(Boolean);
   if (!bridges.length) { alert(currentLang==='fr' ? 'Sélectionnez au moins un pont.' : 'Select at least one bridge.'); return; }
   localStorage.setItem('bridges', JSON.stringify(bridges));
-  // Update drawer checkboxes
   const cg = document.getElementById('bridgeGonzague');
   const cl = document.getElementById('bridgeLarocque');
   if(cg) cg.checked = g;
@@ -1068,10 +1100,52 @@ function obFinish() {
   if(document.getElementById('ob-nt-outage')?.checked) types.push('outage');
   if(document.getElementById('ob-nt-achalandage')?.checked) types.push('achalandage');
   localStorage.setItem('notifTypes', JSON.stringify(types.length ? types : ['bientot_leve','leve','outage']));
-  localStorage.setItem('nameAsked', '1');
-  loadNotifTypes(); // sync drawer toggles
+  loadNotifTypes();
+  obSetStep(4);
+}
+
+async function obActivateNotifs() {
+  const btn = document.getElementById('obActivateBtn');
+  if(btn) { btn.disabled = true; btn.textContent = currentLang==='fr' ? 'Activation...' : 'Activating...'; }
+  try {
+    await toggleNotifications();
+  } catch(e) {}
+  obShowConfirmation();
+}
+
+function obSkipNotifs() {
+  localStorage.setItem('nameAsked','1');
+  obShowConfirmation();
+}
+
+function obShowConfirmation() {
+  localStorage.setItem('nameAsked','1');
+  const notifEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+  // Update sub text based on notif status
+  const sub = document.getElementById('obDoneSub');
+  if(sub) sub.textContent = notifEnabled
+    ? (currentLang==='fr' ? 'Vous recevrez des notifications lors des levées de ponts.' : 'You will receive notifications for bridge lifts.')
+    : (currentLang==='fr' ? 'Vous pouvez activer les notifications à tout moment dans les réglages.' : 'You can enable notifications anytime in settings.');
+  // Show install CTA if available
+  if(deferredInstallPrompt) {
+    const ic = document.getElementById('obInstallCta');
+    if(ic) ic.style.display = 'block';
+  }
+  obSetStep(5);
+}
+
+function obTriggerInstall() {
+  if(!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; });
+  document.getElementById('obInstallCta').style.display = 'none';
+}
+
+function obClose() {
+  localStorage.setItem('nameAsked','1');
   document.getElementById('nameModalOverlay').style.display = 'none';
   syncPrefs();
+  setTimeout(showChangelog, 600);
 }
 
 function saveName(){
@@ -1118,6 +1192,17 @@ function showNameModalIfNeeded(){
   if(document.getElementById('obNtAchalandageLabel')) document.getElementById('obNtAchalandageLabel').textContent=currentLang==='fr'?'Période achalandée':'Busy period';
   if(document.getElementById('obNtAchalandageDesc')) document.getElementById('obNtAchalandageDesc').textContent=currentLang==='fr'?'Alerte 30 min avant une période historiquement chargée en levées.':'Alert 30 min before a historically busy period.';
   if(document.getElementById('obNotifBtn')) document.getElementById('obNotifBtn').textContent=currentLang==='fr'?'Terminer':'Done';
+  // Step 4 labels
+  if(document.getElementById('obNotifActivateTitle')) document.getElementById('obNotifActivateTitle').textContent=currentLang==='fr'?'Activer les notifications':'Enable notifications';
+  if(document.getElementById('obNotifActivateSub')) document.getElementById('obNotifActivateSub').textContent=currentLang==='fr'?'Recevez des alertes en temps réel sur votre téléphone lors des levées de ponts.':'Receive real-time alerts on your phone when bridges are lifted.';
+  if(document.getElementById('obActivateBtn')) document.getElementById('obActivateBtn').textContent=currentLang==='fr'?'Activer les notifications':'Enable notifications';
+  if(document.getElementById('obSkipNotifsBtn')) document.getElementById('obSkipNotifsBtn').textContent=currentLang==='fr'?'Plus tard':'Later';
+  // Step 5 labels
+  if(document.getElementById('obDoneTitle')) document.getElementById('obDoneTitle').textContent=currentLang==='fr'?'Vous êtes prêt !':'You\'re all set!';
+  if(document.getElementById('obInstallTitle')) document.getElementById('obInstallTitle').textContent=currentLang==='fr'?'Installer l\'app':'Install the app';
+  if(document.getElementById('obInstallDesc')) document.getElementById('obInstallDesc').textContent=currentLang==='fr'?'Ajoutez l\'app sur votre écran d\'accueil pour un accès rapide.':'Add the app to your home screen for quick access.';
+  if(document.getElementById('obInstallBtn')) document.getElementById('obInstallBtn').textContent=currentLang==='fr'?'Installer':'Install';
+  if(document.getElementById('obCloseBtn')) document.getElementById('obCloseBtn').textContent=currentLang==='fr'?'Commencer':'Get started';
   obSetStep(1);
   setTimeout(()=>{
     document.getElementById('nameModalOverlay').style.display='flex';
@@ -2145,7 +2230,8 @@ document.getElementById('customAmount').addEventListener('keydown',e=>{
 });
 
 loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();
-setTimeout(showChangelog, 1200);
+// Changelog shown after onboarding (called from obClose) or on load if onboarding already done
+if(localStorage.getItem('nameAsked')) setTimeout(showChangelog, 1200);
 checkMilestone();
 showNameModalIfNeeded();
 showInstallModalIfNeeded();
