@@ -667,7 +667,7 @@ function parseScheduledLifts(text) {
 }
 
 // ── Notification icon per theme ───────────────────────────────────────
-const BASE_URL = 'https://pont-st-louis-de-gonzague.vercel.app';
+const BASE_URL = 'https://ponts-canal-de-beauharnois.vercel.app';
 const VALID_THEMES = ['gonzaguois', 'campivallensien', 'stanicois'];
 
 function notifIcon(sub) {
