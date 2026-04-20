@@ -864,7 +864,6 @@
     <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">×</button>
   </div>
   </div><!-- end notifSectionContent -->
-  <div id="drawerBottomSpacer" style="min-height:160px;"></div>
 
   <div class="drawer-lang">
     <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
@@ -1746,7 +1745,12 @@ function updateNotifyBtns(){
   const mt=document.getElementById('notifMasterToggle');
   if(mt) mt.checked=en;
   const content=document.getElementById('notifSectionContent');
-  if(content) content.style.display=en?'block':'none';
+  if(content){
+    content.style.visibility=en?'visible':'hidden';
+    content.style.maxHeight=en?'':'0';
+    content.style.overflow=en?'':'hidden';
+    content.style.display='block';
+  }
   const mainBanner=document.getElementById('mainInstallBanner');
   if(mainBanner) mainBanner.style.display=en?'none':'block';
 }
