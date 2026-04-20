@@ -1357,6 +1357,7 @@ function openDrawer(){
   document.getElementById('settingsDrawer').classList.add('open');
   document.getElementById('settingsDrawer').removeAttribute('aria-hidden');
   document.getElementById('drawerOverlay').classList.add('open');
+  syncNotifState(); // vérifier l'état réel de la subscription à chaque ouverture
 }
 function closeDrawer(){
   document.getElementById('settingsDrawer').classList.remove('open');
