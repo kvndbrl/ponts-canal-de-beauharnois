@@ -326,7 +326,7 @@
     /* Disclaimer in drawer */
     .drawer-disclaimer{font-size:11px;color:var(--text3);line-height:1.65;padding:16px;border-top:1px solid var(--border);margin-top:4px;}
     .drawer-disclaimer a{color:var(--text2);text-decoration:underline;text-underline-offset:2px;}
-    .drawer-lang{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);margin-top:8px;}
+    .drawer-lang{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
     .lang-btn{background:var(--surface2);border:1.5px solid var(--border);font-family:var(--sans);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;letter-spacing:.5px;padding:8px 18px;border-radius:50px;transition:all .18s;}
     .lang-btn:active{background:var(--accent);color:#fff;border-color:var(--accent);}
   </style>
@@ -751,7 +751,7 @@
     </div>
     <div class="section-primary-desc" id="notifSectionDesc">Activez pour recevoir des alertes lors des changements de statut des ponts.</div>
   </div>
-  <div id="notifSectionContent" style="display:none;">
+  <div id="notifSectionContent"><div id="notifSectionInner" style="display:none;">
   <div class="settings-section-sub-label" id="bridgesSectionLabel">Ponts</div>
   <div class="settings-section-desc" id="settingsBridgesDesc">Choisissez les ponts pour lesquels vous souhaitez être notifié.</div>
   <label class="pref-row">
@@ -863,7 +863,7 @@
     <div id="range2End"></div>
     <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">×</button>
   </div>
-  </div><!-- end notifSectionContent -->
+  </div></div><!-- end notifSectionContent -->
 
   <div class="drawer-lang">
     <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
@@ -1744,13 +1744,8 @@ function updateNotifyBtns(){
   hide(document.getElementById('notifyBtn'));
   const mt=document.getElementById('notifMasterToggle');
   if(mt) mt.checked=en;
-  const content=document.getElementById('notifSectionContent');
-  if(content){
-    content.style.visibility=en?'visible':'hidden';
-    content.style.maxHeight=en?'':'0';
-    content.style.overflow=en?'':'hidden';
-    content.style.display='block';
-  }
+  const content=document.getElementById('notifSectionInner');
+  if(content) content.style.display=en?'block':'none';
   const mainBanner=document.getElementById('mainInstallBanner');
   if(mainBanner) mainBanner.style.display=en?'none':'block';
 }
@@ -1870,8 +1865,7 @@ function mainCtaAction(){
 async function toggleNotificationsMaster(){
   const mt=document.getElementById('notifMasterToggle');
   if(!mt) return;
-  const willEnable = !mt.checked; // flip state
-  mt.checked = willEnable;
+  const willEnable = mt.checked; // checkbox already reflects new state after click
   if(willEnable){
     await toggleNotifications();
     if(localStorage.getItem('notificationsEnabled')!=='true') mt.checked=false;
