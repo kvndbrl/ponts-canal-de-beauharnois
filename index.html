@@ -1204,6 +1204,7 @@ function updatePrenom(){
 }
 
 function showNameModalIfNeeded(){
+  if(isFBWebView) return; // WebView: skip onboarding, show browser prompt instead
   if(localStorage.getItem('nameAsked')) return;
   const t=TR[currentLang];
   // Step 1 labels
@@ -2153,7 +2154,7 @@ function installModalAction(){
 
 function showInstallModalIfNeeded(){
   if(isPWA) return;
-  if(isFBWebView){ setTimeout(showInstallModal, 1200); return; }
+  if(isFBWebView){ showInstallModal(); return; }
   if(!isMobile) return;
   if(localStorage.getItem('installPromptSeen')) return;
   if(localStorage.getItem('notificationsEnabled')==='true') return;
