@@ -145,7 +145,7 @@
     .no-notif-modal-cta{width:100%;padding:14px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;}
     .no-notif-modal-cta:active{opacity:.85;}
     .name-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);}
-    .name-modal{background:var(--surface);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:340px;box-shadow:0 8px 40px rgba(0,0,0,.3);animation:fadeUp .3s ease both;max-height:90dvh;overflow-y:auto;}
+    .name-modal{background:var(--surface);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:340px;box-shadow:0 8px 40px rgba(0,0,0,.3);animation:fadeUp .3s ease both;}
     .name-modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;}
     .name-modal-sub{font-size:13px;color:var(--text3);margin-bottom:20px;line-height:1.5;}
     .name-modal-input{width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:var(--sans);font-size:16px;outline:none;transition:border-color .2s;}
@@ -273,7 +273,7 @@
     /* Settings drawer */
     .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(2px);}
     .drawer-overlay.open{opacity:1;pointer-events:all;}
-    .settings-drawer{position:fixed;top:0;right:0;bottom:0;width:100%;background:var(--surface);z-index:301;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.18);display:flex;flex-direction:column;}
+    .settings-drawer{position:fixed;top:0;right:0;bottom:0;width:100%;background:var(--surface);z-index:301;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.18);}
     .settings-drawer *{max-width:100%;box-sizing:border-box;}
     .settings-drawer.open{transform:translateX(0);}
     .drawer-header{display:flex;align-items:center;justify-content:space-between;padding:22px 16px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;}
@@ -326,7 +326,7 @@
     /* Disclaimer in drawer */
     .drawer-disclaimer{font-size:11px;color:var(--text3);line-height:1.65;padding:16px;border-top:1px solid var(--border);margin-top:4px;}
     .drawer-disclaimer a{color:var(--text2);text-decoration:underline;text-underline-offset:2px;}
-    .drawer-lang{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);margin-top:8px;}
+    .drawer-lang{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
     .lang-btn{background:var(--surface2);border:1.5px solid var(--border);font-family:var(--sans);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;letter-spacing:.5px;padding:8px 18px;border-radius:50px;transition:all .18s;}
     .lang-btn:active{background:var(--accent);color:#fff;border-color:var(--accent);}
   </style>
@@ -741,6 +741,21 @@
     </div>
   </label>
 
+  <div class="drawer-lang">
+    <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+  </div>
+  <div style="padding:4px 16px 12px;text-align:center;">
+    <a id="contactLink" href="https://tally.so/r/A7b2kz" target="_blank" rel="noopener noreferrer"
+      onclick="track('feedback_clicked',{source:'drawer'})"
+      style="font-size:12px;color:var(--text3);font-family:var(--mono);text-decoration:underline;text-underline-offset:3px;cursor:pointer;">
+      <span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:inherit;margin-right:4px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M8 12 H56 V42 H20 L8 54 V42 H8 V12 Z"/> <line x1="20" y1="24" x2="44" y2="24"/> <line x1="20" y1="32" x2="36" y2="32"/> </svg></span> <span id="contactLinkLabel">Commentaires ou suggestions</span>
+    </a>
+  </div>
+  <div class="drawer-disclaimer">
+    <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
+  </div>
+
   <div class="section-primary" id="notifSectionLabel" style="cursor:pointer;" onclick="toggleNotificationsMaster()">
     <div class="section-primary-title">
       <span id="notifSectionLabelText">Notifications</span>
@@ -865,20 +880,7 @@
   </div>
   </div><!-- end notifSectionContent -->
 
-  <div style="flex:1;min-height:16px;"></div>
-  <div class="drawer-lang">
-    <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
   </div>
-  <div style="padding:4px 16px 12px;text-align:center;">
-    <a id="contactLink" href="https://tally.so/r/A7b2kz" target="_blank" rel="noopener noreferrer"
-      onclick="track('feedback_clicked',{source:'drawer'})"
-      style="font-size:12px;color:var(--text3);font-family:var(--mono);text-decoration:underline;text-underline-offset:3px;cursor:pointer;">
-      <span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:inherit;margin-right:4px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M8 12 H56 V42 H20 L8 54 V42 H8 V12 Z"/> <line x1="20" y1="24" x2="44" y2="24"/> <line x1="20" y1="32" x2="36" y2="32"/> </svg></span> <span id="contactLinkLabel">Commentaires ou suggestions</span>
-    </a>
-  </div>
-  <div class="drawer-disclaimer">
-    <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
   </div>
 </div>
 
@@ -1205,7 +1207,6 @@ function updatePrenom(){
 }
 
 function showNameModalIfNeeded(){
-  if(isFBWebView) return; // WebView: skip onboarding, show browser prompt instead
   if(localStorage.getItem('nameAsked')) return;
   const t=TR[currentLang];
   // Step 1 labels
@@ -1357,7 +1358,6 @@ function openDrawer(){
   document.getElementById('settingsDrawer').classList.add('open');
   document.getElementById('settingsDrawer').removeAttribute('aria-hidden');
   document.getElementById('drawerOverlay').classList.add('open');
-  syncNotifState(); // vérifier l'état réel de la subscription à chaque ouverture
 }
 function closeDrawer(){
   document.getElementById('settingsDrawer').classList.remove('open');
@@ -2156,7 +2156,7 @@ function installModalAction(){
 
 function showInstallModalIfNeeded(){
   if(isPWA) return;
-  if(isFBWebView){ showInstallModal(); return; }
+  if(isFBWebView){ setTimeout(showInstallModal, 1200); return; }
   if(!isMobile) return;
   if(localStorage.getItem('installPromptSeen')) return;
   if(localStorage.getItem('notificationsEnabled')==='true') return;
