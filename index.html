@@ -1865,12 +1865,16 @@ function mainCtaAction(){
 async function toggleNotificationsMaster(){
   const mt=document.getElementById('notifMasterToggle');
   if(!mt) return;
-  const willEnable = mt.checked; // checkbox already reflects new state after click
-  if(willEnable){
+  // Determine current state from actual subscription, not checkbox
+  const isCurrentlyEnabled = localStorage.getItem('notificationsEnabled')==='true';
+  if(!isCurrentlyEnabled){
+    // Enable
+    mt.checked = true;
     await toggleNotifications();
     if(localStorage.getItem('notificationsEnabled')!=='true') mt.checked=false;
   } else {
-    // Unsubscribe but stay in drawer
+    // Disable
+    mt.checked = false;
     try{
       const reg=await navigator.serviceWorker.ready;
       const sub=await reg.pushManager.getSubscription();
@@ -1883,7 +1887,6 @@ async function toggleNotificationsMaster(){
     track('notifications_disabled');
     track('subscription_lost');
     updateNotifyBtns();
-    // Show main CTA again
     const mainBanner=document.getElementById('mainInstallBanner');
     if(mainBanner && isMobile) mainBanner.style.display='block';
   }
