@@ -326,7 +326,7 @@
     /* Disclaimer in drawer */
     .drawer-disclaimer{font-size:11px;color:var(--text3);line-height:1.65;padding:16px;border-top:1px solid var(--border);margin-top:4px;}
     .drawer-disclaimer a{color:var(--text2);text-decoration:underline;text-underline-offset:2px;}
-    .drawer-lang{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
+    .drawer-lang{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);margin-top:8px;}
     .lang-btn{background:var(--surface2);border:1.5px solid var(--border);font-family:var(--sans);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;letter-spacing:.5px;padding:8px 18px;border-radius:50px;transition:all .18s;}
     .lang-btn:active{background:var(--accent);color:#fff;border-color:var(--accent);}
   </style>
@@ -741,21 +741,6 @@
     </div>
   </label>
 
-  <div class="drawer-lang">
-    <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
-  </div>
-  <div style="padding:4px 16px 12px;text-align:center;">
-    <a id="contactLink" href="https://tally.so/r/A7b2kz" target="_blank" rel="noopener noreferrer"
-      onclick="track('feedback_clicked',{source:'drawer'})"
-      style="font-size:12px;color:var(--text3);font-family:var(--mono);text-decoration:underline;text-underline-offset:3px;cursor:pointer;">
-      <span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:inherit;margin-right:4px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M8 12 H56 V42 H20 L8 54 V42 H8 V12 Z"/> <line x1="20" y1="24" x2="44" y2="24"/> <line x1="20" y1="32" x2="36" y2="32"/> </svg></span> <span id="contactLinkLabel">Commentaires ou suggestions</span>
-    </a>
-  </div>
-  <div class="drawer-disclaimer">
-    <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
-  </div>
-
   <div class="section-primary" id="notifSectionLabel" style="cursor:pointer;" onclick="toggleNotificationsMaster()">
     <div class="section-primary-title">
       <span id="notifSectionLabelText">Notifications</span>
@@ -879,8 +864,21 @@
     <button class="time-clear" onclick="clearRange(2)" aria-label="Effacer plage 2">×</button>
   </div>
   </div><!-- end notifSectionContent -->
+  <div id="drawerBottomSpacer" style="min-height:160px;"></div>
 
+  <div class="drawer-lang">
+    <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
   </div>
+  <div style="padding:4px 16px 12px;text-align:center;">
+    <a id="contactLink" href="https://tally.so/r/A7b2kz" target="_blank" rel="noopener noreferrer"
+      onclick="track('feedback_clicked',{source:'drawer'})"
+      style="font-size:12px;color:var(--text3);font-family:var(--mono);text-decoration:underline;text-underline-offset:3px;cursor:pointer;">
+      <span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:inherit;margin-right:4px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M8 12 H56 V42 H20 L8 54 V42 H8 V12 Z"/> <line x1="20" y1="24" x2="44" y2="24"/> <line x1="20" y1="32" x2="36" y2="32"/> </svg></span> <span id="contactLinkLabel">Commentaires ou suggestions</span>
+    </a>
+  </div>
+  <div class="drawer-disclaimer">
+    <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
   </div>
 </div>
 
@@ -1358,6 +1356,7 @@ function openDrawer(){
   document.getElementById('settingsDrawer').classList.add('open');
   document.getElementById('settingsDrawer').removeAttribute('aria-hidden');
   document.getElementById('drawerOverlay').classList.add('open');
+  syncNotifState();
 }
 function closeDrawer(){
   document.getElementById('settingsDrawer').classList.remove('open');
