@@ -918,6 +918,7 @@ app.post('/unsubscribe', async (req, res) => {
 });
 
 app.get('/history', (req, res) => {
+  res.set('Cache-Control', 'no-store');
   function getLastLift(bridge) {
     const h = liftHistory[bridge];
     if (!h || h.length === 0) return null;

@@ -2391,7 +2391,7 @@ let _heatmapData = {};
 
 async function fetchLiftHistory() {
   try {
-    const r = await fetch(BACKEND + '/history');
+    const r = await fetch(BACKEND + '/history?t=' + Date.now(), { cache: 'no-store' });
     const d = await r.json();
     _heatmapData = d;
     ['gonzague', 'larocque'].forEach(b => {
@@ -2411,7 +2411,7 @@ async function fetchLiftHistory() {
       el.style.display = 'block';
       if(btn && h.entries > 0) btn.style.display = 'inline';
     });
-  } catch(e) {}
+  } catch(e) { console.error('fetchLiftHistory:', e); }
 }
 
 function showHeatmap(bridge) {
