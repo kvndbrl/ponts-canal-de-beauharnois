@@ -324,6 +324,27 @@
     .error{color:var(--red);text-align:center;margin-top:8px;font-size:11px;font-family:var(--mono);position:relative;z-index:1;flex-shrink:0;}
     .spacer{display:none;}
     /* Disclaimer in drawer */
+
+    /* Heatmap modal */
+    .heatmap-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:800;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);}
+    .heatmap-modal{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:500px;padding:24px 20px 40px;animation:slideUp .3s cubic-bezier(.4,0,.2,1) both;max-height:85dvh;overflow-y:auto;}
+    .heatmap-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;font-family:var(--sans);}
+    .heatmap-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:16px;}
+    .heatmap-grid{display:grid;grid-template-columns:32px repeat(7,1fr);gap:2px;font-family:var(--mono);font-size:9px;}
+    .heatmap-day-label{text-align:center;color:var(--text3);padding:2px 0;font-weight:600;}
+    .heatmap-hour-label{color:var(--text3);display:flex;align-items:center;justify-content:flex-end;padding-right:6px;height:18px;}
+    .heatmap-cell{height:18px;border-radius:3px;background:var(--border);transition:all .15s;cursor:default;}
+    .heatmap-cell:hover{transform:scale(1.15);}
+    .heatmap-legend{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:10px;color:var(--text3);font-family:var(--mono);}
+    .heatmap-legend-cells{display:flex;gap:3px;}
+    .heatmap-legend-cell{width:14px;height:14px;border-radius:2px;}
+    .heatmap-stats{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+    .heatmap-stat{background:var(--surface2);border-radius:10px;padding:8px 12px;flex:1;min-width:80px;}
+    .heatmap-stat-val{font-size:18px;font-weight:700;color:var(--text);font-family:var(--mono);}
+    .heatmap-stat-label{font-size:10px;color:var(--text3);font-family:var(--sans);margin-top:2px;}
+    .heatmap-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-family:var(--mono);font-size:10px;padding:0 4px;text-decoration:underline;text-underline-offset:2px;vertical-align:middle;}
+    .heatmap-btn:hover{color:var(--accent);}
+    .heatmap-close{float:right;background:none;border:none;font-size:20px;color:var(--text3);cursor:pointer;padding:0;line-height:1;}
     .drawer-disclaimer{font-size:11px;color:var(--text3);line-height:1.65;padding:16px;border-top:1px solid var(--border);margin-top:4px;}
     .drawer-disclaimer a{color:var(--text2);text-decoration:underline;text-underline-offset:2px;}
     .drawer-lang{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
@@ -580,7 +601,10 @@
       </div>
       <div class="refresh-time" id="refreshGonzague">—</div>
     </div>
-    <div id="lastLiftGonzague" style="display:none;padding:4px 16px 10px;font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
+      <div id="lastLiftGonzague" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
+      <button class="heatmap-btn" onclick="showHeatmap('gonzague')" id="heatmapBtnGonzague" style="display:none;">📊 Historique</button>
+    </div>
   </section>
 
   <section class="bridge-card" aria-label="Pont Larocque">
@@ -631,7 +655,10 @@
       </div>
       <div class="refresh-time" id="refreshLarocque">—</div>
     </div>
-    <div id="lastLiftLarocque" style="display:none;padding:4px 16px 10px;font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
+      <div id="lastLiftLarocque" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
+      <button class="heatmap-btn" onclick="showHeatmap('larocque')" id="heatmapBtnLarocque" style="display:none;">📊 Historique</button>
+    </div>
   </section>
 
   <!-- WebView banner (Facebook/Instagram browser) -->
@@ -2399,5 +2426,21 @@ document.addEventListener('visibilitychange',()=>{
   </div>
 </div>
 
+
+<!-- Heatmap modal -->
+<div id="heatmapOverlay" style="display:none;" class="heatmap-overlay" onclick="if(event.target===this)closeHeatmap()">
+  <div class="heatmap-modal">
+    <button class="heatmap-close" onclick="closeHeatmap()">×</button>
+    <div class="heatmap-title" id="heatmapTitle">Historique des levées</div>
+    <div class="heatmap-sub" id="heatmapSub"></div>
+    <div class="heatmap-stats" id="heatmapStats"></div>
+    <div class="heatmap-grid" id="heatmapGrid"></div>
+    <div class="heatmap-legend">
+      <span>Moins</span>
+      <div class="heatmap-legend-cells" id="heatmapLegend"></div>
+      <span>Plus</span>
+    </div>
+  </div>
+</div>
 </body>
 </html>

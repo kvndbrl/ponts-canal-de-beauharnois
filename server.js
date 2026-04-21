@@ -923,9 +923,19 @@ app.get('/history', (req, res) => {
     const last = h[h.length - 1];
     return last.raisedAt ? new Date(last.raisedAt).toISOString() : null;
   }
+  function getHeatmap(bridge) {
+    const h = liftHistory[bridge];
+    if (!h || h.length === 0) return {};
+    const map = {};
+    for (const e of h) {
+      const key = `${e.day}-${e.hour}`;
+      map[key] = (map[key] || 0) + 1;
+    }
+    return map;
+  }
   res.json({
-    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague') },
-    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque') }
+    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague'), heatmap: getHeatmap('gonzague') },
+    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque'), heatmap: getHeatmap('larocque') }
   });
 });
 
@@ -1052,19 +1062,6 @@ async function start() {
   subscriptions = await loadSubscriptions();
   await loadLastStatus();
   await loadLiftHistory();
-
-  // If server restarted while a bridge was lifted, record a partial lift entry
-  for (const bridge of ['gonzague', 'larocque']) {
-    const s = lastStatus[bridge];
-    if (s === 'leve' || s === 'raising' || s === 'lowering' || s === 'bientot_leve') {
-      if (!liftActive[bridge]) {
-        log(`🔁 Boot: pont [${bridge}] était en statut "${s}" — levée partielle enregistrée`);
-        const now = Date.now();
-        liftActive[bridge] = { raisedAt: now - 600000 }; // assume lifted ~10 min ago
-      }
-    }
-  }
-
   log(`Ready with ${subscriptions.length} subscriptions — polling every 30s`);
   umamiTrack('subscription_count', { count: subscriptions.length });
   // AIS tracking moved to frontend to avoid Render IP rate limiting
