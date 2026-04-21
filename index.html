@@ -2379,9 +2379,8 @@ function showHeatmap(bridge) {
 
   const statsEl = document.getElementById('heatmapStats');
   statsEl.innerHTML = `
-    <div class="heatmap-stat"><div class="heatmap-stat-val">${d.entries}</div><div class="heatmap-stat-label">${t?'Levées':'Lifts'}</div></div>
-    <div class="heatmap-stat"><div class="heatmap-stat-val">~${d.avgDuration||'?'}</div><div class="heatmap-stat-label">${t?'Min moy.':'Avg min'}</div></div>
-    <div class="heatmap-stat"><div class="heatmap-stat-val">~${d.avgLowering||'?'}</div><div class="heatmap-stat-label">${t?'Min descente':'Lowering min'}</div></div>
+    <div class="heatmap-stat"><div class="heatmap-stat-val">~${d.avgDuration||'?'} min</div><div class="heatmap-stat-label">${t?'Durée moy. levée':'Avg lift duration'}</div></div>
+    <div class="heatmap-stat"><div class="heatmap-stat-val">~${d.avgLowering||'?'} min</div><div class="heatmap-stat-label">${t?'Durée moy. descente':'Avg lowering duration'}</div></div>
   `;
 
   const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#3a6b2a';
@@ -2414,7 +2413,7 @@ function showHeatmap(bridge) {
   }
 
   const legend = document.getElementById('heatmapLegend');
-  legend.innerHTML = '';
+  legend.innerHTML = `<span style="font-weight:600;color:var(--text2);margin-right:4px;">${t?'Achalandage':'Traffic'}</span>`;
   [0.1, 0.3, 0.5, 0.75, 1].forEach(i => {
     const el = document.createElement('div');
     el.className = 'heatmap-legend-cell';
