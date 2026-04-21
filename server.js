@@ -668,7 +668,7 @@ function parseScheduledLifts(text) {
 }
 
 // ── Notification icon per theme ───────────────────────────────────────
-const BASE_URL = 'https://pont-st-louis-de-gonzague.vercel.app';
+const BASE_URL = 'https://ponts-canal-de-beauharnois.vercel.app';
 const VALID_THEMES = ['gonzaguois', 'campivallensien', 'stanicois'];
 
 function notifIcon(sub) {
@@ -917,9 +917,15 @@ app.post('/unsubscribe', async (req, res) => {
 });
 
 app.get('/history', (req, res) => {
+  function getLastLift(bridge) {
+    const h = liftHistory[bridge];
+    if (!h || h.length === 0) return null;
+    const last = h[h.length - 1];
+    return last.raisedAt ? new Date(last.raisedAt).toISOString() : null;
+  }
   res.json({
-    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague') },
-    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque') }
+    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague') },
+    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque') }
   });
 });
 
