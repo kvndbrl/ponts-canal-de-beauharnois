@@ -924,9 +924,19 @@ app.get('/history', (req, res) => {
     const last = h[h.length - 1];
     return last.raisedAt ? new Date(last.raisedAt).toISOString() : null;
   }
+  function getHeatmap(bridge) {
+    const h = liftHistory[bridge];
+    if (!h || h.length === 0) return {};
+    const map = {};
+    for (const e of h) {
+      const key = `${e.day}-${e.hour}`;
+      map[key] = (map[key] || 0) + 1;
+    }
+    return map;
+  }
   res.json({
-    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague') },
-    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque') }
+    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague'), heatmap: getHeatmap('gonzague') },
+    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque'), heatmap: getHeatmap('larocque') }
   });
 });
 
