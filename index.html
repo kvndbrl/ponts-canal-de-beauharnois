@@ -2425,7 +2425,9 @@ function showHeatmap(bridge) {
   const maxVal = vals.length ? Math.max(...vals) : 1;
 
   document.getElementById('heatmapTitle').textContent = t ? 'Historique des levées' : 'Lift History';
-  document.getElementById('heatmapSub').textContent = names[bridge];
+  // Subtitle: bridge name + last 7 days label
+  const subText = names[bridge] + (t ? ' · 7 derniers jours' : ' · Last 7 days');
+  document.getElementById('heatmapSub').textContent = subText;
 
   const statsEl = document.getElementById('heatmapStats');
   statsEl.innerHTML = `

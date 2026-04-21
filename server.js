@@ -924,19 +924,27 @@ app.get('/history', (req, res) => {
     const last = h[h.length - 1];
     return last.raisedAt ? new Date(last.raisedAt).toISOString() : null;
   }
+  function getOldestLift(bridge) {
+    const h = liftHistory[bridge];
+    if (!h || h.length === 0) return null;
+    const oldest = h[0];
+    return oldest.raisedAt ? new Date(oldest.raisedAt).toISOString() : null;
+  }
   function getHeatmap(bridge) {
     const h = liftHistory[bridge];
     if (!h || h.length === 0) return {};
+    const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
     const map = {};
     for (const e of h) {
+      if (e.raisedAt && e.raisedAt < cutoff) continue;
       const key = `${e.day}-${e.hour}`;
       map[key] = (map[key] || 0) + 1;
     }
     return map;
   }
   res.json({
-    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague'), heatmap: getHeatmap('gonzague') },
-    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque'), heatmap: getHeatmap('larocque') }
+    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague'), oldestLift: getOldestLift('gonzague'), heatmap: getHeatmap('gonzague') },
+    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque'), oldestLift: getOldestLift('larocque'), heatmap: getHeatmap('larocque') }
   });
 });
 
