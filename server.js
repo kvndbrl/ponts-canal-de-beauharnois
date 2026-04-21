@@ -819,9 +819,10 @@ async function monitor() {
 
     await Promise.all(notifications);
 
+    const changed = lastStatus.gonzague !== data.gonzague.status || lastStatus.larocque !== data.larocque.status;
     lastStatus.gonzague = data.gonzague.status;
     lastStatus.larocque = data.larocque.status;
-    await saveLastStatus();
+    await saveLastStatus(); // always persist so restarts don't lose state
 
     // Start VesselFinder polling when any bridge is active, stop when all disponible
     const anyActive = ['gonzague','larocque'].some(b =>
@@ -923,19 +924,9 @@ app.get('/history', (req, res) => {
     const last = h[h.length - 1];
     return last.raisedAt ? new Date(last.raisedAt).toISOString() : null;
   }
-  function getHeatmap(bridge) {
-    const h = liftHistory[bridge];
-    if (!h || h.length === 0) return {};
-    const map = {};
-    for (const e of h) {
-      const key = `${e.day}-${e.hour}`;
-      map[key] = (map[key] || 0) + 1;
-    }
-    return map;
-  }
   res.json({
-    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague'), heatmap: getHeatmap('gonzague') },
-    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque'), heatmap: getHeatmap('larocque') }
+    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague') },
+    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque') }
   });
 });
 
@@ -1067,7 +1058,7 @@ async function start() {
   // AIS tracking moved to frontend to avoid Render IP rate limiting
   // startAISTracking();
   await monitor();
-  setInterval(monitor, 30000); // 30s to catch short status windows
+  setInterval(monitor, 15000); // 15s to catch short status windows
 }
 
 start();
