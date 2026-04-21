@@ -543,6 +543,7 @@
   <div class="greeting-block" aria-live="polite">
     <span class="greeting-text" id="greetingText">Bonjour !</span>
     <span class="weather-text" id="weatherText">—</span>
+    <a id="geoPrompt" href="#" onclick="requestWeatherLocation();return false;" style="display:none;font-size:11px;color:var(--accent);font-family:var(--mono);margin-top:6px;text-decoration:underline;text-underline-offset:3px;"></a>
   </div>
   <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">
     <span class="burger-line"></span>
@@ -2421,7 +2422,6 @@ function showHeatmap(bridge) {
     }
   }
 
-  const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#3a6b2a';
   const grid = document.getElementById('heatmapGrid');
   grid.innerHTML = '';
   grid.appendChild(document.createElement('div'));
@@ -2442,8 +2442,9 @@ function showHeatmap(bridge) {
       const cell = document.createElement('div');
       cell.className = 'heatmap-cell';
       if (count > 0) {
-        const intensity = Math.max(0.2, count / maxVal);
-        cell.style.background = hexToRgba(accent, intensity);
+        const intensity = Math.max(0.15, count / maxVal);
+        cell.style.background = 'var(--accent)';
+        cell.style.opacity = intensity;
         cell.title = `${count} levée${count>1?'s':''}`;
       }
       grid.appendChild(cell);
@@ -2454,10 +2455,15 @@ function showHeatmap(bridge) {
   legendCells.innerHTML = '';
   const legendTitle = document.getElementById('heatmapLegendTitle');
   if(legendTitle) legendTitle.textContent = t ? 'Achalandage' : 'Traffic';
-  [0.1, 0.3, 0.5, 0.75, 1].forEach(i => {
+  [0.15, 0.35, 0.55, 0.75, 1].forEach(i => {
     const el = document.createElement('div');
     el.className = 'heatmap-legend-cell';
-    el.style.background = i === 0.1 ? 'var(--border)' : hexToRgba(accent, i);
+    if (i === 0.15) {
+      el.style.background = 'var(--border)';
+    } else {
+      el.style.background = 'var(--accent)';
+      el.style.opacity = i;
+    }
     legendCells.appendChild(el);
   });
 
