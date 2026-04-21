@@ -2410,16 +2410,10 @@ function showHeatmap(bridge) {
     }
   }
 
-  const legendWrap = document.getElementById('heatmapLegend').parentElement;
-  document.getElementById('heatmapLegend').parentElement.innerHTML = `
-    <div style="font-size:10px;font-weight:600;color:var(--text2);font-family:var(--sans);margin-bottom:4px;">${t?'Achalandage':'Traffic'}</div>
-    <div class="heatmap-legend">
-      <span>Moins</span>
-      <div class="heatmap-legend-cells" id="heatmapLegendCells"></div>
-      <span>Plus</span>
-    </div>
-  `;
-  const legendCells = document.getElementById('heatmapLegendCells');
+  const legendCells = document.getElementById('heatmapLegend');
+  legendCells.innerHTML = '';
+  const legendTitle = document.getElementById('heatmapLegendTitle');
+  if(legendTitle) legendTitle.textContent = t ? 'Achalandage' : 'Traffic';
   [0.1, 0.3, 0.5, 0.75, 1].forEach(i => {
     const el = document.createElement('div');
     el.className = 'heatmap-legend-cell';
@@ -2523,10 +2517,13 @@ document.addEventListener('visibilitychange',()=>{
     <div class="heatmap-sub" id="heatmapSub"></div>
     <div class="heatmap-stats" id="heatmapStats"></div>
     <div class="heatmap-grid" id="heatmapGrid"></div>
-    <div class="heatmap-legend">
-      <span>Moins</span>
-      <div class="heatmap-legend-cells" id="heatmapLegend"></div>
-      <span>Plus</span>
+    <div style="margin-top:12px;">
+      <div id="heatmapLegendTitle" style="font-size:10px;font-weight:600;color:var(--text2);font-family:var(--sans);margin-bottom:4px;">Achalandage</div>
+      <div class="heatmap-legend">
+        <span>Moins</span>
+        <div class="heatmap-legend-cells" id="heatmapLegend"></div>
+        <span>Plus</span>
+      </div>
     </div>
   </div>
 </div>
