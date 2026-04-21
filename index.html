@@ -2372,10 +2372,8 @@ function showHeatmap(bridge) {
   const vals = Object.values(heatmap);
   const maxVal = vals.length ? Math.max(...vals) : 1;
 
-  document.getElementById('heatmapTitle').textContent = names[bridge] + (t ? ' — Levées historiques' : ' — Historical lifts');
-  document.getElementById('heatmapSub').textContent = t
-    ? `${d.entries} levée${d.entries>1?'s':''} enregistrée${d.entries>1?'s':''} · Durée moy. ~${d.avgDuration||'?'} min`
-    : `${d.entries} lift${d.entries>1?'s':''} recorded · Avg ~${d.avgDuration||'?'} min`;
+  document.getElementById('heatmapTitle').textContent = t ? 'Historique des levées' : 'Lift History';
+  document.getElementById('heatmapSub').textContent = names[bridge];
 
   const statsEl = document.getElementById('heatmapStats');
   statsEl.innerHTML = `
@@ -2412,13 +2410,21 @@ function showHeatmap(bridge) {
     }
   }
 
-  const legend = document.getElementById('heatmapLegend');
-  legend.innerHTML = `<span style="font-weight:600;color:var(--text2);margin-right:4px;">${t?'Achalandage':'Traffic'}</span>`;
+  const legendWrap = document.getElementById('heatmapLegend').parentElement;
+  document.getElementById('heatmapLegend').parentElement.innerHTML = `
+    <div style="font-size:10px;font-weight:600;color:var(--text2);font-family:var(--sans);margin-bottom:4px;">${t?'Achalandage':'Traffic'}</div>
+    <div class="heatmap-legend">
+      <span>Moins</span>
+      <div class="heatmap-legend-cells" id="heatmapLegendCells"></div>
+      <span>Plus</span>
+    </div>
+  `;
+  const legendCells = document.getElementById('heatmapLegendCells');
   [0.1, 0.3, 0.5, 0.75, 1].forEach(i => {
     const el = document.createElement('div');
     el.className = 'heatmap-legend-cell';
     el.style.background = i === 0.1 ? 'var(--border)' : hexToRgba(accent, i);
-    legend.appendChild(el);
+    legendCells.appendChild(el);
   });
 
   document.getElementById('heatmapOverlay').style.display = 'flex';
