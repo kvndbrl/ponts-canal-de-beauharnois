@@ -1105,7 +1105,37 @@ async function fetchWeather(){
 }
 
 function requestWeatherLocation(){
-  fetchWeather();
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isFr=currentLang==='fr';
+  const overlay=document.getElementById('geoModalOverlay');
+  const title=document.getElementById('geoModalTitle');
+  const body=document.getElementById('geoModalBody');
+  if(!overlay||!title||!body) return;
+  title.textContent=isFr?'Activer la localisation':'Enable location';
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if(isIOS){
+    body.innerHTML=isFr
+      ? (isPWA
+        ?'R\u00e9glages \u2192 <strong>Ponts Beauharnois</strong> \u2192 <strong>Localisation</strong> \u2192 Lors de l\u2019utilisation'
+        :'R\u00e9glages \u2192 <strong>Safari</strong> \u2192 <strong>Localisation</strong> \u2192 Autoriser')
+      : (isPWA
+        ?'Settings \u2192 <strong>Ponts Beauharnois</strong> \u2192 <strong>Location</strong> \u2192 While using'
+        :'Settings \u2192 <strong>Safari</strong> \u2192 <strong>Location</strong> \u2192 Allow');
+  } else {
+    body.innerHTML=isFr
+      ? (isPWA
+        ?'R\u00e9glages \u2192 <strong>Applis</strong> \u2192 <strong>Chrome</strong> \u2192 <strong>Autorisations</strong> \u2192 <strong>Localisation</strong> \u2192 Autoriser'
+        :'Appuyez sur l\u2019ic\u00f4ne \u00e0 gauche de l\u2019adresse du site \u2192 autorisez la <strong>Localisation</strong>')
+      : (isPWA
+        ?'Settings \u2192 <strong>Apps</strong> \u2192 <strong>Chrome</strong> \u2192 <strong>Permissions</strong> \u2192 <strong>Location</strong> \u2192 Allow'
+        :'Tap the icon left of the site address \u2192 allow <strong>Location</strong>');
+  }
+  overlay.style.display='flex';
+}
+
+function closeGeoModal(){
+  const o=document.getElementById('geoModalOverlay');
+  if(o) o.style.display='none';
 }
 
 // ── Name / prénom ──────────────────────────────────────────────────────
@@ -2465,7 +2495,7 @@ function showHeatmap(bridge) {
       if (count > 0) {
         const intensity = Math.max(0.15, count / maxVal);
         // Use inline rgba by reading accent from CSS var at render time
-        const accentRgb = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim();
+        const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '58,107,42';
         if (accentRgb) {
           cell.style.background = `rgba(${accentRgb},${intensity})`;
         } else {
@@ -2482,15 +2512,11 @@ function showHeatmap(bridge) {
   legendCells.innerHTML = '';
   const legendTitle = document.getElementById('heatmapLegendTitle');
   if(legendTitle) legendTitle.textContent = t ? 'Achalandage' : 'Traffic';
+  const legendAccentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '58,107,42';
   [0.15, 0.35, 0.55, 0.75, 1].forEach(i => {
     const el = document.createElement('div');
     el.className = 'heatmap-legend-cell';
-    if (i === 0.15) {
-      el.style.background = 'var(--border)';
-    } else {
-      el.style.background = 'var(--accent)';
-      el.style.opacity = i;
-    }
+    el.style.background = i === 0.15 ? 'var(--border)' : `rgba(${legendAccentRgb},${i})`;
     legendCells.appendChild(el);
   });
 
@@ -2581,6 +2607,15 @@ document.addEventListener('visibilitychange',()=>{
   </div>
 </div>
 
+
+<!-- Geo instructions modal -->
+<div id="geoModalOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9500;backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this)closeGeoModal()">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:340px;box-shadow:0 8px 40px rgba(0,0,0,.35);animation:fadeUp .3s ease both;">
+    <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;font-family:var(--sans);" id="geoModalTitle">Activer la localisation</div>
+    <div style="font-size:13px;color:var(--text3);margin-bottom:20px;line-height:1.6;font-family:var(--sans);" id="geoModalBody"></div>
+    <button onclick="closeGeoModal()" style="width:100%;padding:14px;border-radius:50px;border:none;background:var(--accent);color:white;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;">OK</button>
+  </div>
+</div>
 
 <!-- Heatmap modal -->
 <div id="heatmapOverlay" style="display:none;" class="heatmap-overlay" onclick="if(event.target===this)closeHeatmap()">
