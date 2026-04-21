@@ -671,7 +671,20 @@ function parseScheduledLifts(text) {
 const BASE_URL = 'https://ponts-canal-de-beauharnois.vercel.app';
 const VALID_THEMES = ['gonzaguois', 'campivallensien', 'stanicois'];
 
-function notifIcon(sub) {
+function notifIcon(sub, status) {
+  const statusIconMap = {
+    bientot_leve: '/badge-warning.png',
+    raising:      '/badge-raising.png',
+    leve:         '/badge-leve.png',
+    lowering:     '/badge-lowering.png',
+    disponible:   '/badge-disponible.png',
+    outage:       '/badge-outage.png',
+    scheduled:    '/badge-scheduled.png',
+    achalandage:  '/badge-warning.png',
+  };
+  if (status && statusIconMap[status]) {
+    return `${BASE_URL}/${statusIconMap[status]}`;
+  }
   const theme = VALID_THEMES.includes(sub.theme) ? sub.theme : 'gonzaguois';
   return `${BASE_URL}/notification-icon-${theme}.png`;
 }
@@ -715,7 +728,7 @@ async function sendScheduledLiftNotification(bridge, time) {
       ? { title: `📅 Lift scheduled at ${time}`, body: `${name} will be raised at ${time}.` }
       : { title: `📅 Levée prévue à ${time}`, body: `Le ${name} sera levé à ${time}.` };
 
-    const payload = JSON.stringify({ ...msg, bridge, persistent: false, icon: notifIcon(sub), badge: statusBadge('scheduled') });
+    const payload = JSON.stringify({ ...msg, bridge, persistent: false, icon: notifIcon(sub, 'scheduled'), badge: statusBadge('scheduled') });
     try {
       await webpush.sendNotification(sub, payload);
       sent++;
@@ -752,7 +765,7 @@ async function sendNotifications(bridge, status, bridgeData = {}) {
       ...msg, bridge,
       tag: `pont-${bridge}`,
       persistent: true,
-      icon: notifIcon(sub),
+      icon: notifIcon(sub, status),
       badge: statusBadge(status)
     });
 
@@ -955,7 +968,7 @@ app.post('/milestone-notif', async (req, res) => {
       ...msg,
       tag: `milestone-${milestone}`,
       persistent: false,
-      icon: notifIcon(sub)
+      icon: notifIcon(sub, null)
     }));
     umamiTrack('milestone_push_sent', { milestone });
     res.json({ ok: true });
@@ -1023,14 +1036,9 @@ async function checkBusyPeriodAlerts() {
 
         const lang = sub.lang || 'fr';
         const name = bridgeName[lang]?.[bridge] || bridgeName.fr[bridge];
-        const notifIcon = sub.theme === 'gonzaguois' ? '/notification-icon-gonzaguois.png'
-          : sub.theme === 'campivallensien' ? '/notification-icon-campivallensien.png'
-          : sub.theme === 'stanicois' ? '/notification-icon-stanicois.png'
-          : '/notification-icon.png';
-
         const payload = lang === 'fr'
-          ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min · Prévoir un itinéraire alternatif`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true }
-          : { title: `⚠️ ${name}`, body: `Busy period in ~30 min · Consider an alternate route`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true };
+          ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min · Prévoir un itinéraire alternatif`, icon: notifIcon(sub, 'achalandage'), badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true }
+          : { title: `⚠️ ${name}`, body: `Busy period in ~30 min · Consider an alternate route`, icon: notifIcon(sub, 'achalandage'), badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true };
 
         await webpush.sendNotification(sub, JSON.stringify(payload));
         sent++;
