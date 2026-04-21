@@ -2381,6 +2381,46 @@ function showHeatmap(bridge) {
     <div class="heatmap-stat"><div class="heatmap-stat-val">~${d.avgLowering||'?'} min</div><div class="heatmap-stat-label">${t?'Durée moy. descente':'Avg lowering duration'}</div></div>
   `;
 
+  // Hot periods analysis
+  const hotEl = document.getElementById('heatmapHotPeriods');
+  if (hotEl) {
+    const dayNames = t
+      ? ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.']
+      : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    // Find top slots
+    const slots = Object.entries(heatmap)
+      .map(([key, count]) => {
+        const [day, hour] = key.split('-').map(Number);
+        return { day, hour, count };
+      })
+      .sort((a, b) => b.count - a.count);
+
+    if (slots.length === 0) {
+      hotEl.style.display = 'none';
+    } else {
+      // Group by day, find peak hours
+      const byDay = {};
+      slots.forEach(({ day, hour, count }) => {
+        if (!byDay[day]) byDay[day] = [];
+        byDay[day].push({ hour, count });
+      });
+
+      // Top 3 day+hour combos
+      const top = slots.slice(0, 3);
+      const phrases = top.map(({ day, hour, count }) => {
+        const h1 = `${hour}h`;
+        const h2 = `${hour + 1}h`;
+        return `${dayNames[day]} ${h1}–${h2}`;
+      });
+
+      const intro = t
+        ? 'Levées plus fréquentes : '
+        : 'More frequent lifts: ';
+      hotEl.textContent = intro + phrases.join(', ');
+      hotEl.style.display = 'block';
+    }
+  }
+
   const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#3a6b2a';
   const grid = document.getElementById('heatmapGrid');
   grid.innerHTML = '';
@@ -2516,6 +2556,7 @@ document.addEventListener('visibilitychange',()=>{
     <div class="heatmap-title" id="heatmapTitle">Historique des levées</div>
     <div class="heatmap-sub" id="heatmapSub"></div>
     <div class="heatmap-stats" id="heatmapStats"></div>
+    <div id="heatmapHotPeriods" style="display:none;font-size:12px;color:var(--text2);font-family:var(--sans);background:var(--surface2);border-radius:10px;padding:10px 14px;margin-bottom:12px;line-height:1.5;"></div>
     <div class="heatmap-grid" id="heatmapGrid"></div>
     <div style="margin-top:12px;">
       <div id="heatmapLegendTitle" style="font-size:10px;font-weight:600;color:var(--text2);font-family:var(--sans);margin-bottom:4px;">Achalandage</div>
