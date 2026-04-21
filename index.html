@@ -333,8 +333,10 @@
     .heatmap-grid{display:grid;grid-template-columns:32px repeat(7,1fr);gap:2px;font-family:var(--mono);font-size:9px;}
     .heatmap-day-label{text-align:center;color:var(--text3);padding:2px 0;font-weight:600;}
     .heatmap-hour-label{color:var(--text3);display:flex;align-items:center;justify-content:flex-end;padding-right:6px;height:18px;}
-    .heatmap-cell{height:18px;border-radius:3px;background:var(--border);transition:all .15s;cursor:default;}
-    .heatmap-cell:hover{transform:scale(1.15);}
+    .heatmap-cell{height:18px;border-radius:3px;background:var(--border);}
+    .heatmap-cell.has-data{cursor:pointer;}
+    .heatmap-cell.has-data:hover{filter:brightness(1.3);}
+    .heatmap-tooltip{position:fixed;background:var(--text);color:var(--bg);font-family:var(--mono);font-size:11px;padding:5px 9px;border-radius:7px;pointer-events:none;z-index:9999;white-space:nowrap;transform:translate(-50%,-110%);transition:opacity .1s;}
     .heatmap-legend{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:10px;color:var(--text3);font-family:var(--mono);}
     .heatmap-legend-cells{display:flex;gap:3px;}
     .heatmap-legend-cell{width:14px;height:14px;border-radius:2px;}
@@ -2501,7 +2503,6 @@ function showHeatmap(bridge) {
       cell.className = 'heatmap-cell';
       if (count > 0) {
         const intensity = Math.max(0.15, count / maxVal);
-        // Use inline rgba by reading accent from CSS var at render time
         const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '58,107,42';
         if (accentRgb) {
           cell.style.background = `rgba(${accentRgb},${intensity})`;
@@ -2509,7 +2510,13 @@ function showHeatmap(bridge) {
           cell.style.background = 'var(--accent)';
           cell.style.opacity = intensity;
         }
-        cell.title = `${count} levée${count>1?'s':''}`;
+        cell.classList.add('has-data');
+        const dayLabel = days[day];
+        const timeLabel = `${h}h\u2013${h+1}h`;
+        const countLabel = t ? `${count} lev\u00e9e${count>1?'s':''}` : `${count} lift${count>1?'s':''}`;
+        cell.addEventListener('click', (e) => {
+          showCellTooltip(e, `${dayLabel} ${timeLabel} \u00b7 ${countLabel}`);
+        });
       }
       grid.appendChild(cell);
     }
@@ -2534,6 +2541,29 @@ function showHeatmap(bridge) {
 function closeHeatmap() {
   document.getElementById('heatmapOverlay').style.display = 'none';
   document.body.style.overflow = '';
+  hideCellTooltip();
+}
+
+let _cellTooltipTimer;
+function showCellTooltip(e, text) {
+  let tip = document.getElementById('heatmapTooltip');
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.id = 'heatmapTooltip';
+    tip.className = 'heatmap-tooltip';
+    document.body.appendChild(tip);
+  }
+  tip.textContent = text;
+  tip.style.left = e.clientX + 'px';
+  tip.style.top = e.clientY + 'px';
+  tip.style.display = 'block';
+  clearTimeout(_cellTooltipTimer);
+  _cellTooltipTimer = setTimeout(hideCellTooltip, 2000);
+}
+
+function hideCellTooltip() {
+  const tip = document.getElementById('heatmapTooltip');
+  if (tip) tip.style.display = 'none';
 }
 
 function hexToRgba(hex, alpha) {
