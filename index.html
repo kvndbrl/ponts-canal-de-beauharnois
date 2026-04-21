@@ -1088,8 +1088,24 @@ async function fetchWeather(){
       const line2='\u2191'+maxC+'\u00B0  \u2193'+minC+'\u00B0';
       document.getElementById('weatherText').innerHTML=weatherSvg+line1+'&nbsp;&nbsp;&nbsp;'+line2;
 
+      // Hide prompt on success
+      const prompt=document.getElementById('geoPrompt');
+      if(prompt) prompt.style.display='none';
     }catch(e){console.log('Weather:',e);}
-  },()=>{},{timeout:8000,maximumAge:300000});
+  },(err)=>{
+    // Show prompt if permission denied
+    const prompt=document.getElementById('geoPrompt');
+    if(prompt){
+      prompt.textContent=currentLang==='fr'
+        ?'\uD83D\uDCCD Autoriser la localisation pour afficher la météo'
+        :'\uD83D\uDCCD Allow location to display weather';
+      prompt.style.display='block';
+    }
+  },{timeout:8000,maximumAge:300000});
+}
+
+function requestWeatherLocation(){
+  fetchWeather();
 }
 
 // ── Name / prénom ──────────────────────────────────────────────────────
@@ -2365,12 +2381,11 @@ async function fetchLiftHistory() {
 
 function showHeatmap(bridge) {
   const d = _heatmapData[bridge];
-  if (!d || !d.heatmap) { 
-    fetchLiftHistory().then(()=>{ 
-      const d2 = _heatmapData[bridge]; 
-      if(d2) showHeatmap(bridge); 
-    }); 
-    return; 
+  if (!d) {
+    fetchLiftHistory().then(()=>{
+      if(_heatmapData[bridge]) showHeatmap(bridge);
+    });
+    return;
   }
   const t = currentLang === 'fr';
   const names = { gonzague: t ? 'Pont St-Louis' : 'St-Louis Bridge', larocque: t ? 'Pont Larocque' : 'Larocque Bridge' };
