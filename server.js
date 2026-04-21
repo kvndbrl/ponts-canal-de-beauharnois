@@ -362,10 +362,12 @@ function trackStatusTransition(bridge, prev, curr) {
   const now = Date.now();
   if ((curr === 'raising' || curr === 'leve') && !liftActive[bridge]) {
     liftActive[bridge] = { raisedAt: now };
+  saveLiftActive();
   }
   if (curr === 'lowering' && liftActive[bridge] && !liftActive[bridge].loweredAt) {
     liftActive[bridge].loweredAt = now;
     liftActive[bridge].duration = now - liftActive[bridge].raisedAt;
+  saveLiftActive();
   }
   if (curr === 'disponible' && liftActive[bridge]) {
     const entry = liftActive[bridge];
@@ -381,6 +383,7 @@ function trackStatusTransition(bridge, prev, curr) {
     if (liftHistory[bridge].length > 100) liftHistory[bridge].shift();
     liftActive[bridge] = null;
     saveLiftHistory();
+  saveLiftActive();
     log(`📊 Levée [${bridge}] enregistrée: ~${Math.round((entry.loweredAt||now) - entry.raisedAt) / 60000} min`);
   }
 }
@@ -819,10 +822,9 @@ async function monitor() {
 
     await Promise.all(notifications);
 
-    const changed = lastStatus.gonzague !== data.gonzague.status || lastStatus.larocque !== data.larocque.status;
     lastStatus.gonzague = data.gonzague.status;
     lastStatus.larocque = data.larocque.status;
-    await saveLastStatus(); // always persist so restarts don't lose state
+    await saveLastStatus();
 
     // Start VesselFinder polling when any bridge is active, stop when all disponible
     const anyActive = ['gonzague','larocque'].some(b =>
@@ -918,37 +920,15 @@ app.post('/unsubscribe', async (req, res) => {
 });
 
 app.get('/history', (req, res) => {
-  res.set('Cache-Control', 'no-store');
   function getLastLift(bridge) {
     const h = liftHistory[bridge];
     if (!h || h.length === 0) return null;
     const last = h[h.length - 1];
     return last.raisedAt ? new Date(last.raisedAt).toISOString() : null;
   }
-  function getOldestLift(bridge) {
-    const h = liftHistory[bridge];
-    if (!h || h.length === 0) return null;
-    const oldest = h[0];
-    return oldest.raisedAt ? new Date(oldest.raisedAt).toISOString() : null;
-  }
-  function getHeatmap(bridge) {
-    const h = liftHistory[bridge];
-    if (!h || h.length === 0) return {};
-    const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
-    const map = {};
-    for (const e of h) {
-      // Skip entries older than 7 days, but include entries with missing raisedAt
-      if (e.raisedAt && e.raisedAt < cutoff) continue;
-      const key = `${e.day}-${e.hour}`;
-      if (e.day === undefined || e.hour === undefined) continue;
-      map[key] = (map[key] || 0) + 1;
-    }
-    log(`📊 Heatmap [${bridge}]: ${Object.keys(map).length} slots from ${h.length} entries (cutoff: ${new Date(cutoff).toISOString()})`);
-    return map;
-  }
   res.json({
-    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague'), oldestLift: getOldestLift('gonzague'), heatmap: getHeatmap('gonzague') },
-    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque'), oldestLift: getOldestLift('larocque'), heatmap: getHeatmap('larocque') }
+    gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague') },
+    larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque') }
   });
 });
 
@@ -1071,16 +1051,38 @@ setInterval(checkBusyPeriodAlerts, 5 * 60 * 1000);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
+
+async function saveLiftActive() {
+  try {
+    await redisCommand('set', 'liftActive', JSON.stringify(liftActive));
+  } catch(e) { console.error('saveLiftActive error:', e.message); }
+}
+
+async function loadLiftActive() {
+  try {
+    const val = await redisCommand('get', 'liftActive');
+    if (val) {
+      liftActive = JSON.parse(val);
+      for (const bridge of ['gonzague', 'larocque']) {
+        if (liftActive[bridge]) {
+          log('Boot: liftActive [' + bridge + '] restaure depuis Redis');
+        }
+      }
+    }
+  } catch(e) { console.error('loadLiftActive error:', e.message); }
+}
+
 async function start() {
   subscriptions = await loadSubscriptions();
   await loadLastStatus();
   await loadLiftHistory();
+  await loadLiftActive();
   log(`Ready with ${subscriptions.length} subscriptions — polling every 30s`);
   umamiTrack('subscription_count', { count: subscriptions.length });
   // AIS tracking moved to frontend to avoid Render IP rate limiting
   // startAISTracking();
   await monitor();
-  setInterval(monitor, 15000); // 15s to catch short status windows
+  setInterval(monitor, 30000); // 30s to catch short status windows
 }
 
 start();
