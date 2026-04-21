@@ -542,7 +542,7 @@
 <header class="header">
   <div class="greeting-block" aria-live="polite">
     <span class="greeting-text" id="greetingText">Bonjour !</span>
-    <span class="weather-text" id="weatherText">—</span>
+    <span class="weather-text" id="weatherText"></span>
     <a id="geoPrompt" href="#" onclick="requestWeatherLocation();return false;" style="display:none;font-size:11px;color:var(--accent);font-family:var(--mono);margin-top:6px;text-decoration:underline;text-underline-offset:3px;"></a>
   </div>
   <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">
@@ -2365,7 +2365,13 @@ async function fetchLiftHistory() {
 
 function showHeatmap(bridge) {
   const d = _heatmapData[bridge];
-  if (!d) return;
+  if (!d || !d.heatmap) { 
+    fetchLiftHistory().then(()=>{ 
+      const d2 = _heatmapData[bridge]; 
+      if(d2) showHeatmap(bridge); 
+    }); 
+    return; 
+  }
   const t = currentLang === 'fr';
   const names = { gonzague: t ? 'Pont St-Louis' : 'St-Louis Bridge', larocque: t ? 'Pont Larocque' : 'Larocque Bridge' };
   const days = t ? ['D','L','M','M','J','V','S'] : ['S','M','T','W','T','F','S'];
@@ -2443,8 +2449,14 @@ function showHeatmap(bridge) {
       cell.className = 'heatmap-cell';
       if (count > 0) {
         const intensity = Math.max(0.15, count / maxVal);
-        cell.style.background = 'var(--accent)';
-        cell.style.opacity = intensity;
+        // Use inline rgba by reading accent from CSS var at render time
+        const accentRgb = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim();
+        if (accentRgb) {
+          cell.style.background = `rgba(${accentRgb},${intensity})`;
+        } else {
+          cell.style.background = 'var(--accent)';
+          cell.style.opacity = intensity;
+        }
         cell.title = `${count} levée${count>1?'s':''}`;
       }
       grid.appendChild(cell);
