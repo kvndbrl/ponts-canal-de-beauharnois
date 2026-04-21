@@ -2415,13 +2415,13 @@ async function fetchLiftHistory() {
 }
 
 function showHeatmap(bridge) {
+  // Always refresh data before showing
+  fetchLiftHistory().then(() => _showHeatmap(bridge));
+}
+
+function _showHeatmap(bridge) {
   const d = _heatmapData[bridge];
-  if (!d) {
-    fetchLiftHistory().then(()=>{
-      if(_heatmapData[bridge]) showHeatmap(bridge);
-    });
-    return;
-  }
+  if (!d) return;
   const t = currentLang === 'fr';
   const names = { gonzague: t ? 'Pont St-Louis' : 'St-Louis Bridge', larocque: t ? 'Pont Larocque' : 'Larocque Bridge' };
   const days = t ? ['D','L','M','M','J','V','S'] : ['S','M','T','W','T','F','S'];
