@@ -936,10 +936,13 @@ app.get('/history', (req, res) => {
     const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
     const map = {};
     for (const e of h) {
+      // Skip entries older than 7 days, but include entries with missing raisedAt
       if (e.raisedAt && e.raisedAt < cutoff) continue;
       const key = `${e.day}-${e.hour}`;
+      if (e.day === undefined || e.hour === undefined) continue;
       map[key] = (map[key] || 0) + 1;
     }
+    log(`📊 Heatmap [${bridge}]: ${Object.keys(map).length} slots from ${h.length} entries (cutoff: ${new Date(cutoff).toISOString()})`);
     return map;
   }
   res.json({
