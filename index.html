@@ -2439,39 +2439,44 @@ function showHeatmap(bridge) {
   const hotEl = document.getElementById('heatmapHotPeriods');
   if (hotEl) {
     const dayNames = t
-      ? ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.']
+      ? ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']
       : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    // Find top slots
+
     const slots = Object.entries(heatmap)
       .map(([key, count]) => {
         const [day, hour] = key.split('-').map(Number);
         return { day, hour, count };
-      })
-      .sort((a, b) => b.count - a.count);
+      });
 
     if (slots.length === 0) {
       hotEl.style.display = 'none';
     } else {
-      // Group by day, find peak hours
+      // Group by day, keep only hours with count >= half of max
+      const maxCount = Math.max(...slots.map(s => s.count));
+      const threshold = Math.max(1, Math.ceil(maxCount * 0.5));
       const byDay = {};
       slots.forEach(({ day, hour, count }) => {
+        if (count < threshold) return;
         if (!byDay[day]) byDay[day] = [];
-        byDay[day].push({ hour, count });
+        byDay[day].push(hour);
       });
 
-      // Top 3 day+hour combos
-      const top = slots.slice(0, 3);
-      const phrases = top.map(({ day, hour, count }) => {
-        const h1 = `${hour}h`;
-        const h2 = `${hour + 1}h`;
-        return `${dayNames[day]} ${h1}–${h2}`;
-      });
+      // Sort days, sort hours within each day
+      const dayLines = Object.entries(byDay)
+        .sort(([a], [b]) => Number(a) - Number(b))
+        .map(([day, hours]) => {
+          hours.sort((a, b) => a - b);
+          const hoursStr = hours.map(h => `${h}h`).join(', ');
+          return `<span style="color:var(--text);font-weight:600;">${dayNames[Number(day)]}</span> ${hoursStr}`;
+        });
 
-      const intro = t
-        ? 'Levées plus fréquentes : '
-        : 'More frequent lifts: ';
-      hotEl.textContent = intro + phrases.join(', ');
-      hotEl.style.display = 'block';
+      if (dayLines.length === 0) {
+        hotEl.style.display = 'none';
+      } else {
+        const intro = t ? 'Périodes achalandées' : 'Busy periods';
+        hotEl.innerHTML = `<span style="font-weight:600;color:var(--accent);">${intro}</span><br>${dayLines.join('<br>')}`;
+        hotEl.style.display = 'block';
+      }
     }
   }
 
