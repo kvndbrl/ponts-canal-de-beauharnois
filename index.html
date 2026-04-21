@@ -2335,16 +2335,20 @@ document.getElementById('customAmount').addEventListener('keydown',e=>{
 });
 
 
+let _heatmapData = {};
+
 async function fetchLiftHistory() {
   try {
     const r = await fetch(BACKEND + '/history');
     const d = await r.json();
+    _heatmapData = d;
     ['gonzague', 'larocque'].forEach(b => {
       const C = b.charAt(0).toUpperCase() + b.slice(1);
       const el = document.getElementById('lastLift' + C);
+      const btn = document.getElementById('heatmapBtn' + C);
       if (!el) return;
       const h = d[b];
-      if (!h || !h.lastLift) { el.style.display = 'none'; return; }
+      if (!h || !h.lastLift) { el.style.display = 'none'; if(btn) btn.style.display='none'; return; }
       const dt = new Date(h.lastLift);
       const fmt = dt.toLocaleString(currentLang === 'fr' ? 'fr-CA' : 'en-CA', {
         day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
@@ -2353,8 +2357,87 @@ async function fetchLiftHistory() {
       const label = currentLang === 'fr' ? 'Dernière levée' : 'Last lift';
       el.textContent = label + ' : ' + fmt;
       el.style.display = 'block';
+      if(btn && h.entries > 0) btn.style.display = 'inline';
     });
   } catch(e) {}
+}
+
+function showHeatmap(bridge) {
+  const d = _heatmapData[bridge];
+  if (!d) return;
+  const t = currentLang === 'fr';
+  const names = { gonzague: t ? 'Pont St-Louis' : 'St-Louis Bridge', larocque: t ? 'Pont Larocque' : 'Larocque Bridge' };
+  const days = t ? ['D','L','M','M','J','V','S'] : ['S','M','T','W','T','F','S'];
+  const heatmap = d.heatmap || {};
+  const vals = Object.values(heatmap);
+  const maxVal = vals.length ? Math.max(...vals) : 1;
+
+  document.getElementById('heatmapTitle').textContent = names[bridge] + (t ? ' — Levées historiques' : ' — Historical lifts');
+  document.getElementById('heatmapSub').textContent = t
+    ? `${d.entries} levée${d.entries>1?'s':''} enregistrée${d.entries>1?'s':''} · Durée moy. ~${d.avgDuration||'?'} min`
+    : `${d.entries} lift${d.entries>1?'s':''} recorded · Avg ~${d.avgDuration||'?'} min`;
+
+  const statsEl = document.getElementById('heatmapStats');
+  statsEl.innerHTML = `
+    <div class="heatmap-stat"><div class="heatmap-stat-val">${d.entries}</div><div class="heatmap-stat-label">${t?'Levées':'Lifts'}</div></div>
+    <div class="heatmap-stat"><div class="heatmap-stat-val">~${d.avgDuration||'?'}</div><div class="heatmap-stat-label">${t?'Min moy.':'Avg min'}</div></div>
+    <div class="heatmap-stat"><div class="heatmap-stat-val">~${d.avgLowering||'?'}</div><div class="heatmap-stat-label">${t?'Min descente':'Lowering min'}</div></div>
+  `;
+
+  const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#3a6b2a';
+  const grid = document.getElementById('heatmapGrid');
+  grid.innerHTML = '';
+  grid.appendChild(document.createElement('div'));
+  days.forEach(day => {
+    const el = document.createElement('div');
+    el.className = 'heatmap-day-label';
+    el.textContent = day;
+    grid.appendChild(el);
+  });
+  for (let h = 0; h < 24; h++) {
+    const hourLabel = document.createElement('div');
+    hourLabel.className = 'heatmap-hour-label';
+    hourLabel.textContent = h + 'h';
+    grid.appendChild(hourLabel);
+    for (let day = 0; day < 7; day++) {
+      const key = `${day}-${h}`;
+      const count = heatmap[key] || 0;
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      if (count > 0) {
+        const intensity = Math.max(0.2, count / maxVal);
+        cell.style.background = hexToRgba(accent, intensity);
+        cell.title = `${count} levée${count>1?'s':''}`;
+      }
+      grid.appendChild(cell);
+    }
+  }
+
+  const legend = document.getElementById('heatmapLegend');
+  legend.innerHTML = '';
+  [0.1, 0.3, 0.5, 0.75, 1].forEach(i => {
+    const el = document.createElement('div');
+    el.className = 'heatmap-legend-cell';
+    el.style.background = i === 0.1 ? 'var(--border)' : hexToRgba(accent, i);
+    legend.appendChild(el);
+  });
+
+  document.getElementById('heatmapOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHeatmap() {
+  document.getElementById('heatmapOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function hexToRgba(hex, alpha) {
+  hex = hex.replace('#','').trim();
+  if (!hex || hex.startsWith('var(')) return `rgba(100,150,100,${alpha})`;
+  const r = parseInt(hex.slice(0,2),16);
+  const g = parseInt(hex.slice(2,4),16);
+  const b = parseInt(hex.slice(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
 }
 loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();
 // Changelog shown after onboarding (called from obClose) or on load if onboarding already done
