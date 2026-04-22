@@ -2578,20 +2578,57 @@ loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchW
 
 // ── Donation modal after 3 opens ──────────────────────────────────────
 function checkDonationPrompt() {
-  if(localStorage.getItem('donationPromptSeen')) return;
+  const now = Date.now();
+  const donated = localStorage.getItem('donationDate');
+  const snoozedUntil = localStorage.getItem('donationSnoozedUntil');
   const opens = parseInt(localStorage.getItem('appOpenCount') || '0') + 1;
   localStorage.setItem('appOpenCount', opens);
-  if(opens >= 3) {
-    setTimeout(() => {
-      const overlay = document.getElementById('donationModalOverlay');
-      if(overlay) overlay.style.display = 'flex';
-    }, 3000);
+
+  // Donor re-prompt after 90 days
+  if (donated) {
+    if (now - parseInt(donated) > 90 * 24 * 60 * 60 * 1000) {
+      localStorage.removeItem('donationDate');
+      // Will fall through to normal prompt logic
+    } else {
+      return; // Still within 90 days, don't show
+    }
   }
+
+  // Snoozed — wait until snoozedUntil
+  if (snoozedUntil && now < parseInt(snoozedUntil)) return;
+
+  // First time: show after 3 opens
+  if (!snoozedUntil && opens < 3) return;
+
+  setTimeout(() => {
+    const isFr = currentLang === 'fr';
+    const wasDonor = !!donated;
+    const titleEl = document.getElementById('donModalTitle');
+    const descEl = document.getElementById('donModalDesc');
+    if (titleEl && wasDonor) {
+      titleEl.textContent = isFr ? 'Merci pour votre soutien !' : 'Thank you for your support!';
+    }
+    if (descEl && wasDonor) {
+      descEl.textContent = isFr
+        ? 'Votre don fait une vraie différence. Si vous aimez toujours l\'app, un nouveau soutien est toujours apprécié !'
+        : 'Your donation made a real difference. If you still enjoy the app, another contribution is always welcome!';
+    }
+    const overlay = document.getElementById('donationModalOverlay');
+    if (overlay) overlay.style.display = 'flex';
+  }, 3000);
 }
-function closeDonationModal(permanent) {
+
+function closeDonationModal(donated) {
   const overlay = document.getElementById('donationModalOverlay');
-  if(overlay) overlay.style.display = 'none';
-  if(permanent) localStorage.setItem('donationPromptSeen', '1');
+  if (overlay) overlay.style.display = 'none';
+  if (donated) {
+    localStorage.setItem('donationDate', Date.now());
+    localStorage.removeItem('donationSnoozedUntil');
+  } else {
+    // Snooze for 7–21 days randomly
+    const days = 7 + Math.floor(Math.random() * 15);
+    localStorage.setItem('donationSnoozedUntil', Date.now() + days * 24 * 60 * 60 * 1000);
+  }
 }
 checkDonationPrompt();
 // Changelog shown after onboarding (called from obClose) or on load if onboarding already done
@@ -2675,7 +2712,7 @@ document.addEventListener('visibilitychange',()=>{
       <a href="https://paypal.me/kvndbrl/5" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:5,source:'modal'});closeDonationModal(true);" style="flex:1;text-align:center;padding:14px 4px;border-radius:14px;background:#0070BA;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;text-decoration:none;">5 $</a>
       <a href="https://paypal.me/kvndbrl/10" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:10,source:'modal'});closeDonationModal(true);" style="flex:1;text-align:center;padding:14px 4px;border-radius:14px;background:#0070BA;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;text-decoration:none;">10 $</a>
     </div>
-    <button onclick="closeDonationModal(true)" style="width:100%;padding:14px;border-radius:50px;border:none;background:var(--surface2);color:var(--text3);font-family:var(--sans);font-size:14px;cursor:pointer;" id="donModalSkip">Plus tard</button>
+    <button onclick="closeDonationModal(false)" style="width:100%;padding:14px;border-radius:50px;border:none;background:var(--surface2);color:var(--text3);font-family:var(--sans);font-size:14px;cursor:pointer;" id="donModalSkip">Plus tard</button>
   </div>
 </div>
 
