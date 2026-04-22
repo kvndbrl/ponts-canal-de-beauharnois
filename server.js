@@ -724,7 +724,7 @@ async function sendScheduledLiftNotification(bridge, time) {
 
     const payload = JSON.stringify({ ...msg, bridge, persistent: false, icon: notifIcon(sub), badge: statusBadge('scheduled') });
     try {
-      await webpush.sendNotification(sub, payload);
+      await webpush.sendNotification(sub, payload, { urgency: 'high', TTL: 300 });
       sent++;
     } catch(e) {
       failed++;
@@ -764,7 +764,7 @@ async function sendNotifications(bridge, status, bridgeData = {}) {
     });
 
     try {
-      await webpush.sendNotification(sub, payload);
+      await webpush.sendNotification(sub, payload, { urgency: 'high', TTL: 300 });
       sent++;
     } catch(e) {
       failed++;
@@ -985,7 +985,7 @@ app.post('/milestone-notif', async (req, res) => {
       tag: `milestone-${milestone}`,
       persistent: false,
       icon: notifIcon(sub)
-    }));
+    }), { urgency: 'high', TTL: 300 });
     umamiTrack('milestone_push_sent', { milestone });
     res.json({ ok: true });
   } catch(e) {
@@ -1061,7 +1061,7 @@ async function checkBusyPeriodAlerts() {
           ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min · Prévoir un itinéraire alternatif`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true }
           : { title: `⚠️ ${name}`, body: `Busy period in ~30 min · Consider an alternate route`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true };
 
-        await webpush.sendNotification(sub, JSON.stringify(payload));
+        await webpush.sendNotification(sub, JSON.stringify(payload), { urgency: 'high', TTL: 300 });
         sent++;
       } catch (e) {
         if (e.statusCode === 410) subscriptions = subscriptions.filter(s => s !== sub);
