@@ -401,6 +401,10 @@ async function markLiftNotified(key) {
   } catch(e) { console.error('markLiftNotified error:', e.message); }
 }
 
+// Track last scheduled notification per bridge to prevent spam when time updates each poll
+const lastScheduledNotif = { gonzague: 0, larocque: 0 };
+const SCHEDULED_NOTIF_COOLDOWN = 20 * 60 * 1000; // 20 minutes
+
 // ── Time range check (Montreal time) ─────────────────────────────────
 function isInTimeRange(sub) {
   const now = new Date();
@@ -808,9 +812,11 @@ async function monitor() {
       for (const time of lifts) {
         const key = `${bridge}:${time}`;
         const alreadyNotified = await isLiftNotified(key);
-        if (!alreadyNotified) {
+        const cooldownOk = (Date.now() - lastScheduledNotif[bridge]) > SCHEDULED_NOTIF_COOLDOWN;
+        if (!alreadyNotified && cooldownOk) {
           log(`📅 Nouvelle levée planifiée [${bridge}] à ${time}`);
           await markLiftNotified(key);
+          lastScheduledNotif[bridge] = Date.now();
           notifications.push(sendScheduledLiftNotification(bridge, time));
         }
       }
@@ -1110,7 +1116,7 @@ async function start() {
   // AIS tracking moved to frontend to avoid Render IP rate limiting
   // startAISTracking();
   await monitor();
-  setInterval(monitor, 30000); // 30s to catch short status windows
+  setInterval(monitor, 15000); // 15s to catch short status windows
 }
 
 start();
