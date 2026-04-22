@@ -1083,9 +1083,17 @@ async function loadLiftActive() {
     const val = await redisCommand('get', 'liftActive');
     if (val) {
       liftActive = JSON.parse(val);
+      const now = Date.now();
       for (const bridge of ['gonzague', 'larocque']) {
         if (liftActive[bridge]) {
-          log('Boot: liftActive [' + bridge + '] restaure depuis Redis');
+          const age = now - liftActive[bridge].raisedAt;
+          // If lift has been active for more than 2 hours, it's stale — discard
+          if (age > 2 * 60 * 60 * 1000) {
+            log('Boot: liftActive [' + bridge + '] trop ancien (' + Math.round(age/60000) + ' min), annulé');
+            liftActive[bridge] = null;
+          } else {
+            log('Boot: liftActive [' + bridge + '] restaure depuis Redis (' + Math.round(age/60000) + ' min)');
+          }
         }
       }
     }

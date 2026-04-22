@@ -1629,6 +1629,12 @@ function getLiftTimerText(bridge,status,lang){
   }
   const elapsedMs=Date.now()-start;
   const elapsedMin=Math.floor(elapsedMs/60000);
+  // If elapsed > 2h, liftStartTime is stale — fallback to average
+  if(elapsedMin > 120) {
+    return lang==='fr'
+      ?'Dur\u00E9e moyenne\u00A0: ~'+avgMin+'\u00A0min'
+      :'Average duration: ~'+avgMin+' min';
+  }
   const remaining=Math.max(0,avgMin-elapsedMin);
   if(lang==='fr'){
     if(elapsedMin<1) return 'Lev\u00E9 depuis moins d\u2019une minute \u2014 ~'+avgMin+'\u00A0min restantes';
