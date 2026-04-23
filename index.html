@@ -543,7 +543,6 @@
   <div class="greeting-block" aria-live="polite">
     <span class="greeting-text" id="greetingText">Bonjour !</span>
     <span class="weather-text" id="weatherText"></span>
-    <a id="geoPrompt" href="#" onclick="requestWeatherLocation();return false;" style="display:none;font-size:11px;color:var(--accent);font-family:var(--mono);margin-top:6px;text-decoration:underline;text-underline-offset:3px;"></a>
   </div>
   <button class="gear-btn" onclick="openDrawer()" aria-label="Réglages">
     <span class="burger-line"></span>
@@ -733,6 +732,17 @@
     <span class="pref-row-label" id="darkModeLabel">Mode sombre</span>
     <div class="pref-toggle">
       <input type="checkbox" id="darkToggleInput" onchange="toggleDark()" role="switch" aria-checked="false" aria-label="Mode sombre"/>
+      <span class="pref-slider"></span>
+    </div>
+  </label>
+
+  <label class="pref-row" style="border-top:1px solid var(--border);cursor:pointer;" onclick="toggleWeather()">
+    <div style="display:flex;flex-direction:column;flex:1;min-width:0;">
+      <span class="pref-row-label" id="weatherToggleLabel">Météo</span>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;" id="weatherToggleDesc">Afficher la météo locale dans le salutation.</div>
+    </div>
+    <div class="pref-toggle" style="pointer-events:none;">
+      <input type="checkbox" id="weatherToggleInput" role="switch" aria-checked="false"/>
       <span class="pref-slider"></span>
     </div>
   </label>
@@ -1043,12 +1053,10 @@ function wEmoji(c){if(c<=-15)return'\u{1F976}';if(c<=-5)return'\u2744\uFE0F';if(
 function toF(c){return Math.round(c*9/5+32);}
 
 async function fetchWeather(){
-  if(!navigator.geolocation)return;
+  if(!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(async pos=>{
     try{
       const {latitude:lat,longitude:lon}=pos.coords;
-
-      // Weather + reverse geocode in parallel
       const [wRes,gRes]=await Promise.all([
         fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon
           +'&current=temperature_2m,weather_code'
@@ -1059,36 +1067,43 @@ async function fetchWeather(){
       ]);
       const w=await wRes.json();
       const g=await gRes.json();
-
       const c=Math.round(w.current.temperature_2m);
-      const code=w.current.weather_code;
       const maxC=Math.round(w.daily.temperature_2m_max[0]);
       const minC=Math.round(w.daily.temperature_2m_min[0]);
       const city=g.address?.city||g.address?.town||g.address?.village||g.address?.municipality||'';
-
-      // Two compact lines in header
       const weatherSvg='<span style="display:inline-flex;align-items:center;width:13px;height:13px;vertical-align:middle;margin-right:4px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="22" cy="28" r="10"/> <path d="M38 44 H16 a12 12 0 0 1 0-24 h1 a14 14 0 0 1 26 4 10 10 0 0 1 0 20 H38"/> <line x1="22" y1="10" x2="22" y2="6"/> <line x1="10" y1="22" x2="6" y2="22"/> <line x1="14" y1="14" x2="11" y2="11"/> </svg></span>';
       let line1=city?city+' \u00B7 '+c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F':c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F';
       const line2='\u2191'+maxC+'\u00B0  \u2193'+minC+'\u00B0';
       document.getElementById('weatherText').innerHTML=weatherSvg+line1+'&nbsp;&nbsp;&nbsp;'+line2;
-
-      // Hide prompt on success
-      const prompt=document.getElementById('geoPrompt');
-      if(prompt) prompt.style.display='none';
+      // Mark weather as enabled
+      localStorage.setItem('weatherEnabled','1');
+      const tog=document.getElementById('weatherToggleInput');
+      if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
     }catch(e){console.log('Weather:',e);}
   },(err)=>{
-    // Show prompt if permission denied
-    const prompt=document.getElementById('geoPrompt');
-    if(prompt){
-      prompt.textContent=currentLang==='fr'
-        ?'\uD83D\uDCCD Activer la m\u00e9t\u00e9o \u2192'
-        :'\uD83D\uDCCD Enable weather \u2192';
-      prompt.style.display='block';
-    }
+    // Permission denied — update toggle state
+    localStorage.setItem('weatherEnabled','0');
+    const tog=document.getElementById('weatherToggleInput');
+    if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
   },{timeout:8000,maximumAge:300000});
 }
 
-function requestWeatherLocation(){
+function toggleWeather(){
+  const tog=document.getElementById('weatherToggleInput');
+  const enabled=localStorage.getItem('weatherEnabled')==='1';
+  if(enabled){
+    // Disable
+    localStorage.setItem('weatherEnabled','0');
+    document.getElementById('weatherText').innerHTML='';
+    if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
+  } else {
+    // Try to enable
+    fetchWeather();
+    showGeoInstructions();
+  }
+}
+
+function showGeoInstructions(){
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
   const isPWA=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
   const isFr=currentLang==='fr';
@@ -1096,7 +1111,7 @@ function requestWeatherLocation(){
   const title=document.getElementById('geoModalTitle');
   const body=document.getElementById('geoModalBody');
   if(!overlay||!title||!body) return;
-  title.textContent=isFr?'Activer la localisation':'Enable location';
+  title.textContent=isFr?'Activer la m\u00e9t\u00e9o':'Enable weather';
   if(isIOS){
     body.innerHTML=isFr
       ?(isPWA?'R\u00e9glages \u2192 <strong>Ponts Beauharnois</strong> \u2192 <strong>Localisation</strong> \u2192 Lors de l\u2019utilisation':'R\u00e9glages \u2192 <strong>Safari</strong> \u2192 <strong>Localisation</strong> \u2192 Autoriser')
@@ -1109,12 +1124,26 @@ function requestWeatherLocation(){
   overlay.style.display='flex';
 }
 
+function requestWeatherLocation(){ showGeoInstructions(); }
+
 function closeGeoModal(){
   const o=document.getElementById('geoModalOverlay');
   if(o) o.style.display='none';
 }
 
-// ── Name / prénom ──────────────────────────────────────────────────────
+function initWeatherToggle(){
+  const enabled=localStorage.getItem('weatherEnabled');
+  const tog=document.getElementById('weatherToggleInput');
+  if(!tog) return;
+  if(enabled==='1'){
+    tog.checked=true;
+    tog.setAttribute('aria-checked','true');
+    fetchWeather();
+  } else if(enabled===null){
+    // First time — try silently, no modal
+    fetchWeather();
+  }
+}
 function getUserName(){ return localStorage.getItem('userName')||''; }
 
 function updateGreeting(){
@@ -1915,6 +1944,10 @@ function applyTrans(){
   if(donModalTitle) donModalTitle.textContent = currentLang==='fr' ? 'Vous aimez l\u2019app\u00a0?' : 'Enjoying the app?';
   if(donModalDesc) donModalDesc.textContent = currentLang==='fr' ? 'Ce projet est gratuit et ind\u00e9pendant. Un petit don aide \u00e0 le garder vivant pour toute la communaut\u00e9.' : 'This project is free and independent. A small donation helps keep it alive for the whole community.';
   if(donSkip) donSkip.textContent = currentLang==='fr' ? 'Plus tard' : 'Maybe later';
+  const weatherLbl=document.getElementById('weatherToggleLabel');
+  if(weatherLbl) weatherLbl.textContent=currentLang==='fr'?'M\u00e9t\u00e9o':'Weather';
+  const weatherDesc=document.getElementById('weatherToggleDesc');
+  if(weatherDesc) weatherDesc.textContent=currentLang==='fr'?'Afficher la m\u00e9t\u00e9o locale dans la salutation.':'Show local weather in the greeting.';
   // Drawer donation section translation
   updateDonationTexts();
   applyDayLabels();
@@ -2589,7 +2622,7 @@ function hexToRgba(hex, alpha) {
   const b = parseInt(hex.slice(4,6),16);
   return `rgba(${r},${g},${b},${alpha})`;
 }
-loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();
+loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();initWeatherToggle();
 
 // ── Donation modal after 3 opens ──────────────────────────────────────
 function updateDonationTexts() {
