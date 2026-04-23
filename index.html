@@ -2588,18 +2588,11 @@ function getDonVariant() {
 }
 
 function updateDonationTexts() {
-  const donated = localStorage.getItem('donationDate');
-  const section = document.getElementById('drawerDonationSection');
-  if (donated && (Date.now() - parseInt(donated)) < 90 * 24 * 60 * 60 * 1000) {
-    if (section) section.style.display = 'none';
-  } else {
-    if (section) section.style.display = 'block';
-    const v = getDonVariant();
-    const drawerTitle = document.getElementById('drawerDonTitle');
-    const drawerDesc = document.getElementById('drawerDonDesc');
-    if (drawerTitle) drawerTitle.textContent = v.title;
-    if (drawerDesc) drawerDesc.textContent = v.desc;
-  }
+  const v = getDonVariant();
+  const drawerTitle = document.getElementById('drawerDonTitle');
+  const drawerDesc = document.getElementById('drawerDonDesc');
+  if (drawerTitle) drawerTitle.textContent = v.title;
+  if (drawerDesc) drawerDesc.textContent = v.desc;
 }
 
 function checkDonationPrompt() {
