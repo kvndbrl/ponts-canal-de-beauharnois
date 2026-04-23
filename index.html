@@ -678,6 +678,13 @@
   <!-- Milestone banner — replaces donation card header contextually -->
   <div id="milestoneBanner" style="display:none;margin-bottom:0;"></div>
 
+  <!-- Fun facts section -->
+  <div id="funFactCard" style="margin:0 0 16px;background:var(--surface);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);border:1px solid var(--border);">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--accent);font-family:var(--mono);margin-bottom:8px;" id="funFactLabel">SAVIEZ-VOUS QUE ?</div>
+    <div style="font-size:14px;color:var(--text);font-family:var(--sans);line-height:1.65;margin-bottom:14px;" id="funFactText"></div>
+    <button onclick="nextFunFact()" id="funFactNext" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:50px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:var(--mono);font-size:12px;font-weight:600;cursor:pointer;">Autre fait</button>
+  </div>
+
   <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
 
 </main>
@@ -1850,28 +1857,67 @@ function updateDisplay(){
   updateCards();
 }
 
-const DON_VARIANTS = {
-  fr: [
-    { title: 'Vous aimez l\u2019app\u00a0?', desc: 'Ce projet est gratuit et ind\u00e9pendant. Un petit don aide \u00e0 le garder vivant pour toute la communaut\u00e9.' },
-    { title: 'Un caf\u00e9 pour le d\u00e9veloppeur\u00a0?', desc: 'Chaque alerte re\u00e7ue repr\u00e9sente des heures de travail b\u00e9n\u00e9vole. M\u00eame 2\u00a0$ font une vraie diff\u00e9rence.' },
-    { title: 'L\u2019app vous a \u00e9vit\u00e9 une attente\u00a0?', desc: 'Aidez-nous \u00e0 maintenir le service en ligne et gratuit pour tous.' },
-    { title: 'Vous utilisez l\u2019app r\u00e9guli\u00e8rement\u00a0?', desc: 'Les serveurs co\u00fbtent de l\u2019argent m\u00eame quand les ponts sont disponibles. Votre soutien compte.' },
-    { title: '200+ personnes comptent sur l\u2019app', desc: 'Un projet ind\u00e9pendant, maintenu b\u00e9n\u00e9volement. Contribuez \u00e0 le garder gratuit.' },
-  ],
-  en: [
-    { title: 'Enjoying the app?', desc: 'This project is free and independent. A small donation helps keep it alive for everyone.' },
-    { title: 'Buy the developer a coffee?', desc: 'Every alert you receive represents hours of volunteer work. Even $2 makes a real difference.' },
-    { title: 'Did the app save you a wait?', desc: 'Help us keep the service running and free for everyone.' },
-    { title: 'Using the app regularly?', desc: 'Servers cost money even when bridges are open. Your support matters.' },
-    { title: '200+ people count on this app', desc: 'An independent project, maintained voluntarily. Help keep it free.' },
-  ]
-};
+// ── Fun facts ─────────────────────────────────────────────────────────
+const FUN_FACTS = [
+  { fr: "La ville de Salaberry-de-Valleyfield est entièrement située sur une île, l'île de Salaberry.", en: "The city of Salaberry-de-Valleyfield is entirely located on an island — Île de Salaberry." },
+  { fr: "Le nom de Salaberry-de-Valleyfield rend hommage au colonel Charles-Michel d'Irumberry de Salaberry, héros de la guerre de 1812.", en: "Salaberry-de-Valleyfield is named after Colonel Charles-Michel d'Irumberry de Salaberry, a hero of the War of 1812." },
+  { fr: "Salaberry-de-Valleyfield a longtemps été surnommée la « cité du coton » en raison de la présence de la Montreal Cottons.", en: "Salaberry-de-Valleyfield was long nicknamed the 'cotton city' due to the presence of the Montreal Cottons textile mill." },
+  { fr: "Les célèbres Régates de Salaberry-de-Valleyfield sont les plus importantes courses d'hydroplanes en Amérique du Nord depuis 1938.", en: "The famous Valleyfield Regatta has been the largest hydroplane racing event in North America since 1938." },
+  { fr: "Le Vieux Canal de Salaberry-de-Valleyfield, autrefois industriel, est aujourd'hui un parc nautique urbain unique au Québec.", en: "The Old Canal of Salaberry-de-Valleyfield, once an industrial waterway, is now a unique urban nautical park in Quebec." },
+  { fr: "L'hôtel de ville de Salaberry-de-Valleyfield est aménagé dans un ancien bâtiment industriel de la Montreal Cottons.", en: "Salaberry-de-Valleyfield's city hall is housed in a former Montreal Cottons industrial building." },
+  { fr: "La basilique-cathédrale Sainte-Cécile de Salaberry-de-Valleyfield possède une acoustique parmi les plus réputées de la province.", en: "The Sainte-Cécile basilica-cathedral in Salaberry-de-Valleyfield has one of the most renowned acoustics in the province." },
+  { fr: "D'importantes émeutes ouvrières ont secoué Salaberry-de-Valleyfield en 1900, forçant l'intervention de l'armée.", en: "Major labour riots shook Salaberry-de-Valleyfield in 1900, forcing the army to intervene." },
+  { fr: "Le pont Larocque, reliant Salaberry-de-Valleyfield à la rive sud, est l'un des ponts levants les plus massifs du Canada.", en: "The Larocque Bridge, linking Salaberry-de-Valleyfield to the south shore, is one of the largest lift bridges in Canada." },
+  { fr: "Le parc Delpha-Sauvé au centre-ville de Salaberry-de-Valleyfield était jadis le site des résidences des grands patrons de la filature.", en: "Delpha-Sauvé Park in downtown Salaberry-de-Valleyfield was once the residential area of the textile mill's top executives." },
+  { fr: "Le palais de justice de Salaberry-de-Valleyfield, construit en 1901, est un monument historique majeur de la région.", en: "The Salaberry-de-Valleyfield courthouse, built in 1901, is a major heritage landmark of the region." },
+  { fr: "Le MUSO (Musée de société des Deux-Rives) de Salaberry-de-Valleyfield est logé dans une ancienne église unie.", en: "The MUSO museum in Salaberry-de-Valleyfield is housed in a former United church." },
+  { fr: "Le quartier Bellerive était autrefois une municipalité distincte avant d'être intégré à Salaberry-de-Valleyfield.", en: "The Bellerive neighbourhood was once a separate municipality before being merged into Salaberry-de-Valleyfield." },
+  { fr: "La Baie Saint-François, qui borde Salaberry-de-Valleyfield, est un élargissement naturel du fleuve Saint-Laurent.", en: "Baie Saint-François, which borders Salaberry-de-Valleyfield, is a natural widening of the St. Lawrence River." },
+  { fr: "L'industrie chimique constitue encore aujourd'hui un pilier économique majeur pour Salaberry-de-Valleyfield.", en: "The chemical industry remains a major economic pillar for Salaberry-de-Valleyfield to this day." },
+  { fr: "Le Collège de Salaberry-de-Valleyfield occupe les murs d'un ancien séminaire fondé à la fin du 19e siècle.", en: "The Collège de Valleyfield occupies the walls of a former seminary founded in the late 19th century." },
+  { fr: "L'identité maritime de Salaberry-de-Valleyfield est célébrée chaque année par des milliers de touristes nautiques.", en: "Salaberry-de-Valleyfield's maritime identity is celebrated every year by thousands of nautical tourists." },
+  { fr: "Le parc régional des Îles-de-Saint-Timothée fait partie intégrante du territoire de Salaberry-de-Valleyfield.", en: "The Îles-de-Saint-Timothée regional park is an integral part of the Salaberry-de-Valleyfield territory." },
+  { fr: "Les citoyens de Salaberry-de-Valleyfield sont appelés les Campivallensiens.", en: "The residents of Salaberry-de-Valleyfield are called Campivallensians." },
+  { fr: "Le premier village de Saint-Louis-de-Gonzague a dû être déplacé lors du creusage du canal de Beauharnois.", en: "The original village of Saint-Louis-de-Gonzague had to be relocated during the construction of the Beauharnois Canal." },
+  { fr: "La municipalité de Saint-Louis-de-Gonzague est traversée par l'une des pistes cyclables les plus plates et droites du Québec.", en: "Saint-Louis-de-Gonzague is crossed by one of the flattest and straightest cycling paths in Quebec." },
+  { fr: "Le territoire de Saint-Louis-de-Gonzague est reconnu pour la fertilité exceptionnelle de ses terres agricoles.", en: "The Saint-Louis-de-Gonzague territory is renowned for the exceptional fertility of its farmland." },
+  { fr: "Le pont basculant de Saint-Louis-de-Gonzague permet le passage des navires de la Voie maritime du Saint-Laurent.", en: "The bascule bridge of Saint-Louis-de-Gonzague allows ships of the St. Lawrence Seaway to pass through." },
+  { fr: "Le nom de Saint-Louis-de-Gonzague honore un saint jésuite italien, protecteur de la jeunesse.", en: "The name Saint-Louis-de-Gonzague honours an Italian Jesuit saint, patron of youth." },
+  { fr: "La construction du canal a physiquement divisé le territoire de Saint-Louis-de-Gonzague en deux parties.", en: "The construction of the canal physically split the territory of Saint-Louis-de-Gonzague into two parts." },
+  { fr: "Plusieurs maisons ancestrales en pierre des champs témoignent du riche passé rural de Saint-Louis-de-Gonzague.", en: "Several ancestral fieldstone houses bear witness to the rich rural heritage of Saint-Louis-de-Gonzague." },
+  { fr: "Saint-Louis-de-Gonzague se trouve exactement au milieu du canal de Beauharnois, entre les deux écluses.", en: "Saint-Louis-de-Gonzague sits exactly halfway along the Beauharnois Canal, between the two lock stations." },
+  { fr: "Saint-Louis-de-Gonzague faisait autrefois partie de la vaste seigneurie de Beauharnois.", en: "Saint-Louis-de-Gonzague was once part of the vast Beauharnois seigneury." },
+  { fr: "L'économie de Saint-Louis-de-Gonzague repose en grande partie sur les grandes cultures maraîchères et céréalières.", en: "The economy of Saint-Louis-de-Gonzague relies largely on vegetable and grain farming." },
+  { fr: "La municipalité de Saint-Louis-de-Gonzague est l'une des plus anciennes paroisses de la région.", en: "Saint-Louis-de-Gonzague is one of the oldest parishes in the region." },
+  { fr: "Saint-Stanislas-de-Kostka est située au point de rencontre entre le lac Saint-François et le canal de Beauharnois.", en: "Saint-Stanislas-de-Kostka is located at the meeting point of Lake Saint-François and the Beauharnois Canal." },
+  { fr: "Le nom de Saint-Stanislas-de-Kostka rend hommage à un saint polonais, mort à l'âge de 17 ans.", en: "The name Saint-Stanislas-de-Kostka honours a Polish saint who died at the age of 17." },
+  { fr: "Le secteur de la Baie-des-Brises à Saint-Stanislas-de-Kostka est un lieu de villégiature recherché pour ses couchers de soleil.", en: "The Baie-des-Brises area in Saint-Stanislas-de-Kostka is a sought-after destination for its stunning sunsets." },
+  { fr: "Saint-Stanislas-de-Kostka est un site d'observation privilégié pour la faune aviaire migrant le long du fleuve.", en: "Saint-Stanislas-de-Kostka is a prime birdwatching site for migratory species along the river." },
+  { fr: "La municipalité de Saint-Stanislas-de-Kostka a été officiellement constituée en 1855.", en: "The municipality of Saint-Stanislas-de-Kostka was officially incorporated in 1855." },
+  { fr: "Les inondations printanières étaient autrefois un défi constant pour les résidents de Saint-Stanislas-de-Kostka.", en: "Spring flooding was once a constant challenge for the residents of Saint-Stanislas-de-Kostka." },
+  { fr: "La pêche blanche est une activité hivernale majeure sur le territoire de Saint-Stanislas-de-Kostka.", en: "Ice fishing is a major winter activity on the territory of Saint-Stanislas-de-Kostka." },
+  { fr: "Le chemin de fer New York Central passait autrefois par Saint-Stanislas-de-Kostka pour relier les États-Unis.", en: "The New York Central railway once passed through Saint-Stanislas-de-Kostka connecting to the United States." },
+  { fr: "La topographie de Saint-Stanislas-de-Kostka est parmi les plus planes de toute la plaine du Saint-Laurent.", en: "Saint-Stanislas-de-Kostka has some of the flattest terrain in the entire St. Lawrence lowlands." },
+  { fr: "La proximité de l'eau définit l'art de vivre des résidents de Saint-Stanislas-de-Kostka tout au long de l'année.", en: "The proximity to water defines the way of life of Saint-Stanislas-de-Kostka residents throughout the year." },
+];
 
-function getDonVariant() {
+let _funFactIndex = Math.floor(Math.random() * FUN_FACTS.length);
+
+function renderFunFact() {
+  const el = document.getElementById('funFactText');
+  const lbl = document.getElementById('funFactLabel');
+  const btn = document.getElementById('funFactNext');
+  if (!el) return;
   const isFr = currentLang === 'fr';
-  const variants = DON_VARIANTS[isFr ? 'fr' : 'en'];
-  const idx = Math.floor(Math.random() * variants.length);
-  return variants[idx];
+  if (lbl) lbl.textContent = isFr ? 'Saviez-vous que ?' : 'Did you know?';
+  if (btn) btn.textContent = isFr ? 'Autre fait' : 'Next fact';
+  const fact = FUN_FACTS[_funFactIndex];
+  el.textContent = isFr ? fact.fr : fact.en;
+}
+
+function nextFunFact() {
+  _funFactIndex = (_funFactIndex + 1) % FUN_FACTS.length;
+  renderFunFact();
 }
 
 function applyTrans(){
@@ -1948,6 +1994,7 @@ function applyTrans(){
   if(weatherLbl) weatherLbl.textContent=currentLang==='fr'?'M\u00e9t\u00e9o':'Weather';
   const weatherDesc=document.getElementById('weatherToggleDesc');
   if(weatherDesc) weatherDesc.textContent=currentLang==='fr'?'Afficher la m\u00e9t\u00e9o locale dans la salutation.':'Show local weather in the greeting.';
+  renderFunFact();
   // Drawer donation section translation
   updateDonationTexts();
   applyDayLabels();
@@ -2623,6 +2670,8 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();initWeatherToggle();
+
+renderFunFact();
 
 // ── Donation modal after 3 opens ──────────────────────────────────────
 function updateDonationTexts() {
