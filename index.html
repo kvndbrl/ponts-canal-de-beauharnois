@@ -1920,22 +1920,43 @@ function nextFunFact() {
   renderFunFact();
 }
 
+const DON_VARIANTS = {
+  fr: [
+    { title: 'Vous aimez l\u2019app\u00a0?', desc: 'Ce projet est gratuit et ind\u00e9pendant. Un petit don aide \u00e0 le garder vivant pour toute la communaut\u00e9.' },
+    { title: 'Un caf\u00e9 pour le d\u00e9veloppeur\u00a0?', desc: 'Chaque alerte re\u00e7ue repr\u00e9sente des heures de travail b\u00e9n\u00e9vole. M\u00eame 2\u00a0$ font une vraie diff\u00e9rence.' },
+    { title: 'L\u2019app vous a \u00e9vit\u00e9 une attente\u00a0?', desc: 'Aidez-nous \u00e0 maintenir le service en ligne et gratuit pour tous.' },
+    { title: 'Vous utilisez l\u2019app r\u00e9guli\u00e8rement\u00a0?', desc: 'Les serveurs co\u00fbtent de l\u2019argent m\u00eame quand les ponts sont disponibles. Votre soutien compte.' },
+    { title: '200+ personnes comptent sur l\u2019app', desc: 'Un projet ind\u00e9pendant, maintenu b\u00e9n\u00e9volement. Contribuez \u00e0 le garder gratuit.' },
+  ],
+  en: [
+    { title: 'Enjoying the app?', desc: 'This project is free and independent. A small donation helps keep it alive for everyone.' },
+    { title: 'Buy the developer a coffee?', desc: 'Every alert you receive represents hours of volunteer work. Even $2 makes a real difference.' },
+    { title: 'Did the app save you a wait?', desc: 'Help us keep the service running and free for everyone.' },
+    { title: 'Using the app regularly?', desc: 'Servers cost money even when bridges are open. Your support matters.' },
+    { title: '200+ people count on this app', desc: 'An independent project, maintained voluntarily. Help keep it free.' },
+  ]
+};
+
+function getDonVariant() {
+  const variants = DON_VARIANTS[currentLang === 'fr' ? 'fr' : 'en'];
+  return variants[Math.floor(Math.random() * variants.length)];
+}
+
 function applyTrans(){
   const t=TR[currentLang];
   document.documentElement.lang=currentLang;
   updateGreeting();
-  document.getElementById('themeSectionLabel').textContent=t.themeSectionLabel;
-  const dml=document.getElementById('darkModeLabel');
-  if(dml) dml.textContent=t.darkModeLabel;
-  document.getElementById('prenomSectionLabel').textContent=t.prenomSectionLabel;
-  document.getElementById('prenomLabel').textContent=t.prenomLabel;
-  document.getElementById('prenomInput').placeholder=t.prenomPlaceholder;
-  document.getElementById('settingsTitle').textContent=t.st;
+  const tsl2=document.getElementById('themeSectionLabel');if(tsl2)tsl2.textContent=t.themeSectionLabel;
+  const dml=document.getElementById('darkModeLabel');if(dml)dml.textContent=t.darkModeLabel;
+  const psl=document.getElementById('prenomSectionLabel');if(psl)psl.textContent=t.prenomSectionLabel;
+  const pll=document.getElementById('prenomLabel');if(pll)pll.textContent=t.prenomLabel;
+  const pi=document.getElementById('prenomInput');if(pi)pi.placeholder=t.prenomPlaceholder;
+  const stl=document.getElementById('settingsTitle');if(stl)stl.textContent=t.st;
   const nsl=document.getElementById('notifSectionLabelText');if(nsl)nsl.textContent=t.nsl;
   const nsd=document.getElementById('notifSectionDesc');if(nsd)nsd.textContent=t.notifSectionDesc||'';
   const bsl=document.getElementById('bridgesSectionLabel');if(bsl)bsl.textContent=currentLang==='fr'?'Ponts':'Bridges';
   const dfl=document.getElementById('dayFilterLabel');if(dfl)dfl.textContent=currentLang==='fr'?'Plage 1 — Jours':'Range 1 — Days';
-  document.getElementById('settingsBridgesDesc').textContent=t.bd;
+  const sbd=document.getElementById('settingsBridgesDesc');if(sbd)sbd.textContent=t.bd;
   const pl=document.getElementById('personalisationLabelText');if(pl)pl.textContent=currentLang==='fr'?'Personnalisation':'Personalisation';
   const plDesc=document.getElementById('personalisationDesc');if(plDesc)plDesc.textContent=t.personalisationDesc||'';
   const pd=document.getElementById('prenomDesc');if(pd)pd.textContent=t.prenomDesc||'';
@@ -1962,10 +1983,10 @@ function applyTrans(){
   });
   const ntw=document.getElementById('notifTypesWarningText');
   if(ntw&&t.notifTypesWarning) ntw.textContent=t.notifTypesWarning;
-  document.getElementById('timeSectionLabel').innerHTML=t.tsl;
-  document.getElementById('settingsTimeDesc').textContent=t.td;
-  document.getElementById('range1Label').textContent=t.r1;
-  document.getElementById('range2Label').textContent=t.r2;
+  const tsl=document.getElementById('timeSectionLabel');if(tsl)tsl.innerHTML=t.tsl;
+  const std=document.getElementById('settingsTimeDesc');if(std)std.textContent=t.td;
+  const r1l=document.getElementById('range1Label');if(r1l)r1l.textContent=t.r1;
+  const r2l=document.getElementById('range2Label');if(r2l)r2l.textContent=t.r2;
   const donTitle=document.getElementById('donationTitle');if(donTitle)donTitle.textContent=t.dt;
   const donDesc=document.getElementById('donationDesc');if(donDesc)donDesc.textContent=t.dd;
   const customLabel=document.getElementById('customDonateLabel');
