@@ -1486,7 +1486,7 @@ const TR={
     dp:'~10 min \u00B7 Pleasure craft',dc:'~15 min \u00B7 Commercial',
     cp:'Closure: ',
     ab:n=>n+' is available',
-    st:'Settings',nsl:'Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',notifSectionDesc:'Activez pour recevoir des alertes lors des changements de statut des ponts.',
+    st:'Settings',nsl:'Notifications',notifSectionDesc:'Enable to receive alerts when bridge status changes.',
     notifTypesSectionLabel:'Notification types',
     notifTypesDesc:'Choose which events you want to be notified about.',
     ntSuggestedLabel:'SUGGESTED',ntOptionalLabel:'OPTIONAL',ntLabelBientot:'<span style=\"display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;margin-right:6px;vertical-align:middle;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M32 10 L56 52 H8 Z"/> <line x1="32" y1="26" x2="32" y2="40"/> <circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/> </svg></span>Lift imminent',
@@ -1699,7 +1699,7 @@ function updateCards(){
     updateTimeline(b, lastData[b].status, lastData[b]);
     // Closures → badge + tooltip
     if(cl&&cl.length>0){
-      tooltipTitle.textContent=t.closureTitle||(currentLang==='fr'?'Fermetures planifi\u00E9es':'Planned closures');
+      tooltipTitle.textContent=t.closureTitle||(currentLang==='fr'?'Fermetures planifiées':'Planned closures');
       tooltipBody.innerHTML=cl.map(c=>
         '<div class="closure-tooltip-item">'+fmtClosure(c,currentLang)+'</div>'
       ).join('');
@@ -1821,6 +1821,30 @@ function updateDisplay(){
   updateCards();
 }
 
+const DON_VARIANTS = {
+  fr: [
+    { title: 'Vous aimez l\u2019app\u00a0?', desc: 'Ce projet est gratuit et ind\u00e9pendant. Un petit don aide \u00e0 le garder vivant pour toute la communaut\u00e9.' },
+    { title: 'Un caf\u00e9 pour le d\u00e9veloppeur\u00a0?', desc: 'Chaque alerte re\u00e7ue repr\u00e9sente des heures de travail b\u00e9n\u00e9vole. M\u00eame 2\u00a0$ font une vraie diff\u00e9rence.' },
+    { title: 'L\u2019app vous a \u00e9vit\u00e9 une attente\u00a0?', desc: 'Aidez-nous \u00e0 maintenir le service en ligne et gratuit pour tous.' },
+    { title: 'Vous utilisez l\u2019app r\u00e9guli\u00e8rement\u00a0?', desc: 'Les serveurs co\u00fbtent de l\u2019argent m\u00eame quand les ponts sont disponibles. Votre soutien compte.' },
+    { title: '200+ personnes comptent sur l\u2019app', desc: 'Un projet ind\u00e9pendant, maintenu b\u00e9n\u00e9volement. Contribuez \u00e0 le garder gratuit.' },
+  ],
+  en: [
+    { title: 'Enjoying the app?', desc: 'This project is free and independent. A small donation helps keep it alive for everyone.' },
+    { title: 'Buy the developer a coffee?', desc: 'Every alert you receive represents hours of volunteer work. Even $2 makes a real difference.' },
+    { title: 'Did the app save you a wait?', desc: 'Help us keep the service running and free for everyone.' },
+    { title: 'Using the app regularly?', desc: 'Servers cost money even when bridges are open. Your support matters.' },
+    { title: '200+ people count on this app', desc: 'An independent project, maintained voluntarily. Help keep it free.' },
+  ]
+};
+
+function getDonVariant() {
+  const isFr = currentLang === 'fr';
+  const variants = DON_VARIANTS[isFr ? 'fr' : 'en'];
+  const idx = Math.floor(Math.random() * variants.length);
+  return variants[idx];
+}
+
 function applyTrans(){
   const t=TR[currentLang];
   document.documentElement.lang=currentLang;
@@ -1840,11 +1864,11 @@ function applyTrans(){
   const plDesc=document.getElementById('personalisationDesc');if(plDesc)plDesc.textContent=t.personalisationDesc||'';
   const pd=document.getElementById('prenomDesc');if(pd)pd.textContent=t.prenomDesc||'';
   const td=document.getElementById('themeDesc');if(td)td.textContent=t.themeDesc||'';
-  const d2fl=document.getElementById('day2FilterLabel');if(d2fl)d2fl.textContent=t.day2FilterLabel||'Plage 2 — Jours';
+  const d2fl=document.getElementById('day2FilterLabel');if(d2fl)d2fl.textContent=t.day2FilterLabel||(currentLang==='fr'?'Plage 2 \u2014 Jours':'Range 2 \u2014 Days');
   const ntsl=document.getElementById('notifTypesSectionLabel');if(ntsl)ntsl.textContent=t.notifTypesSectionLabel;
   const ntd=document.getElementById('notifTypesDesc');if(ntd)ntd.textContent=t.notifTypesDesc;
-  const ntSug=document.getElementById('ntSuggestedLabel');if(ntSug)ntSug.textContent=t.ntSuggestedLabel||'SUGGÉRÉES';
-  const ntOpt=document.getElementById('ntOptionalLabel');if(ntOpt)ntOpt.textContent=t.ntOptionalLabel||'OPTIONNELLES';
+  const ntSug=document.getElementById('ntSuggestedLabel');if(ntSug)ntSug.textContent=t.ntSuggestedLabel||(currentLang==='fr'?'SUGG\u00c9R\u00c9ES':'SUGGESTED');
+  const ntOpt=document.getElementById('ntOptionalLabel');if(ntOpt)ntOpt.textContent=t.ntOptionalLabel||(currentLang==='fr'?'OPTIONNELLES':'OPTIONAL');
   ['Bientot','Raising','Leve','Lowering','Disponible','Scheduled','Outage','Achalandage'].forEach(k=>{
     const el=document.getElementById('ntLabel'+k);
     if(el&&t['ntLabel'+k]) el.innerHTML=t['ntLabel'+k];
@@ -1878,10 +1902,10 @@ function applyTrans(){
   if(cl) cl.href=currentLang==='fr'?'https://tally.so/r/A7b2kz':'https://tally.so/r/gDNdyl';
   const cll=document.getElementById('contactLinkLabel');
   if(cll) cll.textContent=currentLang==='fr'?'Commentaires ou suggestions':'Feedback or suggestions';
-  const ibl=document.getElementById('installBannerLabel');if(ibl)ibl.textContent=t.installBannerLabel||'Installer l\'app';
-  const ibs=document.getElementById('installBannerSub');if(ibs)ibs.textContent=t.installBannerSub||'Recevez des notifications sur votre écran d\'accueil';
-  const mil=document.getElementById('mainInstallLabel');if(mil)mil.textContent=t.mainCtaLabel||'Activer les notifications';
-  const mis=document.getElementById('mainInstallSub');if(mis)mis.textContent=t.mainCtaSub||'Recevez des alertes lors des levées de ponts';
+  const ibl=document.getElementById('installBannerLabel');if(ibl)ibl.textContent=t.installBannerLabel||(currentLang==='fr'?'Installer l\'app':'Install the app');
+  const ibs=document.getElementById('installBannerSub');if(ibs)ibs.textContent=t.installBannerSub||(currentLang==='fr'?'Recevez des notifications sur votre \u00e9cran d\u2019accueil':'Get notifications on your home screen');
+  const mil=document.getElementById('mainInstallLabel');if(mil)mil.textContent=t.mainCtaLabel||(currentLang==='fr'?'Activer les notifications':'Enable notifications');
+  const mis=document.getElementById('mainInstallSub');if(mis)mis.textContent=t.mainCtaSub||(currentLang==='fr'?'Recevez des alertes lors des lev\u00e9es de ponts':'Get alerts for bridge lifts');
   const disc=document.getElementById('disclaimer');if(disc)disc.innerHTML=t.di;
   // Donation modal translation
   const donModalTitle = document.getElementById('donModalTitle');
@@ -1890,6 +1914,8 @@ function applyTrans(){
   if(donModalTitle) donModalTitle.textContent = currentLang==='fr' ? 'Vous aimez l\u2019app\u00a0?' : 'Enjoying the app?';
   if(donModalDesc) donModalDesc.textContent = currentLang==='fr' ? 'Ce projet est gratuit et ind\u00e9pendant. Un petit don aide \u00e0 le garder vivant pour toute la communaut\u00e9.' : 'This project is free and independent. A small donation helps keep it alive for the whole community.';
   if(donSkip) donSkip.textContent = currentLang==='fr' ? 'Plus tard' : 'Maybe later';
+  // Drawer donation section translation
+  updateDonationTexts();
   applyDayLabels();
   updateNotifyBtns();updateDisplay();
   syncNotifState(); // verify actual push subscription on load
@@ -2563,30 +2589,6 @@ function hexToRgba(hex, alpha) {
 loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();fetchWeather();
 
 // ── Donation modal after 3 opens ──────────────────────────────────────
-const DON_VARIANTS = {
-  fr: [
-    { title: 'Vous aimez l\u2019app\u00a0?', desc: 'Ce projet est gratuit et ind\u00e9pendant. Un petit don aide \u00e0 le garder vivant pour toute la communaut\u00e9.' },
-    { title: 'Un caf\u00e9 pour le d\u00e9veloppeur\u00a0?', desc: 'Chaque alerte re\u00e7ue repr\u00e9sente des heures de travail b\u00e9n\u00e9vole. M\u00eame 2\u00a0$ font une vraie diff\u00e9rence.' },
-    { title: 'L\u2019app vous a \u00e9vit\u00e9 une attente\u00a0?', desc: 'Aidez-nous \u00e0 maintenir le service en ligne et gratuit pour tous.' },
-    { title: 'Vous utilisez l\u2019app r\u00e9guli\u00e8rement\u00a0?', desc: 'Les serveurs co\u00fbtent de l\u2019argent m\u00eame quand les ponts sont disponibles. Votre soutien compte.' },
-    { title: '200+ personnes comptent sur l\u2019app', desc: 'Un projet ind\u00e9pendant, maintenu b\u00e9n\u00e9volement. Contribuez \u00e0 le garder gratuit.' },
-  ],
-  en: [
-    { title: 'Enjoying the app?', desc: 'This project is free and independent. A small donation helps keep it alive for everyone.' },
-    { title: 'Buy the developer a coffee?', desc: 'Every alert you receive represents hours of volunteer work. Even $2 makes a real difference.' },
-    { title: 'Did the app save you a wait?', desc: 'Help us keep the service running and free for everyone.' },
-    { title: 'Using the app regularly?', desc: 'Servers cost money even when bridges are open. Your support matters.' },
-    { title: '200+ people count on this app', desc: 'An independent project, maintained voluntarily. Help keep it free.' },
-  ]
-};
-
-function getDonVariant() {
-  const isFr = currentLang === 'fr';
-  const variants = DON_VARIANTS[isFr ? 'fr' : 'en'];
-  const idx = Math.floor(Math.random() * variants.length);
-  return variants[idx];
-}
-
 function updateDonationTexts() {
   const v = getDonVariant();
   const drawerTitle = document.getElementById('drawerDonTitle');
