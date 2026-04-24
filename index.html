@@ -2608,15 +2608,17 @@ function _showHeatmap(bridge) {
       ? ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']
       : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     const slots = Object.entries(heatmap)
-      .map(([key, count]) => { const [day, hour] = key.split('-').map(Number); return { day, hour, count }; });
+      .map(([key, count]) => { const [day, hour] = key.split('-').map(Number); return { day, hour, count }; })
+      .filter(s => s.count >= 2) // at least 2 lifts in the slot
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10); // top 10 slots
+
     if (slots.length === 0) {
       hotEl.style.display = 'none';
     } else {
-      const maxCount = Math.max(...slots.map(s => s.count));
-      const threshold = Math.max(1, Math.ceil(maxCount * 0.75));
+      // Group by day
       const byDay = {};
-      slots.forEach(({ day, hour, count }) => {
-        if (count < threshold) return;
+      slots.forEach(({ day, hour }) => {
         if (!byDay[day]) byDay[day] = [];
         byDay[day].push(hour);
       });
