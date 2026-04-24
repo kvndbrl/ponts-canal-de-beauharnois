@@ -1081,8 +1081,8 @@ async function fetchWeather(){
       let line1=city?city+' \u00B7 '+c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F':c+'\u00B0C \u00B7 '+toF(c)+'\u00B0F';
       const line2='\u2191'+maxC+'\u00B0  \u2193'+minC+'\u00B0';
       document.getElementById('weatherText').innerHTML=weatherSvg+line1+'&nbsp;&nbsp;&nbsp;'+line2;
-      // Mark weather as enabled
       localStorage.setItem('weatherEnabled','1');
+      localStorage.setItem('weatherCache', weatherSvg+line1+'&nbsp;&nbsp;&nbsp;'+line2);
       const tog=document.getElementById('weatherToggleInput');
       if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
     }catch(e){console.log('Weather:',e);}
@@ -1091,7 +1091,7 @@ async function fetchWeather(){
     localStorage.setItem('weatherEnabled','0');
     const tog=document.getElementById('weatherToggleInput');
     if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
-  },{timeout:8000,maximumAge:300000});
+  },{timeout:15000,maximumAge:3600000});
 }
 
 function toggleWeather(){
@@ -1153,6 +1153,10 @@ function initWeatherToggle(){
   const tog=document.getElementById('weatherToggleInput');
   if(enabled!=='0'){
     if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
+    // Show cached weather instantly while fetching
+    const cached=localStorage.getItem('weatherCache');
+    const wt=document.getElementById('weatherText');
+    if(cached && wt) wt.innerHTML=cached;
     fetchWeather();
   } else {
     if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
