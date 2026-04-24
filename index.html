@@ -1140,13 +1140,9 @@ function closeGeoModal(){
 function initWeatherToggle(){
   const enabled=localStorage.getItem('weatherEnabled');
   const tog=document.getElementById('weatherToggleInput');
-  if(!tog) return;
-  if(enabled==='1'){
-    tog.checked=true;
-    tog.setAttribute('aria-checked','true');
-    fetchWeather();
-  } else if(enabled===null){
-    // First time — try silently, no modal
+  // Try weather unless user explicitly disabled it
+  if(enabled !== '0'){
+    if(tog){ tog.checked=true; tog.setAttribute('aria-checked','true'); }
     fetchWeather();
   }
 }
