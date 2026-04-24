@@ -2607,34 +2607,53 @@ function _showHeatmap(bridge) {
     const dayNames = t
       ? ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']
       : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    const slots = Object.entries(heatmap)
-      .map(([key, count]) => { const [day, hour] = key.split('-').map(Number); return { day, hour, count }; })
-      .filter(s => s.count >= 2) // at least 2 lifts in the slot
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 10); // top 10 slots
 
-    if (slots.length === 0) {
+    // Build per-day hour totals
+    const byDay = {};
+    Object.entries(heatmap).forEach(([key, count]) => {
+      const [day, hour] = key.split('-').map(Number);
+      if (!byDay[day]) byDay[day] = {};
+      byDay[day][hour] = (byDay[day][hour] || 0) + count;
+    });
+
+    const dayLines = [];
+    for (let d = 0; d < 7; d++) {
+      const hours = byDay[d];
+      if (!hours || Object.keys(hours).length === 0) continue;
+
+      // Find peak hour range: group consecutive hours with activity
+      const sortedHours = Object.keys(hours).map(Number).sort((a, b) => a - b);
+      const dayTotal = Object.values(hours).reduce((s, v) => s + v, 0);
+
+      // Find the best consecutive window (1-3h) with most lifts
+      let bestStart = sortedHours[0], bestEnd = sortedHours[0], bestCount = 0;
+      for (let i = 0; i < sortedHours.length; i++) {
+        let windowCount = 0;
+        let windowEnd = sortedHours[i];
+        for (let j = i; j < sortedHours.length && sortedHours[j] - sortedHours[i] <= 3; j++) {
+          windowCount += hours[sortedHours[j]];
+          windowEnd = sortedHours[j];
+        }
+        if (windowCount > bestCount) {
+          bestCount = windowCount;
+          bestStart = sortedHours[i];
+          bestEnd = windowEnd;
+        }
+      }
+
+      const rangeStr = bestStart === bestEnd
+        ? `${bestStart}h`
+        : `${bestStart}h\u2013${bestEnd + 1}h`;
+
+      dayLines.push(`<span style="color:var(--text);font-weight:600;">${dayNames[d]}</span>\u00a0${rangeStr}`);
+    }
+
+    if (dayLines.length === 0) {
       hotEl.style.display = 'none';
     } else {
-      // Group by day
-      const byDay = {};
-      slots.forEach(({ day, hour }) => {
-        if (!byDay[day]) byDay[day] = [];
-        byDay[day].push(hour);
-      });
-      const dayLines = Object.entries(byDay)
-        .sort(([a], [b]) => Number(a) - Number(b))
-        .map(([day, hours]) => {
-          hours.sort((a, b) => a - b);
-          return `<span style="color:var(--text);font-weight:600;">${dayNames[Number(day)]}</span> ${hours.map(h => h+'h').join(', ')}`;
-        });
-      if (dayLines.length === 0) {
-        hotEl.style.display = 'none';
-      } else {
-        const intro = t ? 'P\u00e9riodes achaland\u00e9es' : 'Busy periods';
-        hotEl.innerHTML = `<span style="font-weight:600;color:var(--accent);">${intro}</span><br>${dayLines.join('<br>')}`;
-        hotEl.style.display = 'block';
-      }
+      const intro = t ? 'Heures d\u2019affluence' : 'Peak hours';
+      hotEl.innerHTML = `<span style="font-weight:600;color:var(--accent);">${intro}</span><br>${dayLines.join('<br>')}`;
+      hotEl.style.display = 'block';
     }
   }
 
