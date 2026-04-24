@@ -1087,10 +1087,12 @@ async function fetchWeather(){
       if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
     }catch(e){console.log('Weather:',e);}
   },(err)=>{
-    // Permission denied — update toggle state
-    localStorage.setItem('weatherEnabled','0');
-    const tog=document.getElementById('weatherToggleInput');
-    if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
+    // Only disable if explicitly denied (code 1), not on timeout or unavailable
+    if(err.code===1){
+      localStorage.setItem('weatherEnabled','0');
+      const tog=document.getElementById('weatherToggleInput');
+      if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
+    }
   },{timeout:15000,maximumAge:3600000});
 }
 
