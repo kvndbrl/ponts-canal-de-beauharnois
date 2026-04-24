@@ -1096,8 +1096,8 @@ async function fetchWeather(){
 
 function toggleWeather(){
   const tog=document.getElementById('weatherToggleInput');
-  const enabled=localStorage.getItem('weatherEnabled')!=='0';
-  if(enabled){
+  const currentlyEnabled=localStorage.getItem('weatherEnabled')==='1';
+  if(currentlyEnabled){
     // Disable
     localStorage.setItem('weatherEnabled','0');
     document.getElementById('weatherText').innerHTML='';
@@ -1107,16 +1107,13 @@ function toggleWeather(){
     if(navigator.permissions){
       navigator.permissions.query({name:'geolocation'}).then(result=>{
         if(result.state==='denied'){
-          // Permission blocked — show instructions
           showGeoInstructions();
         } else {
-          // 'granted' or 'prompt' — trigger directly
           if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
           fetchWeather();
         }
       });
     } else {
-      // Fallback — just try
       if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
       fetchWeather();
     }
@@ -1154,10 +1151,11 @@ function closeGeoModal(){
 function initWeatherToggle(){
   const enabled=localStorage.getItem('weatherEnabled');
   const tog=document.getElementById('weatherToggleInput');
-  // Try weather unless user explicitly disabled it
-  if(enabled !== '0'){
-    if(tog){ tog.checked=true; tog.setAttribute('aria-checked','true'); }
+  if(enabled!=='0'){
+    if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
     fetchWeather();
+  } else {
+    if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
   }
 }
 function getUserName(){ return localStorage.getItem('userName')||''; }
