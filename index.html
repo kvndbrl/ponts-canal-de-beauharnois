@@ -1774,11 +1774,12 @@ function toggleBridgeNotif(bridge) {
   if (content) content.style.display = enabled ? 'block' : 'none';
   if (enabled) renderPerBridgeCheckboxes(bridge);
 
-  // Save to localStorage
-  const allBridges = ['gonzague','larocque'].filter(b => {
-    const tog = document.getElementById('bridgeNotif'+capitalize(b));
-    return tog ? tog.checked : true;
-  });
+  // Save updated bridge prefs to localStorage
+  const saved = localStorage.getItem('bridgePrefs');
+  const current = saved ? JSON.parse(saved) : ['gonzague','larocque'];
+  const allBridges = enabled
+    ? [...new Set([...current, bridge])]
+    : current.filter(b => b !== bridge);
   localStorage.setItem('bridgePrefs', JSON.stringify(allBridges));
   updateCardVisibility();
   syncPrefs();
@@ -1818,12 +1819,8 @@ function updateCardVisibility(){
 
 
 function getSelBridges(){
-  const g = document.getElementById('bridgeNotifGonzague');
-  const l = document.getElementById('bridgeNotifLarocque');
-  const b = [];
-  if(g ? g.checked : true) b.push('gonzague');
-  if(l ? l.checked : true) b.push('larocque');
-  return b;
+  const saved = localStorage.getItem('bridgePrefs');
+  return saved ? JSON.parse(saved) : ['gonzague','larocque'];
 }
 async function updatePrefs(){localStorage.setItem('bridgePrefs',JSON.stringify(getSelBridges()));updateCardVisibility();await syncPrefs();}
 function loadPrefs(){
