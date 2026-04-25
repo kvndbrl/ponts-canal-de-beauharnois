@@ -1759,16 +1759,26 @@ function updateCardVisibility(){
 
 function getSelBridges(){const b=[];if(document.getElementById('prefGonzague').checked)b.push('gonzague');if(document.getElementById('prefLarocque').checked)b.push('larocque');return b;}
 async function updatePrefs(){localStorage.setItem('bridgePrefs',JSON.stringify(getSelBridges()));updateCardVisibility();await syncPrefs();}
-function loadPrefs(){const s=localStorage.getItem('bridgePrefs');if(!s)return;const b=JSON.parse(s);document.getElementById('prefGonzague').checked=b.includes('gonzague');document.getElementById('prefLarocque').checked=b.includes('larocque');updateCardVisibility();}
+function loadPrefs(){
+  const s=localStorage.getItem('bridgePrefs');
+  const b=s?JSON.parse(s):['gonzague','larocque'];
+  const gEl=document.getElementById('prefGonzague');
+  const lEl=document.getElementById('prefLarocque');
+  if(gEl) gEl.checked=b.includes('gonzague');
+  if(lEl) lEl.checked=b.includes('larocque');
+  updateCardVisibility();
+}
 
 // Notification types
 const NT_TYPES=['bientot_leve','raising','leve','lowering','disponible','scheduled','outage','achalandage'];
 const NT_DEFAULT=['bientot_leve','leve','outage']; // suggested defaults only
 function getSelNotifTypes(){
-  return NT_TYPES.filter(t=>{
+  const sel = NT_TYPES.filter(t=>{
     const el=document.getElementById(getNotifTypeId(t));
     return el ? el.checked : false;
   });
+  // If nothing selected (e.g. hidden inputs not yet loaded), return safe default
+  return sel.length ? sel : ['bientot_leve','leve','outage','scheduled'];
 }
 function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 // Map type key → element ID suffix
@@ -1893,22 +1903,15 @@ function toggleOptionalNotifs(){
 
 function loadNotifTypes(){
   const saved=localStorage.getItem('notifTypes');
-  const types=saved?JSON.parse(saved):NT_DEFAULT;
+  const SAFE_DEFAULT=['bientot_leve','leve','outage','scheduled'];
+  const types=saved?JSON.parse(saved):SAFE_DEFAULT;
+  const active=types.length?types:SAFE_DEFAULT;
   NT_TYPES.forEach(t=>{
     const el=document.getElementById(getNotifTypeId(t));
-    if(el) el.checked=types.includes(t);
+    if(el) el.checked=active.includes(t);
   });
-  // Auto-expand optional section if any optional type is enabled
-  const optionalTypes=['raising','lowering','disponible','scheduled','achalandage'];
-  const anyOptional=optionalTypes.some(t=>types.includes(t));
-  if(anyOptional){
-    const content=document.getElementById('ntOptionalContent');
-    const chevron=document.getElementById('ntOptionalChevron');
-    if(content) content.style.display='block';
-    if(chevron) chevron.style.transform='rotate(180deg)';
-  }
   const warning=document.getElementById('notifTypesWarning');
-  if(warning) warning.style.display=types.length===0?'block':'none';
+  if(warning) warning.style.display='none';
 }
 
 async function syncNotifState(){
@@ -2084,8 +2087,8 @@ function applyTrans(){
   const ntOpt=document.getElementById('ntOptionalLabel');if(ntOpt)ntOpt.textContent=t.ntOptionalLabel||(currentLang==='fr'?'OPTIONNELLES':'OPTIONAL');
   ['Bientot','Raising','Leve','Lowering','Disponible','Scheduled','Outage','Achalandage'].forEach(k=>{
     const el=document.getElementById('ntLabel'+k);
-    if(el&&t['ntLabel'+k]) el.innerHTML=t['ntLabel'+k];
-    // Add description below label if not already there
+    if(!el) return; // elements removed, skip
+    if(t['ntLabel'+k]) el.innerHTML=t['ntLabel'+k];
     const descEl=document.getElementById('ntDesc'+k);
     if(descEl&&t['ntDesc'+k]) descEl.textContent=t['ntDesc'+k];
     else if(!descEl&&t['ntDesc'+k]){
