@@ -643,7 +643,7 @@ function getMessages(bridge, status, lang, data) {
     : '';
 
   const fr = {
-    bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Réouverture prévue ~${hm}` },
+    bientot_leve: { title: `⚠️ ${n}`, body: `Bientôt levé · Réouverture prévue ~${hm}` },
     raising:      { title: `🔼 ${n}`, body: `En cours de levage · Réouverture ~${hm}` },
     leve:         { title: `🚢 ${n}`, body: `Pont levé · Réouverture prévue ~${hm}` },
     lowering:     { title: `🔽 ${n}`, body: `Pont redescend · Bientôt disponible` },
@@ -651,7 +651,7 @@ function getMessages(bridge, status, lang, data) {
     outage:       { title: `🚧 ${n}`, body: `Fermeture planifiée${outageStr}` }
   };
   const en = {
-    bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expected reopen ~${hm}` },
+    bientot_leve: { title: `⚠️ ${n}`, body: `Lift soon · Expected reopen ~${hm}` },
     raising:      { title: `🔼 ${n}`, body: `Bridge raising · Reopen ~${hm}` },
     leve:         { title: `🚢 ${n}`, body: `Bridge lifted · Expected reopen ~${hm}` },
     lowering:     { title: `🔽 ${n}`, body: `Bridge lowering · Opening soon` },
