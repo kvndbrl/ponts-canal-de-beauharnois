@@ -713,7 +713,8 @@ async function sendScheduledLiftNotification(bridge, time) {
     const bridges = sub.bridges || ['gonzague', 'larocque'];
     if (!bridges.includes(bridge)) { skippedBridge++; continue; }
     if (!isInTimeRange(sub)) { skippedRange++; continue; }
-    const allowedTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled'];
+    const bridgeKey = bridge === 'gonzague' ? 'notifTypesGonzague' : 'notifTypesLarocque';
+    const allowedTypes = sub[bridgeKey] || sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled'];
     if (!allowedTypes.includes('scheduled')) { skippedBridge++; continue; }
 
     const lang = sub.lang || 'fr';
@@ -748,7 +749,8 @@ async function sendNotifications(bridge, status, bridgeData = {}) {
     const isClosing = status === 'disponible';
     if (!isClosing && !isInTimeRange(sub)) { skippedRange++; continue; }
 
-    const allowedTypes = sub.notifTypes || ['bientot_leve','leve','outage'];
+    const bridgeKey2 = bridge === 'gonzague' ? 'notifTypesGonzague' : 'notifTypesLarocque';
+    const allowedTypes = sub[bridgeKey2] || sub.notifTypes || ['bientot_leve','leve','outage'];
     if (!isClosing && !allowedTypes.includes(status)) { skippedNoMsg++; continue; }
 
     const lang = sub.lang || 'fr';
@@ -902,6 +904,8 @@ app.post('/subscribe', async (req, res) => {
     existing.lang = sub.lang || 'fr';
     existing.theme = sub.theme || 'gonzaguois';
     existing.notifTypes = sub.notifTypes || ['bientot_leve','raising','leve','lowering','disponible','scheduled','outage','achalandage'];
+    if (sub.notifTypesGonzague) existing.notifTypesGonzague = sub.notifTypesGonzague;
+    if (sub.notifTypesLarocque) existing.notifTypesLarocque = sub.notifTypesLarocque;
     existing.notifDays = sub.notifDays !== undefined ? sub.notifDays : [0,1,2,3,4,5,6];
     existing.notifDays2 = sub.notifDays2 !== undefined ? sub.notifDays2 : [0,1,2,3,4,5,6];
     await saveSubscription(existing);
