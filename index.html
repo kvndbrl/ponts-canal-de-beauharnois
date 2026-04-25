@@ -1774,7 +1774,12 @@ function toggleBridgeNotif(bridge) {
   if (content) content.style.display = enabled ? 'block' : 'none';
   if (enabled) renderPerBridgeCheckboxes(bridge);
 
-  localStorage.setItem('bridgePrefs', JSON.stringify(getSelBridges()));
+  // Save to localStorage
+  const allBridges = ['gonzague','larocque'].filter(b => {
+    const tog = document.getElementById('bridgeNotif'+capitalize(b));
+    return tog ? tog.checked : true;
+  });
+  localStorage.setItem('bridgePrefs', JSON.stringify(allBridges));
   updateCardVisibility();
   syncPrefs();
 }
@@ -1802,12 +1807,12 @@ function initBridgeNotifToggles() {
 }
 
 function updateCardVisibility(){
-  const showG = document.getElementById('bridgeNotifGonzague')?.checked ?? true;
-  const showL = document.getElementById('bridgeNotifLarocque')?.checked ?? true;
+  const saved = localStorage.getItem('bridgePrefs');
+  const bridges = saved ? JSON.parse(saved) : ['gonzague','larocque'];
   const cg = document.getElementById('cardGonzague');
   const cl = document.getElementById('cardLarocque');
-  if(cg) cg.style.display = showG ? '' : 'none';
-  if(cl) cl.style.display = showL ? '' : 'none';
+  if(cg) cg.style.display = bridges.includes('gonzague') ? '' : 'none';
+  if(cl) cl.style.display = bridges.includes('larocque') ? '' : 'none';
 }
 
 
@@ -2893,7 +2898,7 @@ function hexToRgba(hex, alpha) {
   const b = parseInt(hex.slice(4,6),16);
   return `rgba(${r},${g},${b},${alpha})`;
 }
-loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();initWeatherToggle();
+loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();initWeatherToggle();updateCardVisibility();
 
 renderFunFact();
 
