@@ -782,64 +782,26 @@
   </label>
 
   <div class="settings-section-sub-label" id="notifTypesSectionLabel">Types de notifications</div>
-  <div class="settings-section-desc" id="notifTypesDesc">Choisissez les événements pour lesquels vous souhaitez être notifié.</div>
+  <div class="settings-section-desc" id="notifTypesDesc">Personnalisez les notifications reçues pour chaque pont.</div>
 
-  <div class="settings-section-sub-label" style="font-size:9px;padding:10px 16px 2px;opacity:.7;" id="ntSuggestedLabel">SUGGÉRÉES</div>
-  <label class="pref-row">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;"><span class="pref-row-label" id="ntLabelBientot"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M32 10 L56 52 H8 Z"/> <line x1="32" y1="26" x2="32" y2="40"/> <circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/> </svg></span>Levage imminent</span>
-<div id="ntDescBientot_leve" style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;padding-left:28px;">Quelques minutes avant que le pont commence à se lever.</div></div>
-    <div class="pref-toggle"><input type="checkbox" id="ntBientot_leve" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;"><span class="pref-row-label" id="ntLabelLeve"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"> <!-- Water line --> <rect x="2" y="50" rx="1.2" opacity="0.3"/> <!-- Left approach road --> <rect x="2" y="44" width="16" height="3" rx="1.5"/> <!-- Right approach road --> <rect x="46" y="44" width="16" height="3" rx="1.5"/> <!-- Left tower --> <rect x="17" y="18" width="4" height="29" rx="1.5"/> <!-- Right tower --> <rect x="43" y="18" width="4" height="29" rx="1.5"/> <!-- Bascule raised vertical ~90 degrees --> <g transform="rotate(-88, 21, 45.5)"> <rect x="21" y="43" width="24" height="3" rx="1.5"/> </g> <!-- Left cable taut --> <path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Right cable --> <path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Ship passing through --> <path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/> <path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/> </svg></span>Levé</span>
-<div id="ntDescLeve" style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;padding-left:28px;">Dès que le pont est levé, avec l'heure de réouverture estimée.</div></div>
-    <div class="pref-toggle"><input type="checkbox" id="ntLeve" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row" style="border-bottom:1px solid var(--border);">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;"><span class="pref-row-label" id="ntLabelOutage"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"> <path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/> <path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/> <path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/> <path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/> <path d="M251.566,391.837h-36.107c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.107 c5.771,0,10.449-4.678,10.449-10.449S257.337,391.837,251.566,391.837z"/> <path d="M161.522,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S167.293,391.837,161.522,391.837z"/> <path d="M127.581,391.837H55.367c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S133.352,391.837,127.581,391.837z"/> <path d="M456.36,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S462.131,391.837,456.36,391.837z"/> <path d="M422.42,391.837h-72.214c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S428.191,391.837,422.42,391.837z"/> <path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h3.99v19.851c0,5.771,4.678,10.449,10.449,10.449 s10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h3.99 v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449 v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203h0.001C512.001,243.463,507.323,238.785,501.552,238.785z M438.692,242.027 c5.049,3.093,10.339,5.826,15.84,8.16v28.802h-15.84V242.027z M401.79,206.86c4.679,6.867,10.048,13.225,16.004,18.979v53.15 H401.79V206.86z M376.663,120.164h4.231v158.824h-4.231V120.164z M339.925,225.626c5.89-5.709,11.203-12.01,15.84-18.81v72.172 h-15.84V225.626z M303.188,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115h-15.84V250.07z M266.45,259.226 c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M229.712,256.79c5.164,1.153,10.451,1.971,15.84,2.435v19.763 h-15.84V256.79z M192.976,241.874c5.048,3.104,10.338,5.85,15.84,8.196v28.919h-15.84V241.874z M156.239,206.817 c4.635,6.799,9.948,13.1,15.839,18.809v53.362h-15.839V206.817z M131.111,120.164h4.231v158.824h-4.231V120.164z M94.373,225.626 c5.89-5.709,11.203-12.01,15.84-18.809v72.171h-15.84V225.626z M57.637,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115 h-15.84V250.07z M20.899,259.226c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M490.938,314.515h-0.001H20.899 v-14.629h99.763h25.011h0.118h220.423h25.011h0.118h99.596V314.515z M491.103,278.988H475.43v-22.133 c5.112,1.128,10.343,1.931,15.673,2.384V278.988z"/> </svg></span>Fermeture planifiée</span>
-<div id="ntDescOutage" style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;padding-left:28px;">Fermetures planifiées connues à l'avance.</div></div>
-    <div class="pref-toggle"><input type="checkbox" id="ntOutage" checked onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-
-
-  <button onclick="toggleOptionalNotifs()" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 16px;background:none;border:none;cursor:pointer;font-family:var(--sans);">
-    <span style="font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--accent);opacity:.7;" id="ntOptionalLabel">OPTIONNELLES</span>
-    <span id="ntOptionalChevron" style="font-size:11px;color:var(--text3);transition:transform .2s;">▼</span>
-  </button>
-  <div id="ntOptionalContent" style="display:none;">
-  <label class="pref-row">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;"><span class="pref-row-label" id="ntLabelRaising"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"> <!-- Water line --> <rect x="2" y="50" rx="1.2" opacity="0.3"/> <!-- Left approach road --> <rect x="2" y="44" width="16" height="3" rx="1.5"/> <!-- Right approach road --> <rect x="46" y="44" width="16" height="3" rx="1.5"/> <!-- Left tower --> <rect x="17" y="18" width="4" height="29" rx="1.5"/> <!-- Right tower --> <rect x="43" y="18" width="4" height="29" rx="1.5"/> <!-- Fixed right leaf (horizontal) --> <rect x="43" y="44" width="4" height="3" rx="1"/> <!-- Bascule left leaf raised ~55 degrees --> <g transform="rotate(-55, 21, 45.5)"> <rect x="21" y="43" width="24" height="3" rx="1.5"/> </g> <!-- Left cable --> <path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Right cable --> <path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Arrow up indicator --> <path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/> <line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/> </svg></span>En cours de levage</span>
-<div id="ntDescRaising" style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;padding-left:28px;">Quand le pont commence physiquement à se lever.</div></div>
-    <div class="pref-toggle"><input type="checkbox" id="ntRaising" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;"><span class="pref-row-label" id="ntLabelLowering"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"> <!-- Water line --> <rect x="2" y="50" rx="1.2" opacity="0.3"/> <!-- Left approach road --> <rect x="2" y="44" width="16" height="3" rx="1.5"/> <!-- Right approach road --> <rect x="46" y="44" width="16" height="3" rx="1.5"/> <!-- Left tower --> <rect x="17" y="18" width="4" height="29" rx="1.5"/> <!-- Right tower --> <rect x="43" y="18" width="4" height="29" rx="1.5"/> <!-- Bascule lowering ~30 degrees --> <g transform="rotate(-30, 21, 45.5)"> <rect x="21" y="43" width="24" height="3" rx="1.5"/> </g> <!-- Left cable --> <path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Right cable --> <path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Arrow down indicator --> <path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/> <line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/> </svg></span>En cours de descente</span>
-<div id="ntDescLowering" style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;padding-left:28px;">Quand le pont redescend — réouverture imminente.</div></div>
-    <div class="pref-toggle"><input type="checkbox" id="ntLowering" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;"><span class="pref-row-label" id="ntLabelDisponible"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <circle cx="32" cy="32" r="22"/> <path d="M20 32 L28 42 L44 24"/> </svg></span>Disponible</span>
-<div id="ntDescDisponible" style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;padding-left:28px;">Dès que la circulation reprend après une levée.</div></div>
-    <div class="pref-toggle"><input type="checkbox" id="ntDisponible" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row" style="border-bottom:1px solid var(--border);">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;"><span class="pref-row-label" id="ntLabelScheduled"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="32" cy="32" r="24"/> <line x1="32" y1="32" x2="32" y2="16"/> <line x1="32" y1="32" x2="44" y2="38"/> <line x1="32" y1="10" x2="32" y2="14"/> <line x1="32" y1="50" x2="32" y2="54"/> <line x1="10" y1="32" x2="14" y2="32"/> <line x1="50" y1="32" x2="54" y2="32"/> </svg></span>Levée planifiée</span>
-<div id="ntDescScheduled" style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;padding-left:28px;">Levée commerciale planifiée dans les 60 prochaines minutes.</div></div>
-    <div class="pref-toggle"><input type="checkbox" id="ntScheduled" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
-  <label class="pref-row">
-    <div style="display:flex;flex-direction:column;flex:1;min-width:0;"><span class="pref-row-label" id="ntLabelAchalandage"><span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:var(--text2);margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 38 L14 26 Q15 23 18 23 L30 23 Q33 23 34 26 L38 38 Z"/><rect x="10" y="38" width="28" height="10" rx="3"/><circle cx="17" cy="50" r="4" fill="currentColor" stroke="none"/><circle cx="31" cy="50" r="4" fill="currentColor" stroke="none"/><line x1="14" y1="33" x2="34" y2="33"/><line x1="44" y1="28" x2="56" y2="28"/><line x1="44" y1="36" x2="54" y2="36"/><line x1="44" y1="44" x2="52" y2="44"/></svg></span>Période achalandée</span>
-<div id="ntDescAchalandage" style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;padding-left:28px;">Alerte 30 min avant une période historiquement chargée en levées.</div></div>
-    <div class="pref-toggle"><input type="checkbox" id="ntAchalandage" onchange="updateNotifTypes()"/><span class="pref-slider"></span></div>
-  </label>
+  <!-- Hidden inputs kept for backward compat with getSelNotifTypes() -->
+  <div style="display:none;">
+    <input type="checkbox" id="ntBientot_leve" checked onchange="updateNotifTypes()"/>
+    <input type="checkbox" id="ntLeve" checked onchange="updateNotifTypes()"/>
+    <input type="checkbox" id="ntOutage" checked onchange="updateNotifTypes()"/>
+    <input type="checkbox" id="ntRaising" onchange="updateNotifTypes()"/>
+    <input type="checkbox" id="ntLowering" onchange="updateNotifTypes()"/>
+    <input type="checkbox" id="ntDisponible" checked onchange="updateNotifTypes()"/>
+    <input type="checkbox" id="ntScheduled" checked onchange="updateNotifTypes()"/>
+    <input type="checkbox" id="ntAchalandage" checked onchange="updateNotifTypes()"/>
+  </div>
   <div id="notifTypesWarning" style="display:none;padding:10px 16px;font-size:12px;color:var(--yellow);line-height:1.5;">
-    <span style="display:inline-flex;align-items:center;width:13px;height:13px;flex-shrink:0;color:var(--yellow);margin-right:4px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M32 10 L56 52 H8 Z"/> <line x1="32" y1="26" x2="32" y2="40"/> <circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/> </svg></span> <span id="notifTypesWarningText">Aucun type sélectionné — vous ne recevrez aucune notification.</span>
+    <span id="notifTypesWarningText">Aucun type sélectionné — vous ne recevrez aucune notification.</span>
   </div>
 
-
   <!-- Per-bridge notification section -->
-  <div class="settings-section-sub-label" id="perBridgeNotifLabel" style="margin-top:4px;">Notifications par pont</div>
-  <div class="settings-section-desc" id="perBridgeNotifDesc">Personnalisez les types de notifications pour chaque pont.</div>
+  <div class="settings-section-sub-label" id="perBridgeNotifLabel">Notifications par pont</div>
+  <div class="settings-section-desc" id="perBridgeNotifDesc">Choisissez les événements pour lesquels vous souhaitez être notifié, par pont.</div>
 
   <!-- Gonzague -->
   <button onclick="togglePerBridgeSection('gonzague')" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 16px;background:none;border:none;cursor:pointer;font-family:var(--sans);border-top:1px solid var(--border);">
@@ -847,7 +809,7 @@
     <span id="perBridgeGonzagueChevron" style="font-size:11px;color:var(--text3);transition:transform .2s;">▼</span>
   </button>
   <div id="perBridgeGonzagueContent" style="display:none;padding:4px 16px 8px;">
-    <div style="display:flex;flex-wrap:wrap;gap:6px;" id="perBridgeGonzagueCheckboxes"></div>
+    <div id="perBridgeGonzagueCheckboxes" style="padding:0 16px;"></div>
   </div>
 
   <!-- Larocque -->
@@ -856,7 +818,7 @@
     <span id="perBridgeLarocqueChevron" style="font-size:11px;color:var(--text3);transition:transform .2s;">▼</span>
   </button>
   <div id="perBridgeLarocqueContent" style="display:none;padding:4px 16px 8px;border-bottom:1px solid var(--border);">
-    <div style="display:flex;flex-wrap:wrap;gap:6px;" id="perBridgeLarocqueCheckboxes"></div>
+    <div id="perBridgeLarocqueCheckboxes" style="padding:0 16px;"></div>
   </div>
 
   <div class="settings-section-sub-label" id="timeSectionLabel">Plages horaires</div>
@@ -1841,14 +1803,14 @@ function dismissNoNotifModal(){
 }
 // ── Per-bridge notification overrides ────────────────────────────────
 const PER_BRIDGE_TYPES = [
-  { key: 'bientot_leve', fr: 'Imminent', en: 'Imminent' },
-  { key: 'leve',         fr: 'Levé',     en: 'Lifted' },
-  { key: 'outage',       fr: 'Fermeture',en: 'Closure' },
-  { key: 'raising',      fr: 'Levage',   en: 'Raising' },
-  { key: 'lowering',     fr: 'Descente', en: 'Lowering' },
-  { key: 'disponible',   fr: 'Dispo',    en: 'Available' },
-  { key: 'scheduled',    fr: 'Planifiée',en: 'Scheduled' },
-  { key: 'achalandage',  fr: 'Achalandé',en: 'Busy' },
+  { key: 'bientot_leve', fr: 'Levage imminent',     en: 'Lift imminent',     descFr: 'Quelques minutes avant que le pont commence à se lever.',         descEn: 'A few minutes before the bridge starts to rise.', default: true },
+  { key: 'leve',         fr: 'Pont levé',            en: 'Bridge lifted',     descFr: 'Dès que le pont est levé, avec l\'heure de réouverture estimée.', descEn: 'As soon as the bridge is lifted, with estimated reopen time.', default: true },
+  { key: 'outage',       fr: 'Fermeture planifiée',  en: 'Planned closure',   descFr: 'Fermetures planifiées connues à l\'avance.',                      descEn: 'Known planned closures notified in advance.', default: true },
+  { key: 'raising',      fr: 'En cours de levage',   en: 'Bridge raising',    descFr: 'Quand le pont commence physiquement à se lever.',                  descEn: 'When the bridge physically starts to rise.', default: false },
+  { key: 'lowering',     fr: 'En cours de descente', en: 'Bridge lowering',   descFr: 'Quand le pont redescend — réouverture imminente.',                descEn: 'When the bridge comes back down — reopening imminent.', default: false },
+  { key: 'disponible',   fr: 'Disponible',            en: 'Available',         descFr: 'Dès que la circulation reprend après une levée.',                  descEn: 'As soon as traffic resumes after a lift.', default: false },
+  { key: 'scheduled',    fr: 'Levée planifiée',       en: 'Scheduled lift',    descFr: 'Levée commerciale planifiée dans les 60 prochaines minutes.',      descEn: 'Commercial lift scheduled within the next 60 minutes.', default: true },
+  { key: 'achalandage',  fr: 'Période achalandée',    en: 'Busy period',       descFr: 'Alerte 30 min avant une période historiquement chargée.',          descEn: 'Alert 30 min before a historically busy period.', default: false },
 ];
 
 function getPerBridgeNotifTypes(bridge) {
@@ -1866,33 +1828,39 @@ function renderPerBridgeCheckboxes(bridge) {
   const container = document.getElementById('perBridge'+capitalize(bridge)+'Checkboxes');
   if (!container) return;
   const saved = getPerBridgeNotifTypes(bridge);
-  const globalTypes = getSelNotifTypes();
-  const active = saved || globalTypes;
+  const NT_DEFAULT_KEYS = PER_BRIDGE_TYPES.filter(t => t.default).map(t => t.key);
+  const active = saved || NT_DEFAULT_KEYS;
+  const isFr = currentLang === 'fr';
   container.innerHTML = '';
-  PER_BRIDGE_TYPES.forEach(({ key, fr, en }) => {
-    // Only show types that are enabled globally
-    if (!globalTypes.includes(key)) return;
+  PER_BRIDGE_TYPES.forEach(({ key, fr, en, descFr, descEn }) => {
     const checked = active.includes(key);
-    const isFr = currentLang === 'fr';
-    const label = document.createElement('label');
-    label.style.cssText = 'display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:var(--surface2);font-family:var(--sans);font-size:11px;cursor:pointer;border:1.5px solid '+(checked?'var(--accent)':'var(--border)')+';color:'+(checked?'var(--accent)':'var(--text3)')+';';
+    const row = document.createElement('label');
+    row.style.cssText = 'display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;';
     const input = document.createElement('input');
     input.type = 'checkbox';
     input.checked = checked;
-    input.style.cssText = 'width:12px;height:12px;accent-color:var(--accent);';
+    input.style.cssText = 'width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;margin-top:2px;';
+    input.setAttribute('data-key', key);
     input.onchange = () => {
-      const all = PER_BRIDGE_TYPES.map(t => t.key).filter(k => {
+      const types = PER_BRIDGE_TYPES.map(t => t.key).filter(k => {
         const el = container.querySelector('input[data-key="'+k+'"]');
         return el ? el.checked : false;
       });
-      savePerBridgeNotifTypes(bridge, all);
-      renderPerBridgeCheckboxes(bridge);
+      savePerBridgeNotifTypes(bridge, types);
       syncPrefs();
     };
-    input.setAttribute('data-key', key);
-    label.appendChild(input);
-    label.appendChild(document.createTextNode(isFr ? fr : en));
-    container.appendChild(label);
+    const textDiv = document.createElement('div');
+    const nameSpan = document.createElement('div');
+    nameSpan.style.cssText = 'font-size:13px;font-weight:600;color:var(--text);font-family:var(--sans);';
+    nameSpan.textContent = isFr ? fr : en;
+    const descSpan = document.createElement('div');
+    descSpan.style.cssText = 'font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;';
+    descSpan.textContent = isFr ? descFr : descEn;
+    textDiv.appendChild(nameSpan);
+    textDiv.appendChild(descSpan);
+    row.appendChild(input);
+    row.appendChild(textDiv);
+    container.appendChild(row);
   });
 }
 
