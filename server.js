@@ -547,8 +547,10 @@ async function fetchBridgeStatus() {
   }
 
   function extractLifts(section) {
-    const match = section.match(/class="item-data[^"]*"[^>]*>([^<]+)/);
-    return match ? match[1].trim() : 'No anticipated bridge lifts';
+    const matches = [...section.matchAll(/class="item-data[^"]*"[^>]*>([^<]+)/g)];
+    const lifts = matches.map(m => m[1].trim()).filter(v => v && v !== 'No anticipated bridge lifts' && v !== 'Aucune levée de pont prévue');
+    if (lifts.length === 0) return 'No anticipated bridge lifts';
+    return lifts.join('\n');
   }
 
   function extractClosures(section) {
@@ -738,7 +740,29 @@ async function sendScheduledLiftNotification(bridge, time) {
   log(`📅 Levée planifiée [${bridge}] ${time} — ✅ ${sent} envoyées | ⏰ ${skippedRange} hors plage | 🚫 ${skippedBridge} pont non suivi | ❌ ${failed} échouées`);
 }
 
+// Track when bridge became disponible to avoid spurious notifications
+const disponibleSince = { gonzague: null, larocque: null };
+const DISPONIBLE_MIN_MS = 90 * 1000; // 90 seconds minimum before sending disponible notif
+
 async function sendNotifications(bridge, status, bridgeData = {}) {
+  // For disponible, wait minimum 90s to avoid spurious notifications
+  if (status === 'disponible') {
+    if (!disponibleSince[bridge]) {
+      disponibleSince[bridge] = Date.now();
+      // Schedule the notification after delay
+      setTimeout(() => {
+        // Only send if still disponible
+        if (lastStatus[bridge] === 'disponible') {
+          sendNotifications(bridge, 'disponible', bridgeData);
+        }
+        disponibleSince[bridge] = null;
+      }, DISPONIBLE_MIN_MS);
+      return;
+    }
+  } else {
+    // Reset timer if bridge is no longer disponible
+    disponibleSince[bridge] = null;
+  }
   let sent = 0, skippedRange = 0, skippedBridge = 0, skippedNoMsg = 0, failed = 0;
 
   for (const sub of [...subscriptions]) {

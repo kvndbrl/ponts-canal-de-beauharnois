@@ -2053,7 +2053,16 @@ function updateDisplay(){
     document.getElementById('pill'+C).className='status-pill '+lastData[b].status;
     document.getElementById('label'+C).textContent=t.sl[lastData[b].status]||lastData[b].status;
     document.getElementById('liftsTitle'+C).textContent=t.ll;
-    document.getElementById('lifts'+C).textContent=translateLifts(lastData[b].next_lifts==='No anticipated bridge lifts'?t.nl:lastData[b].next_lifts,currentLang);
+    const liftsRaw = lastData[b].next_lifts;
+    const liftsEl = document.getElementById('lifts'+C);
+    if (liftsEl) {
+      if (!liftsRaw || liftsRaw === 'No anticipated bridge lifts') {
+        liftsEl.textContent = t.nl;
+      } else {
+        const lines = liftsRaw.split('\n').map(l => translateLifts(l, currentLang));
+        liftsEl.innerHTML = lines.map(l => `<div>${l}</div>`).join('');
+      }
+    }
     document.getElementById('refresh'+C).innerHTML=formatRefresh(lastData.last_refreshed,currentLang);
   });
   updateCards();
