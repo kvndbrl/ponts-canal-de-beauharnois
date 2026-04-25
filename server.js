@@ -643,19 +643,19 @@ function getMessages(bridge, status, lang, data) {
     : '';
 
   const fr = {
-    bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Prévoir un délai${liftStr}${busyStr}` },
-    raising:      { title: `🔼 ${n}`, body: `En cours de levage · Circulation interrompue${liftStr}${busyStr}` },
-    leve:         { title: `🚢 ${n}`, body: `Pont levé${vesselStr||(' · Passage d\'un navire')}${liftStr}` },
-    lowering:     { title: `🔽 ${n}`, body: `Pont redescend · Bientôt disponible${lowerStr}` },
-    disponible:   { title: `✅ ${n}`, body: `Disponible · Circulation normale` },
+    bientot_leve: { title: `⚠️ ${n}`, body: `Levage imminent · Réouverture prévue ~${hm}` },
+    raising:      { title: `🔼 ${n}`, body: `En cours de levage · Réouverture ~${hm}` },
+    leve:         { title: `🚢 ${n}`, body: `Pont levé · Réouverture prévue ~${hm}` },
+    lowering:     { title: `🔽 ${n}`, body: `Pont redescend · Bientôt disponible` },
+    disponible:   { title: `✅ ${n}`, body: `Circulation normale` },
     outage:       { title: `🚧 ${n}`, body: `Fermeture planifiée${outageStr}` }
   };
   const en = {
-    bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expect delays${liftStr}${busyStr}` },
-    raising:      { title: `🔼 ${n}`, body: `Bridge raising · Traffic interrupted${liftStr}${busyStr}` },
-    leve:         { title: `🚢 ${n}`, body: `Bridge lifted${vesselStr||' · Vessel passing'}${liftStr}` },
-    lowering:     { title: `🔽 ${n}`, body: `Bridge lowering · Opening soon${lowerStr}` },
-    disponible:   { title: `✅ ${n}`, body: `Available · Traffic normal` },
+    bientot_leve: { title: `⚠️ ${n}`, body: `Lift imminent · Expected reopen ~${hm}` },
+    raising:      { title: `🔼 ${n}`, body: `Bridge raising · Reopen ~${hm}` },
+    leve:         { title: `🚢 ${n}`, body: `Bridge lifted · Expected reopen ~${hm}` },
+    lowering:     { title: `🔽 ${n}`, body: `Bridge lowering · Opening soon` },
+    disponible:   { title: `✅ ${n}`, body: `Traffic normal` },
     outage:       { title: `🚧 ${n}`, body: `Planned closure${outageStr}` }
   };
 
@@ -1062,8 +1062,8 @@ async function checkBusyPeriodAlerts() {
           : '/notification-icon.png';
 
         const payload = lang === 'fr'
-          ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min · Prévoir un itinéraire alternatif`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true }
-          : { title: `⚠️ ${name}`, body: `Busy period in ~30 min · Consider an alternate route`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true };
+          ? { title: `⚠️ ${name}`, body: `Période achalandée dans ~30 min`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true }
+          : { title: `⚠️ ${name}`, body: `Busy period in ~30 min`, icon: notifIcon, badge: statusBadge('achalandage'), tag: `pont-busy-${bridge}`, renotify: true };
 
         await webpush.sendNotification(sub, JSON.stringify(payload), { urgency: 'high', TTL: 300 });
         sent++;
