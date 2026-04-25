@@ -782,7 +782,7 @@ async function sendNotifications(bridge, status, bridgeData = {}) {
     if (!msg) { skippedNoMsg++; continue; }
 
     const payload = JSON.stringify({
-      ...msg, bridge,
+      ...msg, bridge, status,
       tag: `pont-${bridge}`,
       persistent: true,
       icon: notifIcon(sub),

@@ -977,26 +977,34 @@ function updateTimeline(bridge, status, data) {
 }
 
 // ── Changelog ────────────────────────────────────────────────────────
-const CHANGELOG_VERSION = '1.4';
+const CHANGELOG_VERSION = '1.5';
 const CHANGELOG = {
   fr: [
-    { icon: 'timeline', text: 'Timeline de levage dans les cartes — visualise l\'étape en cours (levage, levé, descente)' },
-    { icon: 'clock',    text: 'Heure de réouverture estimée dans les notifications push' },
-    { icon: 'vessel',  text: 'Identification du navire qui passe sous le pont (quand disponible)' },
-    { icon: 'traffic', text: 'Nouvelle alerte : période achalandée 30 min à l\'avance' },
+    { icon: 'bridge',  text: '"Bientôt levé" — nouvel état pour savoir que le pont va se lever, avant qu\'il commence à bouger' },
+    { icon: 'notif',   text: 'Notifications par pont — désactivez un pont ou choisissez quelles alertes recevoir pour chaque pont' },
+    { icon: 'history', text: 'Toutes les levées prévues affichées dans la carte, pas seulement la première' },
+    { icon: 'vibrate', text: 'Vibrations distinctes selon le statut — chaque type de levée a son propre signal (Android)' },
+    { icon: 'fact',    text: '"Saviez-vous que ?" — un fait local sur la région à chaque ouverture de l\'app' },
   ],
   en: [
-    { icon: 'timeline', text: 'Lift timeline in bridge cards — shows current step (raising, lifted, lowering)' },
-    { icon: 'clock',    text: 'Estimated reopen time in push notifications' },
-    { icon: 'vessel',  text: 'Vessel identification when a ship passes under the bridge' },
-    { icon: 'traffic', text: 'New alert: busy period warning 30 minutes in advance' },
+    { icon: 'bridge',  text: '"Soon lifted" — new state to know the bridge is about to rise, before it starts moving' },
+    { icon: 'notif',   text: 'Per-bridge notifications — disable a bridge or choose which alerts to receive for each one' },
+    { icon: 'history', text: 'All scheduled lifts shown on the card, not just the first one' },
+    { icon: 'vibrate', text: 'Distinct vibration patterns by status — each lift type has its own signal (Android)' },
+    { icon: 'fact',    text: '"Did you know?" — a local fact about the region every time you open the app' },
   ]
 };
 
 const CHANGELOG_ICONS = {
   timeline: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><circle cx="12" cy="32" r="6"/><circle cx="32" cy="32" r="6"/><circle cx="52" cy="32" r="6"/><line x1="18" y1="32" x2="26" y2="32"/><line x1="38" y1="32" x2="46" y2="32"/></svg>',
   clock:    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><circle cx="32" cy="32" r="22"/><line x1="32" y1="32" x2="32" y2="18"/><line x1="32" y1="32" x2="44" y2="38"/></svg>',
-  vessel:   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"> <!-- Water line --> <rect x="2" y="50" rx="1.2" opacity="0.3"/> <!-- Left approach road --> <rect x="2" y="44" width="16" height="3" rx="1.5"/> <!-- Right approach road --> <rect x="46" y="44" width="16" height="3" rx="1.5"/> <!-- Left tower --> <rect x="17" y="18" width="4" height="29" rx="1.5"/> <!-- Right tower --> <rect x="43" y="18" width="4" height="29" rx="1.5"/> <!-- Fixed right leaf (horizontal) --> <rect x="43" y="44" width="4" height="3" rx="1"/> <!-- Bascule left leaf raised ~55 degrees --> <g transform="rotate(-55, 21, 45.5)"> <rect x="21" y="43" width="24" height="3" rx="1.5"/> </g> <!-- Left cable --> <path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Right cable --> <path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Arrow up indicator --> <path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/> <line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/> </svg>',
+  bridge:   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg>',
+  notif:    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6 C20 6 14 16 14 26 L14 38 L8 44 L56 44 L50 38 L50 26 C50 16 44 6 32 6Z"/><line x1="26" y1="50" x2="38" y2="50"/><line x1="44" y1="20" x2="56" y2="14"/><circle cx="54" cy="12" r="6" fill="currentColor" stroke="none"/></svg>',
+  history:  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><rect x="8" y="8" width="48" height="48" rx="6"/><line x1="20" y1="24" x2="44" y2="24"/><line x1="20" y1="32" x2="44" y2="32"/><line x1="20" y1="40" x2="36" y2="40"/></svg>',
+  vibrate:  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><rect x="20" y="12" width="24" height="40" rx="4"/><line x1="8" y1="22" x2="8" y2="42"/><line x1="56" y1="22" x2="56" y2="42"/><line x1="4" y1="26" x2="4" y2="38"/><line x1="60" y1="26" x2="60" y2="38"/></svg>',
+  fact:     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><circle cx="32" cy="32" r="22"/><line x1="32" y1="28" x2="32" y2="44"/><circle cx="32" cy="20" r="2" fill="currentColor" stroke="none"/></svg>',
+  voice:    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><rect x="22" y="6" width="20" height="30" rx="10"/><path d="M12 32 C12 46 52 46 52 32"/><line x1="32" y1="46" x2="32" y2="56"/><line x1="22" y1="56" x2="42" y2="56"/></svg>',
+  vessel:   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
   traffic:  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><path d="M10 38 L14 26 Q15 23 18 23 L30 23 Q33 23 34 26 L38 38 Z"/><rect x="10" y="38" width="28" height="10" rx="3"/><circle cx="17" cy="50" r="4" fill="currentColor" stroke="none"/><circle cx="31" cy="50" r="4" fill="currentColor" stroke="none"/><line x1="44" y1="28" x2="56" y2="28"/><line x1="44" y1="36" x2="54" y2="36"/><line x1="44" y1="44" x2="52" y2="44"/></svg>',
 };
 
@@ -3151,7 +3159,7 @@ document.addEventListener('visibilitychange',()=>{
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
       <span style="display:inline-flex;width:26px;height:26px;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22 L8 42 L20 42 L20 22 Z"/><path d="M20 22 Q44 14 52 10 L52 54 Q44 50 20 42"/><line x1="20" y1="42" x2="20" y2="54"/><line x1="28" y1="44" x2="26" y2="54"/><path d="M52 28 Q58 30 58 32 Q58 34 52 36"/></svg></span>
       <span style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--sans);" id="changelogTitle">Nouveautés</span>
-      <span style="margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono);">v1.4</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono);">v1.5</span>
     </div>
     <div style="width:32px;height:3px;background:var(--accent);border-radius:2px;margin-bottom:20px;"></div>
     <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px;" id="changelogItems"></div>
