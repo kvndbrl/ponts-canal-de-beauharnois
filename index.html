@@ -869,6 +869,20 @@
     </div>
   </div>
 
+  <!-- Voice assistant section -->
+  <div style="padding:4px 16px 4px;border-top:1px solid var(--border);">
+    <button onclick="toggleVoiceAssistant()" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;cursor:pointer;padding:8px 0;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:16px;">🎙️</span>
+        <span style="font-size:13px;font-weight:700;color:var(--text);font-family:var(--sans);" id="voiceAssistantLabel">Assistant vocal</span>
+      </div>
+      <span id="voiceAssistantChevron" style="font-size:11px;color:var(--text3);transition:transform .2s;">▼</span>
+    </button>
+    <div id="voiceAssistantContent" style="display:none;margin-top:4px;padding-bottom:8px;">
+      <div id="voiceAssistantText" style="font-size:12px;color:var(--text3);font-family:var(--sans);line-height:1.7;"></div>
+    </div>
+  </div>
+
   <div id="drawerDonationSection" style="padding:12px 16px 4px;">
     <div style="background:rgba(var(--accent-rgb),.07);border:1.5px solid rgba(var(--accent-rgb),.2);border-radius:16px;padding:14px;">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
@@ -1788,6 +1802,75 @@ function updateDrivingGuideText() {
 }
 
 
+function toggleVoiceAssistant() {
+  const content = document.getElementById('voiceAssistantContent');
+  const chevron = document.getElementById('voiceAssistantChevron');
+  const open = content.style.display === 'none';
+  content.style.display = open ? 'block' : 'none';
+  chevron.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+  if (open) updateVoiceAssistantText();
+}
+
+function updateVoiceAssistantText() {
+  const el = document.getElementById('voiceAssistantText');
+  const lbl = document.getElementById('voiceAssistantLabel');
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isFr = currentLang === 'fr';
+  const apiUrl = 'https://pont-st-louis-de-gonzague.onrender.com/assistant?lang=' + (isFr ? 'fr' : 'en');
+
+  if (lbl) lbl.textContent = isFr ? 'Assistant vocal' : 'Voice assistant';
+  if (!el) return;
+
+  if (isIOS) {
+    el.innerHTML = isFr
+      ? `<strong>Siri (iPhone)</strong><br>
+         Demandez à Siri l'état des ponts en créant un raccourci personnalisé.<br><br>
+         <strong>Comment faire :</strong><br>
+         1. Ouvrez l'app <strong>Raccourcis</strong> sur votre iPhone<br>
+         2. Appuyez sur <strong>+</strong> pour créer un nouveau raccourci<br>
+         3. Ajoutez l'action <strong>Obtenir le contenu de l'URL</strong><br>
+         4. Entrez l'URL : <code style="font-size:10px;word-break:break-all;">${apiUrl}</code><br>
+         5. Ajoutez l'action <strong>Obtenir la valeur du dictionnaire</strong> → clé : <strong>text</strong><br>
+         6. Ajoutez l'action <strong>Dicter du texte</strong> ou <strong>Lire du texte</strong><br>
+         7. Nommez le raccourci <strong>"État des ponts"</strong><br><br>
+         Dites ensuite : <em>"Dis Siri, état des ponts"</em>`
+      : `<strong>Siri (iPhone)</strong><br>
+         Ask Siri for bridge status by creating a custom shortcut.<br><br>
+         <strong>How to:</strong><br>
+         1. Open the <strong>Shortcuts</strong> app on your iPhone<br>
+         2. Tap <strong>+</strong> to create a new shortcut<br>
+         3. Add action <strong>Get Contents of URL</strong><br>
+         4. Enter URL: <code style="font-size:10px;word-break:break-all;">${apiUrl}</code><br>
+         5. Add action <strong>Get Dictionary Value</strong> → key: <strong>text</strong><br>
+         6. Add action <strong>Speak Text</strong><br>
+         7. Name it <strong>"Bridge Status"</strong><br><br>
+         Then say: <em>"Hey Siri, bridge status"</em>`;
+  } else {
+    el.innerHTML = isFr
+      ? `<strong>Google Assistant (Android)</strong><br>
+         Créez une routine Google Assistant pour connaître l'état des ponts.<br><br>
+         <strong>Comment faire :</strong><br>
+         1. Ouvrez <strong>Google Assistant</strong> ou l'app <strong>Google Home</strong><br>
+         2. Allez dans <strong>Routines</strong> → <strong>+</strong><br>
+         3. Phrase déclencheur : <em>"État des ponts"</em><br>
+         4. Action : <strong>Ouvrir une URL</strong><br>
+         5. Entrez : <code style="font-size:10px;word-break:break-all;">${apiUrl}</code><br><br>
+         Ou utilisez <strong>Tasker</strong> (app avancée) pour lire la réponse à voix haute via Text-to-Speech.<br><br>
+         Dites : <em>"OK Google, état des ponts"</em>`
+      : `<strong>Google Assistant (Android)</strong><br>
+         Create a Google Assistant routine to check bridge status.<br><br>
+         <strong>How to:</strong><br>
+         1. Open <strong>Google Assistant</strong> or <strong>Google Home</strong> app<br>
+         2. Go to <strong>Routines</strong> → <strong>+</strong><br>
+         3. Trigger phrase: <em>"Bridge status"</em><br>
+         4. Action: <strong>Open URL</strong><br>
+         5. Enter: <code style="font-size:10px;word-break:break-all;">${apiUrl}</code><br><br>
+         Or use <strong>Tasker</strong> (advanced) to read the response aloud via Text-to-Speech.<br><br>
+         Say: <em>"OK Google, bridge status"</em>`;
+  }
+}
+
+
 function toggleBridgeNotifSection(bridge) {
   const C = capitalize(bridge);
   const content = document.getElementById('perBridge'+C+'Content');
@@ -2251,6 +2334,9 @@ function applyTrans(){
   if(weatherDesc) weatherDesc.textContent=currentLang==='fr'?'Afficher la m\u00e9t\u00e9o locale dans la salutation.':'Show local weather in the greeting.';
   renderFunFact();
   updatePerBridgeLabels();
+  const val = document.getElementById('voiceAssistantLabel');
+  if(val) val.textContent = currentLang==='fr' ? 'Assistant vocal' : 'Voice assistant';
+  if(document.getElementById('voiceAssistantContent')?.style.display !== 'none') updateVoiceAssistantText();
   const dgl = document.getElementById('drivingGuideLabel');
   if(dgl) dgl.textContent = currentLang==='fr' ? 'Notifications en conduisant' : 'Notifications while driving';
   if(document.getElementById('drivingGuideContent')?.style.display !== 'none') updateDrivingGuideText();

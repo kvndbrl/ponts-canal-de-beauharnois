@@ -953,6 +953,39 @@ app.post('/unsubscribe', async (req, res) => {
   res.json({ ok: true });
 });
 
+// ── Voice assistant status endpoint ───────────────────────────────────
+app.get('/assistant', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const lang = req.query.lang || 'fr';
+  const parts = [];
+  for (const bridge of ['gonzague', 'larocque']) {
+    const name = bridge === 'gonzague'
+      ? (lang === 'fr' ? 'Pont St-Louis' : 'St-Louis Bridge')
+      : (lang === 'fr' ? 'Pont Larocque' : 'Larocque Bridge');
+    const s = lastStatus[bridge];
+    let desc;
+    if (lang === 'fr') {
+      if (s === 'disponible') desc = 'est disponible';
+      else if (s === 'bientot_leve') desc = 'sera bientôt levé';
+      else if (s === 'raising') desc = 'est en cours de levage';
+      else if (s === 'leve') desc = 'est levé';
+      else if (s === 'lowering') desc = 'redescend';
+      else desc = 'statut inconnu';
+    } else {
+      if (s === 'disponible') desc = 'is available';
+      else if (s === 'bientot_leve') desc = 'will be lifted soon';
+      else if (s === 'raising') desc = 'is raising';
+      else if (s === 'leve') desc = 'is lifted';
+      else if (s === 'lowering') desc = 'is lowering';
+      else desc = 'status unknown';
+    }
+    parts.push(`${name} ${desc}`);
+  }
+  const text = parts.join(lang === 'fr' ? '. ' : '. ');
+  res.json({ text, gonzague: lastStatus.gonzague, larocque: lastStatus.larocque });
+});
+
+
 app.get('/history', (req, res) => {
   res.set('Cache-Control', 'no-store');
   function getLastLift(bridge) {
