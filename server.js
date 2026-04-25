@@ -725,7 +725,7 @@ async function sendScheduledLiftNotification(bridge, time) {
       ? { title: `📅 Lift scheduled at ${time}`, body: `${name} will be raised at ${time}.` }
       : { title: `📅 Levée prévue à ${time}`, body: `Le ${name} sera levé à ${time}.` };
 
-    const payload = JSON.stringify({ ...msg, bridge, persistent: false, icon: notifIcon(sub), badge: statusBadge('scheduled') });
+    const payload = JSON.stringify({ ...msg, bridge, tag: `pont-${bridge}`, persistent: false, icon: notifIcon(sub), badge: statusBadge('scheduled') });
     try {
       await webpush.sendNotification(sub, payload, { urgency: 'high', TTL: 300 });
       sent++;
