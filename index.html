@@ -3050,14 +3050,14 @@ renderFunFact();
 // ── Swipe-up donation drawer ──────────────────────────────────────────
 const SWIPE_DON_VARIANTS = {
   fr: [
-    { emoji: '🤓', title: 'T\'as swipé vers le haut. C\'est dans le code depuis le début.', desc: 'On savait que tu ferais ça. On espérait juste que tu donnerais aussi.' },
+    { emoji: '🤓', title: 'T\'as scrollé jusqu\'en bas. C\'est dans le code depuis le début.', desc: 'On savait que tu ferais ça. On espérait juste que tu donnerais aussi.' },
     { emoji: '🎯', title: 'T\'as trouvé l\'easter egg.', desc: 'C\'est pas vraiment un easter egg. C\'est juste une demande de don. Mais bravo quand même.' },
     { emoji: '🕵️', title: 'On t\'a vu scroller jusqu\'en bas.', desc: 'On sait pas pourquoi t\'as fait ça. Mais tant qu\'à être là.' },
     { emoji: '🪤', title: 'C\'était un piège.', desc: 'Un piège très doux. Avec des boutons PayPal. Tu peux partir si tu veux, on sera pas fâchés.' },
     { emoji: '🤝', title: 'Bon. On va être honnêtes.', desc: 'On a codé ce tiroir exprès pour que tu donnes. C\'est fait. Maintenant c\'est dans ta cour.' },
   ],
   en: [
-    { emoji: '🤓', title: 'You swiped up. It\'s been in the code all along.', desc: 'We knew you\'d do that. We just hoped you\'d donate too.' },
+    { emoji: '🤓', title: 'You scrolled to the bottom. It\'s been in the code all along.', desc: 'We knew you\'d do that. We just hoped you\'d donate too.' },
     { emoji: '🎯', title: 'You found the easter egg.', desc: 'It\'s not really an easter egg. It\'s just a donation request. But well done anyway.' },
     { emoji: '🕵️', title: 'We saw you scroll to the bottom.', desc: 'We don\'t know why you did that. But since you\'re here.' },
     { emoji: '🪤', title: 'It was a trap.', desc: 'A very gentle trap. With PayPal buttons. You can leave if you want, no hard feelings.' },
@@ -3070,38 +3070,25 @@ let _swipeTouchStartY = 0;
 let _swipeTouchStartTime = 0;
 
 function initSwipeDon() {
-  // Don't show if donated recently
   const donated = localStorage.getItem('donationDate');
   if (donated && (Date.now() - parseInt(donated)) < 90 * 24 * 60 * 60 * 1000) return;
 
-  // Only trigger after user has been on page a bit
-  setTimeout(() => {
-    let startY = 0;
-    let startX = 0;
-    let startTime = 0;
+  let triggered = false;
 
-    document.addEventListener('touchstart', e => {
-      startY = e.touches[0].clientY;
-      startX = e.touches[0].clientX;
-      startTime = Date.now();
-    }, { passive: true });
-
-    document.addEventListener('touchend', e => {
-      if (_swipeDonShown) return;
-      const endY = e.changedTouches[0].clientY;
-      const endX = e.changedTouches[0].clientX;
-      const dy = startY - endY;
-      const dx = Math.abs(startX - endX);
-      const dt = Date.now() - startTime;
-      // Must be mostly vertical, at least 80px up, under 600ms
-      // Only trigger when scrolled near the bottom of the page
-      const nearBottom = (window.scrollY + window.innerHeight) >= (document.body.scrollHeight - 100);
-      if (dy > 80 && dx < 40 && dt < 600 && nearBottom) {
-        _swipeDonShown = true;
-        openSwipeDon();
-      }
-    }, { passive: true });
-  }, 3000); // Wait 3s after page load
+  // Trigger when user scrolls to bottom of page
+  window.addEventListener('scroll', () => {
+    if (triggered || _swipeDonShown) return;
+    const nearBottom = (window.scrollY + window.innerHeight) >= (document.body.scrollHeight - 80);
+    if (nearBottom) {
+      triggered = true;
+      setTimeout(() => {
+        if (!_swipeDonShown) {
+          _swipeDonShown = true;
+          openSwipeDon();
+        }
+      }, 800);
+    }
+  }, { passive: true });
 }
 
 function openSwipeDon() {
