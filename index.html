@@ -3072,23 +3072,26 @@ let _swipeTouchStartTime = 0;
 function initSwipeDon() {
   const donated = localStorage.getItem('donationDate');
   if (donated && (Date.now() - parseInt(donated)) < 90 * 24 * 60 * 60 * 1000) return;
+  if (_swipeDonShown) return;
 
-  let triggered = false;
+  const zone = document.getElementById('swipeZone');
+  if (!zone) return;
 
-  // Trigger when user scrolls to bottom of page
-  window.addEventListener('scroll', () => {
-    if (triggered || _swipeDonShown) return;
-    const nearBottom = (window.scrollY + window.innerHeight) >= (document.body.scrollHeight - 80);
-    if (nearBottom) {
-      triggered = true;
-      setTimeout(() => {
-        if (!_swipeDonShown) {
-          _swipeDonShown = true;
-          openSwipeDon();
-        }
-      }, 800);
+  let startY = 0;
+
+  zone.addEventListener('touchstart', e => {
+    startY = e.touches[0].clientY;
+    e.preventDefault();
+  }, { passive: false });
+
+  zone.addEventListener('touchend', e => {
+    if (_swipeDonShown) return;
+    const dy = startY - e.changedTouches[0].clientY;
+    if (dy > 40) {
+      _swipeDonShown = true;
+      openSwipeDon();
     }
-  }, { passive: true });
+  }, { passive: false });
 }
 
 function openSwipeDon() {
@@ -3286,6 +3289,9 @@ document.addEventListener('visibilitychange',()=>{
     </div>
   </div>
 </div>
+<!-- Swipe detection zone - fixed invisible strip at bottom -->
+<div id="swipeZone" style="position:fixed;bottom:0;left:0;right:0;height:60px;z-index:9200;pointer-events:auto;"></div>
+
 <!-- Swipe-up donation drawer -->
 <div id="swipeDonOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9300;backdrop-filter:blur(4px);" onclick="closeSwipeDon()"></div>
 <div id="swipeDonDrawer" style="position:fixed;bottom:-100%;left:0;right:0;z-index:9400;background:var(--surface);border-radius:24px 24px 0 0;padding:0 0 48px;max-width:500px;margin:0 auto;transition:bottom .35s cubic-bezier(.4,0,.2,1);box-shadow:0 -8px 40px rgba(0,0,0,.4);">
