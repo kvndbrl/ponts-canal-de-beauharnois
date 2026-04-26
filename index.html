@@ -3070,28 +3070,38 @@ let _swipeTouchStartY = 0;
 let _swipeTouchStartTime = 0;
 
 function initSwipeDon() {
+  // Don't show if donated recently
   const donated = localStorage.getItem('donationDate');
   if (donated && (Date.now() - parseInt(donated)) < 90 * 24 * 60 * 60 * 1000) return;
 
-  let startY = 0;
-  let startTime = 0;
+  // Only trigger after user has been on page a bit
+  setTimeout(() => {
+    let startY = 0;
+    let startX = 0;
+    let startTime = 0;
 
-  document.addEventListener('touchstart', e => {
-    startY = e.touches[0].clientY;
-    startTime = Date.now();
-  }, { passive: true });
+    document.addEventListener('touchstart', e => {
+      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
+      startTime = Date.now();
+    }, { passive: true });
 
-  document.addEventListener('touchend', e => {
-    if (_swipeDonShown) return;
-    const endY = e.changedTouches[0].clientY;
-    const dy = startY - endY; // positive = swipe up
-    const dt = Date.now() - startTime;
-    // Swipe up anywhere: at least 60px, under 500ms
-    if (dy > 60 && dt < 500) {
-      _swipeDonShown = true;
-      openSwipeDon();
-    }
-  }, { passive: true });
+    document.addEventListener('touchend', e => {
+      if (_swipeDonShown) return;
+      const endY = e.changedTouches[0].clientY;
+      const endX = e.changedTouches[0].clientX;
+      const dy = startY - endY;
+      const dx = Math.abs(startX - endX);
+      const dt = Date.now() - startTime;
+      // Must be mostly vertical, at least 80px up, under 600ms
+      // Only trigger when scrolled near the bottom of the page
+      const nearBottom = (window.scrollY + window.innerHeight) >= (document.body.scrollHeight - 100);
+      if (dy > 80 && dx < 40 && dt < 600 && nearBottom) {
+        _swipeDonShown = true;
+        openSwipeDon();
+      }
+    }, { passive: true });
+  }, 3000); // Wait 3s after page load
 }
 
 function openSwipeDon() {
