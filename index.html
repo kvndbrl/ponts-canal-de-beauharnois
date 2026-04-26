@@ -379,7 +379,7 @@
   </svg>
 
   <!-- Ship sailing right to left -->
-  <div class="ship-container">
+  <div class="ship-container" onclick="if(!_swipeDonShown){_swipeDonShown=true;openSwipeDon();}" style="cursor:pointer;">
     <div class="ship-bob">
       <div class="ship-wake"></div>
       <svg width="72" height="40" viewBox="0 0 72 40" xmlns="http://www.w3.org/2000/svg">
@@ -3050,18 +3050,18 @@ renderFunFact();
 // ── Swipe-up donation drawer ──────────────────────────────────────────
 const SWIPE_DON_VARIANTS = {
   fr: [
-    { emoji: '🤓', title: 'T\'as tapé sur le petit trait en bas. C\'est dans le code depuis le début.', desc: 'On savait que tu ferais ça. On espérait juste que tu donnerais aussi.' },
+    { emoji: '🚢', title: 'T\'as cliqué sur le bateau.', desc: 'On savait que tu ferais ça. On espérait juste que tu donnerais aussi.' },
     { emoji: '🎯', title: 'T\'as trouvé l\'easter egg.', desc: 'C\'est pas vraiment un easter egg. C\'est juste une demande de don. Mais bravo quand même.' },
-    { emoji: '🕵️', title: 'On t\'a vu appuyer sur le petit trait.', desc: 'On sait pas pourquoi t\'as fait ça. Mais tant qu\'à être là.' },
-    { emoji: '🪤', title: 'C\'était un piège.', desc: 'Un piège très doux. Avec des boutons PayPal. Tu peux partir si tu veux, on sera pas fâchés.' },
-    { emoji: '🤝', title: 'Bon. On va être honnêtes.', desc: 'On a codé ce tiroir exprès pour que tu donnes. C\'est fait. Maintenant c\'est dans ta cour.' },
+    { emoji: '🛳️', title: 'Ce navire transporte peut-être du pétrole. Ou des bananes.', desc: 'On sait pas. Mais on sait que l\'app coûte de l\'argent. Un don aide.' },
+    { emoji: '⚓', title: 'Le bateau navigue. L\'app tourne. Les serveurs coûtent.', desc: 'C\'est le cercle de la vie maritime. Un don brise ce cycle.' },
+    { emoji: '🤝', title: 'Bon. On va être honnêtes.', desc: 'On a mis un easter egg dans le bateau exprès. C\'est fait. Maintenant c\'est dans ta cour.' },
   ],
   en: [
-    { emoji: '🤓', title: 'You tapped the little bar at the bottom. It\'s been in the code all along.', desc: 'We knew you\'d do that. We just hoped you\'d donate too.' },
+    { emoji: '🚢', title: 'You clicked the boat.', desc: 'We knew you\'d do that. We just hoped you\'d donate too.' },
     { emoji: '🎯', title: 'You found the easter egg.', desc: 'It\'s not really an easter egg. It\'s just a donation request. But well done anyway.' },
-    { emoji: '🕵️', title: 'We saw you tap the little bar.', desc: 'We don\'t know why you did that. But since you\'re here.' },
-    { emoji: '🪤', title: 'It was a trap.', desc: 'A very gentle trap. With PayPal buttons. You can leave if you want, no hard feelings.' },
-    { emoji: '🤝', title: 'Okay. Let\'s be honest.', desc: 'We coded this drawer specifically so you\'d donate. It\'s done. The rest is up to you.' },
+    { emoji: '🛳️', title: 'This vessel is carrying oil. Or bananas.', desc: 'We don\'t know. But we know the app costs money. A donation helps.' },
+    { emoji: '⚓', title: 'The boat sails. The app runs. The servers cost.', desc: 'It\'s the circle of maritime life. A donation breaks the cycle.' },
+    { emoji: '🤝', title: 'Okay. Let\'s be honest.', desc: 'We put an easter egg in the boat on purpose. It\'s done. The rest is up to you.' },
   ]
 };
 
@@ -3072,14 +3072,11 @@ let _swipeTouchStartTime = 0;
 function initSwipeDon() {
   const donated = localStorage.getItem('donationDate');
   if (donated && (Date.now() - parseInt(donated)) < 90 * 24 * 60 * 60 * 1000) {
-    const handle = document.getElementById('donHandle');
-    if (handle) handle.style.display = 'none';
+    _swipeDonShown = true; // prevent drawer from opening
   }
 }
 
 function openSwipeDon() {
-  const handle = document.getElementById('donHandle');
-  if (handle) handle.style.display = 'none';
   const isFr = currentLang === 'fr';
   const variants = SWIPE_DON_VARIANTS[isFr ? 'fr' : 'en'];
   const v = variants[Math.floor(Math.random() * variants.length)];
@@ -3274,11 +3271,6 @@ document.addEventListener('visibilitychange',()=>{
     </div>
   </div>
 </div>
-<!-- Donation drawer handle - tap to open -->
-<div id="donHandle" onclick="if(!_swipeDonShown){_swipeDonShown=true;openSwipeDon();}" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:9200;padding:10px 24px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">
-  <div style="width:36px;height:4px;border-radius:2px;background:var(--border);opacity:.6;"></div>
-</div>
-
 <!-- Swipe-up donation drawer -->
 <div id="swipeDonOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9300;backdrop-filter:blur(4px);" onclick="closeSwipeDon()"></div>
 <div id="swipeDonDrawer" style="position:fixed;bottom:-100%;left:0;right:0;z-index:9400;background:var(--surface);border-radius:24px 24px 0 0;padding:0 0 48px;max-width:500px;margin:0 auto;transition:bottom .35s cubic-bezier(.4,0,.2,1);box-shadow:0 -8px 40px rgba(0,0,0,.4);">
