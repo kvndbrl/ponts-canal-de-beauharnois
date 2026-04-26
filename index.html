@@ -3047,7 +3047,81 @@ loadPrefs();loadNotifTypes();loadDays();loadTR();loadTheme();applyTrans();initWe
 
 renderFunFact();
 
-// ── Donation modal after 3 opens ──────────────────────────────────────
+// ── Swipe-up donation drawer ──────────────────────────────────────────
+const SWIPE_DON_VARIANTS = {
+  fr: [
+    { emoji: '🤓', title: 'T\'as swipé vers le haut. C\'est dans le code depuis le début.', desc: 'On savait que tu ferais ça. On espérait juste que tu donnerais aussi.' },
+    { emoji: '🎯', title: 'T\'as trouvé l\'easter egg.', desc: 'C\'est pas vraiment un easter egg. C\'est juste une demande de don. Mais bravo quand même.' },
+    { emoji: '🕵️', title: 'On t\'a vu scroller jusqu\'en bas.', desc: 'On sait pas pourquoi t\'as fait ça. Mais tant qu\'à être là.' },
+    { emoji: '🪤', title: 'C\'était un piège.', desc: 'Un piège très doux. Avec des boutons PayPal. Tu peux partir si tu veux, on sera pas fâchés.' },
+    { emoji: '🤝', title: 'Bon. On va être honnêtes.', desc: 'On a codé ce tiroir exprès pour que tu donnes. C\'est fait. Maintenant c\'est dans ta cour.' },
+  ],
+  en: [
+    { emoji: '🤓', title: 'You swiped up. It\'s been in the code all along.', desc: 'We knew you\'d do that. We just hoped you\'d donate too.' },
+    { emoji: '🎯', title: 'You found the easter egg.', desc: 'It\'s not really an easter egg. It\'s just a donation request. But well done anyway.' },
+    { emoji: '🕵️', title: 'We saw you scroll to the bottom.', desc: 'We don\'t know why you did that. But since you\'re here.' },
+    { emoji: '🪤', title: 'It was a trap.', desc: 'A very gentle trap. With PayPal buttons. You can leave if you want, no hard feelings.' },
+    { emoji: '🤝', title: 'Okay. Let\'s be honest.', desc: 'We coded this drawer specifically so you\'d donate. It\'s done. The rest is up to you.' },
+  ]
+};
+
+let _swipeDonShown = false;
+let _swipeTouchStartY = 0;
+let _swipeTouchStartTime = 0;
+
+function initSwipeDon() {
+  const donated = localStorage.getItem('donationDate');
+  if (donated && (Date.now() - parseInt(donated)) < 90 * 24 * 60 * 60 * 1000) return;
+
+  document.addEventListener('touchstart', e => {
+    _swipeTouchStartY = e.touches[0].clientY;
+    _swipeTouchStartTime = Date.now();
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    if (_swipeDonShown) return;
+    const dy = _swipeTouchStartY - e.changedTouches[0].clientY;
+    const dt = Date.now() - _swipeTouchStartTime;
+    // Swipe up: fast, at least 80px, from bottom third of screen
+    if (dy > 80 && dt < 400 && _swipeTouchStartY > window.innerHeight * 0.6) {
+      _swipeDonShown = true;
+      openSwipeDon();
+    }
+  }, { passive: true });
+}
+
+function openSwipeDon() {
+  const isFr = currentLang === 'fr';
+  const variants = SWIPE_DON_VARIANTS[isFr ? 'fr' : 'en'];
+  const v = variants[Math.floor(Math.random() * variants.length)];
+
+  document.getElementById('swipeDonEmoji').textContent = v.emoji;
+  document.getElementById('swipeDonTitle').textContent = v.title;
+  document.getElementById('swipeDonDesc').textContent = v.desc;
+  document.getElementById('swipeDonSkip').textContent = isFr ? 'Plus tard' : 'Maybe later';
+
+  const overlay = document.getElementById('swipeDonOverlay');
+  const drawer = document.getElementById('swipeDonDrawer');
+  if (overlay) overlay.style.display = 'block';
+  if (drawer) {
+    drawer.style.display = 'block';
+    requestAnimationFrame(() => { drawer.style.bottom = '0'; });
+  }
+}
+
+function closeSwipeDon() {
+  const overlay = document.getElementById('swipeDonOverlay');
+  const drawer = document.getElementById('swipeDonDrawer');
+  if (drawer) drawer.style.bottom = '-100%';
+  setTimeout(() => {
+    if (overlay) overlay.style.display = 'none';
+    if (drawer) drawer.style.display = 'none';
+  }, 350);
+}
+
+initSwipeDon();
+
+
 function updateDonationTexts() {
   const v = getDonVariant();
   const drawerTitle = document.getElementById('drawerDonTitle');
@@ -3211,5 +3285,26 @@ document.addEventListener('visibilitychange',()=>{
     </div>
   </div>
 </div>
-</body>
-</html>
+<!-- Swipe-up donation drawer -->
+<div id="swipeDonOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9300;backdrop-filter:blur(4px);" onclick="closeSwipeDon()"></div>
+<div id="swipeDonDrawer" style="position:fixed;bottom:-100%;left:0;right:0;z-index:9400;background:var(--surface);border-radius:24px 24px 0 0;padding:0 0 48px;max-width:500px;margin:0 auto;transition:bottom .35s cubic-bezier(.4,0,.2,1);box-shadow:0 -8px 40px rgba(0,0,0,.4);">
+  <!-- Handle -->
+  <div style="display:flex;justify-content:center;padding:14px 0 4px;">
+    <div style="width:36px;height:4px;border-radius:2px;background:var(--border);"></div>
+  </div>
+  <!-- Emoji -->
+  <div style="text-align:center;font-size:48px;margin:8px 0 4px;" id="swipeDonEmoji">🚢</div>
+  <!-- Title -->
+  <div style="text-align:center;font-size:20px;font-weight:700;color:var(--text);font-family:var(--sans);padding:0 24px;line-height:1.3;" id="swipeDonTitle"></div>
+  <!-- Desc -->
+  <div style="text-align:center;font-size:13px;color:var(--text3);font-family:var(--sans);padding:8px 32px 20px;line-height:1.6;" id="swipeDonDesc"></div>
+  <!-- Buttons -->
+  <div style="display:flex;gap:10px;padding:0 20px 12px;">
+    <a href="https://paypal.me/kvndbrl/2" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:2,source:'swipe'});closeDonationModal(true);closeSwipeDon();" style="flex:1;text-align:center;padding:14px 4px;border-radius:14px;background:#0070BA;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;text-decoration:none;">2 $</a>
+    <a href="https://paypal.me/kvndbrl/5" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:5,source:'swipe'});closeDonationModal(true);closeSwipeDon();" style="flex:1;text-align:center;padding:14px 4px;border-radius:14px;background:#0070BA;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;text-decoration:none;">5 $</a>
+    <a href="https://paypal.me/kvndbrl/10" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{amount:10,source:'swipe'});closeDonationModal(true);closeSwipeDon();" style="flex:1;text-align:center;padding:14px 4px;border-radius:14px;background:#0070BA;color:#fff;font-family:var(--sans);font-size:16px;font-weight:700;text-decoration:none;">10 $</a>
+  </div>
+  <button onclick="closeSwipeDon()" style="width:calc(100% - 40px);margin:0 20px;padding:13px;border-radius:50px;border:none;background:var(--surface2);color:var(--text3);font-family:var(--sans);font-size:14px;cursor:pointer;" id="swipeDonSkip">Plus tard</button>
+</div>
+
+
