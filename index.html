@@ -3093,15 +3093,15 @@ function openSwipeDon() {
   const drawer = document.getElementById('swipeDonDrawer');
   if (overlay) overlay.style.display = 'block';
   if (drawer) {
-    drawer.style.display = 'block';
-    requestAnimationFrame(() => { drawer.style.bottom = '0'; });
+    drawer.style.pointerEvents = 'auto';
+    drawer.style.bottom = '0';
   }
 }
 
 function closeSwipeDon() {
   const overlay = document.getElementById('swipeDonOverlay');
   const drawer = document.getElementById('swipeDonDrawer');
-  if (drawer) drawer.style.bottom = '-100%';
+  if (drawer) { drawer.style.bottom = '-100%'; drawer.style.pointerEvents = 'none'; }
   setTimeout(() => {
     if (overlay) overlay.style.display = 'none';
     if (drawer) drawer.style.display = 'none';
@@ -3277,7 +3277,7 @@ document.addEventListener('visibilitychange',()=>{
 </div>
 <!-- Swipe-up donation drawer -->
 <div id="swipeDonOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9300;backdrop-filter:blur(4px);" onclick="closeSwipeDon()"></div>
-<div id="swipeDonDrawer" style="position:fixed;bottom:-100%;left:0;right:0;z-index:9400;background:var(--surface);border-radius:24px 24px 0 0;padding:0 0 48px;max-width:500px;margin:0 auto;transition:bottom .35s cubic-bezier(.4,0,.2,1);box-shadow:0 -8px 40px rgba(0,0,0,.4);">
+<div id="swipeDonDrawer" style="position:fixed;bottom:-100%;left:0;right:0;z-index:9400;background:var(--surface);border-radius:24px 24px 0 0;padding:0 0 48px;max-width:500px;margin:0 auto;transition:bottom .35s cubic-bezier(.4,0,.2,1);box-shadow:0 -8px 40px rgba(0,0,0,.4);pointer-events:none;">
   <!-- Handle -->
   <div style="display:flex;justify-content:center;padding:14px 0 4px;">
     <div style="width:36px;height:4px;border-radius:2px;background:var(--border);"></div>
