@@ -3084,16 +3084,19 @@ function initSwipeDon() {
 }
 
 function openSwipeDon() {
-  if (_swipeDonShown) return;
   _swipeDonShown = true;
   const isFr = currentLang === 'fr';
   const variants = SWIPE_DON_VARIANTS[isFr ? 'fr' : 'en'];
   const v = variants[Math.floor(Math.random() * variants.length)];
 
-  document.getElementById('swipeDonEmoji').textContent = v.emoji;
-  document.getElementById('swipeDonTitle').textContent = v.title;
-  document.getElementById('swipeDonDesc').textContent = v.desc;
-  document.getElementById('swipeDonSkip').textContent = isFr ? 'Plus tard' : 'Maybe later';
+  const emojiEl = document.getElementById('swipeDonEmoji');
+  const titleEl = document.getElementById('swipeDonTitle');
+  const descEl = document.getElementById('swipeDonDesc');
+  const skipEl = document.getElementById('swipeDonSkip');
+  if (emojiEl) emojiEl.textContent = v.emoji;
+  if (titleEl) titleEl.textContent = v.title;
+  if (descEl) descEl.textContent = v.desc;
+  if (skipEl) skipEl.textContent = isFr ? 'Plus tard' : 'Maybe later';
 
   const overlay = document.getElementById('swipeDonOverlay');
   const drawer = document.getElementById('swipeDonDrawer');
