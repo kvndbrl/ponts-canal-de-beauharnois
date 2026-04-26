@@ -3073,17 +3073,21 @@ function initSwipeDon() {
   const donated = localStorage.getItem('donationDate');
   if (donated && (Date.now() - parseInt(donated)) < 90 * 24 * 60 * 60 * 1000) return;
 
+  let startY = 0;
+  let startTime = 0;
+
   document.addEventListener('touchstart', e => {
-    _swipeTouchStartY = e.touches[0].clientY;
-    _swipeTouchStartTime = Date.now();
+    startY = e.touches[0].clientY;
+    startTime = Date.now();
   }, { passive: true });
 
   document.addEventListener('touchend', e => {
     if (_swipeDonShown) return;
-    const dy = _swipeTouchStartY - e.changedTouches[0].clientY;
-    const dt = Date.now() - _swipeTouchStartTime;
-    // Swipe up: fast, at least 80px, from bottom third of screen
-    if (dy > 80 && dt < 400 && _swipeTouchStartY > window.innerHeight * 0.6) {
+    const endY = e.changedTouches[0].clientY;
+    const dy = startY - endY; // positive = swipe up
+    const dt = Date.now() - startTime;
+    // Swipe up anywhere: at least 60px, under 500ms
+    if (dy > 60 && dt < 500) {
       _swipeDonShown = true;
       openSwipeDon();
     }
