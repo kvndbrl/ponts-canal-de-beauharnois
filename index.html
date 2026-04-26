@@ -3099,8 +3099,8 @@ function openSwipeDon() {
   const drawer = document.getElementById('swipeDonDrawer');
   if (overlay) overlay.style.display = 'block';
   if (drawer) {
-    drawer.style.pointerEvents = 'auto';
     drawer.style.display = 'block';
+    drawer.style.pointerEvents = 'auto';
     requestAnimationFrame(() => requestAnimationFrame(() => { drawer.style.bottom = '0'; }));
   }
 }
@@ -3112,7 +3112,7 @@ function closeSwipeDon() {
   setTimeout(() => {
     if (overlay) overlay.style.display = 'none';
     if (drawer) drawer.style.display = 'none';
-    _swipeDonShown = false; // allow reopening
+    _swipeDonShown = false;
   }, 350);
 }
 
