@@ -114,7 +114,7 @@
     html,body{height:100%;}
     body{font-family:var(--sans);background:var(--bg);min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 16px;transition:background .3s;overflow-y:auto;overflow-x:hidden;}
     .waves-bg{position:fixed;bottom:0;left:0;width:100%;height:130px;z-index:0;pointer-events:none;overflow:hidden;}
-    .waves-svg{position:absolute;bottom:0;left:0;width:200%;height:100%;}
+    .waves-svg{position:absolute;bottom:0;left:0;width:200%;height:100%;pointer-events:none;}
     .wave1{fill:var(--wave-color);opacity:var(--wave-opacity);}
     .wave2{fill:var(--wave-color);opacity:calc(var(--wave-opacity)*.55);}
     .wave3{fill:var(--wave-color);opacity:calc(var(--wave-opacity)*.3);}
@@ -379,7 +379,7 @@
   </svg>
 
   <!-- Ship sailing right to left -->
-  <div class="ship-container" onclick="if(!_swipeDonShown){_swipeDonShown=true;openSwipeDon();}" style="cursor:pointer;">
+  <div class="ship-container" onclick="if(!_swipeDonShown){_swipeDonShown=true;openSwipeDon();}" style="cursor:pointer;pointer-events:auto;z-index:10;position:relative;">
     <div class="ship-bob">
       <div class="ship-wake"></div>
       <svg width="72" height="40" viewBox="0 0 72 40" xmlns="http://www.w3.org/2000/svg">
