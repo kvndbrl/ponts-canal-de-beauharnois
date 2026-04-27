@@ -7,30 +7,30 @@
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="Welland Canal Bridges"/>
+  <meta name="apple-mobile-web-app-title" content="Ponts Beauharnois"/>
 
   <!-- SEO -->
   <meta name="description" content="Statut en temps réel des ponts du canal de Beauharnois — Pont St-Louis et Pont Larocque (Valleyfield). Notifications push gratuites pour les levées de ponts."/>
   <meta name="keywords" content="pont Beauharnois, pont St-Louis-de-Gonzague, pont Larocque, Valleyfield, canal Beauharnois, levée de pont, statut pont, notifications pont"/>
   <meta name="author" content="Kevin Dubreuil"/>
   <meta name="robots" content="index, follow"/>
-  <link rel="canonical" href="https://welland-canal-bridges.vercel.app/"/>
+  <link rel="canonical" href="https://ponts-canal-de-beauharnois.vercel.app/"/>
   <meta name="google-site-verification" content="9H0jHYZHZc8ArAbUkyvF7mZGJ0xS1RJ5ur2ntnHQGEM"/>
 
   <!-- Open Graph -->
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://welland-canal-bridges.vercel.app/"/>
+  <meta property="og:url" content="https://ponts-canal-de-beauharnois.vercel.app/"/>
   <meta property="og:title" content="Ponts du canal de Beauharnois — Statut en temps réel"/>
   <meta property="og:description" content="Statut en temps réel des ponts du canal de Beauharnois. Notifications push gratuites pour les levées de ponts St-Louis-de-Gonzague et Larocque."/>
-  <meta property="og:image" content="https://welland-canal-bridges.vercel.app/icon-512.png"/>
+  <meta property="og:image" content="https://ponts-canal-de-beauharnois.vercel.app/icon-512.png"/>
   <meta property="og:locale" content="fr_CA"/>
-  <meta property="og:site_name" content="Welland Canal Bridges"/>
+  <meta property="og:site_name" content="Ponts Beauharnois"/>
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary"/>
   <meta name="twitter:title" content="Ponts du canal de Beauharnois — Statut en temps réel"/>
   <meta name="twitter:description" content="Statut en temps réel des ponts du canal de Beauharnois. Notifications push gratuites."/>
-  <meta name="twitter:image" content="https://welland-canal-bridges.vercel.app/icon-512.png"/>
+  <meta name="twitter:image" content="https://ponts-canal-de-beauharnois.vercel.app/icon-512.png"/>
   <link rel="manifest" href="manifest.json"/>
   <link rel="icon" href="icon-192.png" type="image/png"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -556,427 +556,107 @@
 
 <main>
 
-  <section class="bridge-card" id="cardLakeshore" aria-label="Lakeshore Rd">
+  <section class="bridge-card" id="cardGonzague" aria-label="Pont St-Louis">
     <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>LAKESHORE RD (BRIDGE 1)</span>
-      <span class="closure-badge" id="closureBadgeLakeshore" style="display:none;" onclick="toggleTooltip('Lakeshore',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipLakeshore">
-          <div class="closure-tooltip-title" id="closureTooltipTitleLakeshore">Planned closures</div>
-          <div id="closureTooltipBodyLakeshore"></div>
+      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"> <path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/> <path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/> <path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/> <path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/> <path d="M251.566,391.837h-36.107c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.107 c5.771,0,10.449-4.678,10.449-10.449S257.337,391.837,251.566,391.837z"/> <path d="M161.522,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S167.293,391.837,161.522,391.837z"/> <path d="M127.581,391.837H55.367c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S133.352,391.837,127.581,391.837z"/> <path d="M456.36,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S462.131,391.837,456.36,391.837z"/> <path d="M422.42,391.837h-72.214c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S428.191,391.837,422.42,391.837z"/> <path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h3.99v19.851c0,5.771,4.678,10.449,10.449,10.449 s10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h3.99 v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449 v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203h0.001C512.001,243.463,507.323,238.785,501.552,238.785z M438.692,242.027 c5.049,3.093,10.339,5.826,15.84,8.16v28.802h-15.84V242.027z M401.79,206.86c4.679,6.867,10.048,13.225,16.004,18.979v53.15 H401.79V206.86z M376.663,120.164h4.231v158.824h-4.231V120.164z M339.925,225.626c5.89-5.709,11.203-12.01,15.84-18.81v72.172 h-15.84V225.626z M303.188,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115h-15.84V250.07z M266.45,259.226 c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M229.712,256.79c5.164,1.153,10.451,1.971,15.84,2.435v19.763 h-15.84V256.79z M192.976,241.874c5.048,3.104,10.338,5.85,15.84,8.196v28.919h-15.84V241.874z M156.239,206.817 c4.635,6.799,9.948,13.1,15.839,18.809v53.362h-15.839V206.817z M131.111,120.164h4.231v158.824h-4.231V120.164z M94.373,225.626 c5.89-5.709,11.203-12.01,15.84-18.809v72.171h-15.84V225.626z M57.637,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115 h-15.84V250.07z M20.899,259.226c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M490.938,314.515h-0.001H20.899 v-14.629h99.763h25.011h0.118h220.423h25.011h0.118h99.596V314.515z M491.103,278.988H475.43v-22.133 c5.112,1.128,10.343,1.931,15.673,2.384V278.988z"/> </svg></span>
+      <span>Pont St-Louis</span>
+      <span class="closure-badge" id="closureBadgeGonzague" style="display:none;" onclick="toggleTooltip('Gonzague',event)" aria-label="Fermetures planifiées">
+        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M32 10 L56 52 H8 Z"/> <line x1="32" y1="26" x2="32" y2="40"/> <circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/> </svg></span></span>
+        <div class="closure-tooltip" id="closureTooltipGonzague">
+          <div class="closure-tooltip-title" id="closureTooltipTitleGonzague">Fermetures planifiées</div>
+          <div id="closureTooltipBodyGonzague"></div>
         </div>
       </span>
     </div>
     <div class="status-block">
-      <div class="status-pill disponible" id="pillLakeshore" role="status" aria-live="polite">
+      <div class="status-pill disponible" id="pillGonzague" role="status" aria-live="polite">
         <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelLakeshore">Loading...</span>
+        <span id="labelGonzague">Chargement...</span>
       </div>
     </div>
-    <div class="duration-block" id="durationLakeshore" aria-hidden="true">
+    <div class="duration-block" id="durationGonzague" aria-hidden="true">
       <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerLakeshore">—</span>
+      <span class="timer-text" id="timerGonzague">—</span>
     </div>
-    <div><span id="vesselNameLakeshore" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineLakeshore">
+      <span id="vesselNameGonzague" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span>
+    </div>
+    <div class="bridge-timeline" id="timelineGonzague">
       <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Lakeshore"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Lakeshore">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Lakeshore"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Lakeshore"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Lakeshore">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Lakeshore"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Lakeshore"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Lakeshore">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Lakeshore"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Lakeshore"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Lakeshore">Lowering</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot0Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Gonzague">Bientôt levé</span></div>
+        <div class="timeline-connector" id="tConn0Gonzague"></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot1Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Gonzague">Levage</span></div>
+        <div class="timeline-connector" id="tConn1Gonzague"></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot2Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="timeline-label" id="tLbl2Gonzague">Levé</span></div>
+        <div class="timeline-connector" id="tConn2Gonzague"></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot3Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl3Gonzague">Descente</span></div>
       </div>
-      <div class="timeline-reopen" id="timelineReopenLakeshore"></div>
+      <div class="timeline-reopen" id="timelineReopenGonzague"></div>
     </div>
+
+
+
     <div class="lifts-block">
       <div>
-        <div class="lifts-label" id="liftsTitleLakeshore">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsLakeshore" aria-live="polite">—</div>
+        <div class="lifts-label" id="liftsTitleGonzague">Levages — 60 min</div>
+        <div class="lifts-value" id="liftsGonzague" aria-live="polite">—</div>
       </div>
-      <div class="refresh-time" id="refreshLakeshore">—</div>
+      <div class="refresh-time" id="refreshGonzague">—</div>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftLakeshore" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('lakeshore')" id="heatmapBtnLakeshore" style="display:none;">📊 History</button>
+      <div id="lastLiftGonzague" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
+      <button class="heatmap-btn" onclick="showHeatmap('gonzague')" id="heatmapBtnGonzague" style="display:none;">📊 Historique</button>
     </div>
   </section>
-  <section class="bridge-card" id="cardCarlton" aria-label="Carlton St.">
+
+  <section class="bridge-card" id="cardLarocque" aria-label="Pont Larocque">
     <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>CARLTON ST. (BRIDGE 3A)</span>
-      <span class="closure-badge" id="closureBadgeCarlton" style="display:none;" onclick="toggleTooltip('Carlton',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipCarlton">
-          <div class="closure-tooltip-title" id="closureTooltipTitleCarlton">Planned closures</div>
-          <div id="closureTooltipBodyCarlton"></div>
+      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"> <path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/> <path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/> <path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/> <path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/> <path d="M251.566,391.837h-36.107c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.107 c5.771,0,10.449-4.678,10.449-10.449S257.337,391.837,251.566,391.837z"/> <path d="M161.522,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S167.293,391.837,161.522,391.837z"/> <path d="M127.581,391.837H55.367c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S133.352,391.837,127.581,391.837z"/> <path d="M456.36,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S462.131,391.837,456.36,391.837z"/> <path d="M422.42,391.837h-72.214c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S428.191,391.837,422.42,391.837z"/> <path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h3.99v19.851c0,5.771,4.678,10.449,10.449,10.449 s10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h3.99 v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449 v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203h0.001C512.001,243.463,507.323,238.785,501.552,238.785z M438.692,242.027 c5.049,3.093,10.339,5.826,15.84,8.16v28.802h-15.84V242.027z M401.79,206.86c4.679,6.867,10.048,13.225,16.004,18.979v53.15 H401.79V206.86z M376.663,120.164h4.231v158.824h-4.231V120.164z M339.925,225.626c5.89-5.709,11.203-12.01,15.84-18.81v72.172 h-15.84V225.626z M303.188,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115h-15.84V250.07z M266.45,259.226 c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M229.712,256.79c5.164,1.153,10.451,1.971,15.84,2.435v19.763 h-15.84V256.79z M192.976,241.874c5.048,3.104,10.338,5.85,15.84,8.196v28.919h-15.84V241.874z M156.239,206.817 c4.635,6.799,9.948,13.1,15.839,18.809v53.362h-15.839V206.817z M131.111,120.164h4.231v158.824h-4.231V120.164z M94.373,225.626 c5.89-5.709,11.203-12.01,15.84-18.809v72.171h-15.84V225.626z M57.637,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115 h-15.84V250.07z M20.899,259.226c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M490.938,314.515h-0.001H20.899 v-14.629h99.763h25.011h0.118h220.423h25.011h0.118h99.596V314.515z M491.103,278.988H475.43v-22.133 c5.112,1.128,10.343,1.931,15.673,2.384V278.988z"/> </svg></span>
+      <span>Pont Larocque — Valleyfield</span>
+      <span class="closure-badge" id="closureBadgeLarocque" style="display:none;" onclick="toggleTooltip('Larocque',event)" aria-label="Fermetures planifiées">
+        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M32 10 L56 52 H8 Z"/> <line x1="32" y1="26" x2="32" y2="40"/> <circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/> </svg></span></span>
+        <div class="closure-tooltip" id="closureTooltipLarocque">
+          <div class="closure-tooltip-title" id="closureTooltipTitleLarocque">Fermetures planifiées</div>
+          <div id="closureTooltipBodyLarocque"></div>
         </div>
       </span>
     </div>
     <div class="status-block">
-      <div class="status-pill disponible" id="pillCarlton" role="status" aria-live="polite">
+      <div class="status-pill disponible" id="pillLarocque" role="status" aria-live="polite">
         <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelCarlton">Loading...</span>
+        <span id="labelLarocque">Chargement...</span>
       </div>
     </div>
-    <div class="duration-block" id="durationCarlton" aria-hidden="true">
+    <div class="duration-block" id="durationLarocque" aria-hidden="true">
       <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerCarlton">—</span>
+      <span class="timer-text" id="timerLarocque">—</span>
     </div>
-    <div><span id="vesselNameCarlton" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineCarlton">
+      <span id="vesselNameLarocque" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span>
+    </div>
+    <div class="bridge-timeline" id="timelineLarocque">
       <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Carlton"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Carlton">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Carlton"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Carlton"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Carlton">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Carlton"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Carlton"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Carlton">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Carlton"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Carlton"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Carlton">Lowering</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot0Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Larocque">Bientôt levé</span></div>
+        <div class="timeline-connector" id="tConn0Larocque"></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot1Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Larocque">Levage</span></div>
+        <div class="timeline-connector" id="tConn1Larocque"></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot2Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="timeline-label" id="tLbl2Larocque">Levé</span></div>
+        <div class="timeline-connector" id="tConn2Larocque"></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot3Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl3Larocque">Descente</span></div>
       </div>
-      <div class="timeline-reopen" id="timelineReopenCarlton"></div>
+      <div class="timeline-reopen" id="timelineReopenLarocque"></div>
     </div>
+
+
+
     <div class="lifts-block">
       <div>
-        <div class="lifts-label" id="liftsTitleCarlton">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsCarlton" aria-live="polite">—</div>
+        <div class="lifts-label" id="liftsTitleLarocque">Levages — 60 min</div>
+        <div class="lifts-value" id="liftsLarocque" aria-live="polite">—</div>
       </div>
-      <div class="refresh-time" id="refreshCarlton">—</div>
+      <div class="refresh-time" id="refreshLarocque">—</div>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftCarlton" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('carlton')" id="heatmapBtnCarlton" style="display:none;">📊 History</button>
-    </div>
-  </section>
-  <section class="bridge-card" id="cardQueenston" aria-label="Queenston St.">
-    <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>QUEENSTON ST. (BRIDGE 4)</span>
-      <span class="closure-badge" id="closureBadgeQueenston" style="display:none;" onclick="toggleTooltip('Queenston',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipQueenston">
-          <div class="closure-tooltip-title" id="closureTooltipTitleQueenston">Planned closures</div>
-          <div id="closureTooltipBodyQueenston"></div>
-        </div>
-      </span>
-    </div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillQueenston" role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelQueenston">Loading...</span>
-      </div>
-    </div>
-    <div class="duration-block" id="durationQueenston" aria-hidden="true">
-      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerQueenston">—</span>
-    </div>
-    <div><span id="vesselNameQueenston" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineQueenston">
-      <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Queenston"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Queenston">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Queenston"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Queenston"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Queenston">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Queenston"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Queenston"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Queenston">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Queenston"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Queenston"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Queenston">Lowering</span></div>
-      </div>
-      <div class="timeline-reopen" id="timelineReopenQueenston"></div>
-    </div>
-    <div class="lifts-block">
-      <div>
-        <div class="lifts-label" id="liftsTitleQueenston">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsQueenston" aria-live="polite">—</div>
-      </div>
-      <div class="refresh-time" id="refreshQueenston">—</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftQueenston" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('queenston')" id="heatmapBtnQueenston" style="display:none;">📊 History</button>
-    </div>
-  </section>
-  <section class="bridge-card" id="cardGlendale" aria-label="Glendale Ave.">
-    <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>GLENDALE AVE. (BRIDGE 5)</span>
-      <span class="closure-badge" id="closureBadgeGlendale" style="display:none;" onclick="toggleTooltip('Glendale',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipGlendale">
-          <div class="closure-tooltip-title" id="closureTooltipTitleGlendale">Planned closures</div>
-          <div id="closureTooltipBodyGlendale"></div>
-        </div>
-      </span>
-    </div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillGlendale" role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelGlendale">Loading...</span>
-      </div>
-    </div>
-    <div class="duration-block" id="durationGlendale" aria-hidden="true">
-      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerGlendale">—</span>
-    </div>
-    <div><span id="vesselNameGlendale" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineGlendale">
-      <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Glendale"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Glendale">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Glendale"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Glendale"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Glendale">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Glendale"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Glendale"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Glendale">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Glendale"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Glendale"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Glendale">Lowering</span></div>
-      </div>
-      <div class="timeline-reopen" id="timelineReopenGlendale"></div>
-    </div>
-    <div class="lifts-block">
-      <div>
-        <div class="lifts-label" id="liftsTitleGlendale">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsGlendale" aria-live="polite">—</div>
-      </div>
-      <div class="refresh-time" id="refreshGlendale">—</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftGlendale" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('glendale')" id="heatmapBtnGlendale" style="display:none;">📊 History</button>
-    </div>
-  </section>
-  <section class="bridge-card" id="cardAllanburg" aria-label="Highway 20">
-    <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>HIGHWAY 20 (BRIDGE 11)</span>
-      <span class="closure-badge" id="closureBadgeAllanburg" style="display:none;" onclick="toggleTooltip('Allanburg',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipAllanburg">
-          <div class="closure-tooltip-title" id="closureTooltipTitleAllanburg">Planned closures</div>
-          <div id="closureTooltipBodyAllanburg"></div>
-        </div>
-      </span>
-    </div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillAllanburg" role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelAllanburg">Loading...</span>
-      </div>
-    </div>
-    <div class="duration-block" id="durationAllanburg" aria-hidden="true">
-      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerAllanburg">—</span>
-    </div>
-    <div><span id="vesselNameAllanburg" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineAllanburg">
-      <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Allanburg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Allanburg">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Allanburg"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Allanburg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Allanburg">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Allanburg"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Allanburg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Allanburg">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Allanburg"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Allanburg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Allanburg">Lowering</span></div>
-      </div>
-      <div class="timeline-reopen" id="timelineReopenAllanburg"></div>
-    </div>
-    <div class="lifts-block">
-      <div>
-        <div class="lifts-label" id="liftsTitleAllanburg">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsAllanburg" aria-live="polite">—</div>
-      </div>
-      <div class="refresh-time" id="refreshAllanburg">—</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftAllanburg" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('allanburg')" id="heatmapBtnAllanburg" style="display:none;">📊 History</button>
-    </div>
-  </section>
-  <section class="bridge-card" id="cardMainwelland" aria-label="Main St. (Welland)">
-    <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>MAIN ST. — WELLAND</span>
-      <span class="closure-badge" id="closureBadgeMainwelland" style="display:none;" onclick="toggleTooltip('Mainwelland',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipMainwelland">
-          <div class="closure-tooltip-title" id="closureTooltipTitleMainwelland">Planned closures</div>
-          <div id="closureTooltipBodyMainwelland"></div>
-        </div>
-      </span>
-    </div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillMainwelland" role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelMainwelland">Loading...</span>
-      </div>
-    </div>
-    <div class="duration-block" id="durationMainwelland" aria-hidden="true">
-      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerMainwelland">—</span>
-    </div>
-    <div><span id="vesselNameMainwelland" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineMainwelland">
-      <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Mainwelland"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Mainwelland">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Mainwelland"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Mainwelland"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Mainwelland">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Mainwelland"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Mainwelland"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Mainwelland">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Mainwelland"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Mainwelland"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Mainwelland">Lowering</span></div>
-      </div>
-      <div class="timeline-reopen" id="timelineReopenMainwelland"></div>
-    </div>
-    <div class="lifts-block">
-      <div>
-        <div class="lifts-label" id="liftsTitleMainwelland">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsMainwelland" aria-live="polite">—</div>
-      </div>
-      <div class="refresh-time" id="refreshMainwelland">—</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftMainwelland" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('mainwelland')" id="heatmapBtnMainwelland" style="display:none;">📊 History</button>
-    </div>
-  </section>
-  <section class="bridge-card" id="cardClarence" aria-label="Clarence St.">
-    <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>CLARENCE ST.</span>
-      <span class="closure-badge" id="closureBadgeClarence" style="display:none;" onclick="toggleTooltip('Clarence',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipClarence">
-          <div class="closure-tooltip-title" id="closureTooltipTitleClarence">Planned closures</div>
-          <div id="closureTooltipBodyClarence"></div>
-        </div>
-      </span>
-    </div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillClarence" role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelClarence">Loading...</span>
-      </div>
-    </div>
-    <div class="duration-block" id="durationClarence" aria-hidden="true">
-      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerClarence">—</span>
-    </div>
-    <div><span id="vesselNameClarence" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineClarence">
-      <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Clarence"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Clarence">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Clarence"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Clarence"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Clarence">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Clarence"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Clarence"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Clarence">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Clarence"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Clarence"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Clarence">Lowering</span></div>
-      </div>
-      <div class="timeline-reopen" id="timelineReopenClarence"></div>
-    </div>
-    <div class="lifts-block">
-      <div>
-        <div class="lifts-label" id="liftsTitleClarence">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsClarence" aria-live="polite">—</div>
-      </div>
-      <div class="refresh-time" id="refreshClarence">—</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftClarence" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('clarence')" id="heatmapBtnClarence" style="display:none;">📊 History</button>
-    </div>
-  </section>
-  <section class="bridge-card" id="cardJackknife1" aria-label="Lock 8 North">
-    <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>LOCK 8 NORTH BRIDGE</span>
-      <span class="closure-badge" id="closureBadgeJackknife1" style="display:none;" onclick="toggleTooltip('Jackknife1',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipJackknife1">
-          <div class="closure-tooltip-title" id="closureTooltipTitleJackknife1">Planned closures</div>
-          <div id="closureTooltipBodyJackknife1"></div>
-        </div>
-      </span>
-    </div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillJackknife1" role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelJackknife1">Loading...</span>
-      </div>
-    </div>
-    <div class="duration-block" id="durationJackknife1" aria-hidden="true">
-      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerJackknife1">—</span>
-    </div>
-    <div><span id="vesselNameJackknife1" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineJackknife1">
-      <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Jackknife1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Jackknife1">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Jackknife1"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Jackknife1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Jackknife1">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Jackknife1"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Jackknife1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Jackknife1">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Jackknife1"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Jackknife1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Jackknife1">Lowering</span></div>
-      </div>
-      <div class="timeline-reopen" id="timelineReopenJackknife1"></div>
-    </div>
-    <div class="lifts-block">
-      <div>
-        <div class="lifts-label" id="liftsTitleJackknife1">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsJackknife1" aria-live="polite">—</div>
-      </div>
-      <div class="refresh-time" id="refreshJackknife1">—</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftJackknife1" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('jackknife1')" id="heatmapBtnJackknife1" style="display:none;">📊 History</button>
-    </div>
-  </section>
-  <section class="bridge-card" id="cardJackknife2" aria-label="Lock 8 South">
-    <div class="bridge-name" aria-hidden="true">
-      <span style="display:inline-flex;align-items:center;width:24px;height:24px;flex-shrink:0;color:var(--text3);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/><path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/><path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/><path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/><path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203C512.001,243.463,507.323,238.785,501.552,238.785z"/></svg></span>
-      <span>Lock 8 SOUTH BRIDGE</span>
-      <span class="closure-badge" id="closureBadgeJackknife2" style="display:none;" onclick="toggleTooltip('Jackknife2',event)">
-        <span class="closure-badge-icon"><span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L56 52 H8 Z"/><line x1="32" y1="26" x2="32" y2="40"/><circle cx="32" cy="47" r="2" fill="currentColor" stroke="none"/></svg></span></span>
-        <div class="closure-tooltip" id="closureTooltipJackknife2">
-          <div class="closure-tooltip-title" id="closureTooltipTitleJackknife2">Planned closures</div>
-          <div id="closureTooltipBodyJackknife2"></div>
-        </div>
-      </span>
-    </div>
-    <div class="status-block">
-      <div class="status-pill disponible" id="pillJackknife2" role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="labelJackknife2">Loading...</span>
-      </div>
-    </div>
-    <div class="duration-block" id="durationJackknife2" aria-hidden="true">
-      <span class="timer-icon" aria-hidden="true">&#x23F1;&#xFE0F;</span>
-      <span class="timer-text" id="timerJackknife2">—</span>
-    </div>
-    <div><span id="vesselNameJackknife2" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></span></div>
-    <div class="bridge-timeline" id="timelineJackknife2">
-      <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Jackknife2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Jackknife2">Soon lifted</span></div>
-        <div class="timeline-connector" id="tConn0Jackknife2"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Jackknife2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Jackknife2">Raising</span></div>
-        <div class="timeline-connector" id="tConn1Jackknife2"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Jackknife2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g></svg></div><span class="timeline-label" id="tLbl2Jackknife2">Lifted</span></div>
-        <div class="timeline-connector" id="tConn2Jackknife2"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Jackknife2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="timeline-label" id="tLbl3Jackknife2">Lowering</span></div>
-      </div>
-      <div class="timeline-reopen" id="timelineReopenJackknife2"></div>
-    </div>
-    <div class="lifts-block">
-      <div>
-        <div class="lifts-label" id="liftsTitleJackknife2">Scheduled lifts — 60 min</div>
-        <div class="lifts-value" id="liftsJackknife2" aria-live="polite">—</div>
-      </div>
-      <div class="refresh-time" id="refreshJackknife2">—</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 10px;">
-      <div id="lastLiftJackknife2" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
-      <button class="heatmap-btn" onclick="showHeatmap('jackknife2')" id="heatmapBtnJackknife2" style="display:none;">📊 History</button>
+      <div id="lastLiftLarocque" style="font-size:11px;color:var(--text3);font-family:var(--mono);"></div>
+      <button class="heatmap-btn" onclick="showHeatmap('larocque')" id="heatmapBtnLarocque" style="display:none;">📊 Historique</button>
     </div>
   </section>
 
@@ -1221,10 +901,24 @@
     </div>
   </div>
 
-  
+  <div class="drawer-lang">
+    <span style="font-size:13px;color:var(--text3);font-family:var(--sans);" id="langLabel">Langue</span>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+  </div>
+  <div style="padding:4px 16px 12px;text-align:center;">
+    <a id="contactLink" href="https://tally.so/r/A7b2kz" target="_blank" rel="noopener noreferrer"
+      onclick="track('feedback_clicked',{source:'drawer'})"
+      style="font-size:12px;color:var(--text3);font-family:var(--mono);text-decoration:underline;text-underline-offset:3px;cursor:pointer;">
+      <span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:inherit;margin-right:4px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"> <path d="M8 12 H56 V42 H20 L8 54 V42 H8 V12 Z"/> <line x1="20" y1="24" x2="44" y2="24"/> <line x1="20" y1="32" x2="36" y2="32"/> </svg></span> <span id="contactLinkLabel">Commentaires ou suggestions</span>
+    </a>
+  </div>
+  <div class="drawer-disclaimer">
+    <p id="disclaimer">Cette application est indépendante et n'est pas affiliée à la Corporation de Gestion de la Voie Maritime du Saint-Laurent ni au Great Lakes St. Lawrence Seaway System. Les données proviennent du site officiel <a href="https://www.seaway-greatlakes.com" target="_blank" rel="noopener noreferrer">seaway-greatlakes.com</a>.</p>
+  </div>
+</div>
 
 <script>
-const BACKEND='https://welland-canal-bridges.onrender.com';
+const BACKEND='https://pont-st-louis-de-gonzague.onrender.com';
 
 // Disable Umami tracking if ?notrack param present (persists via localStorage)
 if(new URLSearchParams(location.search).has('notrack')) localStorage.setItem('umami.disabled','1');
@@ -1245,7 +939,7 @@ function updateTimeline(bridge, status, data) {
   tl.classList.add('visible');
 
   const currentStep = STATUS_STEP[status] ?? 0;
-  const isFr = false;
+  const isFr = currentLang === 'fr';
 
   // Update dots and connectors (0-3)
   for (let i = 0; i <= 3; i++) {
@@ -1325,7 +1019,7 @@ function showChangelog() {
   const titleEl = document.getElementById('changelogTitle');
   const ctaEl = document.getElementById('changelogCta');
   if (!overlay || !itemsEl) return;
-  const lang = 'en';
+  const lang = currentLang || 'fr';
   if (titleEl) titleEl.textContent = lang === 'fr' ? 'Nouveautés' : "What's New";
   if (ctaEl) ctaEl.textContent = lang === 'fr' ? 'C\'est compris !' : 'Got it!';
   itemsEl.innerHTML = CHANGELOG[lang].map(item => `
@@ -1449,7 +1143,7 @@ function toggleWeather(){
 function showGeoInstructions(){
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
   const isPWA=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
-  const isFr=false;
+  const isFr=currentLang==='fr';
   const overlay=document.getElementById('geoModalOverlay');
   const title=document.getElementById('geoModalTitle');
   const body=document.getElementById('geoModalBody');
@@ -1457,8 +1151,8 @@ function showGeoInstructions(){
   title.textContent=isFr?'Activer la m\u00e9t\u00e9o':'Enable weather';
   if(isIOS){
     body.innerHTML=isFr
-      ?(isPWA?'R\u00e9glages \u2192 <strong>Welland Canal Bridges</strong> \u2192 <strong>Localisation</strong> \u2192 Lors de l\u2019utilisation':'R\u00e9glages \u2192 <strong>Safari</strong> \u2192 <strong>Localisation</strong> \u2192 Autoriser')
-      :(isPWA?'Settings \u2192 <strong>Welland Canal Bridges</strong> \u2192 <strong>Location</strong> \u2192 While using':'Settings \u2192 <strong>Safari</strong> \u2192 <strong>Location</strong> \u2192 Allow');
+      ?(isPWA?'R\u00e9glages \u2192 <strong>Ponts Beauharnois</strong> \u2192 <strong>Localisation</strong> \u2192 Lors de l\u2019utilisation':'R\u00e9glages \u2192 <strong>Safari</strong> \u2192 <strong>Localisation</strong> \u2192 Autoriser')
+      :(isPWA?'Settings \u2192 <strong>Ponts Beauharnois</strong> \u2192 <strong>Location</strong> \u2192 While using':'Settings \u2192 <strong>Safari</strong> \u2192 <strong>Location</strong> \u2192 Allow');
   } else {
     body.innerHTML=isFr
       ?(isPWA?'R\u00e9glages \u2192 <strong>Applis</strong> \u2192 <strong>Chrome</strong> \u2192 <strong>Autorisations</strong> \u2192 <strong>Localisation</strong> \u2192 Autoriser':'Appuyez sur l\u2019ic\u00f4ne \u00e0 gauche de l\u2019adresse du site \u2192 autorisez la <strong>Localisation</strong>')
@@ -1493,9 +1187,9 @@ function getUserName(){ return localStorage.getItem('userName')||''; }
 function updateGreeting(){
   const name=getUserName();
   const h=new Date().getHours();
-  const t=TR['en'];
+  const t=TR[currentLang];
   let greeting;
-  if(false){
+  if(currentLang==='fr'){
     if(h>=5&&h<12) greeting='Bonjour';
     else if(h>=12&&h<18) greeting='Bon après-midi';
     else greeting='Bonsoir';
@@ -1537,7 +1231,7 @@ function obNext2() {
   const g = document.getElementById('ob-bridge-gonzague').checked;
   const l = document.getElementById('ob-bridge-larocque').checked;
   const bridges = [g && 'gonzague', l && 'larocque'].filter(Boolean);
-  if (!bridges.length) { alert(false ? 'Sélectionnez au moins un pont.' : 'Select at least one bridge.'); return; }
+  if (!bridges.length) { alert(currentLang==='fr' ? 'Sélectionnez au moins un pont.' : 'Select at least one bridge.'); return; }
   localStorage.setItem('bridgePrefs', JSON.stringify(bridges));
   const cg = document.getElementById('prefGonzague');
   const cl = document.getElementById('prefLarocque');
@@ -1563,7 +1257,7 @@ function obFinish() {
 
 async function obActivateNotifs() {
   const btn = document.getElementById('obActivateBtn');
-  if(btn) { btn.disabled = true; btn.textContent = false ? 'Activation...' : 'Activating...'; }
+  if(btn) { btn.disabled = true; btn.textContent = currentLang==='fr' ? 'Activation...' : 'Activating...'; }
   try {
     await toggleNotifications();
   } catch(e) {}
@@ -1580,8 +1274,8 @@ function obShowConfirmation() {
   const notifEnabled = localStorage.getItem('notificationsEnabled') === 'true';
   const sub = document.getElementById('obDoneSub');
   if(sub) sub.textContent = notifEnabled
-    ? (false ? 'Vous recevrez des notifications lors des levées de ponts.' : 'You will receive notifications for bridge lifts.')
-    : (false ? 'Vous pouvez activer les notifications à tout moment dans les réglages.' : 'You can enable notifications anytime in settings.');
+    ? (currentLang==='fr' ? 'Vous recevrez des notifications lors des levées de ponts.' : 'You will receive notifications for bridge lifts.')
+    : (currentLang==='fr' ? 'Vous pouvez activer les notifications à tout moment dans les réglages.' : 'You can enable notifications anytime in settings.');
   // Always show install CTA if not already installed
   if(!isInstalled) {
     const ic = document.getElementById('obInstallCta');
@@ -1628,7 +1322,7 @@ function updatePrenom(){
 
 function showNameModalIfNeeded(){
   if(localStorage.getItem('nameAsked')) return;
-  const t=TR['en'];
+  const t=TR[currentLang];
   // Step 1 labels
   document.getElementById('modalTitle').textContent=t.modalTitle||'Comment vous appelez-vous\u00A0?';
   document.getElementById('modalSub').textContent=t.modalSub||'Votre prénom sera affiché dans la salutation.';
@@ -1636,36 +1330,36 @@ function showNameModalIfNeeded(){
   document.getElementById('modalSkip').textContent=t.modalSkip||'Passer';
   document.getElementById('nameModalInput').placeholder=t.modalPlaceholder||'Prénom';
   // Step 2 labels
-  if(document.getElementById('obBridgeTitle')) document.getElementById('obBridgeTitle').textContent=false?'Quels ponts suivre ?':'Which bridges to follow?';
-  if(document.getElementById('obBridgeSub')) document.getElementById('obBridgeSub').textContent=false?'Choisissez les ponts pour lesquels vous souhaitez recevoir des notifications.':'Choose which bridges to receive notifications for.';
+  if(document.getElementById('obBridgeTitle')) document.getElementById('obBridgeTitle').textContent=currentLang==='fr'?'Quels ponts suivre ?':'Which bridges to follow?';
+  if(document.getElementById('obBridgeSub')) document.getElementById('obBridgeSub').textContent=currentLang==='fr'?'Choisissez les ponts pour lesquels vous souhaitez recevoir des notifications.':'Choose which bridges to receive notifications for.';
   if(document.getElementById('obGonzagueLabel')) document.getElementById('obGonzagueLabel').textContent='Pont St-Louis';
-  if(document.getElementById('obLarocqueLabel')) document.getElementById('obLarocqueLabel').textContent=false?'Pont Larocque':'Larocque Bridge';
+  if(document.getElementById('obLarocqueLabel')) document.getElementById('obLarocqueLabel').textContent=currentLang==='fr'?'Pont Larocque':'Larocque Bridge';
   if(document.getElementById('obBridgeBtn')) document.getElementById('obBridgeBtn').textContent=t.modalBtn||'Continuer';
   // Step 3 labels
-  if(document.getElementById('obNotifTitle')) document.getElementById('obNotifTitle').textContent=false?'Quelles notifications ?':'Which notifications?';
-  if(document.getElementById('obNotifSub')) document.getElementById('obNotifSub').textContent=false?'Choisissez les événements pour lesquels vous voulez être alerté.':'Choose which events you want to be alerted for.';
-  if(document.getElementById('obNtBientotLabel')) document.getElementById('obNtBientotLabel').textContent=false?'Bientôt levé':'Soon lifted';
-  if(document.getElementById('obNtBientotDesc')) document.getElementById('obNtBientotDesc').textContent=false?'Avisé quelques minutes avant que le pont commence à se lever.':'Notified a few minutes before the bridge starts to rise.';
-  if(document.getElementById('obNtLeveLabel')) document.getElementById('obNtLeveLabel').textContent=false?'Pont levé':'Bridge lifted';
-  if(document.getElementById('obNtLeveDesc')) document.getElementById('obNtLeveDesc').textContent=false?'Notifié dès que le pont est levé, avec l\'heure de réouverture estimée.':'Notified as soon as the bridge is lifted, with estimated reopen time.';
-  if(document.getElementById('obNtDispoLabel')) document.getElementById('obNtDispoLabel').textContent=false?'Pont disponible':'Bridge available';
-  if(document.getElementById('obNtDispoDesc')) document.getElementById('obNtDispoDesc').textContent=false?'Avisé dès que la circulation reprend après une levée.':'Notified as soon as traffic resumes after a lift.';
-  if(document.getElementById('obNtOutageLabel')) document.getElementById('obNtOutageLabel').textContent=false?'Fermeture planifiée':'Planned closure';
-  if(document.getElementById('obNtOutageDesc')) document.getElementById('obNtOutageDesc').textContent=false?'Prévenu à l\'avance des fermetures planifiées connues.':'Advance notice of known planned closures.';
-  if(document.getElementById('obNtAchalandageLabel')) document.getElementById('obNtAchalandageLabel').textContent=false?'Période achalandée':'Busy period';
-  if(document.getElementById('obNtAchalandageDesc')) document.getElementById('obNtAchalandageDesc').textContent=false?'Alerte 30 min avant une période historiquement chargée en levées.':'Alert 30 min before a historically busy period.';
-  if(document.getElementById('obNotifBtn')) document.getElementById('obNotifBtn').textContent=false?'Terminer':'Done';
+  if(document.getElementById('obNotifTitle')) document.getElementById('obNotifTitle').textContent=currentLang==='fr'?'Quelles notifications ?':'Which notifications?';
+  if(document.getElementById('obNotifSub')) document.getElementById('obNotifSub').textContent=currentLang==='fr'?'Choisissez les événements pour lesquels vous voulez être alerté.':'Choose which events you want to be alerted for.';
+  if(document.getElementById('obNtBientotLabel')) document.getElementById('obNtBientotLabel').textContent=currentLang==='fr'?'Bientôt levé':'Soon lifted';
+  if(document.getElementById('obNtBientotDesc')) document.getElementById('obNtBientotDesc').textContent=currentLang==='fr'?'Avisé quelques minutes avant que le pont commence à se lever.':'Notified a few minutes before the bridge starts to rise.';
+  if(document.getElementById('obNtLeveLabel')) document.getElementById('obNtLeveLabel').textContent=currentLang==='fr'?'Pont levé':'Bridge lifted';
+  if(document.getElementById('obNtLeveDesc')) document.getElementById('obNtLeveDesc').textContent=currentLang==='fr'?'Notifié dès que le pont est levé, avec l\'heure de réouverture estimée.':'Notified as soon as the bridge is lifted, with estimated reopen time.';
+  if(document.getElementById('obNtDispoLabel')) document.getElementById('obNtDispoLabel').textContent=currentLang==='fr'?'Pont disponible':'Bridge available';
+  if(document.getElementById('obNtDispoDesc')) document.getElementById('obNtDispoDesc').textContent=currentLang==='fr'?'Avisé dès que la circulation reprend après une levée.':'Notified as soon as traffic resumes after a lift.';
+  if(document.getElementById('obNtOutageLabel')) document.getElementById('obNtOutageLabel').textContent=currentLang==='fr'?'Fermeture planifiée':'Planned closure';
+  if(document.getElementById('obNtOutageDesc')) document.getElementById('obNtOutageDesc').textContent=currentLang==='fr'?'Prévenu à l\'avance des fermetures planifiées connues.':'Advance notice of known planned closures.';
+  if(document.getElementById('obNtAchalandageLabel')) document.getElementById('obNtAchalandageLabel').textContent=currentLang==='fr'?'Période achalandée':'Busy period';
+  if(document.getElementById('obNtAchalandageDesc')) document.getElementById('obNtAchalandageDesc').textContent=currentLang==='fr'?'Alerte 30 min avant une période historiquement chargée en levées.':'Alert 30 min before a historically busy period.';
+  if(document.getElementById('obNotifBtn')) document.getElementById('obNotifBtn').textContent=currentLang==='fr'?'Terminer':'Done';
   // Step 4 labels
-  if(document.getElementById('obNotifActivateTitle')) document.getElementById('obNotifActivateTitle').textContent=false?'Activer les notifications':'Enable notifications';
-  if(document.getElementById('obNotifActivateSub')) document.getElementById('obNotifActivateSub').textContent=false?'Recevez des alertes en temps réel sur votre téléphone lors des levées de ponts.':'Receive real-time alerts on your phone when bridges are lifted.';
-  if(document.getElementById('obActivateBtn')) document.getElementById('obActivateBtn').textContent=false?'Activer les notifications':'Enable notifications';
-  if(document.getElementById('obSkipNotifsBtn')) document.getElementById('obSkipNotifsBtn').textContent=false?'Plus tard':'Later';
+  if(document.getElementById('obNotifActivateTitle')) document.getElementById('obNotifActivateTitle').textContent=currentLang==='fr'?'Activer les notifications':'Enable notifications';
+  if(document.getElementById('obNotifActivateSub')) document.getElementById('obNotifActivateSub').textContent=currentLang==='fr'?'Recevez des alertes en temps réel sur votre téléphone lors des levées de ponts.':'Receive real-time alerts on your phone when bridges are lifted.';
+  if(document.getElementById('obActivateBtn')) document.getElementById('obActivateBtn').textContent=currentLang==='fr'?'Activer les notifications':'Enable notifications';
+  if(document.getElementById('obSkipNotifsBtn')) document.getElementById('obSkipNotifsBtn').textContent=currentLang==='fr'?'Plus tard':'Later';
   // Step 5 labels
-  if(document.getElementById('obDoneTitle')) document.getElementById('obDoneTitle').textContent=false?'Vous êtes prêt !':'You\'re all set!';
-  if(document.getElementById('obInstallTitle')) document.getElementById('obInstallTitle').textContent=false?'Installer l\'app':'Install the app';
-  if(document.getElementById('obInstallDesc')) document.getElementById('obInstallDesc').textContent=false?'Ajoutez l\'app sur votre écran d\'accueil pour un accès rapide.':'Add the app to your home screen for quick access.';
-  if(document.getElementById('obInstallBtn')) document.getElementById('obInstallBtn').textContent=false?'Installer':'Install';
-  if(document.getElementById('obCloseBtn')) document.getElementById('obCloseBtn').textContent=false?'Commencer':'Get started';
+  if(document.getElementById('obDoneTitle')) document.getElementById('obDoneTitle').textContent=currentLang==='fr'?'Vous êtes prêt !':'You\'re all set!';
+  if(document.getElementById('obInstallTitle')) document.getElementById('obInstallTitle').textContent=currentLang==='fr'?'Installer l\'app':'Install the app';
+  if(document.getElementById('obInstallDesc')) document.getElementById('obInstallDesc').textContent=currentLang==='fr'?'Ajoutez l\'app sur votre écran d\'accueil pour un accès rapide.':'Add the app to your home screen for quick access.';
+  if(document.getElementById('obInstallBtn')) document.getElementById('obInstallBtn').textContent=currentLang==='fr'?'Installer':'Install';
+  if(document.getElementById('obCloseBtn')) document.getElementById('obCloseBtn').textContent=currentLang==='fr'?'Commencer':'Get started';
   obSetStep(1);
   setTimeout(()=>{
     document.getElementById('nameModalOverlay').style.display='flex';
@@ -1749,7 +1443,7 @@ function toggleDay2(d){
 function applyDayLabels(){
   const fr=['D','L','M','M','J','V','S'];
   const en=['S','M','T','W','T','F','S'];
-  const labels=false?fr:en;
+  const labels=currentLang==='fr'?fr:en;
   labels.forEach((l,i)=>{
     const el=document.getElementById('day'+i);
     if(el) el.textContent=l;
@@ -2014,7 +1708,7 @@ function getLiftTimerText(bridge,status,lang){
 // Update timer every 10 seconds
 function refreshTimers(){
   if(!lastData) return;
-  ['lakeshore', 'carlton', 'queenston', 'glendale', 'allanburg', 'mainwelland', 'clarence', 'jackknife1', 'jackknife2'].forEach(b=>{
+  ['gonzague','larocque'].forEach(b=>{
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     const s=lastData[b].status;
     if(s==='leve'){
@@ -2044,10 +1738,10 @@ function getOutageTimerText(bridge, outageEnd, lang){
 
 function updateCards(){
   if(!lastData)return;
-  const t=TR['en'];
+  const t=TR[currentLang];
   const gL=['leve','bientot_leve','raising','lowering','outage'].includes(lastData.gonzague.status);
   const lL=['leve','bientot_leve','raising','lowering','outage'].includes(lastData.larocque.status);
-  ['lakeshore', 'carlton', 'queenston', 'glendale', 'allanburg', 'mainwelland', 'clarence', 'jackknife1', 'jackknife2'].forEach(b=>{
+  ['gonzague','larocque'].forEach(b=>{
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     const alt=b==='gonzague'?'larocque':'gonzague';
     const tL=b==='gonzague'?gL:lL,oL=b==='gonzague'?lL:gL;
@@ -2065,7 +1759,7 @@ function updateCards(){
       timerEl.textContent=getLiftTimerText(b,lastData[b].status,currentLang);
     } else if(isLowering){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
-      timerEl.textContent=false?'Le pont redescend \u2014 Bient\u00F4t disponible':'Bridge is lowering \u2014 Opening soon';
+      timerEl.textContent=currentLang==='fr'?'Le pont redescend \u2014 Bient\u00F4t disponible':'Bridge is lowering \u2014 Opening soon';
     } else if(isOutage){
       db.style.display='flex'; db.removeAttribute('aria-hidden');
       timerEl.textContent=getOutageTimerText(b,lastData[b].outageEnd,currentLang);
@@ -2078,7 +1772,7 @@ function updateCards(){
     updateTimeline(b, lastData[b].status, lastData[b]);
     // Closures → badge + tooltip
     if(cl&&cl.length>0){
-      tooltipTitle.textContent=t.closureTitle||(false?'Fermetures planifiées':'Planned closures');
+      tooltipTitle.textContent=t.closureTitle||(currentLang==='fr'?'Fermetures planifiées':'Planned closures');
       tooltipBody.innerHTML=cl.map(c=>
         '<div class="closure-tooltip-item">'+fmtClosure(c,currentLang)+'</div>'
       ).join('');
@@ -2102,15 +1796,15 @@ function updateDrivingGuideText() {
   const el = document.getElementById('drivingGuideText');
   const lbl = document.getElementById('drivingGuideLabel');
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const isFr = false;
+  const isFr = currentLang === 'fr';
 
   if (lbl) lbl.textContent = isFr ? 'Notifications en conduisant' : 'Notifications while driving';
 
   if (!el) return;
   if (isIOS) {
     el.innerHTML = isFr
-      ? '<strong>Sur iPhone avec Siri\u00a0:</strong><br>1. R\u00e9glages \u2192 <strong>Notifications</strong> \u2192 <strong>Welland Canal Bridges</strong><br>2. Activez <strong>Annoncer les notifications</strong><br>3. Siri lira les alertes \u00e0 voix haute via vos \u00e9couteurs ou Bluetooth en voiture.<br><br><em>Compatible AirPods, Carplay via Siri et tout casque Bluetooth.</em>'
-      : '<strong>On iPhone with Siri:</strong><br>1. Settings \u2192 <strong>Notifications</strong> \u2192 <strong>Welland Canal Bridges</strong><br>2. Enable <strong>Announce Notifications</strong><br>3. Siri will read alerts aloud via your headphones or car Bluetooth.<br><br><em>Compatible with AirPods, CarPlay via Siri, and any Bluetooth headset.</em>';
+      ? '<strong>Sur iPhone avec Siri\u00a0:</strong><br>1. R\u00e9glages \u2192 <strong>Notifications</strong> \u2192 <strong>Ponts Beauharnois</strong><br>2. Activez <strong>Annoncer les notifications</strong><br>3. Siri lira les alertes \u00e0 voix haute via vos \u00e9couteurs ou Bluetooth en voiture.<br><br><em>Compatible AirPods, Carplay via Siri et tout casque Bluetooth.</em>'
+      : '<strong>On iPhone with Siri:</strong><br>1. Settings \u2192 <strong>Notifications</strong> \u2192 <strong>Ponts Beauharnois</strong><br>2. Enable <strong>Announce Notifications</strong><br>3. Siri will read alerts aloud via your headphones or car Bluetooth.<br><br><em>Compatible with AirPods, CarPlay via Siri, and any Bluetooth headset.</em>';
   } else {
     el.innerHTML = isFr
       ? '<strong>Sur Android avec Google Assistant\u00a0:</strong><br>1. R\u00e9glages \u2192 <strong>Applications</strong> \u2192 <strong>Chrome</strong> \u2192 <strong>Notifications</strong><br>2. Assurez-vous que la priorit\u00e9 est \u00e0 <strong>Haute</strong><br>3. Google Assistant annoncera les alertes via vos \u00e9couteurs ou en voiture via Bluetooth.<br><br><em>Compatible Android Auto, \u00e9couteurs Bluetooth et casques avec Google Assistant.</em>'
@@ -2132,7 +1826,7 @@ function updateVoiceAssistantText() {
   const el = document.getElementById('voiceAssistantText');
   const lbl = document.getElementById('voiceAssistantLabel');
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const isFr = false;
+  const isFr = currentLang === 'fr';
   const apiUrl = 'https://pont-st-louis-de-gonzague.onrender.com/assistant?lang=' + (isFr ? 'fr' : 'en');
 
   if (lbl) lbl.textContent = isFr ? 'Assistant vocal' : 'Voice assistant';
@@ -2203,7 +1897,7 @@ function toggleBridgeNotif(bridge) {
   const sub = document.getElementById('perBridge'+C+'Sub');
   const content = document.getElementById('perBridge'+C+'Content');
   const enabled = tog ? tog.checked : true;
-  const isFr = false;
+  const isFr = currentLang === 'fr';
 
   // Update hidden prefGonzague/prefLarocque
   const prefEl = document.getElementById('pref'+C);
@@ -2238,7 +1932,7 @@ function initBridgeNotifToggles() {
     const enabled = bridges.includes(b);
     if (tog) { tog.checked = enabled; }
     if (prefEl) prefEl.checked = enabled;
-    const isFr = false;
+    const isFr = currentLang === 'fr';
     if (sub) sub.textContent = enabled
       ? (isFr ? 'Notifications activ\u00e9es' : 'Notifications on')
       : (isFr ? 'Notifications d\u00e9sactiv\u00e9es' : 'Notifications off');
@@ -2302,7 +1996,7 @@ async function updateNotifTypes(){
 }
 
 function showNoNotifModal(){
-  const t = TR['en'];
+  const t = TR[currentLang];
   const el = document.getElementById('noNotifModalOverlay');
   const title = document.getElementById('noNotifModalTitle');
   const body = document.getElementById('noNotifModalBody');
@@ -2346,7 +2040,7 @@ function renderPerBridgeCheckboxes(bridge) {
   const saved = getPerBridgeNotifTypes(bridge);
   const NT_DEFAULT_KEYS = PER_BRIDGE_TYPES.filter(t => t.default).map(t => t.key);
   const active = saved || NT_DEFAULT_KEYS;
-  const isFr = false;
+  const isFr = currentLang === 'fr';
   container.innerHTML = '';
   PER_BRIDGE_TYPES.forEach(({ key, fr, en, descFr, descEn }) => {
     const checked = active.includes(key);
@@ -2390,7 +2084,7 @@ function togglePerBridgeSection(bridge) {
 }
 
 function updatePerBridgeLabels() {
-  const isFr = false;
+  const isFr = currentLang === 'fr';
   const pbl = document.getElementById('perBridgeNotifLabel');
   const pbd = document.getElementById('perBridgeNotifDesc');
   if (pbl) pbl.textContent = isFr ? 'Notifications par pont' : 'Per-bridge notifications';
@@ -2447,8 +2141,8 @@ function updateNotifyBtns(){
 
 function updateDisplay(){
   if(!lastData)return;
-  const t=TR['en'];
-  ['lakeshore', 'carlton', 'queenston', 'glendale', 'allanburg', 'mainwelland', 'clarence', 'jackknife1', 'jackknife2'].forEach(b=>{
+  const t=TR[currentLang];
+  ['gonzague','larocque'].forEach(b=>{
     const C=b.charAt(0).toUpperCase()+b.slice(1);
     document.getElementById('pill'+C).className='status-pill '+lastData[b].status;
     document.getElementById('label'+C).textContent=t.sl[lastData[b].status]||lastData[b].status;
@@ -2540,7 +2234,7 @@ function renderFunFact() {
   const lbl = document.getElementById('funFactLabel');
   const btn = document.getElementById('funFactNext');
   if (!el) return;
-  const isFr = false;
+  const isFr = currentLang === 'fr';
   if (lbl) lbl.textContent = isFr ? 'Saviez-vous que ?' : 'Did you know?';
   if (btn) btn.textContent = isFr ? 'Autre fait' : 'Next fact';
   const fact = FUN_FACTS[_funFactIndex];
@@ -2572,12 +2266,12 @@ const DON_VARIANTS = {
 };
 
 function getDonVariant() {
-  const variants = DON_VARIANTS[false ? 'fr' : 'en'];
+  const variants = DON_VARIANTS[currentLang === 'fr' ? 'fr' : 'en'];
   return variants[Math.floor(Math.random() * variants.length)];
 }
 
 function applyTrans(){
-  const t=TR['en'];
+  const t=TR[currentLang];
   document.documentElement.lang=currentLang;
   updateGreeting();
   const tsl2=document.getElementById('themeSectionLabel');if(tsl2)tsl2.textContent=t.themeSectionLabel;
@@ -2588,18 +2282,18 @@ function applyTrans(){
   const stl=document.getElementById('settingsTitle');if(stl)stl.textContent=t.st;
   const nsl=document.getElementById('notifSectionLabelText');if(nsl)nsl.textContent=t.nsl;
   const nsd=document.getElementById('notifSectionDesc');if(nsd)nsd.textContent=t.notifSectionDesc||'';
-  const bsl=document.getElementById('bridgesSectionLabel');if(bsl)bsl.textContent=false?'Ponts':'Bridges';
-  const dfl=document.getElementById('dayFilterLabel');if(dfl)dfl.textContent=false?'Plage 1 — Jours':'Range 1 — Days';
+  const bsl=document.getElementById('bridgesSectionLabel');if(bsl)bsl.textContent=currentLang==='fr'?'Ponts':'Bridges';
+  const dfl=document.getElementById('dayFilterLabel');if(dfl)dfl.textContent=currentLang==='fr'?'Plage 1 — Jours':'Range 1 — Days';
   const sbd=document.getElementById('settingsBridgesDesc');if(sbd)sbd.textContent=t.bd;
-  const pl=document.getElementById('personalisationLabelText');if(pl)pl.textContent=false?'Personnalisation':'Personalisation';
+  const pl=document.getElementById('personalisationLabelText');if(pl)pl.textContent=currentLang==='fr'?'Personnalisation':'Personalisation';
   const plDesc=document.getElementById('personalisationDesc');if(plDesc)plDesc.textContent=t.personalisationDesc||'';
   const pd=document.getElementById('prenomDesc');if(pd)pd.textContent=t.prenomDesc||'';
   const td=document.getElementById('themeDesc');if(td)td.textContent=t.themeDesc||'';
-  const d2fl=document.getElementById('day2FilterLabel');if(d2fl)d2fl.textContent=t.day2FilterLabel||(false?'Plage 2 \u2014 Jours':'Range 2 \u2014 Days');
+  const d2fl=document.getElementById('day2FilterLabel');if(d2fl)d2fl.textContent=t.day2FilterLabel||(currentLang==='fr'?'Plage 2 \u2014 Jours':'Range 2 \u2014 Days');
   const ntsl=document.getElementById('notifTypesSectionLabel');if(ntsl)ntsl.textContent=t.notifTypesSectionLabel;
   const ntd=document.getElementById('notifTypesDesc');if(ntd)ntd.textContent=t.notifTypesDesc;
-  const ntSug=document.getElementById('ntSuggestedLabel');if(ntSug)ntSug.textContent=t.ntSuggestedLabel||(false?'SUGG\u00c9R\u00c9ES':'SUGGESTED');
-  const ntOpt=document.getElementById('ntOptionalLabel');if(ntOpt)ntOpt.textContent=t.ntOptionalLabel||(false?'OPTIONNELLES':'OPTIONAL');
+  const ntSug=document.getElementById('ntSuggestedLabel');if(ntSug)ntSug.textContent=t.ntSuggestedLabel||(currentLang==='fr'?'SUGG\u00c9R\u00c9ES':'SUGGESTED');
+  const ntOpt=document.getElementById('ntOptionalLabel');if(ntOpt)ntOpt.textContent=t.ntOptionalLabel||(currentLang==='fr'?'OPTIONNELLES':'OPTIONAL');
   ['Bientot','Raising','Leve','Lowering','Disponible','Scheduled','Outage','Achalandage'].forEach(k=>{
     const el=document.getElementById('ntLabel'+k);
     if(!el) return; // elements removed, skip
@@ -2627,35 +2321,35 @@ function applyTrans(){
   if(customLabel) customLabel.textContent=t.customDonate;
   const customInput=document.getElementById('customAmount');
   if(customInput) customInput.placeholder=t.customPlaceholder;
-  const lb=document.getElementById('langBtn');lb.textContent=false?'EN':'FR';lb.setAttribute('aria-label',t.ll2);
-  const ll=document.getElementById('langLabel');if(ll)ll.textContent=false?'Langue':'Language';
+  const lb=document.getElementById('langBtn');lb.textContent=currentLang==='fr'?'EN':'FR';lb.setAttribute('aria-label',t.ll2);
+  const ll=document.getElementById('langLabel');if(ll)ll.textContent=currentLang==='fr'?'Langue':'Language';
   const cl=document.getElementById('contactLink');
-  if(cl) cl.href=false?'https://tally.so/r/A7b2kz':'https://tally.so/r/gDNdyl';
+  if(cl) cl.href=currentLang==='fr'?'https://tally.so/r/A7b2kz':'https://tally.so/r/gDNdyl';
   const cll=document.getElementById('contactLinkLabel');
-  if(cll) cll.textContent=false?'Commentaires ou suggestions':'Feedback or suggestions';
-  const ibl=document.getElementById('installBannerLabel');if(ibl)ibl.textContent=t.installBannerLabel||(false?'Installer l\'app':'Install the app');
-  const ibs=document.getElementById('installBannerSub');if(ibs)ibs.textContent=t.installBannerSub||(false?'Recevez des notifications sur votre \u00e9cran d\u2019accueil':'Get notifications on your home screen');
-  const mil=document.getElementById('mainInstallLabel');if(mil)mil.textContent=t.mainCtaLabel||(false?'Activer les notifications':'Enable notifications');
-  const mis=document.getElementById('mainInstallSub');if(mis)mis.textContent=t.mainCtaSub||(false?'Recevez des alertes lors des lev\u00e9es de ponts':'Get alerts for bridge lifts');
+  if(cll) cll.textContent=currentLang==='fr'?'Commentaires ou suggestions':'Feedback or suggestions';
+  const ibl=document.getElementById('installBannerLabel');if(ibl)ibl.textContent=t.installBannerLabel||(currentLang==='fr'?'Installer l\'app':'Install the app');
+  const ibs=document.getElementById('installBannerSub');if(ibs)ibs.textContent=t.installBannerSub||(currentLang==='fr'?'Recevez des notifications sur votre \u00e9cran d\u2019accueil':'Get notifications on your home screen');
+  const mil=document.getElementById('mainInstallLabel');if(mil)mil.textContent=t.mainCtaLabel||(currentLang==='fr'?'Activer les notifications':'Enable notifications');
+  const mis=document.getElementById('mainInstallSub');if(mis)mis.textContent=t.mainCtaSub||(currentLang==='fr'?'Recevez des alertes lors des lev\u00e9es de ponts':'Get alerts for bridge lifts');
   const disc=document.getElementById('disclaimer');if(disc)disc.innerHTML=t.di;
   // Donation modal translation
   const donModalTitle = document.getElementById('donModalTitle');
   const donModalDesc = document.getElementById('donModalDesc');
   const donSkip = document.getElementById('donModalSkip');
-  if(donModalTitle) donModalTitle.textContent = false ? 'Vous aimez l\u2019app\u00a0?' : 'Enjoying the app?';
-  if(donModalDesc) donModalDesc.textContent = false ? 'Ce projet est gratuit et ind\u00e9pendant. Un petit don aide \u00e0 le garder vivant pour toute la communaut\u00e9.' : 'This project is free and independent. A small donation helps keep it alive for the whole community.';
-  if(donSkip) donSkip.textContent = false ? 'Plus tard' : 'Maybe later';
+  if(donModalTitle) donModalTitle.textContent = currentLang==='fr' ? 'Vous aimez l\u2019app\u00a0?' : 'Enjoying the app?';
+  if(donModalDesc) donModalDesc.textContent = currentLang==='fr' ? 'Ce projet est gratuit et ind\u00e9pendant. Un petit don aide \u00e0 le garder vivant pour toute la communaut\u00e9.' : 'This project is free and independent. A small donation helps keep it alive for the whole community.';
+  if(donSkip) donSkip.textContent = currentLang==='fr' ? 'Plus tard' : 'Maybe later';
   const weatherLbl=document.getElementById('weatherToggleLabel');
-  if(weatherLbl) weatherLbl.textContent=false?'M\u00e9t\u00e9o':'Weather';
+  if(weatherLbl) weatherLbl.textContent=currentLang==='fr'?'M\u00e9t\u00e9o':'Weather';
   const weatherDesc=document.getElementById('weatherToggleDesc');
-  if(weatherDesc) weatherDesc.textContent=false?'Afficher la m\u00e9t\u00e9o locale dans la salutation.':'Show local weather in the greeting.';
+  if(weatherDesc) weatherDesc.textContent=currentLang==='fr'?'Afficher la m\u00e9t\u00e9o locale dans la salutation.':'Show local weather in the greeting.';
   renderFunFact();
   updatePerBridgeLabels();
   const val = document.getElementById('voiceAssistantLabel');
-  if(val) val.textContent = false ? 'Assistant vocal' : 'Voice assistant';
+  if(val) val.textContent = currentLang==='fr' ? 'Assistant vocal' : 'Voice assistant';
   if(document.getElementById('voiceAssistantContent')?.style.display !== 'none') updateVoiceAssistantText();
   const dgl = document.getElementById('drivingGuideLabel');
-  if(dgl) dgl.textContent = false ? 'Notifications en conduisant' : 'Notifications while driving';
+  if(dgl) dgl.textContent = currentLang==='fr' ? 'Notifications en conduisant' : 'Notifications while driving';
   if(document.getElementById('drivingGuideContent')?.style.display !== 'none') updateDrivingGuideText();
   // Drawer donation section translation
   updateDonationTexts();
@@ -2663,20 +2357,20 @@ function applyTrans(){
   updateNotifyBtns();updateDisplay();
   syncNotifState(); // verify actual push subscription on load
   // Update heatmap button labels and lastLift text on language change
-  ['lakeshore', 'carlton', 'queenston', 'glendale', 'allanburg', 'mainwelland', 'clarence', 'jackknife1', 'jackknife2'].forEach(b => {
+  ['gonzague','larocque'].forEach(b => {
     const C = b.charAt(0).toUpperCase() + b.slice(1);
     const btn = document.getElementById('heatmapBtn' + C);
-    if(btn) btn.textContent = '\uD83D\uDCCA ' + (false ? 'Historique' : 'History');
+    if(btn) btn.textContent = '\uD83D\uDCCA ' + (currentLang==='fr' ? 'Historique' : 'History');
     const el = document.getElementById('lastLift' + C);
     if(el && el.style.display !== 'none' && el.textContent) {
       const parts = el.textContent.split('\u00a0: ');
       if(parts.length === 2) {
-        el.textContent = (false ? 'Derni\u00e8re lev\u00e9e' : 'Last lift') + '\u00a0: ' + parts[1];
+        el.textContent = (currentLang==='fr' ? 'Derni\u00e8re lev\u00e9e' : 'Last lift') + '\u00a0: ' + parts[1];
       }
     }
   });
 }
-function toggleLang(){currentLang=false?'en':'fr';track('language_changed',{lang:currentLang});localStorage.setItem('appLang',currentLang);applyTrans();syncPrefs();}
+function toggleLang(){currentLang=currentLang==='fr'?'en':'fr';track('language_changed',{lang:currentLang});localStorage.setItem('appLang',currentLang);applyTrans();syncPrefs();}
 
 let retries=0;
 async function fetchStatus(){
@@ -2697,7 +2391,7 @@ async function fetchStatus(){
       }catch(e){}
     }
   }catch(e){
-    const t=TR['en'];retries++;
+    const t=TR[currentLang];retries++;
     if(retries<3){setTimeout(fetchStatus,10000);document.getElementById('errorMsg').textContent=t.rc+'... ('+retries+'/3)';}
     else{retries=0;document.getElementById('errorMsg').innerHTML=t.se+' <a href="#" onclick="fetchStatus();return false;">'+t.re+'</a>';}
   }
@@ -2755,7 +2449,7 @@ function openDrawerToNotifs(){
 }
 
 async function toggleNotifications(){
-  const t=TR['en'];
+  const t=TR[currentLang];
   if(isFBWebView){alert(t.ns||'Non supporté dans ce navigateur');return;}
   if(!('Notification'in window)||!('serviceWorker'in navigator)){alert(t.ns);return;}
   try{
@@ -2801,11 +2495,11 @@ async function unsubscribe(){
   updateNotifyBtns();
   closeDrawer();
   // Visual confirmation
-  const t=TR['en'];
+  const t=TR[currentLang];
   const msg=document.getElementById('errorMsg');
   if(msg){
     msg.style.color='var(--green)';
-    msg.textContent=false?'✓ Notifications désactivées':'✓ Notifications disabled';
+    msg.textContent=currentLang==='fr'?'✓ Notifications désactivées':'✓ Notifications disabled';
     setTimeout(()=>{msg.textContent='';msg.style.color='';},3000);
   }
 }
@@ -2836,7 +2530,7 @@ function renderMilestoneBanner(milestone) {
   const banner = document.getElementById('milestoneBanner');
   if (!banner) return;
   const name = getUserName();
-  const isFr = false;
+  const isFr = currentLang === 'fr';
   const tallyUrl = TALLY_URL[currentLang] || TALLY_URL.fr;
   let emoji, title, desc, cta1, cta2;
   if (milestone === 7) {
@@ -2926,7 +2620,7 @@ function makeStep(num, html){
 
 function showInstallModal(){
   track('install_prompt_shown');
-  const t=TR['en'];
+  const t=TR[currentLang];
   const overlay=document.getElementById('installModalOverlay');
   const steps=document.getElementById('installModalSteps');
   const cta=document.getElementById('installModalCta');
@@ -2950,17 +2644,17 @@ function showInstallModal(){
     cta.style.display='none';
   } else if(deferredPrompt){
     icon.innerHTML='<span style="display:inline-flex;align-items:center;width:44px;height:44px;flex-shrink:0;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"> <path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/> <path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/> <path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/> <path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/> <path d="M251.566,391.837h-36.107c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.107 c5.771,0,10.449-4.678,10.449-10.449S257.337,391.837,251.566,391.837z"/> <path d="M161.522,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S167.293,391.837,161.522,391.837z"/> <path d="M127.581,391.837H55.367c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S133.352,391.837,127.581,391.837z"/> <path d="M456.36,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S462.131,391.837,456.36,391.837z"/> <path d="M422.42,391.837h-72.214c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S428.191,391.837,422.42,391.837z"/> <path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h3.99v19.851c0,5.771,4.678,10.449,10.449,10.449 s10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h3.99 v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449 v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203h0.001C512.001,243.463,507.323,238.785,501.552,238.785z M438.692,242.027 c5.049,3.093,10.339,5.826,15.84,8.16v28.802h-15.84V242.027z M401.79,206.86c4.679,6.867,10.048,13.225,16.004,18.979v53.15 H401.79V206.86z M376.663,120.164h4.231v158.824h-4.231V120.164z M339.925,225.626c5.89-5.709,11.203-12.01,15.84-18.81v72.172 h-15.84V225.626z M303.188,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115h-15.84V250.07z M266.45,259.226 c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M229.712,256.79c5.164,1.153,10.451,1.971,15.84,2.435v19.763 h-15.84V256.79z M192.976,241.874c5.048,3.104,10.338,5.85,15.84,8.196v28.919h-15.84V241.874z M156.239,206.817 c4.635,6.799,9.948,13.1,15.839,18.809v53.362h-15.839V206.817z M131.111,120.164h4.231v158.824h-4.231V120.164z M94.373,225.626 c5.89-5.709,11.203-12.01,15.84-18.809v72.171h-15.84V225.626z M57.637,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115 h-15.84V250.07z M20.899,259.226c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M490.938,314.515h-0.001H20.899 v-14.629h99.763h25.011h0.118h220.423h25.011h0.118h99.596V314.515z M491.103,278.988H475.43v-22.133 c5.112,1.128,10.343,1.931,15.673,2.384V278.988z"/> </svg></span>';
-    title.textContent=false?'Soyez alerté en temps réel':'Get real-time bridge alerts';
-    sub.textContent=false
+    title.textContent=currentLang==='fr'?'Soyez alerté en temps réel':'Get real-time bridge alerts';
+    sub.textContent=currentLang==='fr'
       ?'Installez l\'app pour recevoir des notifications dès qu\'un pont se lève — même téléphone verrouillé.'
       :'Install the app to get notified the moment a bridge lifts — even when your phone is locked.';
     steps.style.display='none';
     cta.style.display='block';
-    cta.innerHTML='<span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:#fff;margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"> <rect x="16" y="4" rx="5"/> <line x1="28" y1="50" x2="36" y2="50"/> <line x1="32" y1="20" x2="32" y2="36"/> <path d="M24 30 L32 38 L40 30"/> </svg></span>'+' '+(false?'Installer gratuitement':'Install for free');
+    cta.innerHTML='<span style="display:inline-flex;align-items:center;width:22px;height:22px;flex-shrink:0;color:#fff;margin-right:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"> <rect x="16" y="4" rx="5"/> <line x1="28" y1="50" x2="36" y2="50"/> <line x1="32" y1="20" x2="32" y2="36"/> <path d="M24 30 L32 38 L40 30"/> </svg></span>'+' '+(currentLang==='fr'?'Installer gratuitement':'Install for free');
   } else if(isIOS){
     icon.innerHTML='<span style="display:inline-flex;align-items:center;width:44px;height:44px;flex-shrink:0;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"> <path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/> <path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/> <path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/> <path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/> <path d="M251.566,391.837h-36.107c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.107 c5.771,0,10.449-4.678,10.449-10.449S257.337,391.837,251.566,391.837z"/> <path d="M161.522,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S167.293,391.837,161.522,391.837z"/> <path d="M127.581,391.837H55.367c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S133.352,391.837,127.581,391.837z"/> <path d="M456.36,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S462.131,391.837,456.36,391.837z"/> <path d="M422.42,391.837h-72.214c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S428.191,391.837,422.42,391.837z"/> <path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h3.99v19.851c0,5.771,4.678,10.449,10.449,10.449 s10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h3.99 v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449 v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203h0.001C512.001,243.463,507.323,238.785,501.552,238.785z M438.692,242.027 c5.049,3.093,10.339,5.826,15.84,8.16v28.802h-15.84V242.027z M401.79,206.86c4.679,6.867,10.048,13.225,16.004,18.979v53.15 H401.79V206.86z M376.663,120.164h4.231v158.824h-4.231V120.164z M339.925,225.626c5.89-5.709,11.203-12.01,15.84-18.81v72.172 h-15.84V225.626z M303.188,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115h-15.84V250.07z M266.45,259.226 c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M229.712,256.79c5.164,1.153,10.451,1.971,15.84,2.435v19.763 h-15.84V256.79z M192.976,241.874c5.048,3.104,10.338,5.85,15.84,8.196v28.919h-15.84V241.874z M156.239,206.817 c4.635,6.799,9.948,13.1,15.839,18.809v53.362h-15.839V206.817z M131.111,120.164h4.231v158.824h-4.231V120.164z M94.373,225.626 c5.89-5.709,11.203-12.01,15.84-18.809v72.171h-15.84V225.626z M57.637,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115 h-15.84V250.07z M20.899,259.226c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M490.938,314.515h-0.001H20.899 v-14.629h99.763h25.011h0.118h220.423h25.011h0.118h99.596V314.515z M491.103,278.988H475.43v-22.133 c5.112,1.128,10.343,1.931,15.673,2.384V278.988z"/> </svg></span>';
-    title.textContent=false?'Soyez alerté en temps réel':'Get real-time bridge alerts';
-    sub.textContent=false
+    title.textContent=currentLang==='fr'?'Soyez alerté en temps réel':'Get real-time bridge alerts';
+    sub.textContent=currentLang==='fr'
       ?'Installez l\'app en 3 secondes pour recevoir des notifications de levée de ponts.'
       :'Install in 3 seconds to get bridge lift notifications.';
     steps.appendChild(makeStep(1, t.i1||'Appuyez sur <strong>Partager</strong> ↑ en bas de Safari'));
@@ -2970,8 +2664,8 @@ function showInstallModal(){
     cta.style.display='none';
   } else {
     icon.innerHTML='<span style="display:inline-flex;align-items:center;width:44px;height:44px;flex-shrink:0;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"> <path d="M256.001,354.295h-67.322c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h67.322 c5.771,0,10.449-4.678,10.449-10.449S261.772,354.295,256.001,354.295z"/> <path d="M65.241,354.295H38.14c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h27.102 c5.77,0,10.449-4.678,10.449-10.449C75.69,358.973,71.012,354.295,65.241,354.295z"/> <path d="M488.038,354.295H449.83c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h38.209 c5.771,0,10.449-4.678,10.449-10.449S493.809,354.295,488.038,354.295z"/> <path d="M318.455,354.295h-36.106c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.106 c5.771,0,10.449-4.678,10.449-10.449S324.225,354.295,318.455,354.295z"/> <path d="M251.566,391.837h-36.107c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h36.107 c5.771,0,10.449-4.678,10.449-10.449S257.337,391.837,251.566,391.837z"/> <path d="M161.522,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S167.293,391.837,161.522,391.837z"/> <path d="M127.581,391.837H55.367c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S133.352,391.837,127.581,391.837z"/> <path d="M456.36,391.837h-0.137c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h0.137 c5.771,0,10.449-4.678,10.449-10.449S462.131,391.837,456.36,391.837z"/> <path d="M422.42,391.837h-72.214c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h72.214 c5.771,0,10.449-4.678,10.449-10.449S428.191,391.837,422.42,391.837z"/> <path d="M501.552,238.785c-0.028,0-0.055,0.004-0.083,0.004c-0.028,0-0.054-0.004-0.083-0.004 c-54.891,0-99.552-44.71-99.596-99.682v-29.388c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449 v29.287c0,0.006-0.001,0.014-0.001,0.02c0,55.01-44.753,99.763-99.763,99.763c-55.01,0-99.763-44.754-99.763-99.763v-29.307 c0-5.771-4.678-10.449-10.449-10.449h-25.129c-5.771,0-10.449,4.678-10.449,10.449v29.307c0,55.01-44.753,99.763-99.763,99.763 C4.678,238.785,0,243.463,0,249.234v40.203v35.526c0,5.771,4.678,10.449,10.449,10.449h99.884v19.851 c0,5.771,4.678,10.449,10.449,10.449c5.771,0,10.449-4.678,10.449-10.449v-19.851h3.99v19.851c0,5.771,4.678,10.449,10.449,10.449 s10.449-4.678,10.449-10.449v-19.851h199.764v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h3.99 v19.851c0,5.771,4.678,10.449,10.449,10.449s10.449-4.678,10.449-10.449v-19.851h99.716c5.771,0,10.449-4.678,10.449-10.449 v-33.725c0.102-0.586,0.166-1.186,0.166-1.801v-40.203h0.001C512.001,243.463,507.323,238.785,501.552,238.785z M438.692,242.027 c5.049,3.093,10.339,5.826,15.84,8.16v28.802h-15.84V242.027z M401.79,206.86c4.679,6.867,10.048,13.225,16.004,18.979v53.15 H401.79V206.86z M376.663,120.164h4.231v158.824h-4.231V120.164z M339.925,225.626c5.89-5.709,11.203-12.01,15.84-18.81v72.172 h-15.84V225.626z M303.188,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115h-15.84V250.07z M266.45,259.226 c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M229.712,256.79c5.164,1.153,10.451,1.971,15.84,2.435v19.763 h-15.84V256.79z M192.976,241.874c5.048,3.104,10.338,5.85,15.84,8.196v28.919h-15.84V241.874z M156.239,206.817 c4.635,6.799,9.948,13.1,15.839,18.809v53.362h-15.839V206.817z M131.111,120.164h4.231v158.824h-4.231V120.164z M94.373,225.626 c5.89-5.709,11.203-12.01,15.84-18.809v72.171h-15.84V225.626z M57.637,250.07c5.501-2.347,10.792-5.092,15.84-8.196v37.115 h-15.84V250.07z M20.899,259.226c5.388-0.464,10.676-1.283,15.84-2.435v22.197h-15.84V259.226z M490.938,314.515h-0.001H20.899 v-14.629h99.763h25.011h0.118h220.423h25.011h0.118h99.596V314.515z M491.103,278.988H475.43v-22.133 c5.112,1.128,10.343,1.931,15.673,2.384V278.988z"/> </svg></span>';
-    title.textContent=false?'Soyez alerté en temps réel':'Get real-time bridge alerts';
-    sub.textContent=false
+    title.textContent=currentLang==='fr'?'Soyez alerté en temps réel':'Get real-time bridge alerts';
+    sub.textContent=currentLang==='fr'
       ?'Installez l\'app en 2 secondes pour recevoir des notifications de levée de ponts.'
       :'Install in 2 seconds to get bridge lift notifications.';
     steps.appendChild(makeStep(1, t.a1||'Appuyez sur les <strong>3 points</strong> ⋮ en haut à droite de Chrome'));
@@ -2980,7 +2674,7 @@ function showInstallModal(){
     cta.style.display='none';
   }
 
-  skip.textContent=false?'Pas maintenant':'Not now';
+  skip.textContent=currentLang==='fr'?'Pas maintenant':'Not now';
   overlay.style.display='flex';
   localStorage.setItem('installPromptSeen','1');
 }
@@ -3083,13 +2777,13 @@ function ptUpdateText(pulling){
   const spinner=document.getElementById('pullSpinner');
   if(ptRefreshing){
     spinner.style.display='block';
-    ptText.textContent=false?'Mise à jour...':'Refreshing...';
+    ptText.textContent=currentLang==='fr'?'Mise à jour...':'Refreshing...';
   } else if(pulling){
     spinner.style.display='none';
-    ptText.textContent=false?'Rel\u00E2cher pour rafra\u00EEchir':'Release to refresh';
+    ptText.textContent=currentLang==='fr'?'Rel\u00E2cher pour rafra\u00EEchir':'Release to refresh';
   } else {
     spinner.style.display='none';
-    ptText.textContent=false?'Tirer pour rafra\u00EEchir':'Pull to refresh';
+    ptText.textContent=currentLang==='fr'?'Tirer pour rafra\u00EEchir':'Pull to refresh';
   }
 }
 
@@ -3170,11 +2864,11 @@ async function fetchLiftHistory() {
       const h = d[b];
       if (!h || !h.lastLift) { el.style.display = 'none'; if(btn) btn.style.display='none'; return; }
       const dt = new Date(h.lastLift);
-      const fmt = dt.toLocaleString(false ? 'fr-CA' : 'en-CA', {
+      const fmt = dt.toLocaleString(currentLang === 'fr' ? 'fr-CA' : 'en-CA', {
         day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
         timeZone: 'America/Toronto'
       });
-      const label = false ? 'Dernière levée' : 'Last lift';
+      const label = currentLang === 'fr' ? 'Dernière levée' : 'Last lift';
       el.textContent = label + ' : ' + fmt;
       el.style.display = 'block';
       if(btn && h.entries > 0) btn.style.display = 'inline';
@@ -3190,7 +2884,7 @@ function showHeatmap(bridge) {
 function _showHeatmap(bridge) {
   const d = _heatmapData[bridge];
   if (!d) return;
-  const t = false;
+  const t = currentLang === 'fr';
   const names = { gonzague: t ? 'Pont St-Louis' : 'St-Louis Bridge', larocque: t ? 'Pont Larocque' : 'Larocque Bridge' };
   const days = t ? ['D','L','M','M','J','V','S'] : ['S','M','T','W','T','F','S'];
   const heatmap = d.heatmap || {};
@@ -3388,7 +3082,7 @@ function initSwipeDon() {
 
 function openSwipeDon() {
   _swipeDonShown = true;
-  const isFr = false;
+  const isFr = currentLang === 'fr';
   const variants = SWIPE_DON_VARIANTS[isFr ? 'fr' : 'en'];
   const v = variants[Math.floor(Math.random() * variants.length)];
 
@@ -3536,7 +3230,7 @@ document.addEventListener('visibilitychange',()=>{
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
       <span style="display:inline-flex;width:26px;height:26px;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22 L8 42 L20 42 L20 22 Z"/><path d="M20 22 Q44 14 52 10 L52 54 Q44 50 20 42"/><line x1="20" y1="42" x2="20" y2="54"/><line x1="28" y1="44" x2="26" y2="54"/><path d="M52 28 Q58 30 58 32 Q58 34 52 36"/></svg></span>
       <span style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--sans);" id="changelogTitle">Nouveautés</span>
-      <span style="margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono);">v1.0</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono);">v1.5</span>
     </div>
     <div style="width:32px;height:3px;background:var(--accent);border-radius:2px;margin-bottom:20px;"></div>
     <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px;" id="changelogItems"></div>
