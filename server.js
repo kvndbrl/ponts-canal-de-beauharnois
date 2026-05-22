@@ -745,8 +745,8 @@ async function monitor() {
     await saveLastStatus();
     const anyActive = ['gonzague','larocque'].some(b => ['bientot_leve','raising','leve','lowering'].includes(data[b].status));
     clearTimeout(monitorTimeout);
-    monitorTimeout = setTimeout(monitor, anyActive ? 5000 : 15000);
-    // Send widget update every 2 minutes when a bridge is active (for live reopen time)
+    monitorTimeout = setTimeout(monitor, anyActive ? 5000 : 10000);
+    // Send widget update every 30 seconds when a bridge is active (for live reopen time)
     if (anyActive) {
       clearTimeout(widgetUpdateTimeout);
       widgetUpdateTimeout = setTimeout(async () => {
@@ -754,7 +754,7 @@ async function monitor() {
           gonzague: { status: lastStatus.gonzague || 'disponible', avgLiftDuration: getAvgLiftDuration('gonzague'), avgLoweringDuration: getAvgLoweringDuration('gonzague'), outageEnd: null, liftingSince: liftActive.gonzague?.raisedAt || null, scheduledTimes: parseScheduledLifts(data.gonzague.next_lifts) },
           larocque: { status: lastStatus.larocque || 'disponible', avgLiftDuration: getAvgLiftDuration('larocque'), avgLoweringDuration: getAvgLoweringDuration('larocque'), outageEnd: null, liftingSince: liftActive.larocque?.raisedAt || null, scheduledTimes: parseScheduledLifts(data.larocque.next_lifts) },
         });
-      }, 2 * 60 * 1000);
+      }, 30 * 1000);
     }
   } catch(e) {
     log(`Monitor error: ${e.message}`);
