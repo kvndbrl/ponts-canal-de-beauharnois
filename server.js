@@ -526,7 +526,10 @@ async function sendScheduledLiftNotification(bridge, times) {
     const isFr = lang === 'fr';
     const body = buildWidgetBody(sub, statuses);
     const title = isFr ? 'Ponts Beauharnois' : 'Beauharnois Bridges';
-    const payload = JSON.stringify({ title, body, tag: 'pont-widget', icon: notifIcon(sub), badge: statusBadge('scheduled') });
+    const STATUS_PRIORITY = ['outage', 'leve', 'raising', 'lowering', 'bientot_leve', 'disponible'];
+    const activeStatuses = bridges.map(b => statuses[b]?.status).filter(Boolean);
+    const criticalStatus = STATUS_PRIORITY.find(s => activeStatuses.includes(s)) || 'scheduled';
+    const payload = JSON.stringify({ title, body, tag: 'pont-widget', icon: notifIcon(sub), badge: statusBadge(criticalStatus) });
     try {
       await webpush.sendNotification(sub, payload, { urgency: 'high', TTL: 300 });
       sent++;
