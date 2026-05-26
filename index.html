@@ -37,7 +37,7 @@
   <title>Ponts du canal de Beauharnois</title>
   <style>
     :root{
-      --bg:#f0f2f5;--surface:#fff;--surface2:#f7f8fa;--border:rgba(0,0,0,.06);
+      --bg:#f0f2f5;--surface:#fff;--surface2:#f7f8fa;--border:rgba(0,0,0,.06);--card-border:rgba(0,0,0,.22);
       --text:#0a0e1a;--text2:#3d4a60;--text3:#5a6680;
       --green:#1a5c2a;--green-bg:#e8f5eb;--yellow:#5a4800;--yellow-bg:#fef9e6;
       --red:#9b2318;--red-bg:#fdecea;--orange:#7a3800;--orange-bg:#fff3e0;
@@ -46,7 +46,7 @@
       --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
     }
     body.dark{
-      --bg:#080b14;--surface:#111827;--surface2:#161d2e;--border:rgba(255,255,255,.08);
+      --bg:#080b14;--surface:#111827;--surface2:#161d2e;--border:rgba(255,255,255,.08);--card-border:rgba(255,255,255,.28);
       --text:#f0f4ff;--text2:#a8b8d8;--text3:#7a8aaa;
       --green:#3ddd6a;--green-bg:rgba(61,221,106,.12);
       --yellow:#f0b020;--yellow-bg:rgba(240,176,32,.12);
@@ -58,14 +58,14 @@
     /* ══ THÈME GONZAGUOIS — vert forêt / crème ══ */
     body.theme-gonzaguois{
       --bg:#f2f5ef;--surface:#fafcf8;--surface2:#eef3ea;
-      --border:rgba(40,80,20,.08);
+      --border:rgba(40,80,20,.08);--card-border:rgba(40,80,20,.30);
       --text:#0d1a09;--text2:#2d4a20;--text3:#5a7248;
       --accent:#3a6b2a;--accent-rgb:58,107,42;--wave-color:#3a6b2a;--wave-opacity:.09;
       --shadow:0 2px 16px rgba(40,80,20,.1);
     }
     body.theme-gonzaguois.dark{
       --bg:#080f06;--surface:#0f1c0c;--surface2:#142410;
-      --border:rgba(100,200,60,.08);
+      --border:rgba(100,200,60,.08);--card-border:rgba(100,200,60,.35);
       --text:#e8f5e0;--text2:#a0c880;--text3:#6a9450;
       --accent:#6ab84a;--accent-rgb:106,184,74;--wave-color:#4a9030;--wave-opacity:.18;
       --shadow:0 2px 16px rgba(0,0,0,.5);
@@ -74,14 +74,14 @@
     /* ══ THÈME CAMPIVALLENSIEN — bleu royal / or ══ */
     body.theme-campivallensien{
       --bg:#eef2f8;--surface:#f8fafd;--surface2:#e8eef8;
-      --border:rgba(20,50,120,.08);
+      --border:rgba(20,50,120,.08);--card-border:rgba(20,50,120,.30);
       --text:#080e1f;--text2:#1a3060;--text3:#4a6090;
       --accent:#1a4a8c;--accent-rgb:26,74,140;--wave-color:#1a4a8c;--wave-opacity:.09;
       --shadow:0 2px 16px rgba(20,50,120,.1);
     }
     body.theme-campivallensien.dark{
       --bg:#06090f;--surface:#0c1220;--surface2:#101828;
-      --border:rgba(60,120,220,.08);
+      --border:rgba(60,120,220,.08);--card-border:rgba(60,120,220,.38);
       --text:#e0eaff;--text2:#90aae0;--text3:#5878b0;
       --accent:#4a7fd4;--accent-rgb:74,127,212;--wave-color:#2a5ab0;--wave-opacity:.2;
       --shadow:0 2px 16px rgba(0,0,0,.5);
@@ -90,14 +90,14 @@
     /* ══ THÈME STANIÇOIS — vert émeraude / bleu lac / jaune soleil ══ */
     body.theme-stanicois{
       --bg:#eef8f4;--surface:#f6fcf9;--surface2:#e4f4ee;
-      --border:rgba(20,100,70,.08);
+      --border:rgba(20,100,70,.08);--card-border:rgba(20,100,70,.30);
       --text:#071410;--text2:#1a4a36;--text3:#3a7060;
       --accent:#1a7a5a;--accent-rgb:26,122,90;--wave-color:#1a7a5a;--wave-opacity:.09;
       --shadow:0 2px 16px rgba(20,100,70,.1);
     }
     body.theme-stanicois.dark{
       --bg:#050e0a;--surface:#0a1c14;--surface2:#0e241a;
-      --border:rgba(40,180,120,.08);
+      --border:rgba(40,180,120,.08);--card-border:rgba(40,180,120,.38);
       --text:#d8f5ea;--text2:#70c8a0;--text3:#409870;
       --accent:#3dbb8a;--accent-rgb:61,187,138;--wave-color:#20906a;--wave-opacity:.2;
       --shadow:0 2px 16px rgba(0,0,0,.5);
@@ -181,7 +181,7 @@
     .toggle-switch input:checked+.toggle-slider{background:var(--accent);}
     .toggle-switch input:checked+.toggle-slider:before{transform:translateX(18px);}
     main{width:100%;max-width:430px;flex:1;display:flex;flex-direction:column;align-items:stretch;}
-    .bridge-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:8px;overflow:hidden;border:1px solid var(--border);animation:fadeUp .4s ease both;flex-shrink:0;}
+    .bridge-card{background:var(--surface);border-radius:8px;box-shadow:var(--shadow);margin-bottom:8px;overflow:hidden;border:1px solid var(--card-border);animation:fadeUp .4s ease both;flex-shrink:0;}
     .bridge-card:nth-child(1){animation-delay:0s;}.bridge-card:nth-child(2){animation-delay:.05s;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
     .bridge-name{padding:14px 16px 0;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);display:flex;align-items:center;gap:8px;}
@@ -317,7 +317,7 @@
     .unsub-btn{background:none;border:none;font-family:var(--sans);font-size:13px;color:var(--text3);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;}
 
     /* Donation card — prominent, lifted above boat */
-    .donation-card{background:var(--surface);border-radius:var(--radius);box-shadow:0 4px 24px rgba(var(--accent-rgb),.18),var(--shadow);border:1.5px solid rgba(var(--accent-rgb),.35);border-top:3px solid var(--accent);padding:10px 14px 12px;margin-top:auto;margin-bottom:160px;position:relative;z-index:1;flex-shrink:0;}
+    .donation-card{background:var(--surface);border-radius:var(--radius);box-shadow:0 4px 24px rgba(var(--accent-rgb),.18),var(--shadow);border:1.5px solid rgba(var(--accent-rgb),.35);border-top:3px solid var(--accent);padding:10px 14px 12px;margin-top:auto;margin-bottom:16px;position:relative;z-index:1;flex-shrink:0;}
     .donation-header{display:flex;align-items:center;gap:8px;margin-bottom:2px;}
     .donation-title{font-size:15px;font-weight:700;color:var(--text);}
     .donation-desc{font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.4;}
@@ -497,28 +497,7 @@
 
 </div>
 
-<div style="position:fixed;bottom:0;left:0;width:100%;height:130px;z-index:2;pointer-events:none;overflow:hidden;" aria-hidden="true">
-  <div class="ship-container" onclick="openSwipeDon()" style="cursor:pointer;">
-    <div class="ship-bob">
-      <div class="ship-wake"></div>
-      <svg width="72" height="40" viewBox="0 0 72 40" xmlns="http://www.w3.org/2000/svg">
-        <!-- Hull -->
-        <path d="M4,28 L8,36 L64,36 L68,28 Z" fill="var(--wave-color)" opacity="0.9"/>
-        <!-- Superstructure -->
-        <rect x="18" y="16" width="28" height="14" rx="2" fill="var(--wave-color)" opacity="0.85"/>
-        <!-- Bridge -->
-        <rect x="26" y="9" width="14" height="9" rx="1.5" fill="var(--wave-color)" opacity="0.8"/>
-        <!-- Funnel -->
-        <rect x="32" y="4" width="6" height="7" rx="1" fill="var(--wave-color)" opacity="0.75"/>
-        <!-- Smoke puffs -->
-        <circle cx="35" cy="2" r="2" fill="var(--wave-color)" opacity="0.3"/>
-        <circle cx="38" cy="0" r="1.5" fill="var(--wave-color)" opacity="0.2"/>
-        <!-- Bow detail -->
-        <line x1="52" y1="28" x2="68" y2="28" stroke="var(--wave-color)" stroke-width="1.5" opacity="0.5"/>
-      </svg>
-    </div>
-  </div>
-</div>
+
 
 <div id="nameModalOverlay" class="name-modal-overlay" style="display:none;" aria-modal="true" role="dialog">
   <div class="name-modal" style="max-width:380px;">
@@ -880,6 +859,30 @@
   </div><!-- end belowCardsSection -->
 
 </main>
+
+<!-- ── Section bateau (in-flow, toujours en bas) ── -->
+<div style="width:100%;position:relative;height:130px;overflow:hidden;flex-shrink:0;margin-top:8px;" aria-hidden="true">
+  <div class="ship-container" onclick="openSwipeDon()" style="cursor:pointer;">
+    <div class="ship-bob">
+      <div class="ship-wake"></div>
+      <svg width="72" height="40" viewBox="0 0 72 40" xmlns="http://www.w3.org/2000/svg">
+        <!-- Hull -->
+        <path d="M4,28 L8,36 L64,36 L68,28 Z" fill="var(--wave-color)" opacity="0.9"/>
+        <!-- Superstructure -->
+        <rect x="18" y="16" width="28" height="14" rx="2" fill="var(--wave-color)" opacity="0.85"/>
+        <!-- Bridge -->
+        <rect x="26" y="9" width="14" height="9" rx="1.5" fill="var(--wave-color)" opacity="0.8"/>
+        <!-- Funnel -->
+        <rect x="32" y="4" width="6" height="7" rx="1" fill="var(--wave-color)" opacity="0.75"/>
+        <!-- Smoke puffs -->
+        <circle cx="35" cy="2" r="2" fill="var(--wave-color)" opacity="0.3"/>
+        <circle cx="38" cy="0" r="1.5" fill="var(--wave-color)" opacity="0.2"/>
+        <!-- Bow detail -->
+        <line x1="52" y1="28" x2="68" y2="28" stroke="var(--wave-color)" stroke-width="1.5" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+</div>
 
 </div><!-- end appWrapper -->
 
@@ -3101,16 +3104,19 @@ function renderMilestoneBanner(milestone) {
   const tallyUrl = TALLY_URL[currentLang] || TALLY_URL.fr;
   let emoji, title, desc, cta1, cta2;
   if (milestone === 7) {
+    emoji = '📅';
         title = isFr ? (name?name+', une':'Une')+' semaine ensemble !' : (name?name+', one':'One')+' week together!';
     desc = isFr ? 'Ça fait 7 jours que l\'app veille sur vos traversées. On espère vous avoir évité quelques mauvaises surprises !' : 'The app has been watching over your crossings for 7 days. We hope we\'ve saved you a few frustrating waits!';
     cta1 = isFr ? 'Laisser un commentaire' : 'Leave feedback';
     cta2 = isFr ? 'Soutenir le projet' : 'Support the project';
   } else if (milestone === 30) {
+    emoji = '🗓️';
         title = isFr ? (name?name+', un':'Un')+' mois déjà !' : (name?name+', one':'One')+' month already!';
     desc = isFr ? 'Merci d\'utiliser l\'app depuis un mois ! Votre avis nous aide à l\'améliorer pour toute la communauté.' : 'Thanks for using the app for a month! Your feedback helps us improve it for the whole community.';
     cta1 = isFr ? 'Donner mon avis' : 'Share my feedback';
     cta2 = isFr ? 'Faire un don' : 'Make a donation';
   } else {
+    emoji = '🗓️';
         title = isFr ? (name?name+', 3':'3')+' mois de traversées !' : (name?name+', 3':'3')+' months of crossings!';
     desc = isFr ? 'Vous faites partie des utilisateurs les plus fidèles. Merci de faire partie de cette aventure communautaire !' : 'You\'re one of our most loyal users. Thank you for being part of this community project!';
     cta1 = isFr ? 'Partager votre expérience' : 'Share your experience';
@@ -3118,7 +3124,7 @@ function renderMilestoneBanner(milestone) {
   }
   banner.innerHTML = `
     <div style="text-align:center;padding:4px 0 12px;">
-      <div style="width:36px;height:36px;margin:0 auto 8px;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"> <!-- Water line --> <rect x="2" y="50" rx="1.2" opacity="0.3"/> <!-- Left approach road --> <rect x="2" y="44" width="16" height="3" rx="1.5"/> <!-- Right approach road --> <rect x="46" y="44" width="16" height="3" rx="1.5"/> <!-- Left tower --> <rect x="17" y="18" width="4" height="29" rx="1.5"/> <!-- Right tower --> <rect x="43" y="18" width="4" height="29" rx="1.5"/> <!-- Fixed right leaf (horizontal) --> <rect x="43" y="44" width="4" height="3" rx="1"/> <!-- Bascule left leaf raised ~55 degrees --> <g transform="rotate(-55, 21, 45.5)"> <rect x="21" y="43" width="24" height="3" rx="1.5"/> </g> <!-- Left cable --> <path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Right cable --> <path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/> <!-- Arrow up indicator --> <path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/> <line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/> </svg></div>
+      <div style="font-size:36px;margin:0 auto 8px;text-align:center;">${emoji}</div>
       <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">${title}</div>
       <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:14px;">${desc}</div>
       <div style="display:flex;gap:8px;">
