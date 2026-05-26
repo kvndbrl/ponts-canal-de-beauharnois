@@ -624,7 +624,7 @@ function buildWidgetBody(sub, bridgeStatuses) {
       const avgTotal2 = (d.avgLiftDuration || 12) + (d.avgLoweringDuration || 3);
       const elapsed2 = d.liftingSince ? (Date.now() - d.liftingSince) / 60000 : 0;
       if (elapsed2 > avgTotal2 + 2) {
-        line += isFr ? ' \u00b7 \u26a0\ufe0f Retard possible \u2014 Vue en temps r\u00e9el' : ' \u00b7 \u26a0\ufe0f Possible delay \u2014 Check real-time view';
+        line += isFr ? ' \u00b7 \u26a0\ufe0f Retard possible' : ' \u00b7 \u26a0\ufe0f Possible delay';
       } else {
         const hm = reopenTime.toLocaleTimeString(isFr ? 'fr-CA' : 'en-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
         line += isFr ? ` \u00b7 R\u00e9ouverture ~${hm}` : ` \u00b7 Reopen ~${hm}`;
