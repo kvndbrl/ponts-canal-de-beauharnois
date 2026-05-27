@@ -412,9 +412,17 @@ async function fetchBridgeStatus() {
     const results = [];
     const matches1 = [...section.matchAll(/class="item-data[^"]*"[^>]*style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*>([^<]+)/gi)];
     const matches2 = [...section.matchAll(/style="[^"]*white-space\s*:\s*pre[^"]*"[^>]*class="item-data[^"]*"[^>]*>([^<]+)/gi)];
+    const nowEST = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' }));
     for (const m of [...matches1, ...matches2]) {
       const val = m[1].trim();
-      if (val && !results.includes(val)) results.push(val);
+      if (!val || results.includes(val)) continue;
+      // Filter out past closures: parse end date from "YYYY-MM-DD HH:MM until YYYY-MM-DD HH:MM"
+      const endMatch = val.match(/until\s+(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})/i);
+      if (endMatch) {
+        const endEST = new Date(new Date(`${endMatch[1]}T${endMatch[2]}:00`).toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+        if (endEST < nowEST) continue; // skip past closures
+      }
+      results.push(val);
     }
     return results.length > 0 ? results : null;
   }

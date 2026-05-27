@@ -1786,6 +1786,17 @@ function closeDrawer(){
 }
 
 function fmtClosure(raw,lang){if(!raw)return null;return lang==='fr'?raw.replace(' until ',' au '):raw;}
+function closureIsPast(raw){
+  if(!raw)return true;
+  // Format: "YYYY-MM-DD HH:MM until YYYY-MM-DD HH:MM" or "... au ..."
+  const m=raw.match(/until\s+(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})/);
+  if(!m)return false;
+  const endStr=m[1]+'T'+m[2]+':00';
+  // Parse as America/Toronto
+  const endEST=new Date(new Date(endStr).toLocaleString('en-US',{timeZone:'America/Toronto'}));
+  const nowEST=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'}));
+  return endEST<nowEST;
+}
 
 const TR={
   fr:{
@@ -2157,10 +2168,11 @@ function updateCards(){
     }
     // Update timeline
     updateTimeline(b, lastData[b].status, lastData[b]);
-    // Closures → badge + tooltip
-    if(cl&&cl.length>0){
+    // Closures → badge + tooltip (filter out past ones)
+    const activeCl = cl ? cl.filter(c => !closureIsPast(c)) : [];
+    if(activeCl.length>0){
       tooltipTitle.textContent=t.closureTitle||(currentLang==='fr'?'Fermetures planifiées':'Planned closures');
-      tooltipBody.innerHTML=cl.map(c=>
+      tooltipBody.innerHTML=activeCl.map(c=>
         '<div class="closure-tooltip-item">'+fmtClosure(c,currentLang)+'</div>'
       ).join('');
       badge.style.display='inline-flex';
@@ -2202,8 +2214,8 @@ function updateCards(){
       const elapsed = (Date.now() - d.liftingSince) / 60000;
       if (elapsed > avgTotal + 3) {
         dwEl.innerHTML = isFr
-          ? '⚠️ Possible retard du navire — <a href="#" onclick="showMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Consultez la vue en temps réel</a>'
-          : '⚠️ Possible vessel delay — <a href="#" onclick="showMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Check the real-time view</a>';
+          ? '⚠️ Possible retard du navire — <a href="#" onclick="openMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Consultez la vue en temps réel</a>'
+          : '⚠️ Possible vessel delay — <a href="#" onclick="openMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Check the real-time view</a>';
         dwEl.style.display = 'block';
       } else {
         dwEl.style.display = 'none';
