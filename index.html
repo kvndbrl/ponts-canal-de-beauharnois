@@ -2598,8 +2598,23 @@ function updateDisplay(){
       if (!liftsRaw || liftsRaw === 'No anticipated bridge lifts') {
         liftsEl.textContent = t.nl;
       } else {
-        const lines = liftsRaw.split('\n').map(l => translateLifts(l, currentLang));
-        liftsEl.innerHTML = lines.map(l => `<div>${l}</div>`).join('');
+        const nowEST = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Toronto'}));
+        const lines = liftsRaw.split('\n')
+          .filter(l => {
+            // Filter out lines with a past end datetime "YYYY-MM-DD HH:MM until YYYY-MM-DD HH:MM"
+            const m = l.match(/until\s+(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})/i);
+            if (m) {
+              const endEST = new Date(new Date(`${m[1]}T${m[2]}:00`).toLocaleString('en-US', {timeZone:'America/Toronto'}));
+              return endEST >= nowEST;
+            }
+            return true; // keep lines without a date range
+          })
+          .map(l => translateLifts(l, currentLang));
+        if (lines.length === 0) {
+          liftsEl.textContent = t.nl;
+        } else {
+          liftsEl.innerHTML = lines.map(l => `<div>${l}</div>`).join('');
+        }
         // Show asterisk note if applicable
         const noteEl = document.getElementById('liftsNote'+C);
         if (noteEl) {
