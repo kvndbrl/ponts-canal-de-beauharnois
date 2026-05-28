@@ -643,13 +643,25 @@ function buildWidgetBody(sub, bridgeStatuses) {
       const hm = end.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
       line += isFr ? ` \u00b7 jusqu'\u00e0 ${hm}` : ` \u00b7 until ${hm}`;
     }
-    // Add scheduled time if available
+    // Add scheduled time if available — filter out past times
     if (d.scheduledTimes && d.scheduledTimes.length > 0 && d.status === 'disponible') {
-      const times = d.scheduledTimes.join(', ');
-      const plural = d.scheduledTimes.length > 1;
-      line += isFr
-        ? ` \u00b7 ${plural ? 'Lev\u00e9es pr\u00e9vues' : 'Lev\u00e9e pr\u00e9vue'} ${times}`
-        : ` \u00b7 ${plural ? 'Lifts' : 'Lift'} at ${times}`;
+      const nowEST = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+      const futureTimes = d.scheduledTimes.filter(t => {
+        const m = t.replace('*','').trim().match(/(\d{1,2}):(\d{2})/);
+        if (!m) return false;
+        const scheduled = new Date(nowEST);
+        scheduled.setHours(parseInt(m[1]), parseInt(m[2]), 0, 0);
+        if (scheduled < nowEST) scheduled.setDate(scheduled.getDate() + 1);
+        // Only include if it's within the next 24h and actually in the future
+        return (scheduled - nowEST) < 24 * 60 * 60 * 1000 && scheduled > nowEST;
+      });
+      if (futureTimes.length > 0) {
+        const times = futureTimes.join(', ');
+        const plural = futureTimes.length > 1;
+        line += isFr
+          ? ` \u00b7 ${plural ? 'Lev\u00e9es pr\u00e9vues' : 'Lev\u00e9e pr\u00e9vue'} ${times}`
+          : ` \u00b7 ${plural ? 'Lifts' : 'Lift'} at ${times}`;
+      }
     }
     lines.push(line);
   }

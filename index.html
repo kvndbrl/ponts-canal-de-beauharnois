@@ -860,31 +860,28 @@
 
 </main>
 
-<!-- ── Section bateau (in-flow, toujours en bas) ── -->
-<div style="width:100%;position:relative;height:130px;overflow:hidden;flex-shrink:0;margin-top:8px;" aria-hidden="true">
-  <div class="ship-container" onclick="openSwipeDon()" style="cursor:pointer;">
+<!-- Spacer pour compenser le bateau/vagues fixed -->
+<div style="height:130px;flex-shrink:0;" aria-hidden="true"></div>
+
+</div><!-- end appWrapper -->
+
+<!-- Bateau fixed au-dessus des vagues -->
+<div style="position:fixed;bottom:0;left:0;width:100%;height:130px;z-index:1;pointer-events:none;overflow:hidden;" aria-hidden="true">
+  <div class="ship-container" onclick="openSwipeDon()" style="cursor:pointer;pointer-events:auto;">
     <div class="ship-bob">
       <div class="ship-wake"></div>
       <svg width="72" height="40" viewBox="0 0 72 40" xmlns="http://www.w3.org/2000/svg">
-        <!-- Hull -->
         <path d="M4,28 L8,36 L64,36 L68,28 Z" fill="var(--wave-color)" opacity="0.9"/>
-        <!-- Superstructure -->
         <rect x="18" y="16" width="28" height="14" rx="2" fill="var(--wave-color)" opacity="0.85"/>
-        <!-- Bridge -->
         <rect x="26" y="9" width="14" height="9" rx="1.5" fill="var(--wave-color)" opacity="0.8"/>
-        <!-- Funnel -->
         <rect x="32" y="4" width="6" height="7" rx="1" fill="var(--wave-color)" opacity="0.75"/>
-        <!-- Smoke puffs -->
         <circle cx="35" cy="2" r="2" fill="var(--wave-color)" opacity="0.3"/>
         <circle cx="38" cy="0" r="1.5" fill="var(--wave-color)" opacity="0.2"/>
-        <!-- Bow detail -->
         <line x1="52" y1="28" x2="68" y2="28" stroke="var(--wave-color)" stroke-width="1.5" opacity="0.5"/>
       </svg>
     </div>
   </div>
 </div>
-
-</div><!-- end appWrapper -->
 
 <!-- Donate modal -->
 <div id="donateModalOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;" onclick="if(event.target===this)closeDonateModal()">
