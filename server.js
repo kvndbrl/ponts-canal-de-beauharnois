@@ -191,6 +191,15 @@ async function removeSubscription(sub) {
 
 let subscriptions = [];
 let lastStatus = { gonzague: null, larocque: null };
+
+// ── SSE clients ────────────────────────────────────────────────────────────
+const sseClients = new Set();
+function broadcastSSE(data) {
+  const payload = `data: ${JSON.stringify(data)}\n\n`;
+  for (const res of sseClients) {
+    try { res.write(payload); } catch(e) { sseClients.delete(res); }
+  }
+}
 let monitorTimeout = null;
 let widgetUpdateTimeout = null;
 
@@ -766,10 +775,23 @@ async function monitor() {
     lastStatus.gonzague = data.gonzague.status;
     lastStatus.larocque = data.larocque.status;
     await saveLastStatus();
+    // Broadcast aux clients SSE connectés
+    if (sseClients.size > 0) {
+      const sseData = { ...data };
+      for (const bridge of ['gonzague', 'larocque']) {
+        sseData[bridge] = { ...data[bridge], avgLiftDuration: getAvgLiftDuration(bridge), avgLoweringDuration: getAvgLoweringDuration(bridge), liftCount: liftHistory[bridge].length };
+        if (liftActive[bridge]) sseData[bridge].liftingSince = liftActive[bridge].raisedAt;
+      }
+      broadcastSSE(sseData);
+    }
     const anyActive = ['gonzague','larocque'].some(b => ['bientot_leve','raising','leve','lowering'].includes(data[b].status));
     clearTimeout(monitorTimeout);
-    monitorTimeout = setTimeout(monitor, anyActive ? 5000 : 10000);
-    // Send widget update every 30 seconds when a bridge is active (for live reopen time)
+    // Ralentir la nuit (23h-5h EST) quand aucun pont actif
+    const hourEST = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' })).getHours();
+    const isNight = hourEST >= 23 || hourEST < 5;
+    const nextDelay = anyActive ? 5000 : isNight ? 60000 : 20000;
+    monitorTimeout = setTimeout(monitor, nextDelay);
+    // Send widget update every 60 seconds when a bridge is active (for live reopen time)
     if (anyActive) {
       clearTimeout(widgetUpdateTimeout);
       widgetUpdateTimeout = setTimeout(async () => {
@@ -777,7 +799,7 @@ async function monitor() {
           gonzague: { status: lastStatus.gonzague || 'disponible', avgLiftDuration: getAvgLiftDuration('gonzague'), avgLoweringDuration: getAvgLoweringDuration('gonzague'), outageEnd: null, liftingSince: liftActive.gonzague?.raisedAt || null, scheduledTimes: parseScheduledLifts(data.gonzague.next_lifts) },
           larocque: { status: lastStatus.larocque || 'disponible', avgLiftDuration: getAvgLiftDuration('larocque'), avgLoweringDuration: getAvgLoweringDuration('larocque'), outageEnd: null, liftingSince: liftActive.larocque?.raisedAt || null, scheduledTimes: parseScheduledLifts(data.larocque.next_lifts) },
         });
-      }, 30 * 1000);
+      }, 60 * 1000);
     }
   } catch(e) {
     log(`Monitor error: ${e.message}`);
@@ -823,7 +845,35 @@ app.get('/status', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-app.post('/subscribe', async (req, res) => {
+app.get('/stream', async (req, res) => {
+  res.set({
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'X-Accel-Buffering': 'no',
+  });
+  res.flushHeaders();
+  sseClients.add(res);
+  // Send current status immediately on connect
+  try {
+    const data = await fetchBridgeStatus();
+    for (const bridge of ['gonzague', 'larocque']) {
+      data[bridge].avgLiftDuration = getAvgLiftDuration(bridge);
+      data[bridge].avgLoweringDuration = getAvgLoweringDuration(bridge);
+      data[bridge].liftCount = liftHistory[bridge].length;
+      if (liftActive[bridge]) data[bridge].liftingSince = liftActive[bridge].raisedAt;
+    }
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  } catch(e) {}
+  // Heartbeat toutes les 25s pour garder la connexion vivante
+  const heartbeat = setInterval(() => {
+    try { res.write(': ping\n\n'); } catch(e) {}
+  }, 25000);
+  req.on('close', () => {
+    clearInterval(heartbeat);
+    sseClients.delete(res);
+  });
+});
   const sub = req.body;
   const existing = subscriptions.find(s => s.endpoint === sub.endpoint);
   if (existing) {

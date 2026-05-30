@@ -3706,7 +3706,10 @@ window.addEventListener('resize', updateOrientation);
 window.addEventListener('orientationchange', () => setTimeout(updateOrientation, 150));
 if (screen.orientation) screen.orientation.addEventListener('change', () => setTimeout(updateOrientation, 150));
 if (window.visualViewport) window.visualViewport.addEventListener('resize', updateOrientation);
-setInterval(updateOrientation, 500);
+// Remplacé setInterval(updateOrientation, 500) par ResizeObserver — pas de polling continu
+if (window.ResizeObserver) {
+  new ResizeObserver(updateOrientation).observe(document.documentElement);
+}
 updateOrientation();
 
 // Force unlock rotation for PWA
@@ -3842,27 +3845,66 @@ const savedName=getUserName();
 if(savedName) document.getElementById('prenomInput').value=savedName;
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
 loadCachedStatus();
-fetchStatus();
 fetchLiftHistory();
-  
 
 
-// Pause polling when tab is hidden, resume and refresh immediately when visible
-let _fetchInterval=setInterval(fetchStatus,60000);
-let _greetInterval=setInterval(updateGreeting,60000);
-let _timerInterval=setInterval(refreshTimers,10000);
-document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){
-    clearInterval(_fetchInterval);
+
+// ── Stratégie fetch : SSE si pont actif, polling sinon ────────────────────
+let _sseSource = null;
+let _fetchInterval = null;
+let _greetInterval = setInterval(updateGreeting, 60000);
+function _isAnyActive() {
+  return Object.values(lastData||{}).some(d=>d&&['leve','raising','lowering','bientot_leve'].includes(d.status));
+}
+function _startSSE() {
+  if (_sseSource) return;
+  _stopPolling();
+  _sseSource = new EventSource(BACKEND + '/stream');
+  _sseSource.onmessage = e => {
+    try {
+      const d = JSON.parse(e.data);
+      lastData = d; retries = 0;
+      saveCachedStatus(d);
+      trackLiftStatus('gonzague', d.gonzague.status, d.gonzague.raisedSince);
+      trackLiftStatus('larocque', d.larocque.status, d.larocque.raisedSince);
+      updateDisplay(); refreshTimers();
+      // Repasser au polling si plus aucun pont actif
+      if (!_isAnyActive()) { _stopSSE(); _startPolling(); }
+    } catch(e) {}
+  };
+  _sseSource.onerror = () => { _stopSSE(); _startPolling(); };
+}
+function _stopSSE() {
+  if (_sseSource) { _sseSource.close(); _sseSource = null; }
+}
+function _startPolling() {
+  if (_fetchInterval) return;
+  const hourEST = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'})).getHours();
+  const isNight = hourEST >= 23 || hourEST < 5;
+  _fetchInterval = setInterval(async () => {
+    await fetchStatus();
+    // Passer en SSE si un pont devient actif
+    if (_isAnyActive()) { _startSSE(); }
+  }, isNight ? 180000 : 60000);
+}
+function _stopPolling() {
+  if (_fetchInterval) { clearInterval(_fetchInterval); _fetchInterval = null; }
+}
+function _shouldRunTimers() { return _isAnyActive(); }
+let _timerInterval = setInterval(() => { if (_shouldRunTimers()) refreshTimers(); }, 10000);
+
+// Démarrage initial
+fetchStatus().then(() => { _isAnyActive() ? _startSSE() : _startPolling(); });
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    _stopSSE(); _stopPolling();
     clearInterval(_greetInterval);
     clearInterval(_timerInterval);
   } else {
-    fetchStatus();
-    updateGreeting();
-    refreshTimers();
-    _fetchInterval=setInterval(fetchStatus,60000);
-    _greetInterval=setInterval(updateGreeting,60000);
-    _timerInterval=setInterval(refreshTimers,10000);
+    updateGreeting(); fetchStatus().then(() => { _isAnyActive() ? _startSSE() : _startPolling(); });
+    _greetInterval = setInterval(updateGreeting, 60000);
+    _timerInterval = setInterval(() => { if (_shouldRunTimers()) refreshTimers(); }, 10000);
   }
 });
 </script>
