@@ -874,6 +874,8 @@ app.get('/stream', async (req, res) => {
     sseClients.delete(res);
   });
 });
+
+app.post('/subscribe', async (req, res) => {
   const sub = req.body;
   const existing = subscriptions.find(s => s.endpoint === sub.endpoint);
   if (existing) {
