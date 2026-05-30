@@ -2211,8 +2211,8 @@ function updateCards(){
       const elapsed = (Date.now() - d.liftingSince) / 60000;
       if (elapsed > avgTotal + 3) {
         dwEl.innerHTML = isFr
-          ? '⚠️ Possible retard du navire — <a href="#" onclick="openMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Consultez la vue en temps réel</a>'
-          : '⚠️ Possible vessel delay — <a href="#" onclick="openMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Check the real-time view</a>';
+          ? '⚠️ Possible retard du navire — <a href="#" onclick="showMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Consultez la vue en temps réel</a>'
+          : '⚠️ Possible vessel delay — <a href="#" onclick="showMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Check the real-time view</a>';
         dwEl.style.display = 'block';
       } else {
         dwEl.style.display = 'none';
