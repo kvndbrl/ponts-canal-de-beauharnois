@@ -1103,24 +1103,29 @@ async function sendDonationNotification() {
 }
 
 // Vérifie chaque jeudi à 12h00 EST si c'est le premier jeudi du mois
-const donationNotifSent = { month: -1 };
-setInterval(() => {
+// La date du dernier envoi est persistée dans Redis pour survivre aux redémarrages
+setInterval(async () => {
   const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' }));
   const day = now.getDay();       // 4 = jeudi
   const date = now.getDate();     // 1-7 = premier jeudi du mois
   const hour = now.getHours();
-  const month = now.getMonth();
-  if (day === 4 && date <= 7 && hour === 12 && donationNotifSent.month !== month) {
-    donationNotifSent.month = month;
+  if (day !== 4 || date > 7 || hour !== 12) return;
+  const monthKey = `${now.getFullYear()}-${now.getMonth()}`;
+  try {
+    const alreadySent = await redisCommand('get', 'donation_notif_sent');
+    if (alreadySent === monthKey) return;
+    await redisCommand('set', 'donation_notif_sent', monthKey);
     log('Premier jeudi du mois - envoi notification don');
     sendDonationNotification();
+  } catch(e) {
+    log('Erreur scheduler don: ' + e.message);
   }
 }, 60 * 1000); // vérifie chaque minute
 
-// Endpoint admin pour tester la notification de don manuellement
-app.post('/admin/send-donation-notif', async (req, res) => {
+// Endpoint admin pour déclencher manuellement la notification de don
+app.get('/admin/send-donation-notif', async (req, res) => {
   const adminKey = process.env.ADMIN_KEY;
-  if (adminKey && req.headers['x-admin-key'] !== adminKey) {
+  if (adminKey && req.query.key !== adminKey) {
     return res.status(401).json({ error: 'unauthorized' });
   }
   try {
