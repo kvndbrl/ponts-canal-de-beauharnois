@@ -1064,6 +1064,73 @@ async function checkBusyPeriodAlerts() {
 
 setInterval(checkBusyPeriodAlerts, 5 * 60 * 1000);
 
+// ── Notification mensuelle de don ──────────────────────────────────────────
+const BMAC_URL = 'https://buymeacoffee.com/kvndbrl';
+
+async function sendDonationNotification() {
+  const isFr = (sub) => (sub.lang || 'fr') === 'fr';
+  let sent = 0, failed = 0;
+  for (const sub of [...subscriptions]) {
+    const fr = isFr(sub);
+    const payload = JSON.stringify({
+      title: fr ? '☕ Ponts Beauharnois' : '☕ Beauharnois Bridges',
+      body: fr
+        ? "Cette app est gratuite et maintenue par une seule personne. Si elle vous est utile, un petit don fait toute la différence!"
+        : "This app is free and maintained by one person. If it's been useful to you, a small donation makes a real difference!",
+      tag: 'donation-monthly',
+      icon: notifIcon(sub),
+      badge: `${BASE_URL}/badge-disponible.png`,
+      url: BMAC_URL,
+      actions: [
+        { action: 'donate', title: fr ? 'Faire un don ☕' : 'Donate ☕' }
+      ],
+      persistent: false,
+    });
+    try {
+      await webpush.sendNotification(sub, payload, { urgency: 'low', TTL: 86400 });
+      sent++;
+    } catch(e) {
+      failed++;
+      if (e.statusCode === 410) {
+        subscriptions = subscriptions.filter(s => s.endpoint !== sub.endpoint);
+        await removeSubscription(sub);
+        umamiTrack('subscription_lost', { reason: 'push_failed', total: subscriptions.length });
+      }
+    }
+  }
+  log(`Notification don mensuelle - ${sent} envoyées | ${failed} échouées`);
+  umamiTrack('donation_notif_sent', { sent, failed });
+}
+
+// Vérifie chaque jeudi à 12h00 EST si c'est le premier jeudi du mois
+const donationNotifSent = { month: -1 };
+setInterval(() => {
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+  const day = now.getDay();       // 4 = jeudi
+  const date = now.getDate();     // 1-7 = premier jeudi du mois
+  const hour = now.getHours();
+  const month = now.getMonth();
+  if (day === 4 && date <= 7 && hour === 12 && donationNotifSent.month !== month) {
+    donationNotifSent.month = month;
+    log('Premier jeudi du mois - envoi notification don');
+    sendDonationNotification();
+  }
+}, 60 * 1000); // vérifie chaque minute
+
+// Endpoint admin pour tester la notification de don manuellement
+app.post('/admin/send-donation-notif', async (req, res) => {
+  const adminKey = process.env.ADMIN_KEY;
+  if (adminKey && req.headers['x-admin-key'] !== adminKey) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+  try {
+    await sendDonationNotification();
+    res.json({ ok: true, subscribers: subscriptions.length });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
