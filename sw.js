@@ -32,6 +32,9 @@ self.addEventListener('push', function(event) {
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  const url = event.notification.data?.url || '/';
+  const tag = event.notification.tag;
+  const url = tag === 'donation-monthly'
+    ? 'https://buymeacoffee.com/kvndbrl'
+    : (event.notification.data?.url || '/');
   event.waitUntil(clients.openWindow(url));
 });
