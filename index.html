@@ -2999,9 +2999,9 @@ async function loadSupporters(){
       row.style.cssText='background:var(--surface2);border-radius:8px;padding:7px 9px;';
       const name=document.createElement('div');
       name.style.cssText='font-size:10px;font-weight:700;color:var(--text);font-family:var(--sans);margin-bottom:2px;';
-      name.textContent=(s.name||(currentLang==='fr'?'Anonyme':'Anonymous'));
+      name.textContent=s.name||(currentLang==='fr'?'Anonyme':'Anonymous');
       const note=document.createElement('div');
-      note.style.cssText='font-size:10px;color:var(--text3);font-family:var(--sans);line-height:1.4;';
+      note.style.cssText='font-size:10px;color:var(--text3);font-family:var(--sans);line-height:1.4;white-space:pre-line;';
       note.textContent=s.note;
       row.appendChild(name);
       row.appendChild(note);

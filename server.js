@@ -1089,13 +1089,24 @@ async function fetchBMACSupporters() {
       .filter(r => r.support_note && r.support_note.trim().length > 0)
       .sort((a, b) => new Date(b.support_created_on) - new Date(a.support_created_on))
       .slice(0, MAX_SUPPORTERS_CACHED)
-      .map(r => ({
-        name: (r.supporter_name || r.payer_name || 'Anonyme').trim(),
-        note: r.support_note.trim(),
-        amount: r.support_coffee_price ? Number(r.support_coffee_price) * (r.support_coffees || 1) : null,
-        currency: r.support_currency || 'CAD',
-        createdAt: r.support_created_on || null,
-      }));
+      .map(r => {
+        const rawName = (r.supporter_name || r.payer_name || '').trim();
+        // BMC renvoie parfois le courriel comme nom si le supporter n'a pas défini de nom d'affichage
+        // On ne l'affiche jamais publiquement — protection vie privée
+        const looksLikeEmail = /@/.test(rawName);
+        const cleanNote = r.support_note
+          .replace(/<br\s*\/?>/gi, '\n')   // préserve les sauts de ligne volontaires
+          .replace(/<[^>]+>/g, '')          // retire tout le reste du HTML
+          .trim();
+        return {
+          name: looksLikeEmail || !rawName ? null : rawName, // null = le frontend affiche "Anonyme"/"Anonymous"
+          note: cleanNote,
+          amount: r.support_coffee_price ? Number(r.support_coffee_price) * (r.support_coffees || 1) : null,
+          currency: r.support_currency || 'CAD',
+          createdAt: r.support_created_on || null,
+        };
+      })
+      .filter(s => s.note.length > 0); // au cas où le nettoyage HTML viderait complètement une note
     bmacSupporters = withNotes;
     await redisCommand('set', 'bmac_supporters', JSON.stringify(bmacSupporters));
     log(`Supporters BMC rafraîchis: ${bmacSupporters.length} commentaires`);
