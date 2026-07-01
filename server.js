@@ -1064,6 +1064,64 @@ async function checkBusyPeriodAlerts() {
 
 setInterval(checkBusyPeriodAlerts, 5 * 60 * 1000);
 
+// ── Supporters Buy Me a Coffee (API officielle, pas de scraping) ───────────
+// Token généré depuis https://developers.buymeacoffee.com/dashboard
+// À ajouter comme variable d'environnement sur Render: BMAC_API_TOKEN
+const BMAC_API_TOKEN = process.env.BMAC_API_TOKEN;
+const BMAC_SUPPORTERS_API = 'https://developers.buymeacoffee.com/api/v1/supporters';
+const MAX_SUPPORTERS_CACHED = 20;
+
+let bmacSupporters = []; // { name, note, amount, currency, createdAt }
+
+async function fetchBMACSupporters() {
+  if (!BMAC_API_TOKEN) {
+    log('BMAC_API_TOKEN non configuré - supporters non récupérés');
+    return;
+  }
+  try {
+    const res = await fetch(`${BMAC_SUPPORTERS_API}?page=1`, {
+      headers: { Authorization: `Bearer ${BMAC_API_TOKEN}` }
+    });
+    if (!res.ok) throw new Error(`BMC API ${res.status}`);
+    const data = await res.json();
+    const rows = Array.isArray(data.data) ? data.data : [];
+    const withNotes = rows
+      .filter(r => r.support_note && r.support_note.trim().length > 0)
+      .sort((a, b) => new Date(b.support_created_on) - new Date(a.support_created_on))
+      .slice(0, MAX_SUPPORTERS_CACHED)
+      .map(r => ({
+        name: (r.supporter_name || r.payer_name || 'Anonyme').trim(),
+        note: r.support_note.trim(),
+        amount: r.support_coffee_price ? Number(r.support_coffee_price) * (r.support_coffees || 1) : null,
+        currency: r.support_currency || 'CAD',
+        createdAt: r.support_created_on || null,
+      }));
+    bmacSupporters = withNotes;
+    await redisCommand('set', 'bmac_supporters', JSON.stringify(bmacSupporters));
+    log(`Supporters BMC rafraîchis: ${bmacSupporters.length} commentaires`);
+  } catch (e) {
+    console.error('fetchBMACSupporters error:', e.message);
+    // On garde le cache existant en mémoire/Redis en cas d'échec - pas de casse silencieuse visible
+  }
+}
+
+async function loadBMACSupportersFromCache() {
+  try {
+    const val = await redisCommand('get', 'bmac_supporters');
+    if (val) {
+      bmacSupporters = JSON.parse(val);
+      log(`Supporters BMC chargés depuis Redis: ${bmacSupporters.length}`);
+    }
+  } catch (e) { console.error('loadBMACSupportersFromCache error:', e.message); }
+}
+
+app.get('/api/supporters', (req, res) => {
+  res.json({ supporters: bmacSupporters });
+});
+
+// Rafraîchit toutes les 6 heures - largement suffisant pour ce volume de dons
+setInterval(fetchBMACSupporters, 6 * 60 * 60 * 1000);
+
 // ── Notification mensuelle de don ──────────────────────────────────────────
 const BMAC_URL = 'https://buymeacoffee.com/kvndbrl';
 
@@ -1170,6 +1228,8 @@ async function start() {
   await loadLastStatus();
   await loadLiftHistory();
   await loadLiftActive();
+  await loadBMACSupportersFromCache();
+  fetchBMACSupporters(); // rafraîchit en arrière-plan au démarrage, sans bloquer le boot
   log(`Ready with ${subscriptions.length} subscriptions`);
   umamiTrack('subscription_count', { count: subscriptions.length });
   // Send widget update on boot if status was already active (e.g. after reboot)
