@@ -717,12 +717,12 @@
 
   <button onclick="event.preventDefault();event.stopPropagation();openAboutModal();" id="aboutBtn" style="background:none;border:none;color:var(--accent);font-size:12px;font-family:var(--mono);cursor:pointer;text-decoration:underline;text-underline-offset:3px;margin-top:10px;padding:4px 0;display:block;width:100%;text-align:center;font-weight:600;">À propos du développeur</button>
   </a>
+</div>
 
-  <!-- Bloc supporters BMC - preuve sociale des dons déjà reçus -->
-  <div id="supportersWidget" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-    <div style="font-size:11px;font-weight:700;color:var(--text2);font-family:var(--sans);text-align:center;margin-bottom:8px;" id="supportersTitle">Merci à nos supporters ☕</div>
-    <div id="supportersList" style="display:flex;flex-direction:column;gap:6px;"></div>
-  </div>
+<!-- Bloc supporters BMC - indépendant de la bannière de don, reste visible même si celle-ci est fermée -->
+<div id="supportersWidget" style="display:none;margin:0 16px 10px;padding:10px 12px;background:var(--surface);border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--border);">
+  <div style="font-size:11px;font-weight:700;color:var(--text2);font-family:var(--sans);text-align:center;margin-bottom:8px;" id="supportersTitle">Merci à nos supporters ☕</div>
+  <div id="supportersList" style="display:flex;flex-direction:column;gap:6px;"></div>
 </div>
 <span id="mostAppreciatedBadge" style="display:none;">⭐ CONTRIBUTION EXEMPLAIRE</span>
 <a id="donateNowBtn" href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" style="display:none;"></a>
