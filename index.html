@@ -719,11 +719,24 @@
   </a>
 </div>
 
-<!-- Bloc supporters BMC - indépendant de la bannière de don, reste visible même si celle-ci est fermée -->
-<div id="supportersWidget" style="display:none;margin:0 16px 10px;padding:10px 12px;background:var(--surface);border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--border);">
-  <div style="font-size:11px;font-weight:700;color:var(--text2);font-family:var(--sans);text-align:center;margin-bottom:8px;" id="supportersTitle">Merci à nos supporters ☕</div>
-  <div id="supportersList" style="display:flex;flex-direction:column;gap:6px;"></div>
+<!-- Bloc supporters BMC - barre sticky discrète en bas de page, carrousel auto-défilant -->
+<div id="supportersFooter" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:200;background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(0,0,0,.15);">
+  <a href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer"
+    onclick="track('donation_clicked',{source:'supporters_footer'});"
+    style="display:flex;align-items:center;gap:8px;text-decoration:none;padding:8px 14px calc(8px + env(safe-area-inset-bottom));overflow:hidden;">
+    <span style="font-size:15px;flex-shrink:0;line-height:1;">☕</span>
+    <div id="supportersFooterTrack" style="flex:1;min-width:0;position:relative;height:30px;overflow:hidden;"></div>
+  </a>
 </div>
+<style>
+.supporter-slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;transition:opacity .6s ease;pointer-events:none;}
+.supporter-slide.active{opacity:1;}
+.supporter-slide .sup-line1{font-size:11px;font-weight:700;color:var(--text);font-family:var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.supporter-slide .sup-line2{font-size:10px;color:var(--text3);font-family:var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+body.has-supporters-footer{padding-bottom:52px;}
+body.has-supporters-footer{padding-bottom:calc(52px + env(safe-area-inset-bottom));}
+</style>
+
 <span id="mostAppreciatedBadge" style="display:none;">⭐ CONTRIBUTION EXEMPLAIRE</span>
 <a id="donateNowBtn" href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" style="display:none;"></a>
 
@@ -2981,41 +2994,50 @@ async function fetchStatus(){
   }
 }
 
-// ── Bloc supporters BMC ──────────────────────────────────────────────────
+// ── Bloc supporters BMC — carrousel sticky en bas de page ─────────────────
+let supportersCarouselTimer=null;
 async function loadSupporters(){
   try{
     const r=await fetch(BACKEND+'/api/supporters',{signal:AbortSignal.timeout(15000)});
     const d=await r.json();
     const list=Array.isArray(d.supporters)?d.supporters:[];
-    const widget=document.getElementById('supportersWidget');
-    const container=document.getElementById('supportersList');
-    const title=document.getElementById('supportersTitle');
-    if(!list.length||!widget||!container) return;
-    title.textContent=currentLang==='fr'?'Merci à nos supporters ☕':'Thanks to our supporters ☕';
-    container.innerHTML='';
-    // Affiche les 3 plus récents commentaires
-    list.slice(0,3).forEach(s=>{
-      const row=document.createElement('div');
-      row.style.cssText='background:var(--surface2);border-radius:8px;padding:7px 9px;';
-      const name=document.createElement('div');
-      name.style.cssText='font-size:10px;font-weight:700;color:var(--text);font-family:var(--sans);margin-bottom:2px;';
-      name.textContent=s.name||(currentLang==='fr'?'Anonyme':'Anonymous');
-      const note=document.createElement('div');
-      note.style.cssText='font-size:10px;color:var(--text3);font-family:var(--sans);line-height:1.4;white-space:pre-line;';
-      note.textContent=s.note;
-      row.appendChild(name);
-      row.appendChild(note);
-      container.appendChild(row);
+    const footer=document.getElementById('supportersFooter');
+    const trackEl=document.getElementById('supportersFooterTrack');
+    if(!list.length||!footer||!trackEl) return;
+    trackEl.innerHTML='';
+    const anon=currentLang==='fr'?'Anonyme':'Anonymous';
+    list.slice(0,8).forEach((s,i)=>{
+      const slide=document.createElement('div');
+      slide.className='supporter-slide'+(i===0?' active':'');
+      const line1=document.createElement('div');
+      line1.className='sup-line1';
+      const amountTxt=s.amount?` · ${s.amount}$`:'';
+      line1.textContent=(s.name||anon)+amountTxt;
+      const line2=document.createElement('div');
+      line2.className='sup-line2';
+      line2.textContent=s.note.replace(/\n+/g,' ');
+      slide.appendChild(line1);
+      slide.appendChild(line2);
+      trackEl.appendChild(slide);
     });
-    widget.style.display='block';
+    footer.style.display='block';
+    document.body.classList.add('has-supporters-footer');
+    // Rotation automatique du carrousel toutes les 4.5s
+    if(supportersCarouselTimer) clearInterval(supportersCarouselTimer);
+    if(list.length>1){
+      let idx=0;
+      const slides=trackEl.querySelectorAll('.supporter-slide');
+      supportersCarouselTimer=setInterval(()=>{
+        slides[idx].classList.remove('active');
+        idx=(idx+1)%slides.length;
+        slides[idx].classList.add('active');
+      },4500);
+    }
   }catch(e){
-    // Échec silencieux - le widget reste caché, l'app fonctionne normalement sans lui
+    // Échec silencieux - la barre reste cachée, l'app fonctionne normalement sans elle
   }
 }
-if(!sessionStorage.getItem('supportersLoaded')){
-  loadSupporters();
-  sessionStorage.setItem('supportersLoaded','1');
-}
+loadSupporters();
 
 function mainCtaAction(){
   track('notif_cta_clicked');
