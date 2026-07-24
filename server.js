@@ -682,6 +682,7 @@ async function sendWidgetUpdate(bridgeStatuses) {
   // Priority order for badge: outage > leve > raising > lowering > bientot_leve > disponible
   const STATUS_PRIORITY = ['outage', 'leve', 'raising', 'lowering', 'bientot_leve', 'disponible'];
   for (const sub of [...subscriptions]) {
+    if (!isInTimeRange(sub)) continue;
     const lang = sub.lang || 'fr';
     const isFr = lang === 'fr';
     const body = buildWidgetBody(sub, bridgeStatuses);
