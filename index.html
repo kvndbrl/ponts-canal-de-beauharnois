@@ -1370,9 +1370,32 @@ function wmoEmoji(code){
 function wEmoji(c){if(c<=-15)return'\u{1F976}';if(c<=-5)return'\u2744\uFE0F';if(c<=5)return'\u{1F9CA}';if(c<=12)return'\u{1F32C}\uFE0F';if(c<=18)return'\u26C5';if(c<=24)return'\u2600\uFE0F';if(c<=30)return'\u{1F321}\uFE0F';return'\u{1F525}';}
 function toF(c){return Math.round(c*9/5+32);}
 
+// Temporary on-screen debug log for diagnosing the weather toggle on mobile —
+// shows a small dismissible panel instead of requiring dev tools
+function wLog(...args){
+  console.log(...args);
+  let panel=document.getElementById('wDebugPanel');
+  if(!panel){
+    panel=document.createElement('div');
+    panel.id='wDebugPanel';
+    panel.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;max-height:50vh;overflow-y:auto;background:#000;color:#0f0;font-family:monospace;font-size:11px;padding:10px;border-radius:8px;z-index:99999;white-space:pre-wrap;box-shadow:0 4px 20px rgba(0,0,0,.5);';
+    const closeBtn=document.createElement('div');
+    closeBtn.textContent='✕ Fermer';
+    closeBtn.style.cssText='color:#fff;background:#333;padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:8px;cursor:pointer;';
+    closeBtn.onclick=()=>panel.remove();
+    panel.appendChild(closeBtn);
+    document.body.appendChild(panel);
+  }
+  const line=document.createElement('div');
+  line.textContent=args.map(a=>typeof a==='object'?JSON.stringify(a):String(a)).join(' ');
+  panel.appendChild(line);
+}
+
 async function fetchWeather(){
+  wLog('[weather] fetchWeather() called, navigator.geolocation available:', !!navigator.geolocation);
   if(!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(async pos=>{
+    wLog('[weather] geolocation success:', pos.coords.latitude, pos.coords.longitude);
     try{
       const {latitude:lat,longitude:lon}=pos.coords;
       const [wRes,gRes]=await Promise.all([
@@ -1383,6 +1406,7 @@ async function fetchWeather(){
         fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json',
           {headers:{'Accept-Language':currentLang==='en'?'en':'fr'}})
       ]);
+      wLog('[weather] fetch responses ok:', wRes.ok, gRes.ok, wRes.status, gRes.status);
       const w=await wRes.json();
       const g=await gRes.json();
       const c=Math.round(w.current.temperature_2m);
@@ -1397,8 +1421,10 @@ async function fetchWeather(){
       localStorage.setItem('weatherCache', weatherSvg+line1+'&nbsp;&nbsp;&nbsp;'+line2);
       const tog=document.getElementById('weatherToggleInput');
       if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
-    }catch(e){console.log('Weather:',e);}
+      wLog('[weather] SUCCESS — weather text set');
+    }catch(e){wLog('[weather] FAILED inside try block:',e);}
   },(err)=>{
+    wLog('[weather] geolocation ERROR — code:', err.code, 'message:', err.message);
     // Only disable if explicitly denied (code 1), not on timeout or unavailable
     if(err.code===1){
       localStorage.setItem('weatherEnabled','0');
@@ -1410,30 +1436,39 @@ async function fetchWeather(){
 }
 
 function toggleWeather(){
+  wLog('[weather] toggleWeather() called');
   const tog=document.getElementById('weatherToggleInput');
   const currentlyEnabled=localStorage.getItem('weatherEnabled')==='1';
+  wLog('[weather] currentlyEnabled =', currentlyEnabled, 'tog found =', !!tog);
   if(currentlyEnabled){
     // Disable
+    wLog('[weather] disabling');
     localStorage.setItem('weatherEnabled','0');
     document.getElementById('weatherText').innerHTML='';
     if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
   } else {
     // Try to enable — check permission state first
+    wLog('[weather] enabling — navigator.permissions available:', !!navigator.permissions, 'navigator.geolocation available:', !!navigator.geolocation);
     if(navigator.permissions){
       navigator.permissions.query({name:'geolocation'}).then(result=>{
+        wLog('[weather] permissions.query resolved, state =', result.state);
         if(result.state==='denied'){
+          wLog('[weather] denied → showing instructions');
           showGeoInstructions();
         } else {
+          wLog('[weather] not denied → enabling toggle + fetchWeather()');
           if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
           fetchWeather();
         }
-      }).catch(()=>{
+      }).catch((e)=>{
         // Some browsers (notably older Safari) reject this query entirely —
         // fall back to trying the geolocation request directly
+        wLog('[weather] permissions.query REJECTED:', e, '→ trying fetchWeather() directly');
         if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
         fetchWeather();
       });
     } else {
+      wLog('[weather] no navigator.permissions → trying fetchWeather() directly');
       if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
       fetchWeather();
     }
