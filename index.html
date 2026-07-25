@@ -1404,6 +1404,7 @@ async function fetchWeather(){
       localStorage.setItem('weatherEnabled','0');
       const tog=document.getElementById('weatherToggleInput');
       if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
+      showGeoInstructions();
     }
   },{timeout:15000,maximumAge:3600000});
 }
@@ -1426,6 +1427,11 @@ function toggleWeather(){
           if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
           fetchWeather();
         }
+      }).catch(()=>{
+        // Some browsers (notably older Safari) reject this query entirely —
+        // fall back to trying the geolocation request directly
+        if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
+        fetchWeather();
       });
     } else {
       if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
