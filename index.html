@@ -1024,13 +1024,13 @@ function closeDonateModal() {
     </div>
   </div>
 
-  <label class="pref-row" style="border-top:1px solid var(--border);cursor:pointer;" onclick="toggleWeather()">
+  <label class="pref-row" style="border-top:1px solid var(--border);cursor:pointer;">
     <div style="display:flex;flex-direction:column;flex:1;min-width:0;">
       <span class="pref-row-label" id="weatherToggleLabel">Météo</span>
       <div style="font-size:11px;color:var(--text3);font-family:var(--sans);margin-top:2px;line-height:1.4;" id="weatherToggleDesc">Afficher la météo locale dans le salutation.</div>
     </div>
-    <div class="pref-toggle" style="pointer-events:none;">
-      <input type="checkbox" id="weatherToggleInput" role="switch" aria-checked="false"/>
+    <div class="pref-toggle">
+      <input type="checkbox" id="weatherToggleInput" onchange="toggleWeather()" role="switch" aria-checked="false"/>
       <span class="pref-slider"></span>
     </div>
   </label>
@@ -1387,7 +1387,10 @@ function wLog(...args){
     document.body.appendChild(panel);
   }
   const line=document.createElement('div');
-  line.textContent=args.map(a=>typeof a==='object'?JSON.stringify(a):String(a)).join(' ');
+  line.textContent=args.map(a=>{
+    if(a instanceof Error) return a.message||String(a);
+    return typeof a==='object'&&a!==null?JSON.stringify(a):String(a);
+  }).join(' ');
   panel.appendChild(line);
 }
 
@@ -1436,16 +1439,15 @@ async function fetchWeather(){
 }
 
 function toggleWeather(){
-  wLog('[weather] toggleWeather() called');
   const tog=document.getElementById('weatherToggleInput');
-  const currentlyEnabled=localStorage.getItem('weatherEnabled')==='1';
-  wLog('[weather] currentlyEnabled =', currentlyEnabled, 'tog found =', !!tog);
-  if(currentlyEnabled){
+  const wantEnabled=tog?tog.checked:false; // the checkbox has already toggled natively by the time 'change' fires
+  wLog('[weather] toggleWeather() called, wantEnabled =', wantEnabled);
+  if(!wantEnabled){
     // Disable
     wLog('[weather] disabling');
     localStorage.setItem('weatherEnabled','0');
     document.getElementById('weatherText').innerHTML='';
-    if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
+    if(tog) tog.setAttribute('aria-checked','false');
   } else {
     // Try to enable — check permission state first
     wLog('[weather] enabling — navigator.permissions available:', !!navigator.permissions, 'navigator.geolocation available:', !!navigator.geolocation);
@@ -1454,22 +1456,23 @@ function toggleWeather(){
         wLog('[weather] permissions.query resolved, state =', result.state);
         if(result.state==='denied'){
           wLog('[weather] denied → showing instructions');
+          if(tog){tog.checked=false;tog.setAttribute('aria-checked','false');}
           showGeoInstructions();
         } else {
-          wLog('[weather] not denied → enabling toggle + fetchWeather()');
-          if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
+          wLog('[weather] not denied → fetchWeather()');
+          if(tog) tog.setAttribute('aria-checked','true');
           fetchWeather();
         }
       }).catch((e)=>{
         // Some browsers (notably older Safari) reject this query entirely —
         // fall back to trying the geolocation request directly
         wLog('[weather] permissions.query REJECTED:', e, '→ trying fetchWeather() directly');
-        if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
+        if(tog) tog.setAttribute('aria-checked','true');
         fetchWeather();
       });
     } else {
       wLog('[weather] no navigator.permissions → trying fetchWeather() directly');
-      if(tog){tog.checked=true;tog.setAttribute('aria-checked','true');}
+      if(tog) tog.setAttribute('aria-checked','true');
       fetchWeather();
     }
   }
