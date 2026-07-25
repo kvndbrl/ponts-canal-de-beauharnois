@@ -2,128 +2,10 @@ const express = require('express');
 const webpush = require('web-push');
 const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
 const cors = require('cors');
-const WebSocket = require('ws');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-const AIS_API_KEY = process.env.AIS_API_KEY || 'f34af67c17c71094f8c307646b6e5db74f860168';
-const AIS_BBOX = [[45.18, -74.02], [45.22, -73.95]];
-let vesselNearBridge = { gonzague: null, larocque: null };
-const BRIDGES = {
-  gonzague: { lat: 45.2053, lon: -73.9855 },
-  larocque: { lat: 45.1942, lon: -74.0020 }
-};
-const VALID_HEADINGS = [[60, 120], [240, 300]];
-const vesselHistory = new Map();
-const MAX_HISTORY = 20;
-
-function isValidHeading(cog) {
-  if (cog === undefined || cog === null || cog === 511) return true;
-  return VALID_HEADINGS.some(([min, max]) => cog >= min && cog <= max);
-}
-
-function haversineKm(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-function getBestVesselForBridge(bridge) {
-  const bp = BRIDGES[bridge];
-  const now = Date.now();
-  const candidates = [];
-  for (const [mmsi, history] of vesselHistory.entries()) {
-    if (!history.length) continue;
-    const recent = history.filter(p => now - p.ts < 300000);
-    if (!recent.length) continue;
-    const latest = recent[recent.length - 1];
-    const distKm = haversineKm(latest.lat, latest.lon, bp.lat, bp.lon);
-    if (distKm > 2.0) continue;
-    const isMoving = recent.length > 1;
-    const headingOk = isValidHeading(latest.cog);
-    let confidence = 0;
-    confidence += Math.max(0, 100 - distKm * 50);
-    if (headingOk) confidence += 20;
-    if (isMoving) confidence += 10;
-    const crossed = recent.some(p => haversineKm(p.lat, p.lon, bp.lat, bp.lon) < 0.3);
-    if (crossed) confidence += 30;
-    candidates.push({ mmsi, name: latest.name, distKm, confidence, cog: latest.cog });
-  }
-  if (!candidates.length) return null;
-  candidates.sort((a, b) => b.confidence - a.confidence);
-  const best = candidates[0];
-  if (best.confidence < 40) return null;
-  return { name: best.name, mmsi: best.mmsi, distKm: Math.round(best.distKm * 10) / 10, confidence: Math.round(best.confidence), cog: best.cog };
-}
-
-function startAISTracking() {
-  let ws;
-  let reconnectDelay = 30000;
-  const MAX_DELAY = 300000;
-  function connect() {
-    ws = new WebSocket('wss://stream.aisstream.io/v0/stream');
-    ws.on('open', () => {
-      log('AIS WebSocket connect\u00e9');
-      reconnectDelay = 30000;
-      ws.send(JSON.stringify({ APIKey: AIS_API_KEY, BoundingBoxes: [AIS_BBOX], FilterMessageTypes: ['PositionReport', 'ShipStaticData'] }));
-    });
-    ws.on('message', (data) => {
-      try {
-        const msg = JSON.parse(data);
-        const meta = msg.MetaData;
-        if (!meta) return;
-        const lat = meta.latitude;
-        const lon = meta.longitude;
-        const mmsi = String(meta.MMSI || '');
-        const name = meta.ShipName?.trim().replace(/[^\x20-\x7E]/g, '').trim() || null;
-        if (!name || name === '!!!ANYSUCHVESSEL!!!' || !mmsi) return;
-        const cog = msg.Message?.PositionReport?.Cog ?? null;
-        if (!vesselHistory.has(mmsi)) vesselHistory.set(mmsi, []);
-        const hist = vesselHistory.get(mmsi);
-        hist.push({ lat, lon, cog, name, ts: Date.now() });
-        if (hist.length > MAX_HISTORY) hist.shift();
-        for (const bridge of ['gonzague', 'larocque']) {
-          const best = getBestVesselForBridge(bridge);
-          if (best) {
-            vesselNearBridge[bridge] = { ...best, updatedAt: Date.now() };
-            if (!vesselNearBridge[bridge]._logged) {
-              log('Navire d\u00e9tect\u00e9 [' + bridge + ']: ' + best.name + ' \u00e0 ' + best.distKm + 'km');
-              vesselNearBridge[bridge]._logged = true;
-            }
-          }
-        }
-      } catch(e) {}
-    });
-    ws.on('close', () => {
-      log('AIS WebSocket d\u00e9connect\u00e9 - reconnexion dans ' + reconnectDelay/1000 + 's');
-      setTimeout(connect, reconnectDelay);
-      reconnectDelay = Math.min(reconnectDelay * 2, MAX_DELAY);
-    });
-    ws.on('error', (e) => {
-      log('AIS erreur: ' + e.message);
-      reconnectDelay = Math.min(reconnectDelay * 2, MAX_DELAY);
-    });
-  }
-  connect();
-}
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [mmsi, hist] of vesselHistory.entries()) {
-    const recent = hist.filter(p => now - p.ts < 600000);
-    if (!recent.length) vesselHistory.delete(mmsi);
-    else vesselHistory.set(mmsi, recent);
-  }
-  for (const bridge of ['gonzague', 'larocque']) {
-    const best = getBestVesselForBridge(bridge);
-    if (best) { vesselNearBridge[bridge] = { ...best, updatedAt: now }; }
-    else { vesselNearBridge[bridge] = null; }
-  }
-}, 60000);
 
 const UMAMI_URL = 'https://cloud.umami.is/api/send';
 const UMAMI_WEBSITE_ID = '1786c8da-b13f-4fec-b8d2-7d2e7102c29b';
@@ -820,18 +702,6 @@ setInterval(async () => {
 app.get('/', (req, res) => res.send('Ponts Beauharnois API'));
 app.get('/ping', (req, res) => res.json({ ok: true, subs: subscriptions.length }));
 
-app.post('/vessel-update', (req, res) => {
-  const { bridge, name, mmsi, confidence, cog } = req.body;
-  if (!bridge || !['gonzague','larocque'].includes(bridge)) return res.status(400).json({ error: 'Invalid bridge' });
-  if (name && mmsi) {
-    vesselNearBridge[bridge] = { name, mmsi, confidence: confidence || 50, cog, updatedAt: Date.now() };
-    log(`Navire [${bridge}] via client: ${name}`);
-  } else {
-    vesselNearBridge[bridge] = null;
-  }
-  res.json({ ok: true });
-});
-
 app.get('/status', async (req, res) => {
   try {
     const data = await fetchBridgeStatus();
@@ -840,7 +710,6 @@ app.get('/status', async (req, res) => {
       data[bridge].avgLoweringDuration = getAvgLoweringDuration(bridge);
       data[bridge].liftCount = liftHistory[bridge].length;
       if (liftActive[bridge]) data[bridge].liftingSince = liftActive[bridge].raisedAt;
-      if (vesselNearBridge[bridge]) data[bridge].vessel = vesselNearBridge[bridge];
     }
     res.json(data);
   } catch(e) { res.status(500).json({ error: e.message }); }
