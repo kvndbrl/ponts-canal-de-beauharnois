@@ -214,7 +214,19 @@
     .bridge-timeline.visible{display:flex;}
     .timeline-track{display:flex;align-items:flex-start;padding:4px 0;gap:0;}
     .timeline-step{display:flex;flex-direction:column;align-items:center;flex:1;gap:6px;}
-    .timeline-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;transition:all .4s;overflow:hidden;cursor:pointer;}
+    .timeline-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;transition:all .4s;overflow:hidden;}
+    .timeline-dot-wrap{position:relative;cursor:pointer;}
+    .dot-info-badge{position:absolute;top:-2px;right:-2px;width:13px;height:13px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--text3);font-size:8px;font-weight:700;font-family:var(--mono);display:flex;align-items:center;justify-content:center;line-height:1;pointer-events:none;}
+    .status-tooltip{
+      position:fixed;z-index:400;visibility:hidden;
+      background:var(--surface);border:1px solid rgba(255,255,255,.22);
+      border-radius:12px;box-shadow:var(--shadow);
+      padding:10px 14px;max-width:min(260px,calc(100vw - 24px));
+      font-family:var(--mono);font-size:11px;color:var(--text2);
+      line-height:1.6;display:none;
+    }
+    .status-tooltip.open{display:block;}
+    .status-tooltip-title{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;}
     .timeline-dot svg{width:20px;height:20px;fill:var(--text3);color:var(--text3);transition:fill .4s,color .4s;}
     .timeline-dot.active{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 4px rgba(var(--accent-rgb),.2);}
     .timeline-dot.active svg{fill:#fff;color:#fff;}
@@ -750,17 +762,17 @@
 
     <div class="bridge-timeline" id="timelineGonzague">
       <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Gonzague" onclick="toggleStatusTooltip('Gonzague',0,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Gonzague">Bientôt levé</span></div>
+        <div class="timeline-step"><div class="timeline-dot-wrap" onclick="toggleStatusTooltip('Gonzague',0,event)"><div class="timeline-dot" id="tDot0Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="dot-info-badge">i</span></div><span class="timeline-label" id="tLbl0Gonzague">Bientôt levé</span></div>
         <div class="timeline-connector" id="tConn0Gonzague"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Gonzague" onclick="toggleStatusTooltip('Gonzague',1,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Gonzague">Levage</span></div>
+        <div class="timeline-step"><div class="timeline-dot-wrap" onclick="toggleStatusTooltip('Gonzague',1,event)"><div class="timeline-dot" id="tDot1Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="dot-info-badge">i</span></div><span class="timeline-label" id="tLbl1Gonzague">Levage</span></div>
         <div class="timeline-connector" id="tConn1Gonzague"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Gonzague" onclick="toggleStatusTooltip('Gonzague',2,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="timeline-label" id="tLbl2Gonzague">Levé</span></div>
+        <div class="timeline-step"><div class="timeline-dot-wrap" onclick="toggleStatusTooltip('Gonzague',2,event)"><div class="timeline-dot" id="tDot2Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="dot-info-badge">i</span></div><span class="timeline-label" id="tLbl2Gonzague">Levé</span></div>
         <div class="timeline-connector" id="tConn2Gonzague"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Gonzague" onclick="toggleStatusTooltip('Gonzague',3,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl3Gonzague">Descente</span></div>
+        <div class="timeline-step"><div class="timeline-dot-wrap" onclick="toggleStatusTooltip('Gonzague',3,event)"><div class="timeline-dot" id="tDot3Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="dot-info-badge">i</span></div><span class="timeline-label" id="tLbl3Gonzague">Descente</span></div>
       </div>
       <div class="timeline-reopen" id="timelineReopenGonzague"></div>
-      <div class="closure-tooltip" id="statusTooltipGonzague">
-        <div class="closure-tooltip-title" id="statusTooltipTitleGonzague"></div>
+      <div class="status-tooltip" id="statusTooltipGonzague">
+        <div class="status-tooltip-title" id="statusTooltipTitleGonzague"></div>
         <div id="statusTooltipBodyGonzague"></div>
       </div>
     </div>
@@ -810,17 +822,17 @@
 
     <div class="bridge-timeline" id="timelineLarocque">
       <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Larocque" onclick="toggleStatusTooltip('Larocque',0,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Larocque">Bientôt levé</span></div>
+        <div class="timeline-step"><div class="timeline-dot-wrap" onclick="toggleStatusTooltip('Larocque',0,event)"><div class="timeline-dot" id="tDot0Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="dot-info-badge">i</span></div><span class="timeline-label" id="tLbl0Larocque">Bientôt levé</span></div>
         <div class="timeline-connector" id="tConn0Larocque"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Larocque" onclick="toggleStatusTooltip('Larocque',1,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Larocque">Levage</span></div>
+        <div class="timeline-step"><div class="timeline-dot-wrap" onclick="toggleStatusTooltip('Larocque',1,event)"><div class="timeline-dot" id="tDot1Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="dot-info-badge">i</span></div><span class="timeline-label" id="tLbl1Larocque">Levage</span></div>
         <div class="timeline-connector" id="tConn1Larocque"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Larocque" onclick="toggleStatusTooltip('Larocque',2,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="timeline-label" id="tLbl2Larocque">Levé</span></div>
+        <div class="timeline-step"><div class="timeline-dot-wrap" onclick="toggleStatusTooltip('Larocque',2,event)"><div class="timeline-dot" id="tDot2Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="dot-info-badge">i</span></div><span class="timeline-label" id="tLbl2Larocque">Levé</span></div>
         <div class="timeline-connector" id="tConn2Larocque"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Larocque" onclick="toggleStatusTooltip('Larocque',3,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl3Larocque">Descente</span></div>
+        <div class="timeline-step"><div class="timeline-dot-wrap" onclick="toggleStatusTooltip('Larocque',3,event)"><div class="timeline-dot" id="tDot3Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="dot-info-badge">i</span></div><span class="timeline-label" id="tLbl3Larocque">Descente</span></div>
       </div>
       <div class="timeline-reopen" id="timelineReopenLarocque"></div>
-      <div class="closure-tooltip" id="statusTooltipLarocque">
-        <div class="closure-tooltip-title" id="statusTooltipTitleLarocque"></div>
+      <div class="status-tooltip" id="statusTooltipLarocque">
+        <div class="status-tooltip-title" id="statusTooltipTitleLarocque"></div>
         <div id="statusTooltipBodyLarocque"></div>
       </div>
     </div>
@@ -3364,6 +3376,7 @@ function toggleTooltip(cap, e){
 }
 document.addEventListener('click',()=>{
   document.querySelectorAll('.closure-tooltip').forEach(el=>el.classList.remove('open'));
+  document.querySelectorAll('.status-tooltip').forEach(el=>el.classList.remove('open'));
 });
 
 // Discreet per-status tooltip on the timeline dots — short description + approximate duration when known
@@ -3371,9 +3384,11 @@ function toggleStatusTooltip(cap, step, e){
   e.stopPropagation();
   const tt=document.getElementById('statusTooltip'+cap);
   if(!tt) return;
-  const isOpen=tt.classList.contains('open');
+  const isSameStepOpen=tt.classList.contains('open') && tt.dataset.step===String(step);
+  document.querySelectorAll('.status-tooltip').forEach(el=>el.classList.remove('open'));
   document.querySelectorAll('.closure-tooltip').forEach(el=>el.classList.remove('open'));
-  if(isOpen) return;
+  if(isSameStepOpen) return; // tapping the already-open pastille closes it
+  tt.dataset.step=String(step);
   const bridge=cap.toLowerCase();
   const d=lastData&&lastData[bridge];
   const isFr=currentLang==='fr';
@@ -3394,7 +3409,23 @@ function toggleStatusTooltip(cap, step, e){
   const bodyEl=document.getElementById('statusTooltipBody'+cap);
   if(titleEl) titleEl.textContent=titles[step];
   if(bodyEl) bodyEl.textContent=desc;
+
+  // Position the tooltip above the tapped dot, clamped so it never runs off-screen
+  const dotEl=document.getElementById('tDot'+step+cap);
   tt.classList.add('open');
+  tt.style.visibility='hidden';
+  if(dotEl){
+    const rect=dotEl.getBoundingClientRect();
+    const ttRect=tt.getBoundingClientRect();
+    const margin=12;
+    let left=rect.left+rect.width/2-ttRect.width/2;
+    left=Math.max(margin,Math.min(left,window.innerWidth-ttRect.width-margin));
+    let top=rect.top-ttRect.height-10;
+    if(top<margin) top=rect.bottom+10; // not enough room above → show below instead
+    tt.style.left=left+'px';
+    tt.style.top=top+'px';
+  }
+  tt.style.visibility='visible';
 }
 
 // Format timestamp
