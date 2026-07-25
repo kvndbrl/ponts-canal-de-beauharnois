@@ -214,7 +214,7 @@
     .bridge-timeline.visible{display:flex;}
     .timeline-track{display:flex;align-items:flex-start;padding:4px 0;gap:0;}
     .timeline-step{display:flex;flex-direction:column;align-items:center;flex:1;gap:6px;}
-    .timeline-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;transition:all .4s;overflow:hidden;}
+    .timeline-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;transition:all .4s;overflow:hidden;cursor:pointer;}
     .timeline-dot svg{width:20px;height:20px;fill:var(--text3);color:var(--text3);transition:fill .4s,color .4s;}
     .timeline-dot.active{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 4px rgba(var(--accent-rgb),.2);}
     .timeline-dot.active svg{fill:#fff;color:#fff;}
@@ -750,15 +750,19 @@
 
     <div class="bridge-timeline" id="timelineGonzague">
       <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Gonzague">Bientôt levé</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot0Gonzague" onclick="toggleStatusTooltip('Gonzague',0,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Gonzague">Bientôt levé</span></div>
         <div class="timeline-connector" id="tConn0Gonzague"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Gonzague">Levage</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot1Gonzague" onclick="toggleStatusTooltip('Gonzague',1,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Gonzague">Levage</span></div>
         <div class="timeline-connector" id="tConn1Gonzague"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="timeline-label" id="tLbl2Gonzague">Levé</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot2Gonzague" onclick="toggleStatusTooltip('Gonzague',2,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="timeline-label" id="tLbl2Gonzague">Levé</span></div>
         <div class="timeline-connector" id="tConn2Gonzague"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Gonzague"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl3Gonzague">Descente</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot3Gonzague" onclick="toggleStatusTooltip('Gonzague',3,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl3Gonzague">Descente</span></div>
       </div>
       <div class="timeline-reopen" id="timelineReopenGonzague"></div>
+      <div class="closure-tooltip" id="statusTooltipGonzague">
+        <div class="closure-tooltip-title" id="statusTooltipTitleGonzague"></div>
+        <div id="statusTooltipBodyGonzague"></div>
+      </div>
     </div>
 
 
@@ -806,15 +810,19 @@
 
     <div class="bridge-timeline" id="timelineLarocque">
       <div class="timeline-track">
-        <div class="timeline-step"><div class="timeline-dot" id="tDot0Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Larocque">Bientôt levé</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot0Larocque" onclick="toggleStatusTooltip('Larocque',0,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><rect x="21" y="43" width="22" height="3" rx="1.5"/><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><rect x="30" y="4" width="4" height="14" rx="2" fill="currentColor"/><rect x="30" y="21" width="4" height="4" rx="2" fill="currentColor"/></svg></div><span class="timeline-label" id="tLbl0Larocque">Bientôt levé</span></div>
         <div class="timeline-connector" id="tConn0Larocque"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot1Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Larocque">Levage</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot1Larocque" onclick="toggleStatusTooltip('Larocque',1,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-55, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 28 L56 22 L59 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl1Larocque">Levage</span></div>
         <div class="timeline-connector" id="tConn1Larocque"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot2Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="timeline-label" id="tLbl2Larocque">Levé</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot2Larocque" onclick="toggleStatusTooltip('Larocque',2,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-88, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 L19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 L45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M28 50 L28 44 L36 44 L36 50 Z" opacity="0.5"/><path d="M30 44 L32 40 L34 44 Z" opacity="0.5"/></svg></div><span class="timeline-label" id="tLbl2Larocque">Levé</span></div>
         <div class="timeline-connector" id="tConn2Larocque"></div>
-        <div class="timeline-step"><div class="timeline-dot" id="tDot3Larocque"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl3Larocque">Descente</span></div>
+        <div class="timeline-step"><div class="timeline-dot" id="tDot3Larocque" onclick="toggleStatusTooltip('Larocque',3,event)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor"><rect x="2" y="44" width="16" height="3" rx="1.5"/><rect x="46" y="44" width="16" height="3" rx="1.5"/><rect x="17" y="18" width="4" height="29" rx="1.5"/><rect x="43" y="18" width="4" height="29" rx="1.5"/><g transform="rotate(-30, 21, 45.5)"><rect x="21" y="43" width="24" height="3" rx="1.5"/></g><path d="M19 18 Q19 35 19 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M45 18 Q45 35 45 44" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/><path d="M53 26 L56 32 L59 26" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="56" y1="22" x2="56" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><span class="timeline-label" id="tLbl3Larocque">Descente</span></div>
       </div>
       <div class="timeline-reopen" id="timelineReopenLarocque"></div>
+      <div class="closure-tooltip" id="statusTooltipLarocque">
+        <div class="closure-tooltip-title" id="statusTooltipTitleLarocque"></div>
+        <div id="statusTooltipBodyLarocque"></div>
+      </div>
     </div>
 
 
@@ -1189,6 +1197,8 @@ function updateTimeline(bridge, status, data) {
 
   const activeStatuses = ['bientot_leve','raising','leve','lowering'];
   if (!activeStatuses.includes(status)) {
+    const stt = document.getElementById('statusTooltip'+C);
+    if (stt) stt.classList.remove('open');
     tl.classList.remove('visible');
     return;
   }
@@ -1224,17 +1234,9 @@ function updateTimeline(bridge, status, data) {
   // Reopen estimate
   const reopenEl = document.getElementById('timelineReopen'+C);
   if (reopenEl) {
-    const avgMin = data?.avgLiftDuration || data?.avgLoweringDuration;
-    if (avgMin && (status === 'leve' || status === 'lowering')) {
-      let reopenTime;
-      if (data?.liftingSince) {
-        const elapsed = (Date.now() - data.liftingSince) / 60000;
-        const remaining = Math.max(1, avgMin - elapsed);
-        reopenTime = new Date(Date.now() + remaining * 60000);
-      } else {
-        reopenTime = new Date(Date.now() + avgMin * 60000);
-      }
-      const hm = reopenTime.toLocaleTimeString(isFr?'fr-CA':'en-CA', {hour:'2-digit',minute:'2-digit'});
+    if (status === 'leve' || status === 'lowering') {
+      const est = computeReopenEstimate(data);
+      const hm = est.reopenTime.toLocaleTimeString(isFr?'fr-CA':'en-CA', {hour:'2-digit',minute:'2-digit'});
       reopenEl.innerHTML = '<span style="display:inline-flex;align-items:center;width:12px;height:12px;flex-shrink:0;color:var(--text2);margin-right:4px;vertical-align:middle;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="32" cy="36" r="20"/> <line x1="32" y1="36" x2="32" y2="24"/> <line x1="32" y1="36" x2="42" y2="40"/> <line x1="26" y1="8" x2="38" y2="8"/> <line x1="32" y1="8" x2="32" y2="14"/> </svg></span>'+(isFr ? `Réouverture prévue ~${hm}` : `Expected reopen ~${hm}`);
     } else {
       reopenEl.textContent = '';
@@ -2058,52 +2060,70 @@ function loadTheme(){
 function show(el){el.style.display='block';el.removeAttribute('aria-hidden');}
 function hide(el){el.style.display='none';el.setAttribute('aria-hidden','true');}
 
-// Lift timer — persisted in localStorage so it survives page refresh
-const liftStartTimes={gonzague:null,larocque:null};
+// Lift timer — driven by the server's authoritative liftingSince timestamp,
+// extended using scheduled vessel data (next_lifts) for a more precise estimate.
 const liftAvgMin=12;
-// Clear any stale lift times from previous sessions
+// Clear any stale lift times from a previous version of the app
 localStorage.removeItem('liftStart_gonzague');
 localStorage.removeItem('liftStart_larocque');
 
-function trackLiftStatus(bridge, status, raisedSince){
-  if(status==='leve'||status==='raising'||status==='bientot_leve'){
-    if(raisedSince){
-      const now=new Date();
-      const [h,m]=raisedSince.split(':').map(Number);
-      const t=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0,0);
-      if(t>now) t.setDate(t.getDate()-1);
-      liftStartTimes[bridge]=t.getTime();
-    }
-    // No raisedSince → leave liftStartTimes[bridge] as null, show avg only
+function computeReopenEstimate(d){
+  if(!d) return null;
+  const avgLift=Math.max(5,d.avgLiftDuration||12);
+  const avgLow=Math.max(2,d.avgLoweringDuration||3);
+  const avgTotal=avgLift+avgLow;
+  let reopenTime, elapsedMin=null;
+  if(d.status==='lowering'){
+    reopenTime=new Date(Date.now()+avgLow*60000);
+  } else if(d.liftingSince){
+    elapsedMin=Math.max(0,(Date.now()-d.liftingSince)/60000);
+    reopenTime=new Date(Date.now()+Math.max(1,avgTotal-elapsedMin)*60000);
   } else {
-    liftStartTimes[bridge]=null;
+    reopenTime=new Date(Date.now()+avgTotal*60000);
   }
+  // Extend the estimate if a commercial vessel is scheduled close to it — same rule used for push notifications
+  if(d.next_lifts){
+    const nowEST=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'}));
+    for(const line of d.next_lifts.split('\n')){
+      const m=line.replace('*','').match(/(\d{1,2}):(\d{2})/);
+      if(!m) continue;
+      const scheduled=new Date(nowEST);
+      scheduled.setHours(parseInt(m[1]),parseInt(m[2]),0,0);
+      if(scheduled<nowEST) scheduled.setDate(scheduled.getDate()+1);
+      const gap=(scheduled-reopenTime)/60000;
+      if(gap<=20){
+        const nextReopen=new Date(scheduled.getTime()+avgTotal*60000);
+        if(nextReopen>reopenTime) reopenTime=nextReopen;
+      }
+    }
+  }
+  const delayed=elapsedMin!==null && elapsedMin>avgTotal+2;
+  return {reopenTime,elapsedMin,avgTotal,delayed};
 }
 
 function getLiftTimerText(bridge,status,lang){
-  const start=liftStartTimes[bridge];
   const avgMin=(lastData&&lastData[bridge]?.avgLiftDuration)||liftAvgMin;
-  if(!start){
-    // Don't know when it started — just show average
+  const est=computeReopenEstimate(lastData&&lastData[bridge]);
+  if(!est||est.elapsedMin===null){
+    // No confirmed lift-start time yet — just show the historical average
     return lang==='fr'
       ?'Dur\u00E9e moyenne\u00A0: ~'+avgMin+'\u00A0min'
       :'Average duration: ~'+avgMin+' min';
   }
-  const elapsedMs=Date.now()-start;
-  const elapsedMin=Math.floor(elapsedMs/60000);
-  // If elapsed > 2h, liftStartTime is stale — fallback to average
-  if(elapsedMin > 120) {
+  const elapsedMin=Math.floor(est.elapsedMin);
+  // If elapsed > 2h, the server-side lift tracking is stale — fallback to average
+  if(elapsedMin>120){
     return lang==='fr'
       ?'Dur\u00E9e moyenne\u00A0: ~'+avgMin+'\u00A0min'
       :'Average duration: ~'+avgMin+' min';
   }
-  const remaining=Math.max(0,avgMin-elapsedMin);
+  const remaining=Math.max(0,Math.round((est.reopenTime-Date.now())/60000));
   if(lang==='fr'){
-    if(elapsedMin<1) return 'Lev\u00E9 depuis moins d\u2019une minute \u2014 ~'+avgMin+'\u00A0min restantes';
+    if(elapsedMin<1) return 'Lev\u00E9 depuis moins d\u2019une minute \u2014 ~'+remaining+'\u00A0min restantes';
     if(remaining<=0) return 'Lev\u00E9 depuis '+elapsedMin+'\u00A0min \u2014 Bient\u00F4t disponible';
     return 'Lev\u00E9 depuis '+elapsedMin+'\u00A0min \u2014 ~'+remaining+'\u00A0min restantes';
   } else {
-    if(elapsedMin<1) return 'Lifted less than a minute ago \u2014 ~'+avgMin+' min remaining';
+    if(elapsedMin<1) return 'Lifted less than a minute ago \u2014 ~'+remaining+' min remaining';
     if(remaining<=0) return 'Lifted '+elapsedMin+' min ago \u2014 Should reopen soon';
     return 'Lifted '+elapsedMin+' min ago \u2014 ~'+remaining+' min remaining';
   }
@@ -2196,36 +2216,12 @@ function updateCards(){
     const dwEl = document.getElementById('delayWarning'+C);
     if (!dwEl) continue;
     const isFr = currentLang === 'fr';
-    if (status === 'leve' && d.liftingSince) {
-      const avgLift2 = Math.max(5, d.avgLiftDuration || 12);
-      const avgLow2 = Math.max(2, d.avgLoweringDuration || 3);
-      let avgTotal = avgLift2 + avgLow2;
-      // Extend for upcoming vessel
-      if (d.next_lifts) {
-        const nowEST2 = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Toronto'}));
-        const reopenEst2 = new Date(d.liftingSince + avgTotal * 60000);
-        for (const line of (d.next_lifts||'').split('\n')) {
-          const m2 = line.replace('*','').match(/(\d{1,2}):(\d{2})/);
-          if (!m2) continue;
-          const sched2 = new Date(nowEST2);
-          sched2.setHours(parseInt(m2[1]), parseInt(m2[2]), 0, 0);
-          if (sched2 < nowEST2) sched2.setDate(sched2.getDate()+1);
-          const gap2 = (sched2 - reopenEst2) / 60000;
-          if (gap2 >= 0 && gap2 <= 20) {
-            const ext2 = Math.round((sched2 - new Date(d.liftingSince)) / 60000) + avgLow2;
-            if (ext2 > avgTotal) avgTotal = ext2;
-          }
-        }
-      }
-      const elapsed = (Date.now() - d.liftingSince) / 60000;
-      if (elapsed > avgTotal + 3) {
-        dwEl.innerHTML = isFr
-          ? '⚠️ Possible retard du navire — <a href="#" onclick="showMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Consultez la vue en temps réel</a>'
-          : '⚠️ Possible vessel delay — <a href="#" onclick="showMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Check the real-time view</a>';
-        dwEl.style.display = 'block';
-      } else {
-        dwEl.style.display = 'none';
-      }
+    const est = status === 'leve' ? computeReopenEstimate(d) : null;
+    if (est && est.delayed) {
+      dwEl.innerHTML = isFr
+        ? '⚠️ Possible retard du navire — <a href="#" onclick="showMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Consultez la vue en temps réel</a>'
+        : '⚠️ Possible vessel delay — <a href="#" onclick="showMapModal(\'' + b + '\');return false;" style="color:inherit;text-decoration:underline;">Check the real-time view</a>';
+      dwEl.style.display = 'block';
     } else {
       dwEl.style.display = 'none';
     }
@@ -2981,8 +2977,6 @@ async function fetchStatus(){
     const d=await r.json();lastData=d;retries=0;
     saveCachedStatus(d);
     if(errEl) errEl.textContent='';
-    trackLiftStatus('gonzague',d.gonzague.status,d.gonzague.raisedSince);
-    trackLiftStatus('larocque',d.larocque.status,d.larocque.raisedSince);
     updateDisplay();
     refreshTimers();
     // Track subscriber count once per session
@@ -3371,6 +3365,37 @@ function toggleTooltip(cap, e){
 document.addEventListener('click',()=>{
   document.querySelectorAll('.closure-tooltip').forEach(el=>el.classList.remove('open'));
 });
+
+// Discreet per-status tooltip on the timeline dots — short description + approximate duration when known
+function toggleStatusTooltip(cap, step, e){
+  e.stopPropagation();
+  const tt=document.getElementById('statusTooltip'+cap);
+  if(!tt) return;
+  const isOpen=tt.classList.contains('open');
+  document.querySelectorAll('.closure-tooltip').forEach(el=>el.classList.remove('open'));
+  if(isOpen) return;
+  const bridge=cap.toLowerCase();
+  const d=lastData&&lastData[bridge];
+  const isFr=currentLang==='fr';
+  const titles=isFr?['Bientôt levé','Levage','Levé','Descente']:['Soon lifted','Raising','Lifted','Lowering'];
+  let desc='';
+  if(step===0){
+    desc=isFr?'Un navire approche \u2014 le pont s\u2019appr\u00eate \u00e0 fermer sous peu.':'A vessel is approaching \u2014 the bridge is about to close soon.';
+  } else if(step===1){
+    desc=isFr?'Le tablier du pont est en train de se soulever.':'The bridge deck is currently rising.';
+  } else if(step===2){
+    desc=isFr?'Le pont est compl\u00e8tement lev\u00e9 pour laisser passer un navire.':'The bridge is fully raised to let a vessel pass.';
+    if(d&&d.avgLiftDuration) desc+=isFr?` Une fermeture dure g\u00e9n\u00e9ralement ~${d.avgLiftDuration}\u00A0min au total.`:` A closure typically lasts ~${d.avgLiftDuration} min in total.`;
+  } else if(step===3){
+    desc=isFr?'Le pont redescend et rouvrira sous peu.':'The bridge is lowering and will reopen shortly.';
+    if(d&&d.avgLoweringDuration) desc+=isFr?` Cette \u00e9tape dure g\u00e9n\u00e9ralement ~${d.avgLoweringDuration}\u00A0min.`:` This step typically takes ~${d.avgLoweringDuration} min.`;
+  }
+  const titleEl=document.getElementById('statusTooltipTitle'+cap);
+  const bodyEl=document.getElementById('statusTooltipBody'+cap);
+  if(titleEl) titleEl.textContent=titles[step];
+  if(bodyEl) bodyEl.textContent=desc;
+  tt.classList.add('open');
+}
 
 // Format timestamp
 function formatRefresh(raw,lang){
@@ -3891,8 +3916,6 @@ function _startSSE() {
       const d = JSON.parse(e.data);
       lastData = d; retries = 0;
       saveCachedStatus(d);
-      trackLiftStatus('gonzague', d.gonzague.status, d.gonzague.raisedSince);
-      trackLiftStatus('larocque', d.larocque.status, d.larocque.raisedSince);
       updateDisplay(); refreshTimers();
       // Repasser au polling si plus aucun pont actif
       if (!_isAnyActive()) { _stopSSE(); _startPolling(); }
