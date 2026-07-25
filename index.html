@@ -784,6 +784,7 @@
         <div class="lifts-label" id="liftsTitleGonzague">Levages — 60 min</div>
         <div class="lifts-value" id="liftsGonzague" aria-live="polite">—</div>
         <div id="liftsNoteGonzague" style="display:none;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px;line-height:1.4;"></div>
+        <div id="upcomingClosureGonzague" style="display:none;font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);line-height:1.5;"></div>
       </div>
       <div class="refresh-time" id="refreshGonzague">—</div>
     </div>
@@ -844,6 +845,7 @@
         <div class="lifts-label" id="liftsTitleLarocque">Levages — 60 min</div>
         <div class="lifts-value" id="liftsLarocque" aria-live="polite">—</div>
         <div id="liftsNoteLarocque" style="display:none;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px;line-height:1.4;"></div>
+        <div id="upcomingClosureLarocque" style="display:none;font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);line-height:1.5;"></div>
       </div>
       <div class="refresh-time" id="refreshLarocque">—</div>
     </div>
@@ -2113,6 +2115,37 @@ function computeReopenEstimate(d){
   return {reopenTime,elapsedMin,avgTotal,delayed};
 }
 
+// Predicts a future unavailability window from a scheduled vessel (next_lifts),
+// only when the bridge is currently available and we have enough history to
+// avoid guessing. Chains consecutive scheduled vessels into one window when
+// they're close enough together that the bridge likely won't reopen in between.
+function computeUpcomingClosure(d){
+  if(!d || d.status!=='disponible') return null;
+  if(!d.next_lifts || d.next_lifts==='No anticipated bridge lifts') return null;
+  if(!d.avgLiftDuration || !d.avgLoweringDuration) return null; // not enough history — don't guess
+  const avgTotal=d.avgLiftDuration+d.avgLoweringDuration;
+  const nowEST=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'}));
+  const times=[];
+  for(const line of d.next_lifts.split('\n')){
+    const m=line.replace('*','').match(/(\d{1,2}):(\d{2})/);
+    if(!m) continue;
+    const t=new Date(nowEST);
+    t.setHours(parseInt(m[1]),parseInt(m[2]),0,0);
+    if(t<nowEST) t.setDate(t.getDate()+1);
+    times.push(t);
+  }
+  if(!times.length) return null;
+  times.sort((a,b)=>a-b);
+  const start=times[0];
+  let end=new Date(start.getTime()+avgTotal*60000);
+  for(let i=1;i<times.length;i++){
+    const gap=(times[i]-end)/60000;
+    if(gap<=20) end=new Date(times[i].getTime()+avgTotal*60000);
+    else break; // next vessel is a separate, later closure — don't merge distant ones
+  }
+  return {start,end,approximate:d.next_lifts.includes('*')};
+}
+
 function getLiftTimerText(bridge,status,lang){
   const avgMin=(lastData&&lastData[bridge]?.avgLiftDuration)||liftAvgMin;
   const est=computeReopenEstimate(lastData&&lastData[bridge]);
@@ -2628,6 +2661,8 @@ function updateDisplay(){
     if (liftsEl) {
       if (!liftsRaw || liftsRaw === 'No anticipated bridge lifts') {
         liftsEl.textContent = t.nl;
+        const noteElEmpty = document.getElementById('liftsNote'+C);
+        if (noteElEmpty) noteElEmpty.style.display = 'none';
       } else {
         const nowEST = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Toronto'}));
         const lines = liftsRaw.split('\n')
@@ -2659,6 +2694,25 @@ function updateDisplay(){
             noteEl.style.display = 'none';
           }
         }
+      }
+    }
+    // Predicted closure window from the next scheduled vessel — only shown
+    // when the bridge is currently available and we have enough history
+    // to avoid an overly optimistic guess
+    const ucEl = document.getElementById('upcomingClosure'+C);
+    if (ucEl) {
+      const pred = computeUpcomingClosure(lastData[b]);
+      if (pred) {
+        const locale = currentLang === 'fr' ? 'fr-CA' : 'en-CA';
+        const startHm = pred.start.toLocaleTimeString(locale, {hour:'2-digit', minute:'2-digit'});
+        const endHm = pred.end.toLocaleTimeString(locale, {hour:'2-digit', minute:'2-digit'});
+        const approxWord = pred.approximate ? (currentLang === 'fr' ? ' (approximatif)' : ' (approximate)') : '';
+        ucEl.textContent = currentLang === 'fr'
+          ? `🕐 Estimation : indisponible d'environ ${startHm} à ${endHm}${approxWord}`
+          : `🕐 Estimate: unavailable from about ${startHm} to ${endHm}${approxWord}`;
+        ucEl.style.display = 'block';
+      } else {
+        ucEl.style.display = 'none';
       }
     }
     document.getElementById('refresh'+C).innerHTML=formatRefresh(lastData.last_refreshed,currentLang);
