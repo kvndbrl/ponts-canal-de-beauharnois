@@ -339,40 +339,6 @@ async function fetchBridgeStatus() {
   };
 }
 
-function getMessages(bridge, status, lang, data) {
-  const shortNames = {
-    fr: { gonzague: 'Pont St-Louis', larocque: 'Pont Larocque' },
-    en: { gonzague: 'St-Louis Bridge', larocque: 'Larocque Bridge' }
-  };
-  const n = (shortNames[lang] || shortNames.fr)[bridge];
-  let outageStr = '';
-  if (status === 'outage' && data && data.outageEnd) {
-    const end = new Date(data.outageEnd);
-    const hm = end.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
-    outageStr = lang === 'fr' ? ` \u00b7 Ferm\u00e9 jusqu'\u00e0 ${hm}` : ` \u00b7 Closed until ${hm}`;
-  }
-  const avgLift = data?.avgLiftDuration || 12;
-  const reopenTime = new Date(Date.now() + avgLift * 60000);
-  const hm = reopenTime.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
-  const fr = {
-    bientot_leve: { title: `\u26a0\ufe0f ${n}`, body: `Bient\u00f4t lev\u00e9 \u00b7 Pr\u00e9voir un d\u00e9lai` },
-    raising:      { title: `\ud83d\udd3c ${n}`, body: `En cours de levage \u00b7 R\u00e9ouverture ~${hm}` },
-    leve:         { title: `\ud83d\udea2 ${n}`, body: `Pont lev\u00e9 \u00b7 R\u00e9ouverture pr\u00e9vue ~${hm}` },
-    lowering:     { title: `\ud83d\udd3d ${n}`, body: `Pont redescend \u00b7 Bient\u00f4t disponible` },
-    disponible:   { title: `\u2705 ${n}`, body: `Circulation normale` },
-    outage:       { title: `\ud83d\udea7 ${n}`, body: `Fermeture planifi\u00e9e${outageStr}` }
-  };
-  const en = {
-    bientot_leve: { title: `\u26a0\ufe0f ${n}`, body: `Lift soon \u00b7 Expect delays` },
-    raising:      { title: `\ud83d\udd3c ${n}`, body: `Bridge raising \u00b7 Reopen ~${hm}` },
-    leve:         { title: `\ud83d\udea2 ${n}`, body: `Bridge lifted \u00b7 Expected reopen ~${hm}` },
-    lowering:     { title: `\ud83d\udd3d ${n}`, body: `Bridge lowering \u00b7 Opening soon` },
-    disponible:   { title: `\u2705 ${n}`, body: `Traffic normal` },
-    outage:       { title: `\ud83d\udea7 ${n}`, body: `Planned closure${outageStr}` }
-  };
-  return (lang === 'en' ? en : fr)[status] || null;
-}
-
 function parseScheduledLifts(text) {
   if (!text || text === 'No anticipated bridge lifts') return [];
   const times = [];
@@ -525,8 +491,10 @@ function buildWidgetBody(sub, bridgeStatuses) {
       if (elapsed2 > avgTotal2 + 2) {
         line += isFr ? ' \u00b7 \u26a0\ufe0f Retard possible' : ' \u00b7 \u26a0\ufe0f Possible delay';
       } else {
-        const hm = reopenTime.toLocaleTimeString(isFr ? 'fr-CA' : 'en-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
-        line += isFr ? ` \u00b7 R\u00e9ouverture ~${hm}` : ` \u00b7 Reopen ~${hm}`;
+        const startTime = d.liftingSince ? new Date(d.liftingSince) : new Date();
+        const startHm = startTime.toLocaleTimeString(isFr ? 'fr-CA' : 'en-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
+        const endHm = reopenTime.toLocaleTimeString(isFr ? 'fr-CA' : 'en-CA', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Toronto' });
+        line += isFr ? ` \u00b7 Indisponible ~${startHm} \u00e0 ${endHm}` : ` \u00b7 Unavailable ~${startHm} to ${endHm}`;
       }
     }
     if (d.status === 'outage' && d.outageEnd) {
