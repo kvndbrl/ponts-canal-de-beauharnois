@@ -4009,8 +4009,9 @@ function _startSSE() {
       lastData = d; retries = 0;
       saveCachedStatus(d);
       updateDisplay(); refreshTimers();
-      // Repasser au polling si plus aucun pont actif
-      if (!_isAnyActive()) { _stopSSE(); _startPolling(); }
+      // SSE reste ouvert en tout temps — le serveur diffuse à chaque vérification
+      // peu importe l'activité, donc fermer la connexion ici ne ferait qu'ajouter
+      // un délai de détection au prochain changement de statut.
     } catch(e) {}
   };
   _sseSource.onerror = () => { _stopSSE(); _startPolling(); };
@@ -4024,9 +4025,9 @@ function _startPolling() {
   const isNight = hourEST >= 23 || hourEST < 5;
   _fetchInterval = setInterval(async () => {
     await fetchStatus();
-    // Passer en SSE si un pont devient actif
-    if (_isAnyActive()) { _startSSE(); }
-  }, isNight ? 180000 : 60000);
+    // Tenter de rétablir le SSE (mode normal) — le polling n'est qu'un filet de sécurité
+    _startSSE();
+  }, isNight ? 30000 : 10000);
 }
 function _stopPolling() {
   if (_fetchInterval) { clearInterval(_fetchInterval); _fetchInterval = null; }
@@ -4034,8 +4035,8 @@ function _stopPolling() {
 function _shouldRunTimers() { return _isAnyActive(); }
 let _timerInterval = setInterval(() => { if (_shouldRunTimers()) refreshTimers(); }, 10000);
 
-// Démarrage initial
-fetchStatus().then(() => { _isAnyActive() ? _startSSE() : _startPolling(); });
+// Démarrage initial — SSE en tout temps, avec le polling seulement comme filet de sécurité
+fetchStatus().then(() => { _startSSE(); });
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
@@ -4043,7 +4044,7 @@ document.addEventListener('visibilitychange', () => {
     clearInterval(_greetInterval);
     clearInterval(_timerInterval);
   } else {
-    updateGreeting(); fetchStatus().then(() => { _isAnyActive() ? _startSSE() : _startPolling(); });
+    updateGreeting(); fetchStatus().then(() => { _startSSE(); });
     _greetInterval = setInterval(updateGreeting, 60000);
     _timerInterval = setInterval(() => { if (_shouldRunTimers()) refreshTimers(); }, 10000);
   }
