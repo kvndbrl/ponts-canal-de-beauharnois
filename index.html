@@ -1293,23 +1293,16 @@ function showChangelog() {
   const ctaEl = document.getElementById('changelogCta');
   if (!overlay || !itemsEl) return;
   const lang = currentLang || 'fr';
+  const versionEl = document.getElementById('changelogVersionLabel');
+  if (versionEl) versionEl.textContent = 'v' + CHANGELOG_VERSION;
   if (titleEl) titleEl.textContent = lang === 'fr' ? 'Nouveautés' : "What's New";
   if (ctaEl) ctaEl.textContent = lang === 'fr' ? 'C\'est compris !' : 'Got it!';
   const donTitle = document.getElementById('changelogDonTitle');
-  const donText = document.getElementById('changelogDonText');
   const clBadge = document.getElementById('changelogBadge');
-  const clOrOnce = document.getElementById('changelogOrOnce');
   const clSocialTitle = document.getElementById('changelogSocialTitle');
-  const clDonateBtn = document.getElementById('changelogDonateBtn');
   if (donTitle) donTitle.textContent = lang === 'fr' ? 'Soutien mensuel — 1 $/mois' : 'Monthly supporter — 1 $/month';
-  if (donText) donText.textContent = lang === 'fr' ? 'Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.' : "If everyone gave $1, the server's cost would be covered for 10 years.";
   if (clBadge) clBadge.textContent = lang === 'fr' ? '⭐ CONTRIBUTION EXEMPLAIRE' : '⭐ MOST APPRECIATED';
-  if (clOrOnce) clOrOnce.textContent = lang === 'fr' ? 'ou un don unique' : 'or a one-time coffee';
   if (clSocialTitle) clSocialTitle.textContent = lang === 'fr' ? '12 000 personnes ont consulté cette app.' : '12,000 people have visited this app.';
-  if (clDonateBtn) clDonateBtn.textContent = lang === 'fr' ? 'Faire un don ☕' : 'Donate now ☕';
-  if (donText) donText.textContent = lang === 'fr'
-    ? 'Votre soutien garde ce projet vivant et gratuit.'
-    : 'Your support keeps this project alive and free.';
   itemsEl.innerHTML = CHANGELOG[lang].map(item => `
     <div style="display:flex;align-items:flex-start;gap:12px;">
       <span style="display:inline-flex;width:22px;height:22px;flex-shrink:0;color:var(--accent);margin-top:2px;">${CHANGELOG_ICONS[item.icon]}</span>
@@ -4139,7 +4132,7 @@ document.addEventListener('visibilitychange', () => {
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
       <span style="display:inline-flex;width:26px;height:26px;color:var(--accent);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22 L8 42 L20 42 L20 22 Z"/><path d="M20 22 Q44 14 52 10 L52 54 Q44 50 20 42"/><line x1="20" y1="42" x2="20" y2="54"/><line x1="28" y1="44" x2="26" y2="54"/><path d="M52 28 Q58 30 58 32 Q58 34 52 36"/></svg></span>
       <span style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--sans);" id="changelogTitle">Nouveautés</span>
-      <span style="margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono);">v2.0</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono);" id="changelogVersionLabel">v2.0</span>
     </div>
     <div style="width:32px;height:3px;background:var(--accent);border-radius:2px;margin-bottom:20px;"></div>
     <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px;" id="changelogItems"></div>
@@ -4155,15 +4148,14 @@ document.addEventListener('visibilitychange', () => {
           <div style="font-size:12px;font-weight:800;color:#FFDD00;font-family:var(--sans);" id="changelogDonTitle">1 $/mois</div>
           <div style="font-size:9px;color:rgba(255,221,0,.7);font-family:var(--sans);margin-top:1px;" id="changelogBadge">Soutien mensuel</div>
         </div>
-        <div style="flex:1;background:rgba(0,0,0,.15);border-radius:8px;padding:8px;text-align:center;" id="changelogOrOnce">
-          <div style="font-size:12px;font-weight:700;color:#000;font-family:var(--sans);" data-don-unique>Don unique</div>
-          <div style="font-size:9px;color:#333;font-family:var(--sans);margin-top:1px;" data-don-unique-sub>Au montant de ton choix</div>
-        </div>
       </div>
-      <div style="font-size:11px;color:#555;font-family:var(--sans);text-align:center;margin-top:6px;" id="changelogSocialTitle">Plus de 12 000 citoyens ont consulté cette app.</div>
     </a>
-    <a id="changelogDonateBtn" href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{source:'changelog_once'});dismissChangelog();" style="display:none;"></a>
-    <span id="changelogDonText" style="display:none;">Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.</span>
+    <a href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{source:'changelog_once'});dismissChangelog();" id="changelogOrOnceLink"
+      style="display:block;background:rgba(255,221,0,.12);border-radius:8px;padding:8px;text-align:center;text-decoration:none;margin-top:8px;">
+      <div style="font-size:12px;font-weight:700;color:#FFDD00;font-family:var(--sans);" data-don-unique>Don unique</div>
+      <div style="font-size:9px;color:var(--text3);font-family:var(--sans);margin-top:1px;" data-don-unique-sub>Au montant de ton choix</div>
+    </a>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--sans);text-align:center;margin-top:6px;" id="changelogSocialTitle">Plus de 12 000 citoyens ont consulté cette app.</div>
       </div>
     </div>
   </div>
