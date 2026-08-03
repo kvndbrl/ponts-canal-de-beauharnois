@@ -670,6 +670,25 @@ setInterval(async () => {
 app.get('/', (req, res) => res.send('Ponts Beauharnois API'));
 app.get('/ping', (req, res) => res.json({ ok: true, subs: subscriptions.length }));
 
+// Visitor counter — seeded from the app's real historical Umami total (34 000 as of
+// August 2026) so the displayed number doesn't reset to zero. The client pings this
+// once per device (guarded by localStorage) on first-ever load, not on every visit.
+const VISITOR_COUNT_SEED = 34000;
+async function getVisitorCount() {
+  try {
+    const val = await redisCommand('get', 'visitorCount');
+    const n = parseInt(val, 10);
+    return Number.isFinite(n) ? n : VISITOR_COUNT_SEED;
+  } catch(e) { return VISITOR_COUNT_SEED; }
+}
+app.post('/visitor-ping', async (req, res) => {
+  try {
+    await redisCommand('setnx', 'visitorCount', String(VISITOR_COUNT_SEED));
+    const n = await redisCommand('incr', 'visitorCount');
+    res.json({ ok: true, count: n });
+  } catch(e) { res.status(500).json({ ok: false }); }
+});
+
 app.get('/status', async (req, res) => {
   try {
     const data = await fetchBridgeStatus();
@@ -679,6 +698,7 @@ app.get('/status', async (req, res) => {
       data[bridge].liftCount = liftHistory[bridge].length;
       if (liftActive[bridge]) data[bridge].liftingSince = liftActive[bridge].raisedAt;
     }
+    data.visitorCount = await getVisitorCount();
     res.json(data);
   } catch(e) { res.status(500).json({ error: e.message }); }
 });

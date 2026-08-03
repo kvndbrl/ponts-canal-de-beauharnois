@@ -701,7 +701,7 @@
     style="display:block;background:var(--surface);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);border:1px solid var(--border);text-decoration:none;">
 
     <!-- Title -->
-    <div style="font-size:13px;font-weight:700;color:var(--text);font-family:var(--sans);text-align:center;margin-bottom:2px;" id="socialProofTitle">Plus de 12 000 citoyens ont consulté cette app.</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text);font-family:var(--sans);text-align:center;margin-bottom:2px;" id="socialProofTitle">Plus de 34 000 citoyens ont consulté cette app.</div>
     <div style="font-size:11px;color:var(--text3);font-family:var(--sans);text-align:center;margin-bottom:10px;line-height:1.4;" id="socialProofText">Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.</div>
 
     <!-- Yellow BMAC block -->
@@ -780,7 +780,7 @@
 
 
     <div class="lifts-block">
-      <div>
+      <div style="flex:1;min-width:0;">
         <div class="lifts-label" id="liftsTitleGonzague">Levages — 60 min</div>
         <div class="lifts-value" id="liftsGonzague" aria-live="polite">—</div>
         <div id="liftsNoteGonzague" style="display:none;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px;line-height:1.4;"></div>
@@ -842,7 +842,7 @@
 
 
     <div class="lifts-block">
-      <div>
+      <div style="flex:1;min-width:0;">
         <div class="lifts-label" id="liftsTitleLarocque">Levages — 60 min</div>
         <div class="lifts-value" id="liftsLarocque" aria-live="polite">—</div>
         <div id="liftsNoteLarocque" style="display:none;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px;line-height:1.4;"></div>
@@ -934,7 +934,7 @@
       <div style="flex:1;height:1px;background:var(--border);"></div>
     </div>
     <div style="background:rgba(var(--accent-rgb),.07);border-radius:10px;padding:10px 12px;margin:8px 0 10px;">
-      <div style="font-size:12px;color:var(--text);font-family:var(--sans);text-align:center;font-weight:600;" id="modalSocialTitle">12 000 personnes ont consulté cette app.</div>
+      <div style="font-size:12px;color:var(--text);font-family:var(--sans);text-align:center;font-weight:600;" id="modalSocialTitle">34 000 personnes ont consulté cette app.</div>
       <div style="font-size:11px;color:var(--text3);font-family:var(--sans);text-align:center;margin-top:2px;line-height:1.4;" id="modalSocialText">Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.</div>
     </div>
     <a href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{source:'modal_once'});closeDonateModal();" style="display:block;text-align:center;padding:11px;border-radius:8px;background:var(--accent);color:#fff;font-family:var(--sans);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:12px;" id="modalDonateNowBtn">Faire un don ☕</a>
@@ -952,7 +952,7 @@ function openDonateModal() {
   document.getElementById('modalMonthlyDesc').textContent = isFr ? 'Garde l\'app vivante pour toute la communauté 🙏' : 'Keeps the app alive for everyone 🙏';
   document.getElementById('modalOrOnceLabel').textContent = isFr ? 'ou un don unique' : 'or a one-time coffee';
   document.getElementById('donateModalLater').textContent = isFr ? 'Peut-être plus tard' : 'Maybe later';
-  const mst=document.getElementById('modalSocialTitle');if(mst)mst.textContent=isFr?'12 000 personnes ont consulté cette app.':'12,000 people have visited this app.';
+  updateSocialProofLabels();
   const msx=document.getElementById('modalSocialText');if(msx)msx.textContent=isFr?'Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.':"If everyone gave $1, the server's cost would be covered for 10 years.";
   const mdn=document.getElementById('modalDonateNowBtn');if(mdn)mdn.textContent=isFr?'Faire un don ☕':'Donate now ☕';
   document.getElementById('donateModalOverlay').style.display = 'flex';
@@ -1169,15 +1169,14 @@ function closeDonateModal() {
           <div style="font-size:12px;font-weight:800;color:#FFDD00;font-family:var(--sans);" id="drawerDonTitle">1 $/mois</div>
           <div style="font-size:9px;color:rgba(255,221,0,.7);font-family:var(--sans);margin-top:1px;" id="drawerBadge">Soutien mensuel</div>
         </div>
-        <div style="flex:1;background:rgba(0,0,0,.15);border-radius:8px;padding:8px;text-align:center;" id="drawerOrOnce">
-          <div style="font-size:12px;font-weight:700;color:#000;font-family:var(--sans);" data-don-unique>Don unique</div>
-          <div style="font-size:9px;color:#333;font-family:var(--sans);margin-top:1px;" data-don-unique-sub>Au montant de ton choix</div>
-        </div>
       </div>
-      <div style="font-size:11px;color:#555;font-family:var(--sans);text-align:center;margin-top:6px;" id="drawerSocialTitle">Plus de 12 000 citoyens ont consulté cette app.</div>
     </a>
-    <a id="drawerDonateNowBtn" href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{source:'drawer_once'});" style="display:none;"></a>
-    <span id="drawerSocialText" style="display:none;">Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.</span>
+    <a href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{source:'drawer_once'});"
+      style="display:block;background:rgba(255,221,0,.12);border-radius:8px;padding:8px;text-align:center;text-decoration:none;margin-top:8px;">
+      <div style="font-size:12px;font-weight:700;color:#FFDD00;font-family:var(--sans);" data-don-unique>Don unique</div>
+      <div style="font-size:9px;color:var(--text3);font-family:var(--sans);margin-top:1px;" data-don-unique-sub>Au montant de ton choix</div>
+    </a>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--sans);text-align:center;margin-top:6px;" id="drawerSocialTitle">Plus de 34 000 citoyens ont consulté cette app.</div>
     </div>
   </div>
 
@@ -1199,6 +1198,31 @@ function closeDonateModal() {
 
 <script>
 const BACKEND='https://pont-st-louis-de-gonzague.onrender.com';
+
+// Visitor counter — dynamic, backed by the server's Redis-persisted count (seeded
+// from the real historical Umami total). Pinged once per device, ever.
+function pingVisitorOnce(){
+  if(localStorage.getItem('visitorPinged')) return;
+  fetch(BACKEND+'/visitor-ping',{method:'POST'}).then(()=>{
+    localStorage.setItem('visitorPinged','1');
+  }).catch(()=>{});
+}
+function updateSocialProofLabels(){
+  const raw=(lastData&&lastData.visitorCount)||34000;
+  const rounded=Math.floor(raw/1000)*1000;
+  const isFr=currentLang==='fr';
+  const n=rounded.toLocaleString(isFr?'fr-CA':'en-CA');
+  const styleA=isFr?`Plus de ${n} citoyens ont consulté cette app.`:`Over ${n} people have used this app.`;
+  const styleB=isFr?`${n} personnes ont consulté cette app.`:`${n} people have visited this app.`;
+  ['socialProofTitle','drawerSocialTitle','promptSocialTitle'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=styleA;
+  });
+  ['modalSocialTitle','changelogSocialTitle'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=styleB;
+  });
+}
 
 // Disable Umami tracking if ?notrack param present (persists via localStorage)
 if(new URLSearchParams(location.search).has('notrack')) localStorage.setItem('umami.disabled','1');
@@ -1299,10 +1323,9 @@ function showChangelog() {
   if (ctaEl) ctaEl.textContent = lang === 'fr' ? 'C\'est compris !' : 'Got it!';
   const donTitle = document.getElementById('changelogDonTitle');
   const clBadge = document.getElementById('changelogBadge');
-  const clSocialTitle = document.getElementById('changelogSocialTitle');
   if (donTitle) donTitle.textContent = lang === 'fr' ? 'Soutien mensuel — 1 $/mois' : 'Monthly supporter — 1 $/month';
   if (clBadge) clBadge.textContent = lang === 'fr' ? '⭐ CONTRIBUTION EXEMPLAIRE' : '⭐ MOST APPRECIATED';
-  if (clSocialTitle) clSocialTitle.textContent = lang === 'fr' ? '12 000 personnes ont consulté cette app.' : '12,000 people have visited this app.';
+  updateSocialProofLabels();
   itemsEl.innerHTML = CHANGELOG[lang].map(item => `
     <div style="display:flex;align-items:flex-start;gap:12px;">
       <span style="display:inline-flex;width:22px;height:22px;flex-shrink:0;color:var(--accent);margin-top:2px;">${CHANGELOG_ICONS[item.icon]}</span>
@@ -3024,7 +3047,6 @@ function applyDonationTrans(isFr) {
   const ids = {
     mainDonateBtnText:   [isFr?'1 $/mois':'$1/month'],
     mainDonateBtnDesc:   [isFr?'Garde l\'app vivante pour toute la communauté 🙏':'Keeps the app alive for everyone 🙏'],
-    socialProofTitle:    [isFr?'Plus de 12 000 citoyens ont consulté cette app.':'Over 12,000 people have used this app.'],
     socialProofText:     [isFr?'Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.':'If everyone donated $1, server costs would be covered for 10 years.'],
     mostAppreciatedBadge:[isFr?'⭐ CONTRIBUTION EXEMPLAIRE':'⭐ MOST APPRECIATED'],
     orOnceLabel:         [isFr?'Soutien mensuel':'Monthly support'],
@@ -3032,19 +3054,17 @@ function applyDonationTrans(isFr) {
     drawerDonDesc:       [isFr?'Garde l\'app vivante pour toute la communauté 🙏':'Keeps the app alive for everyone 🙏'],
     drawerDonTitle:      [isFr?'1 $/mois':'$1/month'],
     drawerBadge:         [isFr?'Soutien mensuel':'Monthly support'],
-    drawerSocialTitle:   [isFr?'Plus de 12 000 citoyens ont consulté cette app.':'Over 12,000 people have used this app.'],
     // Changelog
     changelogDonDesc:    [isFr?'Garde l\'app vivante pour toute la communauté 🙏':'Keeps the app alive for everyone 🙏'],
     changelogDonTitle:   [isFr?'1 $/mois':'$1/month'],
     changelogBadge:      [isFr?'Soutien mensuel':'Monthly support'],
-    changelogSocialTitle:[isFr?'Plus de 12 000 citoyens ont consulté cette app.':'Over 12,000 people have used this app.'],
     // Prompt modal
     donModalDesc:        [isFr?'Garde l\'app vivante pour toute la communauté 🙏':'Keeps the app alive for everyone 🙏'],
     donModalTitle:       [isFr?'1 $/mois':'$1/month'],
     promptBadge:         [isFr?'Soutien mensuel':'Monthly support'],
-    promptSocialTitle:   [isFr?'Plus de 12 000 citoyens ont consulté cette app.':'Over 12,000 people have used this app.'],
     promptSocialText:    [isFr?'Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.':'If everyone donated $1, server costs would be covered for 10 years.'],
   };
+  updateSocialProofLabels();
   // Hardcoded "Don unique" labels — add IDs if needed
   document.querySelectorAll('[data-don-unique]').forEach(el => {
     el.textContent = isFr ? 'Don unique' : 'One-time donation';
@@ -4078,7 +4098,8 @@ function _shouldRunTimers() { return _isAnyActive(); }
 let _timerInterval = setInterval(() => { if (_shouldRunTimers()) refreshTimers(); }, 10000);
 
 // Démarrage initial — SSE en tout temps, avec le polling seulement comme filet de sécurité
-fetchStatus().then(() => { _startSSE(); });
+fetchStatus().then(() => { _startSSE(); updateSocialProofLabels(); });
+pingVisitorOnce();
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
@@ -4086,7 +4107,7 @@ document.addEventListener('visibilitychange', () => {
     clearInterval(_greetInterval);
     clearInterval(_timerInterval);
   } else {
-    updateGreeting(); fetchStatus().then(() => { _startSSE(); });
+    updateGreeting(); fetchStatus().then(() => { _startSSE(); updateSocialProofLabels(); });
     _greetInterval = setInterval(updateGreeting, 60000);
     _timerInterval = setInterval(() => { if (_shouldRunTimers()) refreshTimers(); }, 10000);
   }
@@ -4155,7 +4176,7 @@ document.addEventListener('visibilitychange', () => {
       <div style="font-size:12px;font-weight:700;color:#FFDD00;font-family:var(--sans);" data-don-unique>Don unique</div>
       <div style="font-size:9px;color:var(--text3);font-family:var(--sans);margin-top:1px;" data-don-unique-sub>Au montant de ton choix</div>
     </a>
-    <div style="font-size:11px;color:var(--text3);font-family:var(--sans);text-align:center;margin-top:6px;" id="changelogSocialTitle">Plus de 12 000 citoyens ont consulté cette app.</div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--sans);text-align:center;margin-top:6px;" id="changelogSocialTitle">Plus de 34 000 citoyens ont consulté cette app.</div>
       </div>
     </div>
   </div>
@@ -4174,15 +4195,14 @@ document.addEventListener('visibilitychange', () => {
           <div style="font-size:12px;font-weight:800;color:#FFDD00;font-family:var(--sans);" id="donModalTitle">1 $/mois</div>
           <div style="font-size:9px;color:rgba(255,221,0,.7);font-family:var(--sans);margin-top:1px;" id="promptBadge">Soutien mensuel</div>
         </div>
-        <div style="flex:1;background:rgba(0,0,0,.15);border-radius:8px;padding:8px;text-align:center;" id="promptOrOnce">
-          <div style="font-size:12px;font-weight:700;color:#000;font-family:var(--sans);" data-don-unique>Don unique</div>
-          <div style="font-size:9px;color:#333;font-family:var(--sans);margin-top:1px;" data-don-unique-sub>Au montant de ton choix</div>
-        </div>
       </div>
-      <div style="font-size:11px;color:#555;font-family:var(--sans);text-align:center;margin-top:6px;" id="promptSocialTitle">Plus de 12 000 citoyens ont consulté cette app.</div>
+      <div style="font-size:11px;color:#555;font-family:var(--sans);text-align:center;margin-top:6px;" id="promptSocialTitle">Plus de 34 000 citoyens ont consulté cette app.</div>
     </a>
-    <a id="promptDonateBtn" href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{source:'prompt_once'});closeDonationModal(true);" style="display:none;"></a>
-    <span id="promptSocialText" style="display:none;">Si chacun donnait 1 $, le coût des serveurs serait couvert pour 10 ans.</span>
+    <a href="https://buymeacoffee.com/kvndbrl" target="_blank" rel="noopener noreferrer" onclick="track('donation_clicked',{source:'prompt_once'});closeDonationModal(true);" id="promptOrOnceLink"
+      style="display:block;background:rgba(255,221,0,.12);border-radius:8px;padding:8px;text-align:center;text-decoration:none;margin-top:8px;">
+      <div style="font-size:12px;font-weight:700;color:#FFDD00;font-family:var(--sans);" data-don-unique>Don unique</div>
+      <div style="font-size:9px;color:var(--text3);font-family:var(--sans);margin-top:1px;" data-don-unique-sub>Au montant de ton choix</div>
+    </a>
     <button onclick="closeDonationModal(false)" style="width:100%;padding:14px;border-radius:50px;border:none;background:var(--surface2);color:var(--text3);font-family:var(--sans);font-size:14px;cursor:pointer;" id="donModalSkip">Plus tard</button>
   </div>
 </div>
