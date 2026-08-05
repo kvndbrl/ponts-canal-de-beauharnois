@@ -1566,7 +1566,7 @@ function updateGreeting(){
 
 // ── Onboarding ────────────────────────────────────────────────────────
 let deferredInstallPrompt = null;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstallPrompt = e; });
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstallPrompt = e; window.deferredInstallPrompt = e; });
 
 function obSetStep(n) {
   [0,1,2,3,4,5,6].forEach(i => {
@@ -3423,6 +3423,7 @@ let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
   deferredPrompt=e;
+  window.deferredInstallPrompt=e;
 });
 
 function makeStep(num, html){
@@ -4480,6 +4481,8 @@ function doInstall() {
         localStorage.removeItem('nameAskedAt');
       }
       window.deferredInstallPrompt = null; window.deferredPrompt = null;
+      try { deferredInstallPrompt = null; } catch(e) {}
+      try { deferredPrompt = null; } catch(e) {}
     });
   } else {
     showInstallModal();
