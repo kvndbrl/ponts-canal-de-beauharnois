@@ -371,13 +371,15 @@ function statusBadge(status) {
 
 function log(msg) { console.log(`[${new Date().toISOString()}] ${msg}`); }
 
-async function sendScheduledLiftNotification(bridge, times) {
+async function sendScheduledLiftNotification(bridge, times, currentStatuses = {}) {
   // times can be a single time string or array of times
   const timesArr = Array.isArray(times) ? times : [times];
-  // Build widget statuses with scheduled info appended
+  // Build widget statuses with scheduled info appended, using freshly-fetched data for
+  // both bridges (not lastStatus, which can be stale if the other bridge's status-change
+  // notification is running concurrently in the same monitor() cycle).
   const statuses = {
-    gonzague: { status: lastStatus.gonzague || 'disponible', avgLiftDuration: getAvgLiftDuration('gonzague'), avgLoweringDuration: getAvgLoweringDuration('gonzague'), outageEnd: null, liftingSince: liftActive.gonzague?.raisedAt || null, scheduledTimes: bridge === 'gonzague' ? timesArr : null },
-    larocque: { status: lastStatus.larocque || 'disponible', avgLiftDuration: getAvgLiftDuration('larocque'), avgLoweringDuration: getAvgLoweringDuration('larocque'), outageEnd: null, liftingSince: liftActive.larocque?.raisedAt || null, scheduledTimes: bridge === 'larocque' ? timesArr : null },
+    gonzague: { status: currentStatuses.gonzague ?? (lastStatus.gonzague || 'disponible'), avgLiftDuration: getAvgLiftDuration('gonzague'), avgLoweringDuration: getAvgLoweringDuration('gonzague'), outageEnd: null, liftingSince: liftActive.gonzague?.raisedAt || null, scheduledTimes: bridge === 'gonzague' ? timesArr : null },
+    larocque: { status: currentStatuses.larocque ?? (lastStatus.larocque || 'disponible'), avgLiftDuration: getAvgLiftDuration('larocque'), avgLoweringDuration: getAvgLoweringDuration('larocque'), outageEnd: null, liftingSince: liftActive.larocque?.raisedAt || null, scheduledTimes: bridge === 'larocque' ? timesArr : null },
   };
   let sent = 0, skipped = 0, failed = 0;
   for (const sub of [...subscriptions]) {
@@ -565,10 +567,12 @@ async function sendWidgetUpdate(bridgeStatuses) {
 
 // sendNotifications now delegates to widget update
 async function sendNotifications(bridge, status, bridgeData = {}) {
-  // Build current statuses from lastStatus + this update
+  // Build current statuses from the freshly-fetched data for BOTH bridges (not lastStatus,
+  // which is only updated at the end of monitor() and is stale when two bridges change in
+  // the same cycle and their sendNotifications calls run concurrently).
   const statuses = {
-    gonzague: { status: lastStatus.gonzague || 'disponible', avgLiftDuration: getAvgLiftDuration('gonzague'), avgLoweringDuration: getAvgLoweringDuration('gonzague'), outageEnd: null, liftingSince: liftActive.gonzague?.raisedAt || null, scheduledTimes: parseScheduledLifts(bridgeData.next_lifts_gonzague || '') },
-    larocque: { status: lastStatus.larocque || 'disponible', avgLiftDuration: getAvgLiftDuration('larocque'), avgLoweringDuration: getAvgLoweringDuration('larocque'), outageEnd: null, liftingSince: liftActive.larocque?.raisedAt || null, scheduledTimes: parseScheduledLifts(bridgeData.next_lifts_larocque || '') },
+    gonzague: { status: bridgeData.currentGonzagueStatus ?? (lastStatus.gonzague || 'disponible'), avgLiftDuration: getAvgLiftDuration('gonzague'), avgLoweringDuration: getAvgLoweringDuration('gonzague'), outageEnd: null, liftingSince: liftActive.gonzague?.raisedAt || null, scheduledTimes: parseScheduledLifts(bridgeData.next_lifts_gonzague || '') },
+    larocque: { status: bridgeData.currentLarocqueStatus ?? (lastStatus.larocque || 'disponible'), avgLiftDuration: getAvgLiftDuration('larocque'), avgLoweringDuration: getAvgLoweringDuration('larocque'), outageEnd: null, liftingSince: liftActive.larocque?.raisedAt || null, scheduledTimes: parseScheduledLifts(bridgeData.next_lifts_larocque || '') },
   };
   statuses[bridge] = {
     status,
@@ -599,6 +603,8 @@ async function monitor() {
           ...data[bridge],
           next_lifts_gonzague: data.gonzague.next_lifts,
           next_lifts_larocque: data.larocque.next_lifts,
+          currentGonzagueStatus: data.gonzague.status,
+          currentLarocqueStatus: data.larocque.status,
         }));
       }
     }
@@ -618,7 +624,7 @@ async function monitor() {
       }
       if (newTimes.length > 0) {
         lastScheduledNotif[bridge] = Date.now();
-        notifications.push(sendScheduledLiftNotification(bridge, newTimes));
+        notifications.push(sendScheduledLiftNotification(bridge, newTimes, { gonzague: data.gonzague.status, larocque: data.larocque.status }));
       }
     }
     if (notifications.length === 0) log(`Aucun changement d\u00e9tect\u00e9`);
