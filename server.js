@@ -392,7 +392,7 @@ async function sendScheduledLiftNotification(bridge, times, currentStatuses = {}
     const lang = sub.lang || 'fr';
     const isFr = lang === 'fr';
     const body = buildWidgetBody(sub, statuses);
-    const title = isFr ? 'Ponts Beauharnois' : 'Beauharnois Bridges';
+    const title = 'Ponts Canal Beauharnois';
     const STATUS_PRIORITY = ['outage', 'leve', 'raising', 'lowering', 'bientot_leve', 'disponible'];
     const activeStatuses = bridges.map(b => statuses[b]?.status).filter(Boolean);
     const criticalStatus = STATUS_PRIORITY.find(s => activeStatuses.includes(s)) || 'scheduled';
@@ -539,7 +539,7 @@ async function sendWidgetUpdate(bridgeStatuses) {
     const isFr = lang === 'fr';
     const body = buildWidgetBody(sub, bridgeStatuses);
     if (!body) continue;
-    const title = isFr ? 'Ponts Beauharnois' : 'Beauharnois Bridges';
+    const title = 'Ponts Canal Beauharnois';
     // Pick most critical status for badge
     const bridges = sub.bridges || ['gonzague', 'larocque'];
     const activeStatuses = bridges.map(b => bridgeStatuses[b]?.status).filter(Boolean);
@@ -1006,7 +1006,7 @@ async function sendDonationNotification() {
   for (const sub of [...subscriptions]) {
     const fr = isFr(sub);
     const payload = JSON.stringify({
-      title: fr ? '☕ Ponts Beauharnois' : '☕ Beauharnois Bridges',
+      title: '☕ Ponts Canal Beauharnois',
       body: fr
         ? "Cette app est gratuite et maintenue par une seule personne. Si elle vous est utile, un petit don fait toute la différence!"
         : "This app is free and maintained by one person. If it's been useful to you, a small donation makes a real difference!",
