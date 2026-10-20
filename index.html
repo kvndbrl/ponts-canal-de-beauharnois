@@ -2183,7 +2183,8 @@ function isBridgeCrossingBlocked(d){
 function computeReopenEstimate(d){
   if(!d) return null;
   const avgLift=Math.max(5,d.avgLiftDuration||12);
-  const avgLow=Math.max(2,d.avgLoweringDuration||3);
+  // Bornée à 10 min : filet de sécurité si le serveur renvoie encore une moyenne polluée
+  const avgLow=Math.min(10,Math.max(2,d.avgLoweringDuration||3));
   const avgTotal=avgLift+avgLow;
   let reopenTime, elapsedMin=null;
   if(d.status==='lowering'){
@@ -2194,8 +2195,11 @@ function computeReopenEstimate(d){
   } else {
     reopenTime=new Date(Date.now()+avgTotal*60000);
   }
-  // Extend the estimate if a commercial vessel is scheduled close to it — same rule used for push notifications
-  if(d.next_lifts){
+  // Prolonge l'estimation seulement si un navire est attendu dans les 0-20 min APRÈS la
+  // réouverture — même règle que les notifications push. Un navire listé avant la
+  // réouverture est celui que la levée sert déjà. En descente, l'opérateur a déjà
+  // décidé de rouvrir : on n'enchaîne rien.
+  if(d.next_lifts && d.status!=='lowering'){
     const nowEST=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'}));
     for(const line of d.next_lifts.split('\n')){
       const m=line.replace('*','').match(/(\d{1,2}):(\d{2})/);
@@ -2204,7 +2208,7 @@ function computeReopenEstimate(d){
       scheduled.setHours(parseInt(m[1]),parseInt(m[2]),0,0);
       if(scheduled<nowEST) scheduled.setDate(scheduled.getDate()+1);
       const gap=(scheduled-reopenTime)/60000;
-      if(gap<=20){
+      if(gap>=0 && gap<=20){
         const nextReopen=new Date(scheduled.getTime()+avgTotal*60000);
         if(nextReopen>reopenTime) reopenTime=nextReopen;
       }

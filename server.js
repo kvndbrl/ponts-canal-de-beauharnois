@@ -118,21 +118,35 @@ async function loadLiftHistory() {
   } catch(e) { console.error('loadLiftHistory error:', e.message); }
 }
 
+// Médiane plutôt que moyenne : une seule levée aberrante (navires enchaînés, statut
+// "unavailable" prolongé, redémarrage du serveur) faisait exploser la moyenne — la
+// descente du pont St-Louis affichait ~75 min. Les valeurs hors bornes réalistes sont
+// écartées avant le calcul, ce qui assainit aussi l'historique déjà pollué dans Redis.
+const MAX_LIFT_MS = 60 * 60000;      // une levée réelle dépasse rarement 60 min
+const MAX_LOWERING_MS = 10 * 60000;  // une descente réelle prend quelques minutes
+function median(values) {
+  if (!values.length) return null;
+  const v = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(v.length / 2);
+  return v.length % 2 ? v[mid] : (v[mid - 1] + v[mid]) / 2;
+}
+
 function getAvgLiftDuration(bridge) {
   const h = liftHistory[bridge];
   if (!h || h.length === 0) return null;
-  const recent = h.slice(-20);
-  const avg = recent.reduce((a, b) => a + b.duration, 0) / recent.length;
-  return Math.max(5, Math.round(avg / 60000)); // minimum 5 min
+  const vals = h.slice(-20).map(e => e.duration).filter(d => d > 0 && d <= MAX_LIFT_MS);
+  const m = median(vals);
+  if (m === null) return null;
+  return Math.max(5, Math.round(m / 60000)); // minimum 5 min
 }
 
 function getAvgLoweringDuration(bridge) {
   const h = liftHistory[bridge];
   if (!h || h.length === 0) return null;
-  const withLowering = h.slice(-20).filter(e => e.loweringDuration);
-  if (!withLowering.length) return null;
-  const avg = withLowering.reduce((a, b) => a + b.loweringDuration, 0) / withLowering.length;
-  return Math.max(2, Math.round(avg / 60000)); // minimum 2 min
+  const vals = h.slice(-20).map(e => e.loweringDuration).filter(d => d > 0 && d <= MAX_LOWERING_MS);
+  const m = median(vals);
+  if (m === null) return null;
+  return Math.max(2, Math.round(m / 60000)); // minimum 2 min
 }
 
 function isBusyPeriod(bridge) {
@@ -146,6 +160,23 @@ function isBusyPeriod(bridge) {
 
 function trackStatusTransition(bridge, prev, curr) {
   const now = Date.now();
+  // Le pont repart en levée alors qu'il était en descente (navires enchaînés) :
+  // on clôt le cycle précédent sans durée de descente (elle n'a jamais abouti) et on en
+  // ouvre un nouveau. Avant, loweredAt restait figé et la "descente" enregistrée couvrait
+  // toutes les levées suivantes jusqu'au prochain "disponible".
+  if ((curr === 'raising' || curr === 'leve') && liftActive[bridge] && liftActive[bridge].loweredAt) {
+    const entry = liftActive[bridge];
+    liftHistory[bridge].push({
+      raisedAt: entry.raisedAt,
+      duration: entry.loweredAt - entry.raisedAt,
+      loweringDuration: null,
+      day: new Date(entry.raisedAt).getDay(),
+      hour: new Date(entry.raisedAt).getHours()
+    });
+    if (liftHistory[bridge].length > 100) liftHistory[bridge].shift();
+    liftActive[bridge] = null;
+    saveLiftHistory();
+  }
   if ((curr === 'raising' || curr === 'leve') && !liftActive[bridge]) {
     liftActive[bridge] = { raisedAt: now };
     saveLiftActive();
@@ -480,9 +511,12 @@ function buildWidgetBody(sub, bridgeStatuses) {
           const scheduled = new Date(nowEST);
           scheduled.setHours(parseInt(match[1]), parseInt(match[2]), 0, 0);
           if (scheduled < nowEST) scheduled.setDate(scheduled.getDate() + 1);
-          // Bug fix 2: pousser la réouverture si un navire arrive AVANT ou dans les 20 min APRÈS l'estimation actuelle
+          // Seuls les navires attendus dans les 0-20 min APRÈS la réouverture prolongent la
+          // fermeture. Un navire listé avant la réouverture est celui que la levée sert déjà.
+          // En descente, l'opérateur a déjà décidé de rouvrir : on n'enchaîne rien.
+          if (d.status === 'lowering') continue;
           const gap = (scheduled - reopenTime) / 60000;
-          if (gap <= 20) {
+          if (gap >= 0 && gap <= 20) {
             const nextReopen = new Date(scheduled.getTime() + avgTotal * 60000);
             if (nextReopen > reopenTime) reopenTime = nextReopen;
           }
