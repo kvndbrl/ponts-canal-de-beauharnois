@@ -119,6 +119,9 @@
     body.simplified [id^="lastLift"],
     body.simplified .lifts-block { display:none !important; }
 
+    /* Portrait : wrapper plafonné et centré — sinon, quand le zoom « Petit » (0.9) rend la zone utile > 430px, header/main (max-width:430px) restent collés à gauche pendant que les bannières prennent toute la largeur */
+    #appWrapper{width:100%;max-width:430px;}
+
     #appWrapper.landscape { width: 100vw !important; max-width: 100vw !important; padding: 0 16px; box-sizing: border-box; }
     #appWrapper.landscape .header { width: 100% !important; max-width: 100% !important; }
     #appWrapper.landscape #cardsMain { width: 100% !important; max-width: 100% !important; }
