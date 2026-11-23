@@ -328,7 +328,9 @@ async function fetchBridgeStatus() {
 
   function extractLifts(section) {
     const matches = [...section.matchAll(/class="item-data[^"]*"[^>]*>([^<]+)/g)];
-    const lifts = matches.map(m => m[1].trim()).filter(v => v && v !== 'No anticipated bridge lifts' && v !== 'Aucune lev\u00e9e de pont pr\u00e9vue');
+    // Les fermetures (« 2026-11-22 22:15 until 2026-11-22 23:00 ») utilisent la même classe item-data
+    // que les levées : on les exclut ici, elles sont déjà traitées par extractClosures().
+    const lifts = matches.map(m => m[1].trim()).filter(v => v && v !== 'No anticipated bridge lifts' && v !== 'Aucune lev\u00e9e de pont pr\u00e9vue' && !/\d{4}-\d{2}-\d{2}|until|jusqu/i.test(v));
     if (lifts.length === 0) return 'No anticipated bridge lifts';
     return lifts.join('\n');
   }
@@ -903,13 +905,7 @@ function buildHABridge(bridge, d) {
   const avgLift = getAvgLiftDuration(bridge);
   const avgLow = getAvgLoweringDuration(bridge);
   const active = liftActive[bridge];
-  // Les fermetures (« 2026-11-22 22:15 until 2026-11-22 23:00 ») sont dans la même liste
-  // que les levées sur le site de la Voie maritime : on les retire pour ne pas les lire comme des levées.
-  const liftText = String(d.next_lifts || '')
-    .split('\n')
-    .filter(l => !/\d{4}-\d{2}-\d{2}|until|jusqu/i.test(l))
-    .join('\n');
-  let upcoming = parseScheduledLifts(liftText)
+  let upcoming = parseScheduledLifts(d.next_lifts)
     .map(t => ({ time: t.replace('*', '').trim(), in_min: minutesUntilTime(t) }))
     .filter(u => u.in_min !== null && u.in_min < 1440)
     .sort((a, b) => a.in_min - b.in_min);
