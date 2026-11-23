@@ -73,6 +73,9 @@ async function removeSubscription(sub) {
 
 let subscriptions = [];
 let lastStatus = { gonzague: null, larocque: null };
+// Dernières données complètes récupérées par monitor() — servies par /api/homeassistant
+// sans relancer un scraping du site de la Voie maritime à chaque requête.
+let lastData = null;
 
 // ── SSE clients ────────────────────────────────────────────────────────────
 const sseClients = new Set();
@@ -623,6 +626,7 @@ async function sendNotifications(bridge, status, bridgeData = {}) {
 async function monitor() {
   try {
     const data = await fetchBridgeStatus();
+    lastData = data;
     log(`Gonzague: ${data.gonzague.status} | Larocque: ${data.larocque.status} | Abonn\u00e9s: ${subscriptions.length}`);
     const notifications = [];
     for (const bridge of ['gonzague', 'larocque']) {
@@ -869,6 +873,138 @@ app.get('/history', (req, res) => {
     gonzague: { entries: liftHistory.gonzague.length, avgDuration: getAvgLiftDuration('gonzague'), avgLowering: getAvgLoweringDuration('gonzague'), lastLift: getLastLift('gonzague'), oldestLift: getOldestLift('gonzague'), heatmap: getHeatmap('gonzague') },
     larocque: { entries: liftHistory.larocque.length, avgDuration: getAvgLiftDuration('larocque'), avgLowering: getAvgLoweringDuration('larocque'), lastLift: getLastLift('larocque'), oldestLift: getOldestLift('larocque'), heatmap: getHeatmap('larocque') }
   });
+});
+
+// ── API Home Assistant ─────────────────────────────────────────────────────
+// Une seule réponse JSON avec tout ce que l'app sait des deux ponts, pour des capteurs
+// REST dans Home Assistant. Protégée par la variable d'environnement HA_API_KEY sur Render
+// (en-tête X-API-Key ou ?key=). Si HA_API_KEY n'est pas définie, l'accès reste ouvert.
+const HA_API_KEY = process.env.HA_API_KEY;
+
+function minutesUntilTime(hm) {
+  const m = String(hm).replace('*', '').trim().match(/(\d{1,2}):(\d{2})/);
+  if (!m) return null;
+  const nowEST = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+  let diff = (parseInt(m[1]) * 60 + parseInt(m[2])) - (nowEST.getHours() * 60 + nowEST.getMinutes());
+  if (diff < 0) diff += 1440;
+  return diff;
+}
+
+function isoInMinutes(min) {
+  const d = new Date(Date.now() + min * 60000);
+  d.setSeconds(0, 0);
+  return d.toISOString();
+}
+
+function buildHABridge(bridge, d) {
+  d = d || {};
+  const status = d.status || 'inconnu';
+  const avgLift = getAvgLiftDuration(bridge);
+  const avgLow = getAvgLoweringDuration(bridge);
+  const active = liftActive[bridge];
+  const upcoming = parseScheduledLifts(d.next_lifts)
+    .map(t => ({ time: t.replace('*', '').trim(), in_min: minutesUntilTime(t) }))
+    .filter(u => u.in_min !== null && u.in_min < 1440)
+    .sort((a, b) => a.in_min - b.in_min);
+
+  // Réouverture estimée — même logique que buildWidgetBody (médianes historiques,
+  // navire enchaîné dans les 20 min après la réouverture, pas d'enchaînement en descente).
+  let reopen = null;
+  let possibleDelay = false;
+  if (['raising', 'leve', 'lowering'].includes(status) && avgLift) {
+    const avgTotal = avgLift + (avgLow || 3);
+    let remaining;
+    if (status === 'lowering') {
+      const since = active?.loweredAt ? (Date.now() - active.loweredAt) / 60000 : 0;
+      remaining = Math.max(1, (avgLow || 3) - since);
+    } else if (active?.raisedAt) {
+      const elapsed = (Date.now() - active.raisedAt) / 60000;
+      remaining = Math.max(1, avgTotal - elapsed);
+      if (elapsed > avgTotal + 2) possibleDelay = true;
+      for (const u of upcoming) {
+        const gap = u.in_min - remaining;
+        if (gap >= 0 && gap <= 20) remaining = Math.max(remaining, u.in_min + avgTotal);
+      }
+    } else {
+      remaining = avgTotal;
+    }
+    reopen = isoInMinutes(remaining);
+  }
+  if (status === 'outage' && d.outageEnd) reopen = new Date(d.outageEnd).toISOString();
+
+  // Fenêtre d'indisponibilité prévue : pont disponible, navire attendu dans les 60 min,
+  // et assez d'historique pour estimer la durée. Sinon rien, plutôt qu'une estimation optimiste.
+  let windowStart = null;
+  let windowEnd = null;
+  if (['disponible', 'bientot_leve'].includes(status) && avgLift) {
+    const soon = upcoming.find(u => u.in_min <= 60);
+    if (soon) {
+      windowStart = isoInMinutes(soon.in_min);
+      windowEnd = isoInMinutes(soon.in_min + avgLift + (avgLow || 3));
+    }
+  }
+
+  // Même règle que le détour de l'app : levage, levé ou fermé, ou descente avec plus de 5 min restantes.
+  let blocked = ['raising', 'leve', 'outage'].includes(status);
+  if (status === 'lowering') {
+    const left = reopen ? (new Date(reopen) - Date.now()) / 60000 : 0;
+    blocked = left > 5;
+  }
+
+  return {
+    status,
+    label: STATUS_LABEL_FR[status] || 'Inconnu',
+    label_en: STATUS_LABEL_EN[status] || 'Unknown',
+    blocked,
+    raised_since: d.raisedSince || null,
+    lifting_since: active?.raisedAt ? new Date(active.raisedAt).toISOString() : null,
+    reopen_estimate: reopen,
+    possible_delay: possibleDelay,
+    next_lift: upcoming[0]?.time || null,
+    next_lift_in_min: upcoming[0]?.in_min ?? null,
+    next_lifts: upcoming.map(u => u.time),
+    window_start: windowStart,
+    window_end: windowEnd,
+    avg_lift_min: avgLift,
+    avg_lowering_min: avgLow,
+    busy_period: isBusyPeriod(bridge),
+    outage_end: d.outageEnd ? new Date(d.outageEnd).toISOString() : null,
+    closures: d.closures || [],
+  };
+}
+
+app.get('/api/homeassistant', async (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  if (HA_API_KEY && req.get('X-API-Key') !== HA_API_KEY && req.query.key !== HA_API_KEY) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+  try {
+    const data = lastData || await fetchBridgeStatus();
+    const gonzague = buildHABridge('gonzague', data.gonzague);
+    const larocque = buildHABridge('larocque', data.larocque);
+    let detour_fr = null;
+    let detour_en = null;
+    if (gonzague.blocked && larocque.blocked) {
+      detour_fr = 'Les deux ponts sont bloqués. Itinéraire alternatif : passer par Beauharnois.';
+      detour_en = 'Both bridges are blocked. Alternate route: go through Beauharnois.';
+    } else if (gonzague.blocked) {
+      detour_fr = 'Itinéraire alternatif : emprunter la route 236 pour aller vers le pont Larocque.';
+      detour_en = 'Alternate route: take route 236 to the Larocque Bridge.';
+    } else if (larocque.blocked) {
+      detour_fr = 'Itinéraire alternatif : emprunter la route 236 pour aller vers le pont St-Louis.';
+      detour_en = 'Alternate route: take route 236 to the St-Louis Bridge.';
+    }
+    res.json({
+      updated_at: new Date().toISOString(),
+      last_refreshed: data.last_refreshed || null,
+      gonzague,
+      larocque,
+      detour_fr,
+      detour_en,
+    });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.post('/milestone-notif', async (req, res) => {
