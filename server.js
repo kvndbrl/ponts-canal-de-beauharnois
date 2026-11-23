@@ -886,7 +886,8 @@ function minutesUntilTime(hm) {
   if (!m) return null;
   const nowEST = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' }));
   let diff = (parseInt(m[1]) * 60 + parseInt(m[2])) - (nowEST.getHours() * 60 + nowEST.getMinutes());
-  if (diff < 0) diff += 1440;
+  // Une heure passée depuis moins de 6 h est en retard (négatif), pas une levée de demain.
+  if (diff < -360) diff += 1440;
   return diff;
 }
 
@@ -902,10 +903,18 @@ function buildHABridge(bridge, d) {
   const avgLift = getAvgLiftDuration(bridge);
   const avgLow = getAvgLoweringDuration(bridge);
   const active = liftActive[bridge];
-  const upcoming = parseScheduledLifts(d.next_lifts)
+  // Les fermetures (« 2026-11-22 22:15 until 2026-11-22 23:00 ») sont dans la même liste
+  // que les levées sur le site de la Voie maritime : on les retire pour ne pas les lire comme des levées.
+  const liftText = String(d.next_lifts || '')
+    .split('\n')
+    .filter(l => !/\d{4}-\d{2}-\d{2}|until|jusqu/i.test(l))
+    .join('\n');
+  let upcoming = parseScheduledLifts(liftText)
     .map(t => ({ time: t.replace('*', '').trim(), in_min: minutesUntilTime(t) }))
     .filter(u => u.in_min !== null && u.in_min < 1440)
     .sort((a, b) => a.in_min - b.in_min);
+  const overdue = upcoming.filter(u => u.in_min < 0);
+  upcoming = upcoming.filter(u => u.in_min >= 0);
 
   // Réouverture estimée — même logique que buildWidgetBody (médianes historiques,
   // navire enchaîné dans les 20 min après la réouverture, pas d'enchaînement en descente).
@@ -963,6 +972,7 @@ function buildHABridge(bridge, d) {
     next_lift: upcoming[0]?.time || null,
     next_lift_in_min: upcoming[0]?.in_min ?? null,
     next_lifts: upcoming.map(u => u.time),
+    overdue_lifts: overdue.map(u => u.time),
     window_start: windowStart,
     window_end: windowEnd,
     avg_lift_min: avgLift,
